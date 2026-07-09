@@ -12,8 +12,8 @@ Use this before changing the repository visibility from private to public.
 
 ## Legal And Attribution
 
-- Choose a license before public release.
-- Confirm any brand references are descriptive and not presented as endorsement.
+- MIT license is present for original code and documentation.
+- Notice file explains that brand references are descriptive and not presented as endorsement.
 - Avoid checking in copyrighted reference photos unless they are licensed for reuse.
 
 ## Engineering Hygiene
@@ -28,4 +28,5 @@ Use this before changing the repository visibility from private to public.
 
 - Create a version tag, such as `v0.1.0`.
 - Create a GitHub Release with screenshots and a short changelog.
+- Enable GitHub Pages so visitors can open the app from the repository homepage.
 - Only then switch repository visibility to public.

@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "description": "Standalone HTML/SVG world clock and watch-face gallery.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/christopherrbrown3/world-clock.git"
+  },
   "scripts": {
     "test": "node scripts/validate.js",
     "validate": "node scripts/validate.js"

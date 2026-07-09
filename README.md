@@ -4,6 +4,8 @@
 
 World Clock is a standalone HTML/SVG gallery of detailed watch and clock faces. It runs directly in the browser, with no build step and no server required.
 
+[Live demo](https://christopherrbrown3.github.io/world-clock/)
+
 ![World Clock preview](docs/assets/preview.png)
 
 ## Features
@@ -19,6 +21,8 @@ World Clock is a standalone HTML/SVG gallery of detailed watch and clock faces. 
 ```sh
 open world-clock.html
 ```
+
+The project can also run from the [GitHub Pages demo](https://christopherrbrown3.github.io/world-clock/) after Pages is enabled.
 
 ## Validate
 
@@ -44,6 +48,12 @@ gh pr create --fill
 
 See [docs/github-workflow.md](docs/github-workflow.md) for the project workflow and GitHub concepts.
 
-## Public Release Readiness
+## Release Readiness
 
-This repository is being prepared as a public showcase. Before switching visibility to public, use [docs/public-release-checklist.md](docs/public-release-checklist.md).
+Use [docs/public-release-checklist.md](docs/public-release-checklist.md) before major visibility or release changes.
+
+## License And Notices
+
+The original source code and documentation are released under the [MIT License](LICENSE).
+
+This is an independent project. Brand, product, clock, watch, and character names are used descriptively for reference and identification. See [NOTICE.md](NOTICE.md).
