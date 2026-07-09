@@ -1,0 +1,34 @@
+name: Watch-face fidelity improvement
+description: Track a realism or reference-photo improvement.
+title: "[Fidelity]: "
+labels:
+  - enhancement
+  - visual-fidelity
+  - watch-face
+body:
+  - type: input
+    id: face
+    attributes:
+      label: Watch or clock face
+      placeholder: "Example: Mickey Mouse, Yacht-Master, Norfolk Southern pocket watch"
+    validations:
+      required: true
+  - type: textarea
+    id: reference
+    attributes:
+      label: Reference source
+      description: Link or attach the reference photo(s).
+    validations:
+      required: true
+  - type: textarea
+    id: deviations
+    attributes:
+      label: Deviations to fix
+      description: List the specific visual differences from the reference.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: What must be true before this issue is done?

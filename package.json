@@ -1,0 +1,13 @@
+{
+  "name": "world-clock",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Standalone HTML/SVG world clock and watch-face gallery.",
+  "scripts": {
+    "test": "node scripts/validate.js",
+    "validate": "node scripts/validate.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

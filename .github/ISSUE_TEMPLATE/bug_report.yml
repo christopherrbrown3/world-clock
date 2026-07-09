@@ -1,0 +1,39 @@
+name: Bug report
+description: Report a broken behavior or visual defect.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: input
+    id: face
+    attributes:
+      label: Watch or clock face
+      description: Which face is affected?
+      placeholder: "Example: Submariner, Big Ben, Grand Central"
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the defect.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      description: What should it look like or do instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. Open world-clock.html
+        2. Select ...
+        3. Notice ...
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots or references
+      description: Add screenshots, reference links, or notes.
