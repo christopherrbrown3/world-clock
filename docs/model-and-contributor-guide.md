@@ -1,4 +1,4 @@
-# Model And Contributor Guide
+# Model and Contributor Guide
 
 This guide is for human contributors and AI model runs. The project is partly a benchmark of model output, so version pages should make it clear what each model produced while still keeping the app usable and public-ready.
 
@@ -18,17 +18,7 @@ A new model can either reuse and improve an existing model page or create a new 
 - While a model is currently active, its checkpoint page can be refreshed.
 - When a newer model begins, freeze the previous model page and create a new page for the new model.
 
-For a new model page:
-
-1. Start from `world-clock.html` or an existing `versions/*.html` page.
-2. Create `versions/<model-name>.html`.
-3. Add the page to `versions.json`.
-4. Add the page to the picker in `index.html`.
-5. Update README and changelog text when the public list changes.
-6. Run `npm test`.
-7. Open a pull request and wait for CI.
-
-Keep `versions.json` limited to real pages that exist in the repo. Do not add placeholder future versions.
+Follow `docs/model-versioning.md` for the file, manifest, picker, and pull request steps. Keep `versions.json` limited to real pages that exist in the repo. Do not add placeholder future versions.
 
 Use `docs/watch-face-catalog.md` as the public list of supported faces. Update it when a model adds, removes, renames, or replaces a face.
 

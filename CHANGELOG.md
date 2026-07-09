@@ -14,3 +14,4 @@ Notable project changes will be tracked here.
 - Refreshed the Codex 5.5 checkpoint with improved page chrome for the active world clock.
 - Added model and contributor guidance for future AI model runs and reference-driven SVG face work.
 - Added a validated watch and clock face catalog.
+- Organized project documentation to reduce duplication and clarify guide ownership.

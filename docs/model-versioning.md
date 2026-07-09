@@ -13,29 +13,32 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 - `versions.json`: manifest of real model-version pages available in the app.
 - `index.html`: simple version picker for GitHub Pages and local browsing.
 
-## Current Snapshots
+## Current Model Pages
 
 - `versions/codex-5.5.html`: current Codex 5.5 checkpoint.
 - `versions/claude-opus-4.8.html`: Claude Opus 4.8 baseline.
 
-## Future Codex 5.6 Workflow
+## Creating A New Model Page
 
-Do not create a Codex 5.6 page until the Codex 5.6 version exists.
+Do not create placeholder pages for model versions that do not exist yet.
 
-When it is ready:
+When a new model version is ready:
 
-1. Finish the current Codex 5.5 work in `world-clock.html` and `versions/codex-5.5.html`.
-2. Treat `versions/codex-5.5.html` as frozen.
-3. Copy the active build into `versions/codex-5.6.html` when Codex 5.6 work begins.
-4. Add a `codex-5.6` entry to `versions.json`.
+1. Finish the current model work in `world-clock.html` and the current `versions/*.html` checkpoint.
+2. Treat the previous model page as finalized unless the maintainer explicitly asks to revise it.
+3. Copy the active build into `versions/<model-id>.html` for the new model.
+4. Add the new model entry to `versions.json`.
 5. Add a card and dropdown option in `index.html`.
-6. Run `npm test`.
-7. Commit through a pull request.
-8. Optionally tag the model checkpoint:
+6. Update README and changelog text when the public list changes.
+7. Run `npm test`.
+8. Commit through a pull request.
+9. Optionally tag the model checkpoint:
 
    ```sh
-   git tag -a model/codex-5.6 -m "Codex 5.6 snapshot"
-   git push origin model/codex-5.6
+   git tag -a model/<model-id> -m "<Model Name> snapshot"
+   git push origin model/<model-id>
    ```
 
-After the Codex 5.6 page is created, continue using `world-clock.html` as the active working file for the next iteration.
+After the new model page is created, continue using `world-clock.html` as the active working file for the next iteration.
+
+For example, when Codex 5.6 work begins, create `versions/codex-5.6.html`, add a `codex-5.6` manifest entry, and freeze `versions/codex-5.5.html` unless a maintainer asks for a correction.

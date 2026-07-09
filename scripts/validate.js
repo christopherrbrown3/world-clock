@@ -26,6 +26,24 @@ function fileExists(relativePath) {
   return fs.existsSync(path.join(root, relativePath));
 }
 
+function relativeFileList(dir = ".") {
+  const base = path.join(root, dir);
+  const entries = fs.readdirSync(base, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    if (entry.name === ".git") continue;
+    const relativePath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...relativeFileList(relativePath));
+    } else {
+      files.push(relativePath.replace(/^\.\//, ""));
+    }
+  }
+
+  return files;
+}
+
 function inlineScripts(html) {
   const scripts = [];
   const scriptRe = /<script\b([^>]*)>([\s\S]*?)<\/script>/gi;
@@ -76,6 +94,34 @@ function validateHtml(relativePath, options = {}) {
   }
 
   return scripts.length;
+}
+
+function validateMarkdownLinks() {
+  const markdownFiles = relativeFileList()
+    .filter((file) => file.endsWith(".md"));
+
+  for (const file of markdownFiles) {
+    const text = readText(file);
+    const linkRe = /!?\[[^\]]+\]\(([^)]+)\)/g;
+    let match;
+
+    while ((match = linkRe.exec(text))) {
+      const href = match[1].trim();
+      if (!href || href.startsWith("#") || /^(https?:|mailto:)/i.test(href)) continue;
+
+      const target = href.split("#")[0];
+      if (!target) continue;
+
+      const decodedTarget = decodeURIComponent(target);
+      const absoluteTarget = path.resolve(path.join(root, path.dirname(file)), decodedTarget);
+
+      if (!absoluteTarget.startsWith(root) || !fs.existsSync(absoluteTarget)) {
+        fail(`${file} links to missing local target: ${href}`);
+      }
+    }
+  }
+
+  return markdownFiles.length;
 }
 
 function validateManifest() {
@@ -223,6 +269,7 @@ for (const file of htmlFiles) {
 }
 
 const faceCatalogCount = validateFaceCatalog();
+const markdownCount = validateMarkdownLinks();
 
 if (failures.length > 0) {
   console.error("Validation failed:");
@@ -232,4 +279,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Validation passed: ${htmlFiles.length} HTML file(s), ${scriptCount} inline script(s), ${requiredFaces.length} required face keys per app page, ${faceCatalogCount} cataloged face(s).`);
+console.log(`Validation passed: ${htmlFiles.length} HTML file(s), ${scriptCount} inline script(s), ${requiredFaces.length} required face keys per app page, ${faceCatalogCount} cataloged face(s), ${markdownCount} markdown file(s).`);

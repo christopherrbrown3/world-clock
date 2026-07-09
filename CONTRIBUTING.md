@@ -2,44 +2,19 @@
 
 This project uses a standard GitHub workflow so changes stay reviewable and easy to validate.
 
-Before changing watch faces or creating a new model-version page, read `docs/model-and-contributor-guide.md`.
+Start with the [documentation index](docs/README.md). Before changing watch faces or creating a model-version page, read [docs/model-and-contributor-guide.md](docs/model-and-contributor-guide.md).
 
-## Daily Workflow
+## Workflow
 
-1. Sync with GitHub:
+Use the branch and pull request flow in [docs/github-workflow.md](docs/github-workflow.md). Do not commit directly to `main`.
 
-   ```sh
-   git switch main
-   git pull
-   ```
+For every meaningful change:
 
-2. Create a branch:
-
-   ```sh
-   git switch -c short-description
-   ```
-
-3. Make the change and validate it:
-
-   ```sh
-   npm test
-   ```
-
-4. Commit locally:
-
-   ```sh
-   git add .
-   git commit -m "Describe the change"
-   ```
-
-5. Push the branch and open a pull request:
-
-   ```sh
-   git push -u origin short-description
-   gh pr create --fill
-   ```
-
-6. Merge after CI passes.
+1. Create a branch from current `main`.
+2. Make one focused change.
+3. Run `npm test`.
+4. Open a pull request.
+5. Merge only after CI passes.
 
 ## Commit Messages
 
