@@ -34,6 +34,8 @@ The project keeps AI-model versions as separate standalone HTML pages under `ver
 
 See [docs/model-versioning.md](docs/model-versioning.md) for the model-version workflow and the future Codex 5.6 plan.
 
+Future AI model runs and contributors should read [docs/model-and-contributor-guide.md](docs/model-and-contributor-guide.md) before changing watch faces or creating new model pages.
+
 ## Validate
 
 ```sh

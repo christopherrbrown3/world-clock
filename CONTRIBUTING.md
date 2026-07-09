@@ -2,6 +2,8 @@
 
 This project uses a standard GitHub workflow so changes stay reviewable and easy to validate.
 
+Before changing watch faces or creating a new model-version page, read `docs/model-and-contributor-guide.md`.
+
 ## Daily Workflow
 
 1. Sync with GitHub:
@@ -54,3 +56,5 @@ For watch-face changes, include:
 - The reference image or source.
 - A screenshot of the rendered face.
 - Notes about any intentional approximation.
+
+Watch and clock faces should be built as client-side SVG, researched against real reference photos, and tested across multiple times and dates. Do not use raster watch-face images or server-rendered assets for the faces.
