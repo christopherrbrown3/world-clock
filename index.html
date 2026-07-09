@@ -163,14 +163,14 @@
     <main>
       <header>
         <h1>World Clock</h1>
-        <p class="lede">Open the active build or a frozen AI-model snapshot. Snapshots are kept as standalone HTML files so benchmark versions remain viewable over time.</p>
+        <p class="lede">Open the active build or a standalone AI-model version. Current model checkpoints can be refreshed while finalized model pages remain viewable over time.</p>
       </header>
 
       <section class="selector" aria-label="Open a version">
         <label for="version-select">Version</label>
         <select id="version-select">
           <option value="world-clock.html">Active working build</option>
-          <option value="versions/codex-5.5.html">Codex 5.5 snapshot</option>
+          <option value="versions/codex-5.5.html">Codex 5.5 current checkpoint</option>
           <option value="versions/claude-opus-4.8.html">Claude Opus 4.8 snapshot</option>
         </select>
         <button type="button" id="open-selected">Open</button>
@@ -180,14 +180,14 @@
         <article class="card">
           <span class="tag">Active</span>
           <h2>Working Build</h2>
-          <p class="meta">Current development page. Future model work, including Codex 5.6, starts here before it is frozen as a snapshot.</p>
+          <p class="meta">Current development page. Future model work, including Codex 5.6, starts here before it becomes a model-version page.</p>
           <a class="button" href="world-clock.html">Open</a>
         </article>
 
         <article class="card">
-          <span class="tag">Snapshot</span>
+          <span class="tag">Current Model</span>
           <h2>Codex 5.5</h2>
-          <p class="meta">Baseline public-release version produced with Codex 5.5 and frozen on 2026-07-09.</p>
+          <p class="meta">Current Codex 5.5 checkpoint. This page can be refreshed while Codex 5.5 is the active model under review.</p>
           <a class="button" href="versions/codex-5.5.html">Open</a>
         </article>
 
