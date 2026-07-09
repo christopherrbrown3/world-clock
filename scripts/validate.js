@@ -120,6 +120,97 @@ function validateManifest() {
   return [...new Set(files)];
 }
 
+function activeFaceCatalog() {
+  const html = readText("world-clock.html");
+  const scripts = inlineScripts(html);
+  const appScript = scripts[scripts.length - 1] || "";
+  const marker = "const FACE_KEYS = Object.keys(FACES);";
+  const markerIndex = appScript.indexOf(marker);
+
+  if (markerIndex < 0) {
+    fail("world-clock.html is missing FACE_KEYS declaration.");
+    return [];
+  }
+
+  const source = appScript.slice(0, markerIndex + marker.length);
+  const context = {
+    console,
+    Intl,
+    Date,
+    Math,
+    Number,
+    String,
+    Array,
+    Set,
+    Map,
+    JSON,
+    localStorage: {
+      getItem() { return null; },
+      setItem() {}
+    },
+    document: {
+      getElementById() { return {}; }
+    }
+  };
+
+  try {
+    vm.createContext(context);
+    vm.runInContext(
+      `${source}\nglobalThis.__catalog = FACE_KEYS.map(key => ({ key, name: FACES[key].name, cadence: FACES[key].cadence || "default" }));`,
+      context,
+      { filename: "world-clock.html:face-catalog.js" }
+    );
+  } catch (error) {
+    fail(`Could not derive face catalog from world-clock.html: ${error.message}`);
+    return [];
+  }
+
+  return context.__catalog || [];
+}
+
+function validateFaceCatalog() {
+  const relativePath = "docs/watch-face-catalog.md";
+  if (!fileExists(relativePath)) {
+    fail(`${relativePath} is missing.`);
+    return 0;
+  }
+
+  const expected = activeFaceCatalog();
+  const markdown = readText(relativePath);
+  const rows = [];
+
+  for (const line of markdown.split(/\r?\n/)) {
+    const match = line.match(/^\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|$/);
+    if (!match) continue;
+    rows.push({
+      key: match[1].trim(),
+      name: match[2].trim(),
+      cadence: match[3].trim()
+    });
+  }
+
+  if (rows.length !== expected.length) {
+    fail(`${relativePath} lists ${rows.length} face(s), but world-clock.html exposes ${expected.length}.`);
+  }
+
+  const totalMatch = markdown.match(/Total faces:\s*(\d+)\./);
+  if (!totalMatch) {
+    fail(`${relativePath} is missing a "Total faces" line.`);
+  } else if (Number(totalMatch[1]) !== expected.length) {
+    fail(`${relativePath} says Total faces: ${totalMatch[1]}, but world-clock.html exposes ${expected.length}.`);
+  }
+
+  expected.forEach((face, index) => {
+    const row = rows[index];
+    if (!row) return;
+    if (row.key !== face.key || row.name !== face.name || row.cadence !== face.cadence) {
+      fail(`${relativePath} row ${index + 1} should be \`${face.key}\` | ${face.name} | \`${face.cadence}\`, but found \`${row.key}\` | ${row.name} | \`${row.cadence}\`.`);
+    }
+  });
+
+  return expected.length;
+}
+
 const manifestFiles = validateManifest();
 const htmlFiles = ["index.html", ...manifestFiles].filter((file) => fileExists(file));
 let scriptCount = 0;
@@ -131,6 +222,8 @@ for (const file of htmlFiles) {
   });
 }
 
+const faceCatalogCount = validateFaceCatalog();
+
 if (failures.length > 0) {
   console.error("Validation failed:");
   for (const failure of failures) {
@@ -139,4 +232,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Validation passed: ${htmlFiles.length} HTML file(s), ${scriptCount} inline script(s), ${requiredFaces.length} required face keys per app page.`);
+console.log(`Validation passed: ${htmlFiles.length} HTML file(s), ${scriptCount} inline script(s), ${requiredFaces.length} required face keys per app page, ${faceCatalogCount} cataloged face(s).`);
