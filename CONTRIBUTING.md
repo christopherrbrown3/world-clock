@@ -51,6 +51,8 @@ Use short, specific commit messages:
 
 ## Visual Changes
 
+Check `docs/watch-face-catalog.md` when adding, removing, renaming, or replacing a face. `npm test` validates that the catalog matches the active face list.
+
 For watch-face changes, include:
 
 - The reference image or source.

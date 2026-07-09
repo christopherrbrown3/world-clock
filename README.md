@@ -16,6 +16,8 @@ World Clock is a standalone HTML/SVG gallery of detailed watch and clock faces. 
 - Offline-friendly: open the HTML file directly in a browser.
 - Lightweight validation through GitHub Actions.
 
+See [docs/watch-face-catalog.md](docs/watch-face-catalog.md) for the current watch and clock face catalog.
+
 ## Open Locally
 
 ```sh

@@ -30,6 +30,8 @@ For a new model page:
 
 Keep `versions.json` limited to real pages that exist in the repo. Do not add placeholder future versions.
 
+Use `docs/watch-face-catalog.md` as the public list of supported faces. Update it when a model adds, removes, renames, or replaces a face.
+
 ## Required App Behavior
 
 Every model page must remain a single client-side browser app.
@@ -140,6 +142,7 @@ Check that hands do not cover important text more than they would on the real ob
 Before opening a pull request:
 
 - Run `npm test`.
+- Confirm `docs/watch-face-catalog.md` reflects the active face list.
 - Load the edited page in a browser.
 - Confirm the page is not blank and has no framework or runtime error overlay.
 - Check browser console warnings and errors.
