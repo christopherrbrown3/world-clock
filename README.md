@@ -34,9 +34,7 @@ The project keeps AI-model versions as separate standalone HTML pages under `ver
 - Codex 5.5 checkpoint: [versions/codex-5.5.html](versions/codex-5.5.html)
 - Claude Opus 4.8 snapshot: [versions/claude-opus-4.8.html](versions/claude-opus-4.8.html)
 
-See [docs/model-versioning.md](docs/model-versioning.md) for the model-version workflow and the future Codex 5.6 plan.
-
-Future AI model runs and contributors should read [docs/model-and-contributor-guide.md](docs/model-and-contributor-guide.md) before changing watch faces or creating new model pages.
+See [docs/model-versioning.md](docs/model-versioning.md) for the model-version workflow.
 
 ## Validate
 
@@ -44,23 +42,15 @@ Future AI model runs and contributors should read [docs/model-and-contributor-gu
 npm test
 ```
 
-The validation checks the active build, model-version pages, and version manifest for JavaScript syntax errors, unresolved merge conflicts, missing links, and required watch-face keys.
+The validation checks the active build, model-version pages, version manifest, required watch-face keys, and watch-face catalog consistency.
 
 ## Development Workflow
 
-Use a branch for every meaningful change:
+Use a branch and pull request for every meaningful change. See [CONTRIBUTING.md](CONTRIBUTING.md) for contributor expectations and [docs/github-workflow.md](docs/github-workflow.md) for the command-level workflow.
 
-```sh
-git switch -c short-description
-# edit files
-npm test
-git add .
-git commit -m "Describe the change"
-git push -u origin short-description
-gh pr create --fill
-```
+## Documentation
 
-See [docs/github-workflow.md](docs/github-workflow.md) for the project workflow and GitHub concepts.
+Start with [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Release Readiness
 
