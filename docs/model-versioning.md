@@ -4,6 +4,8 @@ World Clock keeps the active working page separate from model-version pages.
 
 The model version currently under review can be refreshed while that model is still active. Once work moves to a newer model, the previous model page should be treated as frozen.
 
+Before creating or refreshing a model page, read `docs/model-and-contributor-guide.md` for face fidelity, SVG, interaction, and QA requirements.
+
 ## Files
 
 - `world-clock.html`: active working build.
