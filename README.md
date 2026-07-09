@@ -19,10 +19,20 @@ World Clock is a standalone HTML/SVG gallery of detailed watch and clock faces. 
 ## Open Locally
 
 ```sh
-open world-clock.html
+open index.html
 ```
 
-The project can also run from the [GitHub Pages demo](https://christopherrbrown3.github.io/world-clock/) after Pages is enabled.
+Use `index.html` to choose between the active build and frozen snapshots. Open `world-clock.html` directly when working on the active version.
+
+## Model Snapshots
+
+The project keeps immutable AI-model snapshots as separate standalone HTML pages under `versions/`.
+
+- Active build: [world-clock.html](world-clock.html)
+- Codex 5.5 snapshot: [versions/codex-5.5.html](versions/codex-5.5.html)
+- Claude Opus 4.8 snapshot: [versions/claude-opus-4.8.html](versions/claude-opus-4.8.html)
+
+See [docs/model-versioning.md](docs/model-versioning.md) for the snapshot workflow and the future Codex 5.6 plan.
 
 ## Validate
 
@@ -30,7 +40,7 @@ The project can also run from the [GitHub Pages demo](https://christopherrbrown3
 npm test
 ```
 
-The validation checks the standalone HTML file for JavaScript syntax errors, unresolved merge conflicts, and required watch-face keys.
+The validation checks the active build, frozen snapshots, and version manifest for JavaScript syntax errors, unresolved merge conflicts, missing links, and required watch-face keys.
 
 ## Development Workflow
 
