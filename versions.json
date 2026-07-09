@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "active": {
+    "id": "working-build",
+    "label": "Active working build",
+    "file": "world-clock.html",
+    "status": "development"
+  },
+  "snapshots": [
+    {
+      "id": "codex-5.5",
+      "label": "Codex 5.5",
+      "file": "versions/codex-5.5.html",
+      "snapshotDate": "2026-07-09",
+      "notes": "Baseline public-release version produced with Codex 5.5."
+    },
+    {
+      "id": "claude-opus-4.8",
+      "label": "Claude Opus 4.8",
+      "file": "versions/claude-opus-4.8.html",
+      "snapshotDate": "2026-06-30",
+      "notes": "Imported standalone HTML version supplied for benchmark viewing."
+    }
+  ]
+}
