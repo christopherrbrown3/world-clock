@@ -10448,6 +10448,46 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.swatch = () => "";
   FIDELITY_OVERLAYS.swatch = () => "";
 
+  // ───────────────── Braun BN0021BKBKG ─────────────────
+  // Reference object: the 38 mm BN0021 black-dial / black-leather quartz
+  // model. Its Dieter-Rams-derived design is flat, sparse and matte rather
+  // than a large polished generic dress-watch.
+  FACES.braun = {
+    name: "Braun BN0021",
+    cadence: "tick",
+    render() {
+      const id = "bn0021";
+      let numerals = "", ticks = "";
+      for (let hour = 1; hour <= 12; hour++) {
+        const a = hour / 12 * Math.PI * 2, [x, y] = P(a, 48.7);
+        numerals += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="${hour === 12 || hour === 6 ? "8.25" : "7.6"}" font-weight="400" fill="#f2f3f3">${hour}</text>`;
+      }
+      for (let minute = 0; minute < 60; minute++) {
+        const a = minute / 60 * Math.PI * 2, [x1, y1] = P(a, 62.5), [x2, y2] = P(a, minute % 5 === 0 ? 57.1 : 59.4);
+        ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#f1f2f1" stroke-width="${minute % 5 === 0 ? "0.9" : "0.38"}" opacity="${minute % 5 === 0 ? "1" : "0.82"}"/>`;
+      }
+      return `<defs>${caseDefs(id, "steel")}
+        <linearGradient id="bn-leather-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#343638"/><stop offset="40%" stop-color="#090a0b"/><stop offset="72%" stop-color="#1d1f20"/><stop offset="100%" stop-color="#020303"/></linearGradient>
+        <linearGradient id="bn-steel-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#f7f9f8"/><stop offset="30%" stop-color="#abb4b9"/><stop offset="55%" stop-color="#f1f3f2"/><stop offset="100%" stop-color="#7e898f"/></linearGradient>
+        <linearGradient id="bn-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.12"/><stop offset="48%" stop-color="#fff" stop-opacity="0.02"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <radialGradient id="bn-dial-${id}" cx="47%" cy="30%" r="84%"><stop offset="0%" stop-color="#17191b"/><stop offset="66%" stop-color="#070809"/><stop offset="100%" stop-color="#010102"/></radialGradient>
+        <clipPath id="bn-dialclip-${id}"><circle cx="100" cy="100" r="64.3"/></clipPath>
+      </defs>
+      <!-- Tapered black leather and restrained lugs around the thin 38 mm case. -->
+      <path d="M68 0 H132 L138 44 H62 Z M62 156 H138 L132 200 H68 Z" fill="url(#bn-leather-${id})" stroke="#050607" stroke-width="0.48"/><path d="M72 6 H128 M69 20 H131 M66 34 H134 M66 166 H134 M69 180 H131 M72 194 H128" stroke="#505356" stroke-width="0.4" opacity="0.42"/>
+      <path d="M53 59 L60 39 Q66 38 80 49 L86 55 Z M147 59 L140 39 Q134 38 120 49 L114 55 Z M53 141 L60 161 Q66 162 80 151 L86 145 Z M147 141 L140 161 Q134 162 120 151 L114 145 Z" fill="url(#bn-steel-${id})" stroke="#69747a" stroke-width="0.4"/>
+      <circle cx="100" cy="100" r="76.2" fill="url(#bn-steel-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="75.3" fill="none" stroke="url(#rim-${id})" stroke-width="0.72"/><circle cx="100" cy="100" r="70.1" fill="#c5cdd0"/><circle cx="100" cy="100" r="68.4" fill="url(#bn-steel-${id})"/><circle cx="100" cy="100" r="64.3" fill="url(#bn-dial-${id})"/>
+      <!-- Understated grooved crown at three. -->
+      <rect x="170.7" y="96.8" width="6.3" height="6.4" rx="0.9" fill="url(#bn-steel-${id})"/><circle cx="181.8" cy="100" r="4.6" fill="url(#bn-steel-${id})" stroke="#667177" stroke-width="0.45"/><path d="M179.2 97.1 V102.9 M180.5 96.2 V103.8 M181.8 95.9 V104.1 M183.1 96.2 V103.8 M184.4 97.1 V102.9" stroke="#677177" stroke-width="0.42"/>
+      <g clip-path="url(#bn-dialclip-${id})">
+        ${ticks}${numerals}<text x="100" y="70.2" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="5.7" font-weight="700" letter-spacing="-0.38" fill="#f0f2f1">BRΛUN</text><path d="M43 47 H87 L43 95 Z" fill="url(#bn-glass-${id})" opacity="0.45"/>
+      </g>
+      <g class="hand-hour"><rect x="98.25" y="69" width="3.5" height="36.2" rx="1.65" fill="#f4f5f4"/></g><g class="hand-min"><rect x="98.85" y="39.5" width="2.3" height="65.8" rx="1.1" fill="#f4f5f4"/></g><g class="hand-sec"><line x1="100" y1="116.8" x2="100" y2="36.4" stroke="#f2c400" stroke-width="0.92"/><line x1="100" y1="113.5" x2="100" y2="123.2" stroke="#f2c400" stroke-width="1.1"/></g><circle cx="100" cy="100" r="3.35" fill="#f2c400"/><circle cx="100" cy="100" r="1.2" fill="#8c7100"/>`;
+    }
+  };
+  LOGOS.braun = () => "";
+  FIDELITY_OVERLAYS.braun = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
