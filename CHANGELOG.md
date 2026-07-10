@@ -19,6 +19,7 @@ Notable project changes will be tracked here.
 - Rebuilt the Patek Philippe Calatrava face against the 6119R-001, with its Clous de Paris bezel, silvery grained dial, railway track, obus markers, dauphine hands, and manually wound small seconds.
 - Rebuilt the Cartier Tank face against the current Tank Louis Cartier WGTA0342 small quartz model, with its slender yellow-gold brancards, silver-grained Roman dial, chemin-de-fer, blued sword hands, alligator strap, and sapphire cabochon crown.
 - Rebuilt the Jaeger-LeCoultre Reverso face against the current Reverso Classic Monoface Small Seconds Q3868520, with its slim steel reversible case, triple gadroons, vertically brushed and coin-stack guilloché dial, blued stick hands, and six-o’clock small seconds.
+- Rebuilt the Omega Seamaster Diver 300M face against the current 210.30.42.20.03.001, with its five-link bracelet, lyre lugs, blue ceramic wave dial and bezel, helium valve, six-o’clock date, skeleton handset, and lollipop seconds hand.
 - Added a simple version picker and model-version pages for Codex 5.5 and Claude Opus 4.8.
 - Refreshed the Codex 5.5 checkpoint with improved page chrome for the active world clock.
 - Added model and contributor guidance for future AI model runs and reference-driven SVG face work.
