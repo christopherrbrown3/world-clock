@@ -16,6 +16,7 @@ Notable project changes will be tracked here.
 - Rebuilt the Omega Speedmaster Professional face against the current Hesalite Moonwatch ref. 310.30.42.50.01.001, with its asymmetric lyre-lug case, pump pushers, printed stepped dial, DOT-over-90 tachymeter, 3 Hz track, and authentic running-seconds behavior.
 - Rebuilt the Patek Philippe Nautilus face against the current white-gold 5811/1G-001, including its rounded-octagonal porthole case, integrated links, blue-black embossed dial, framed date, and white-gold handset.
 - Rebuilt the Audemars Piguet Royal Oak face against the current 15510ST.OO.1320ST.06, with a circular Grande Tapisserie dial, paired slotted bezel screws, integrated links, central sweep seconds, and dark framed date.
+- Rebuilt the Patek Philippe Calatrava face against the 6119R-001, with its Clous de Paris bezel, silvery grained dial, railway track, obus markers, dauphine hands, and manually wound small seconds.
 - Added a simple version picker and model-version pages for Codex 5.5 and Claude Opus 4.8.
 - Refreshed the Codex 5.5 checkpoint with improved page chrome for the active world clock.
 - Added model and contributor guidance for future AI model runs and reference-driven SVG face work.
