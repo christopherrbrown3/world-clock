@@ -9487,6 +9487,87 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
     timexindiglo: () => ``
   };
 
+  // ───────────────── Patek Philippe Calatrava ─────────────────
+  // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
+  // bezel and manually wound small seconds at six.
+  FACES.calatrava = {
+    name: "Patek Philippe Calatrava",
+    cadence: "sweep",
+    render() {
+      const id = "cala6119";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+
+      // Fine rose-gold hobnails form the iconic single guilloché bezel band.
+      let hobnails = "";
+      for (let i = 0; i < 120; i++) {
+        const deg = i * 3;
+        const [x, y] = at(deg, 86.1);
+        const s = i % 2 ? 1.42 : 1.56;
+        hobnails += `<polygon points="${x.toFixed(1)},${(y - s).toFixed(1)} ${(x + s).toFixed(1)},${y.toFixed(1)} ${x.toFixed(1)},${(y + s).toFixed(1)} ${(x - s).toFixed(1)},${y.toFixed(1)}" fill="${i % 2 ? "#fbd5ad" : "#aa5d3e"}" stroke="#82402d" stroke-width="0.2" transform="rotate(${deg + 45} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+      }
+
+      let railway = "", pearls = "";
+      for (let minute = 0; minute < 60; minute++) {
+        const deg = minute * 6;
+        const [x1, y1] = at(deg, 75.2);
+        const [x2, y2] = at(deg, minute % 5 === 0 ? 70.2 : 72.5);
+        railway += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#25201b" stroke-width="${minute % 5 === 0 ? 0.82 : 0.45}" opacity="0.9"/>`;
+        if (minute % 5 === 0) {
+          const [px, py] = at(deg, 77.8);
+          pearls += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="1.12" fill="url(#rose-metal-${id})" stroke="#9c5839" stroke-width="0.28"/>`;
+        }
+      }
+
+      let markers = "";
+      for (let hour = 1; hour < 12; hour++) {
+        const deg = hour * 30;
+        const [x, y] = at(deg, 59.4);
+        markers += `<g transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"><path d="M${(x - 2.35).toFixed(1)} ${(y + 6.65).toFixed(1)} L${(x - 2.35).toFixed(1)} ${(y - 3.7).toFixed(1)} L${x.toFixed(1)} ${(y - 7.55).toFixed(1)} L${(x + 2.35).toFixed(1)} ${(y - 3.7).toFixed(1)} L${(x + 2.35).toFixed(1)} ${(y + 6.65).toFixed(1)} L${x.toFixed(1)} ${(y + 4.15).toFixed(1)} Z" fill="url(#rose-metal-${id})" stroke="#a35e3e" stroke-width="0.28"/><path d="M${x.toFixed(1)} ${(y - 7.55).toFixed(1)} L${(x + 2.35).toFixed(1)} ${(y - 3.7).toFixed(1)} L${(x + 2.35).toFixed(1)} ${(y + 6.65).toFixed(1)} L${x.toFixed(1)} ${(y + 4.15).toFixed(1)} Z" fill="#9e5235" opacity="0.55"/></g>`;
+      }
+      markers += `<g><path d="M91.2 33.8 H97.0 L96.4 48.3 H91.8 Z" fill="url(#rose-metal-${id})" stroke="#a35e3e" stroke-width="0.28"/><path d="M103.0 33.8 H108.8 L108.2 48.3 H103.6 Z" fill="url(#rose-metal-${id})" stroke="#a35e3e" stroke-width="0.28"/><path d="M94.1 34.1 L96.4 48.3 L91.8 48.3 Z" fill="#9e5235" opacity="0.54"/><path d="M105.9 34.1 L108.2 48.3 L103.6 48.3 Z" fill="#9e5235" opacity="0.54"/></g>`;
+
+      let smallTicks = "";
+      for (let tick = 0; tick < 60; tick++) {
+        const deg = tick * 6;
+        const [x1, y1] = at(deg, 14.2, 100, 136);
+        const [x2, y2] = at(deg, tick % 5 === 0 ? 10.8 : 12.35, 100, 136);
+        smallTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#59463b" stroke-width="${tick % 5 === 0 ? 0.72 : 0.34}"/>`;
+      }
+
+      let crownGrooves = "";
+      for (let x = 188.4; x <= 197.2; x += 1.7) {
+        crownGrooves += `<line x1="${x.toFixed(1)}" y1="94.5" x2="${x.toFixed(1)}" y2="105.5" stroke="#9a5538" stroke-width="0.58"/><line x1="${(x + 0.4).toFixed(1)}" y1="94.6" x2="${(x + 0.4).toFixed(1)}" y2="105.4" stroke="#ffe0bd" stroke-width="0.25" opacity="0.62"/>`;
+      }
+
+      const dialPrint = `<g class="calatrava-print"><text x="100" y="68.4" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.5" font-weight="600" letter-spacing="0.14" fill="#1b1815">PATEK PHILIPPE</text><text x="100" y="74.6" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.85" font-weight="500" letter-spacing="0.68" fill="#1b1815">GENEVE</text><text x="100" y="173.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.1" font-weight="600" letter-spacing="0.4" fill="#4a352c">SWISS</text></g>`;
+
+      return `<defs>${caseDefs(id, "rose")}
+        <radialGradient id="silver-dial-${id}" cx="45%" cy="35%" r="82%"><stop offset="0%" stop-color="#fffdf7"/><stop offset="56%" stop-color="#f1eee6"/><stop offset="100%" stop-color="#d7d0c4"/></radialGradient>
+        <linearGradient id="rose-metal-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffe8c4"/><stop offset="34%" stop-color="#e6a66e"/><stop offset="62%" stop-color="#b76948"/><stop offset="100%" stop-color="#7d3b2b"/></linearGradient>
+        <linearGradient id="rose-polish-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#fff1da"/><stop offset="26%" stop-color="#dd9764"/><stop offset="48%" stop-color="#ffddb8"/><stop offset="76%" stop-color="#9c5137"/><stop offset="100%" stop-color="#efb37d"/></linearGradient>
+        <linearGradient id="cala-glass-${id}" x1="0" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.24"/><stop offset="39%" stop-color="#ffffff" stop-opacity="0.045"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <clipPath id="cala-dialclip-${id}"><circle cx="100" cy="100" r="78"/></clipPath></defs>
+        <!-- Glossy brown alligator strap, seen only where it meets the four lugs. -->
+        <path d="M73 0 H127 L135 32 H65 Z" fill="#4e2419" stroke="#2b120d" stroke-width="0.65"/><path d="M73 168 H127 L135 200 H65 Z" fill="#4e2419" stroke="#2b120d" stroke-width="0.65"/><path d="M67 14 H133 M65 25 H135 M67 176 H133 M65 187 H135" stroke="#9b6144" stroke-width="0.75" opacity="0.62"/>
+        <!-- Four slender sculpted lugs of the 6119R case. -->
+        <path d="M65 48 L56 17 Q61 12 76 12 L88 37 Z" fill="url(#rose-polish-${id})" stroke="#8a432f" stroke-width="0.45"/><path d="M135 48 L144 17 Q139 12 124 12 L112 37 Z" fill="url(#rose-polish-${id})" stroke="#8a432f" stroke-width="0.45"/><path d="M65 152 L56 183 Q61 188 76 188 L88 163 Z" fill="url(#rose-polish-${id})" stroke="#8a432f" stroke-width="0.45"/><path d="M135 152 L144 183 Q139 188 124 188 L112 163 Z" fill="url(#rose-polish-${id})" stroke="#8a432f" stroke-width="0.45"/>
+        <circle cx="100" cy="100" r="91.5" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="90.5" fill="none" stroke="url(#rim-${id})" stroke-width="1.0"/><circle cx="100" cy="100" r="88.4" fill="#a8583a"/><circle cx="100" cy="100" r="87.7" fill="url(#rose-polish-${id})"/>
+        <!-- Clous de Paris bezel: tight pyramidal ring rather than oversized diamonds. -->
+        ${hobnails}<circle cx="100" cy="100" r="80.4" fill="url(#rose-polish-${id})" stroke="#995039" stroke-width="0.62"/><circle cx="100" cy="100" r="78.1" fill="url(#silver-dial-${id})" stroke="#c18a61" stroke-width="0.55"/>
+        <g clip-path="url(#cala-dialclip-${id})">${railway}${pearls}${markers}${dialPrint}
+          <!-- Manually wound small-seconds register at six. -->
+          <circle cx="100" cy="136" r="15.2" fill="#f8f5ed" stroke="#c48a61" stroke-width="0.72"/>${smallTicks}<g class="hand-subsec" data-pivot="100 136"><line x1="100" y1="141.7" x2="100" y2="122.7" stroke="#82503a" stroke-width="0.92"/><circle cx="100" cy="136" r="1.45" fill="#a76041"/></g>
+          <ellipse cx="75" cy="60" rx="50" ry="24" fill="url(#cala-glass-${id})" transform="rotate(-26 75 60)"/></g>
+        <!-- Small fluted crown at three; fully visible in the fixed viewBox. -->
+        <rect x="179" y="96.8" width="8.4" height="6.4" rx="1.05" fill="url(#rose-polish-${id})"/><circle cx="193" cy="100" r="5.8" fill="url(#rose-metal-${id})" stroke="#85402e" stroke-width="0.55"/>${crownGrooves}<circle cx="193" cy="100" r="5.8" fill="none" stroke="#ffe1bc" stroke-width="0.3" opacity="0.65"/>
+        <g class="hand-hour"><path d="M100 105 L96.2 66 L100 56 L103.8 66 L103.8 105 Z" fill="url(#rose-metal-${id})" stroke="#88432f" stroke-width="0.38"/><path d="M100 56 L103.8 66 L100 99 Z" fill="#88432f" opacity="0.72"/></g><g class="hand-min"><path d="M100 106 L97.45 42 L100 31.5 L102.55 42 L102.55 106 Z" fill="url(#rose-metal-${id})" stroke="#88432f" stroke-width="0.38"/><path d="M100 31.5 L102.55 42 L100 100 Z" fill="#88432f" opacity="0.72"/></g><circle cx="100" cy="100" r="3.45" fill="url(#rose-metal-${id})" stroke="#85402e" stroke-width="0.42"/><circle cx="100" cy="100" r="1.2" fill="#ffe0b7"/>`;
+    }
+  };
+  LOGOS.calatrava = () => "";
+
   // ───────────────── Audemars Piguet Royal Oak ─────────────────
   // Reference object: Royal Oak Selfwinding 15510ST.OO.1320ST.06 (41 mm steel).
   // Its Calibre 4302 has a central seconds hand, date, and no sub-registers.
