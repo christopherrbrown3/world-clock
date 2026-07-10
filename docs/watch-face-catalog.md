@@ -36,7 +36,7 @@ Total faces: 62.
 | `moonphase` | Blancpain Villeret Quantième Complet | `sweep` |
 | `richardmille` | Richard Mille RM 011 Felipe Massa | `sweep` |
 | `blackbay58` | TUDOR Black Bay Fifty-Eight M79030N | `sweep` |
-| `navitimer` | Breitling Navitimer | `sweep` |
+| `navitimer` | Breitling Navitimer B01 Chronograph 43 | `sweep` |
 | `elprimero` | Zenith Chronomaster El Primero | `sweep` |
 | `overseas` | Vacheron Constantin Overseas | `sweep` |
 | `bigbang` | Hublot Big Bang | `sweep` |

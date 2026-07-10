@@ -11085,6 +11085,113 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.blackbay58 = () => "";
   FIDELITY_OVERLAYS.blackbay58 = () => "";
 
+  // ───────────────── Breitling Navitimer B01 Chronograph 43 ─────────────────
+  // Reference: AB0138241G1P1, the 2022 steel/silver panda with black alligator
+  // strap, AOPA wings, slide-rule bezel and black B01 tri-compax registers.
+  FACES.navitimer = {
+    name: "Breitling Navitimer B01 Chronograph 43",
+    cadence: "sweep",
+    render() {
+      const id = "naviab0138241g1p1";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const labelRotation = (deg) => deg > 90 && deg < 270 ? deg + 180 : deg;
+      let teeth = "", cScale = "", dScale = "", chapter = "", markers = "", stitches = "";
+
+      // A Navitimer's circular C and D scales are logarithmic rather than a
+      // decorative ordinary minute ring. Retaining their progression makes the
+      // black flight-computer bezel read as the actual AB0138241G1P1 design.
+      for (let i = 0; i < 180; i++) {
+        const deg = i * 2, [x1, y1] = at(deg, 79.45), [x2, y2] = at(deg, 76.15);
+        teeth += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 2 ? "#f4f5f2" : "#637077"}" stroke-width="0.48" opacity="0.73"/>`;
+      }
+      for (let value = 10; value <= 100; value++) {
+        const deg = Math.log10(value / 10) * 360, major = value % 10 === 0 || [12, 15, 25, 50].includes(value);
+        const [x1, y1] = at(deg, 74.05), [x2, y2] = at(deg, major ? 68.1 : 70.85);
+        cScale += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${major ? "#f5f5f0" : "#c7c9c6"}" stroke-width="${major ? "0.70" : "0.33"}" opacity="${major ? "0.96" : "0.72"}"/>`;
+      }
+      for (const value of [10, 12, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90]) {
+        const deg = Math.log10(value / 10) * 360, [x, y] = at(deg, 71.0), red = value === 10 || value === 60;
+        cScale += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${[10,20,50].includes(value) ? "4.25" : "3.42"}" font-weight="700" fill="${red ? "#cd2529" : "#f4f4ed"}" transform="rotate(${labelRotation(deg).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${value}</text>`;
+      }
+      for (let value = 10; value <= 100; value++) {
+        const deg = Math.log10(value / 10) * 360, major = value % 10 === 0 || [12,15,25,50].includes(value);
+        const [x1, y1] = at(deg, 64.0), [x2, y2] = at(deg, major ? 59.3 : 61.5);
+        dScale += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${major ? "#202426" : "#4c5051"}" stroke-width="${major ? "0.63" : "0.28"}" opacity="${major ? "0.92" : "0.68"}"/>`;
+      }
+      for (const value of [10,12,15,20,25,30,40,50,60,80]) {
+        const deg = Math.log10(value / 10) * 360, [x, y] = at(deg, 62.0);
+        dScale += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="2.82" font-weight="700" fill="#26292a" transform="rotate(${labelRotation(deg).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${value}</text>`;
+      }
+      for (const [word, deg] of [["MPH",29],["KM",84],["NAUT.",148],["STAT.",217]]) {
+        const [x, y] = at(deg, 58.2);
+        dScale += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.68" font-weight="700" fill="#ba2528" transform="rotate(${labelRotation(deg).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${word}</text>`;
+      }
+      for (const deg of [0, 122, 241]) {
+        const [x1, y1] = at(deg, 66.8), [x2, y2] = at(deg, 61.6);
+        dScale += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} L${(x2 - 1.65).toFixed(1)} ${(y2 + 1.9).toFixed(1)} L${(x2 + 1.65).toFixed(1)} ${(y2 + 1.9).toFixed(1)} Z" fill="#ca2c2c"/>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const deg = i * 6, [x1, y1] = at(deg, 56.6), [x2, y2] = at(deg, i % 5 === 0 ? 53.55 : 55.0);
+        chapter += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#1a1c1d" stroke-width="${i % 5 === 0 ? "0.70" : "0.31"}" opacity="0.85"/>`;
+      }
+      for (let h = 1; h < 12; h++) {
+        if ([3,6,9].includes(h)) continue;
+        const deg = h * 30, [x, y] = at(deg, 46.4);
+        markers += `<g transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x - 1.4).toFixed(1)}" y="${(y - 5.1).toFixed(1)}" width="2.8" height="10.2" rx="0.55" fill="url(#navi-metal-${id})" stroke="#6c7579" stroke-width="0.32"/><rect x="${(x - 0.72).toFixed(1)}" y="${(y - 3.88).toFixed(1)}" width="1.44" height="7.76" rx="0.32" fill="#e2e8c9"/></g>`;
+      }
+      markers += `<g><rect x="92.0" y="47.0" width="3.1" height="10.2" rx="0.5" fill="url(#navi-metal-${id})" stroke="#6c7579" stroke-width="0.32"/><rect x="104.9" y="47.0" width="3.1" height="10.2" rx="0.5" fill="url(#navi-metal-${id})" stroke="#6c7579" stroke-width="0.32"/><rect x="92.72" y="48.1" width="1.65" height="7.95" rx="0.32" fill="#e2e8c9"/><rect x="105.63" y="48.1" width="1.65" height="7.95" rx="0.32" fill="#e2e8c9"/></g>`;
+      for (const y of [8,18,178,188]) stitches += `<path d="M73 ${y} H127" fill="none" stroke="#eee9df" stroke-width="0.72" stroke-linecap="round" stroke-dasharray="2.05 1.75" opacity="0.9"/>`;
+
+      const counter = (cx, cy, label, numerals) => {
+        let ticks = "", words = "";
+        for (let i = 0; i < 60; i++) {
+          const deg = i * 6, [x1, y1] = at(deg, 14.2, cx, cy), [x2, y2] = at(deg, i % 5 === 0 ? 11.35 : 12.35, cx, cy);
+          ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e7e8e4" stroke-width="${i % 5 === 0 ? "0.52" : "0.28"}" opacity="0.9"/>`;
+        }
+        for (const [word, deg] of numerals) {
+          const [x, y] = at(deg, 9.2, cx, cy);
+          words += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="2.62" font-weight="700" fill="#e7e8e4">${word}</text>`;
+        }
+        return `<circle cx="${cx}" cy="${cy}" r="15.0" fill="#e2e4e2" stroke="#a7adaf" stroke-width="0.85"/><circle cx="${cx}" cy="${cy}" r="14.15" fill="url(#navi-sub-${id})" stroke="#07090a" stroke-width="0.62"/>${ticks}${words}<text x="${cx}" y="${cy + 3.15}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.22" font-weight="700" letter-spacing="0.30" fill="#e7e8e4" opacity="0.83">${label}</text>`;
+      };
+
+      return `<defs>
+        <linearGradient id="navi-steel-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#5c656a"/><stop offset="14%" stop-color="#f8f9f6"/><stop offset="36%" stop-color="#aeb7ba"/><stop offset="54%" stop-color="#ffffff"/><stop offset="78%" stop-color="#8c969a"/><stop offset="100%" stop-color="#505b60"/></linearGradient>
+        <linearGradient id="navi-metal-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#737c80"/><stop offset="24%" stop-color="#fcfcf7"/><stop offset="53%" stop-color="#a7afb1"/><stop offset="74%" stop-color="#f8f8f2"/><stop offset="100%" stop-color="#60696e"/></linearGradient>
+        <radialGradient id="navi-dial-${id}" cx="42%" cy="32%" r="81%"><stop offset="0%" stop-color="#ffffff"/><stop offset="48%" stop-color="#f1f1ed"/><stop offset="78%" stop-color="#d3d6d4"/><stop offset="100%" stop-color="#acb1b2"/></radialGradient>
+        <radialGradient id="navi-sub-${id}" cx="40%" cy="32%" r="78%"><stop offset="0%" stop-color="#35393a"/><stop offset="56%" stop-color="#171a1b"/><stop offset="100%" stop-color="#060708"/></radialGradient>
+        <linearGradient id="navi-strap-${id}" x1="0.1" y1="0" x2="0.8" y2="1"><stop offset="0%" stop-color="#454548"/><stop offset="22%" stop-color="#111214"/><stop offset="62%" stop-color="#050506"/><stop offset="100%" stop-color="#303034"/></linearGradient>
+        <linearGradient id="navi-glass-${id}" x1="0.1" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.28"/><stop offset="37%" stop-color="#fff" stop-opacity="0.052"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="navi-shadow-${id}" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.35" stdDeviation="1.72" flood-color="#172025" flood-opacity="0.36"/></filter>
+        <filter id="navi-handshadow-${id}" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="1.05" stdDeviation="0.66" flood-color="#08090a" flood-opacity="0.48"/></filter>
+        <clipPath id="navi-dialclip-${id}"><circle cx="100" cy="100" r="55.7"/></clipPath>
+      </defs>
+      <!-- Straight black alligator strap with white contrast stitching. -->
+      <path d="M67 0 H133 L141.5 44.5 H58.5 Z M58.5 155.5 H141.5 L133 200 H67 Z" fill="url(#navi-strap-${id})" stroke="#070809" stroke-width="0.78"/><path d="M73 0 H127 L134.5 43.5 H65.5 Z M65.5 156.5 H134.5 L127 200 H73 Z" fill="none" stroke="#777779" stroke-width="0.38" opacity="0.5"/>${stitches}
+      <!-- The 43 mm case has broad faceted lugs, a serrated slide-rule bezel and separate pump pushers. -->
+      <path d="M64 31 L51 21 Q45 19 38 26 L18 47 Q25 57 40 60 L66 50 Z M136 31 L149 21 Q155 19 162 26 L182 47 Q175 57 160 60 L134 50 Z M64 169 L51 179 Q45 181 38 174 L18 153 Q25 143 40 140 L66 150 Z M136 169 L149 179 Q155 181 162 174 L182 153 Q175 143 160 140 L134 150 Z" fill="url(#navi-steel-${id})" stroke="#657076" stroke-width="0.54"/>
+      <circle cx="100" cy="100" r="80.0" fill="url(#navi-steel-${id})" filter="url(#navi-shadow-${id})"/><circle cx="100" cy="100" r="79.0" fill="none" stroke="#f7f8f5" stroke-width="0.66" opacity="0.72"/><circle cx="100" cy="100" r="76.0" fill="#707a7f"/>${teeth}<circle cx="100" cy="100" r="74.6" fill="#0c0e0f" stroke="#3e464a" stroke-width="0.8"/>${cScale}<circle cx="100" cy="100" r="65.2" fill="#e7e8e3" stroke="#0d0f10" stroke-width="0.68"/>${dScale}<circle cx="100" cy="100" r="56.4" fill="#b8bdbe" stroke="#818a8e" stroke-width="0.58"/><circle cx="100" cy="100" r="55.7" fill="url(#navi-dial-${id})" stroke="#f8f8f2" stroke-width="0.46"/>
+      <g transform="rotate(-25 181 77)"><rect x="172.5" y="72.6" width="20.3" height="8.8" rx="2.75" fill="url(#navi-steel-${id})" stroke="#5f686d" stroke-width="0.56"/><rect x="182.7" y="73.85" width="9.2" height="6.3" rx="1.85" fill="#e4e7e4" opacity="0.72"/></g><g transform="rotate(25 181 123)"><rect x="172.5" y="118.6" width="20.3" height="8.8" rx="2.75" fill="url(#navi-steel-${id})" stroke="#5f686d" stroke-width="0.56"/><rect x="182.7" y="119.85" width="9.2" height="6.3" rx="1.85" fill="#e4e7e4" opacity="0.72"/></g><rect x="174.3" y="95.2" width="10.8" height="9.6" rx="1.8" fill="url(#navi-steel-${id})" stroke="#667177" stroke-width="0.4"/><circle cx="190.0" cy="100" r="9.25" fill="url(#navi-steel-${id})" stroke="#59646a" stroke-width="0.68"/><path d="M184.0 94.1 V105.9 M186.1 92.5 V107.5 M188.2 91.3 V108.7 M190.3 90.9 V109.1 M192.4 91.3 V108.7 M194.5 92.5 V107.5 M196.4 94.1 V105.9" stroke="#5e686d" stroke-width="0.68"/><path d="M185.0 94.2 V105.8 M189.2 91.5 V108.5 M193.4 92.4 V107.6 M195.2 94.0 V106.0" stroke="#fbfcf8" stroke-width="0.25" opacity="0.72"/>
+      <g clip-path="url(#navi-dialclip-${id})">
+        ${chapter}${markers}
+        <g transform="translate(100 59)" fill="url(#navi-metal-${id})" stroke="#5c6468" stroke-width="0.3"><path d="M-1.4 0 C-5.4 -3.6 -11.1 -3.3 -17 -1.4 C-12.8 -0.2 -9.5 1.25 -5.4 2.2 C-9.1 2.4 -12.4 3.65 -15.5 5.2 C-9.1 5.05 -4.75 3.95 -1.4 1.8 Z"/><path d="M1.4 0 C5.4 -3.6 11.1 -3.3 17 -1.4 C12.8 -0.2 9.5 1.25 5.4 2.2 C9.1 2.4 12.4 3.65 15.5 5.2 C9.1 5.05 4.75 3.95 1.4 1.8 Z"/><circle cx="0" cy="-3.05" r="1.28"/><rect x="-0.58" y="-2.7" width="1.16" height="5" rx="0.35"/></g>
+        <text x="100" y="67.4" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="5.1" font-weight="700" letter-spacing="0.68" fill="#1a1d1e">BREITLING</text><text x="100" y="72.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.25" font-weight="700" letter-spacing="0.92" fill="#2b2e30">1884</text>
+        ${counter(63.5,100,"SEC",[["20",120],["40",240]])}${counter(136.5,100,"MIN",[["10",120],["20",240],["30",0]])}${counter(100,136.5,"HOUR",[["3",90],["6",180],["9",270],["12",0]])}
+        <!-- Only the nine o'clock B01 running seconds is live. Chronograph counters remain stopped. -->
+        <g class="hand-subsec" data-pivot="63.5 100"><line x1="63.5" y1="105.0" x2="63.5" y2="88.2" stroke="#f6f6f0" stroke-width="0.92"/><circle cx="63.5" cy="90.1" r="1.15" fill="#f6f6f0"/><circle cx="63.5" cy="100" r="1.44" fill="#d5d8d4" stroke="#08090a" stroke-width="0.34"/></g><line x1="136.5" y1="105.1" x2="136.5" y2="88.45" stroke="#e7e8e3" stroke-width="0.9"/><circle cx="136.5" cy="100" r="1.43" fill="#d5d8d4" stroke="#08090a" stroke-width="0.34"/><line x1="100" y1="141.7" x2="100" y2="124.9" stroke="#e7e8e3" stroke-width="0.9"/><circle cx="100" cy="136.5" r="1.43" fill="#d5d8d4" stroke="#08090a" stroke-width="0.34"/>
+        <text x="100" y="116.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.34" font-weight="700" letter-spacing="0.56" fill="#1c1f20">CHRONOMETER</text><text x="100" y="121.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.15" font-weight="700" letter-spacing="0.74" fill="#1b1e20">NAVITIMER</text>
+        <rect x="93.1" y="141.3" width="13.8" height="7.45" rx="0.55" fill="#f3f3ee" stroke="#777e80" stroke-width="0.5"/><text class="date-win" data-date="dom" x="100" y="145.05" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="5.75" font-weight="700" fill="#131617">1</text><text x="88.2" y="153.3" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.95" font-weight="700" letter-spacing="0.36" fill="#272a2b">SWISS</text><text x="111.8" y="153.3" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.95" font-weight="700" letter-spacing="0.36" fill="#272a2b">MADE</text><path d="M47 53 C69 40 90 41 111 52 C82 47 64 58 47 83 Z" fill="url(#navi-glass-${id})" opacity="0.23"/>
+      </g>
+      <!-- Central red chronograph seconds is intentionally parked at 12, not driven by the normal seconds engine. -->
+      <g filter="url(#navi-handshadow-${id})"><g class="hand-hour"><path d="M100 106 L95.6 98.4 L96.55 75.5 L100 61.8 L103.45 75.5 L104.4 98.4 Z" fill="url(#navi-metal-${id})" stroke="#4d5559" stroke-width="0.54"/><path d="M100 98.7 L98.55 77.1 L100 67.6 L101.45 77.1 L101.45 98.7 Z" fill="#e1e8c8"/></g><g class="hand-min"><path d="M100 107 L97.25 98.2 L98.1 52.5 L100 37.5 L101.9 52.5 L102.75 98.2 Z" fill="url(#navi-metal-${id})" stroke="#4d5559" stroke-width="0.52"/><path d="M100 98.8 L99.0 54.1 L100 43.1 L101.0 54.1 L101.0 98.8 Z" fill="#e1e8c8"/></g></g><g class="navi-chrono-rest"><line x1="100" y1="116.3" x2="100" y2="31.8" stroke="#bd2028" stroke-width="1.0"/><path d="M100 27.2 L97.3 34.1 H102.7 Z" fill="#d3262b" stroke="#731217" stroke-width="0.4"/><circle cx="100" cy="52.4" r="1.55" fill="none" stroke="#bd2028" stroke-width="0.86"/></g><circle cx="100" cy="100" r="4.1" fill="url(#navi-metal-${id})" stroke="#4e575b" stroke-width="0.55"/><circle cx="100" cy="100" r="2.0" fill="#c6cdca" stroke="#f7f7f0" stroke-width="0.34"/><circle cx="100" cy="100" r="0.75" fill="#717a7d"/><circle cx="100" cy="100" r="55.7" fill="none" stroke="#ffffff" stroke-width="0.6" opacity="0.55"/>`;
+    }
+  };
+  LOGOS.navitimer = () => "";
+  FIDELITY_OVERLAYS.navitimer = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
