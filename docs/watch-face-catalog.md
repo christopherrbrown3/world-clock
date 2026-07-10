@@ -28,7 +28,7 @@ Total faces: 62.
 | `swatch` | Swatch Once Again | `tick` |
 | `braun` | Braun BN0021 | `tick` |
 | `mondaine` | Mondaine Swiss Railway | `mondaine` |
-| `monaco` | TAG Heuer Monaco | `sweep` |
+| `monaco` | TAG Heuer Monaco Calibre 11 | `sweep` |
 | `panerai` | Panerai Luminor | `sweep` |
 | `f1` | Rolex Trackside Clock | `sweep` |
 | `bigben` | Big Ben (Elizabeth Tower) | `tick` |
