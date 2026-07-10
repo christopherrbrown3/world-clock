@@ -11277,6 +11277,80 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.elprimero = () => "";
   FIDELITY_OVERLAYS.elprimero = () => "";
 
+  // ───────────────── Vacheron Constantin Overseas Self-Winding 4520V/210A-B128 ─────────────────
+  // Reference object: current 41 mm steel Overseas with blue lacquered sunburst
+  // dial, six-part Maltese-cross bezel, steel bracelet and a simple central
+  // seconds/date Calibre 5100 layout.
+  FACES.overseas = {
+    name: "Vacheron Constantin Overseas Self-Winding 4520V/210A-B128",
+    cadence: "sweep",
+    render() {
+      const id = "ovs4520vb128";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      let bracelet = "", bezel = "", track = "", markers = "";
+      const braceletLink = (y1, y2, w) => {
+        const x = 100 - w / 2, centre = Math.max(25, w * 0.39);
+        return `<path d="M${x.toFixed(1)} ${y1} H${(x + w).toFixed(1)} L${(x + w - 2.7).toFixed(1)} ${y2} H${(x + 2.7).toFixed(1)} Z" fill="url(#ovs-brush-${id})" stroke="#657075" stroke-width="0.48"/><path d="M${(100 - centre / 2).toFixed(1)} ${(y1 + 0.7).toFixed(1)} L${(100 + centre / 2).toFixed(1)} ${(y1 + 0.7).toFixed(1)} L${(100 + centre / 2 - 1.35).toFixed(1)} ${(y2 - 0.7).toFixed(1)} L${(100 - centre / 2 + 1.35).toFixed(1)} ${(y2 - 0.7).toFixed(1)} Z" fill="url(#ovs-polish-${id})" stroke="#899296" stroke-width="0.30"/><path d="M${(x + 3.5).toFixed(1)} ${(y1 + 1.1).toFixed(1)} V${(y2 - 1.1).toFixed(1)} M${(x + w - 3.5).toFixed(1)} ${(y1 + 1.1).toFixed(1)} V${(y2 - 1.1).toFixed(1)}" stroke="#f4f5f2" stroke-width="0.26" opacity="0.50"/>`;
+      };
+      for (const [a,b,w] of [[0,12,56],[12,25,61],[25,39,66],[39,50,70],[150,161,70],[161,175,66],[175,188,61],[188,200,56]]) bracelet += braceletLink(a,b,w);
+      // Six separately machined arcs leave the deep Maltese-cross gaps that
+      // distinguish an Overseas bezel from an ordinary round steel bezel.
+      for (let i = 0; i < 6; i++) {
+        const a = i * 60 - 24, b = i * 60 + 24;
+        const [ox1,oy1] = at(a,81.8), [ox2,oy2] = at(b,81.8), [ix2,iy2] = at(b,72.35), [ix1,iy1] = at(a,72.35);
+        bezel += `<path d="M${ox1.toFixed(1)} ${oy1.toFixed(1)} A81.8 81.8 0 0 1 ${ox2.toFixed(1)} ${oy2.toFixed(1)} L${ix2.toFixed(1)} ${iy2.toFixed(1)} A72.35 72.35 0 0 0 ${ix1.toFixed(1)} ${iy1.toFixed(1)} Z" fill="url(#ovs-metal-${id})" stroke="#58646a" stroke-width="0.65"/>`;
+        const [g1x,g1y] = at(b,82.5), [g2x,g2y] = at(b,71.0);
+        bezel += `<path d="M${g1x.toFixed(1)} ${g1y.toFixed(1)} L${g2x.toFixed(1)} ${g2y.toFixed(1)}" stroke="#354147" stroke-width="1.35" opacity="0.68"/>`;
+      }
+      for (let minute = 0; minute < 60; minute++) {
+        const deg = minute * 6, [x1,y1] = at(deg,68.7), [x2,y2] = at(deg,minute % 5 === 0 ? 64.3 : 66.4);
+        track += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${minute % 5 === 0 ? "#ecf1ed" : "#a6c4d7"}" stroke-width="${minute % 5 === 0 ? "0.66" : "0.31"}" opacity="${minute % 5 === 0 ? "0.94" : "0.72"}"/>`;
+      }
+      for (const [word,deg] of [["60",0],["15",90],["30",180],["45",270]]) {
+        const [x,y] = at(deg,60.5);
+        track += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.7" font-weight="600" fill="#d6e4ed">${word}</text>`;
+      }
+      for (let h = 1; h < 12; h++) {
+        if (h === 3) continue;
+        const deg = h * 30, [x,y] = at(deg,51.3);
+        const long = h === 6;
+        markers += `<g transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x - 1.9).toFixed(1)}" y="${(y - (long ? 7.2 : 6.2)).toFixed(1)}" width="3.8" height="${long ? "14.4" : "12.4"}" rx="0.48" fill="url(#ovs-metal-${id})" stroke="#6a777c" stroke-width="0.34"/><rect x="${(x - 0.95).toFixed(1)}" y="${(y - (long ? 5.65 : 4.75)).toFixed(1)}" width="1.9" height="${long ? "11.3" : "9.5"}" rx="0.26" fill="#b6d2dd"/></g>`;
+      }
+      markers += `<g><rect x="90.65" y="42.7" width="3.85" height="13.1" rx="0.48" fill="url(#ovs-metal-${id})" stroke="#6a777c" stroke-width="0.34"/><rect x="105.5" y="42.7" width="3.85" height="13.1" rx="0.48" fill="url(#ovs-metal-${id})" stroke="#6a777c" stroke-width="0.34"/><rect x="91.6" y="44.2" width="1.95" height="10.1" rx="0.25" fill="#b6d2dd"/><rect x="106.45" y="44.2" width="1.95" height="10.1" rx="0.25" fill="#b6d2dd"/></g>`;
+
+      return `<defs>
+        <linearGradient id="ovs-brush-${id}" x1="0.06" y1="0" x2="0.94" y2="1"><stop offset="0%" stop-color="#5d686d"/><stop offset="16%" stop-color="#e9ece9"/><stop offset="39%" stop-color="#a1aaad"/><stop offset="63%" stop-color="#f5f6f2"/><stop offset="100%" stop-color="#566168"/></linearGradient>
+        <linearGradient id="ovs-polish-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#dfe4e3"/><stop offset="26%" stop-color="#ffffff"/><stop offset="50%" stop-color="#a1abad"/><stop offset="71%" stop-color="#fcfdf9"/><stop offset="100%" stop-color="#6a7579"/></linearGradient>
+        <linearGradient id="ovs-metal-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#657177"/><stop offset="22%" stop-color="#fbfcf8"/><stop offset="48%" stop-color="#a4aeb1"/><stop offset="75%" stop-color="#f6f7f2"/><stop offset="100%" stop-color="#59656a"/></linearGradient>
+        <radialGradient id="ovs-dial-${id}" cx="42%" cy="31%" r="83%"><stop offset="0%" stop-color="#2b75ac"/><stop offset="35%" stop-color="#155c95"/><stop offset="69%" stop-color="#0a3f78"/><stop offset="100%" stop-color="#052850"/></radialGradient>
+        <radialGradient id="ovs-inner-${id}" cx="49%" cy="38%" r="82%"><stop offset="0%" stop-color="#1b629c"/><stop offset="100%" stop-color="#073968"/></radialGradient>
+        <linearGradient id="ovs-glass-${id}" x1="0.1" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.22"/><stop offset="40%" stop-color="#fff" stop-opacity="0.03"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="ovs-shadow-${id}" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.15" stdDeviation="1.68" flood-color="#111a1f" flood-opacity="0.34"/></filter>
+        <filter id="ovs-handshadow-${id}" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="1.0" stdDeviation="0.65" flood-color="#07111b" flood-opacity="0.50"/></filter>
+        <clipPath id="ovs-dialclip-${id}"><circle cx="100" cy="100" r="68.1"/></clipPath>
+      </defs>
+      <!-- Interlocking brushed/polished bracelet links echo the Maltese-cross theme. -->
+      ${bracelet}<path d="M63 44 L51 31 Q45 26 36 33 L19 51 Q28 60 43 62 L68 53 Z M137 44 L149 31 Q155 26 164 33 L181 51 Q172 60 157 62 L132 53 Z M63 156 L51 169 Q45 174 36 167 L19 149 Q28 140 43 138 L68 147 Z M137 156 L149 169 Q155 174 164 167 L181 149 Q172 140 157 138 L132 147 Z" fill="url(#ovs-brush-${id})" stroke="#626d72" stroke-width="0.52"/>
+      <circle cx="100" cy="100" r="82.2" fill="url(#ovs-brush-${id})" filter="url(#ovs-shadow-${id})"/><circle cx="100" cy="100" r="81.15" fill="none" stroke="#f4f5f1" stroke-width="0.65" opacity="0.78"/><circle cx="100" cy="100" r="81.9" fill="#526067"/>${bezel}<circle cx="100" cy="100" r="71.4" fill="#0b3d70" stroke="#d4d9d8" stroke-width="0.68"/><circle cx="100" cy="100" r="68.1" fill="url(#ovs-dial-${id})" stroke="#0a2d50" stroke-width="0.72"/>
+      <!-- The Overseas has only its naked, finely fluted crown—no chronograph pushers. -->
+      <rect x="172.9" y="95.3" width="11.4" height="9.4" rx="1.75" fill="url(#ovs-brush-${id})" stroke="#627076" stroke-width="0.4"/><circle cx="190.0" cy="100" r="9.05" fill="url(#ovs-metal-${id})" stroke="#566268" stroke-width="0.68"/><path d="M184.1 94.3 V105.7 M186.15 92.65 V107.35 M188.2 91.5 V108.5 M190.25 91.1 V108.9 M192.3 91.5 V108.5 M194.35 92.65 V107.35 M196.2 94.3 V105.7" stroke="#58656a" stroke-width="0.67"/><path d="M185.05 94.2 V105.8 M189.15 91.7 V108.3 M193.25 92.35 V107.65 M195.05 94.1 V105.9" stroke="#fbfcf8" stroke-width="0.25" opacity="0.70"/>
+      <g clip-path="url(#ovs-dialclip-${id})">
+        <circle cx="100" cy="100" r="65.9" fill="none" stroke="#8db2cb" stroke-width="0.45" opacity="0.66"/>${track}<circle cx="100" cy="100" r="56.0" fill="url(#ovs-inner-${id})" opacity="0.35"/>${markers}
+        <!-- Applied Maltese cross and the exact two-line Vacheron signature. -->
+        <g transform="translate(100 62.3)" fill="url(#ovs-metal-${id})" stroke="#90a1a5" stroke-width="0.27"><path d="M0 -5.8 L1.35 -1.45 L5.8 0 L1.35 1.45 L0 5.8 L-1.35 1.45 L-5.8 0 L-1.35 -1.45 Z"/></g><text x="100" y="72.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.72" font-weight="700" letter-spacing="0.43" fill="#e7edf0">VACHERON CONSTANTIN</text><text x="100" y="77.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.55" font-weight="600" letter-spacing="1.04" fill="#c9dbe4">GENÈVE</text>
+        <!-- White framed date aperture sits exactly at three, replacing that index. -->
+        <rect x="143.6" y="94.1" width="11.8" height="11.8" rx="0.66" fill="#d6dddd" stroke="#60737f" stroke-width="0.58"/><rect x="144.75" y="95.25" width="9.5" height="9.5" rx="0.27" fill="#f8faf6"/><text class="date-win" data-date="dom" x="149.5" y="100" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="6.8" font-weight="700" fill="#101a22">1</text><text x="88.8" y="156.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.08" font-weight="700" letter-spacing="0.35" fill="#d6e5ed">SWISS</text><text x="111.2" y="156.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.08" font-weight="700" letter-spacing="0.35" fill="#d6e5ed">MADE</text><path d="M43 51 C64 40 89 40 116 53 C84 46 62 57 43 87 Z" fill="url(#ovs-glass-${id})" opacity="0.29"/>
+      </g>
+      <!-- Gold-toned faceted hands with blue lume and the slim central seconds hand. -->
+      <g filter="url(#ovs-handshadow-${id})"><g class="hand-hour"><path d="M100 106 L96.35 98.4 L97.05 76.1 L100 61.5 L102.95 76.1 L103.65 98.4 Z" fill="url(#ovs-metal-${id})" stroke="#5e6a70" stroke-width="0.54"/><path d="M100 98.7 L98.25 77.9 L100 67.2 L101.75 77.9 L101.75 98.7 Z" fill="#b6d2dd"/></g><g class="hand-min"><path d="M100 107 L98.1 98.3 L98.7 50.8 L100 35.8 L101.3 50.8 L101.9 98.3 Z" fill="url(#ovs-metal-${id})" stroke="#5e6a70" stroke-width="0.52"/><path d="M100 98.8 L99.22 52.6 L100 41.2 L100.78 52.6 L100.78 98.8 Z" fill="#b6d2dd"/></g><g class="hand-sec"><line x1="100" y1="118.0" x2="100" y2="38.1" stroke="#e4ecec" stroke-width="0.92"/><line x1="100" y1="111.0" x2="100" y2="124.2" stroke="#e4ecec" stroke-width="1.1"/><circle cx="100" cy="54.0" r="1.38" fill="none" stroke="#e4ecec" stroke-width="0.7"/></g></g><circle cx="100" cy="100" r="4.0" fill="url(#ovs-metal-${id})" stroke="#55636a" stroke-width="0.56"/><circle cx="100" cy="100" r="1.82" fill="#c7d5d8" stroke="#f8faf6" stroke-width="0.32"/><circle cx="100" cy="100" r="0.68" fill="#708086"/><circle cx="100" cy="100" r="68.1" fill="none" stroke="#eaf0ef" stroke-width="0.55" opacity="0.45"/>`;
+    }
+  };
+  LOGOS.overseas = () => "";
+  FIDELITY_OVERLAYS.overseas = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
