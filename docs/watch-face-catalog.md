@@ -32,7 +32,7 @@ Total faces: 62.
 | `panerai` | Panerai Luminor Marina PAM03312 | `sweep` |
 | `f1` | Rolex Trackside Clock | `sweep` |
 | `bigben` | Big Ben (Elizabeth Tower) | `tick` |
-| `seiko5` | Seiko 5 Sports | `sweep` |
+| `seiko5` | Seiko 5 Sports SRPD51 | `sweep` |
 | `moonphase` | Blancpain Villeret | `sweep` |
 | `richardmille` | Richard Mille RM 011 | `sweep` |
 | `blackbay58` | Tudor Black Bay 58 | `sweep` |

@@ -34,6 +34,7 @@ Notable project changes will be tracked here.
 - Rebuilt the Mondaine stop2go face against the Vegan Grape Leather 41 mm MST.4101B.LBV.2SE, with its crown-less brushed-steel case, stitched black strap, segmented railway scale, squared SBB hands, lollipop-tipped red seconds hand, quarter-second steps, and correct 58-second pause.
 - Rebuilt the TAG Heuer Monaco face against the Calibre 11 CAW211P.FC6356, with its blue opaline square dial, left crown, right pushers, perforated racing strap, square silver registers, framed six-o'clock date, static red chronograph needle, and live three-o'clock small seconds.
 - Rebuilt the Panerai Luminor face against the current Luminor Marina PAM03312, with its 44 mm brushed-steel case, polished bezel, crown-protecting bridge, black sandwich dial, enlarged three-o'clock date, rhodium nine-o'clock small seconds, and black alligator strap.
+- Rebuilt the Seiko 5 Sports face against the SRPD51K1, with its three-link steel bracelet, knurled blue one-way bezel, four-o'clock crown, dimensional Lumibrite markers, split day/date window, and Caliber 4R36 sweep seconds.
 - Added a simple version picker and model-version pages for Codex 5.5 and Claude Opus 4.8.
 - Refreshed the Codex 5.5 checkpoint with improved page chrome for the active world clock.
 - Added model and contributor guidance for future AI model runs and reference-driven SVG face work.
