@@ -9969,6 +9969,90 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   };
   LOGOS.portugieser = () => "";
 
+  // ───────────────── Rolex Cosmograph Daytona ─────────────────
+  // Reference object: Cosmograph Daytona 126500LN-0001, Oystersteel with white
+  // dial, black counter rings, Oyster bracelet and black Cerachrom tachymeter bezel.
+  FACES.daytona = {
+    name: "Rolex Daytona",
+    cadence: "sweep",
+    render() {
+      const id = "day126";
+      const braceletRow = (y, width, height) => {
+        const x = 100 - width / 2;
+        return `<g><rect x="${x.toFixed(1)}" y="${y}" width="${width}" height="${height}" rx="1.7" fill="url(#day-brush-${id})" stroke="#5f6970" stroke-width="0.42"/><rect x="${(x + 2).toFixed(1)}" y="${(y + 0.8).toFixed(1)}" width="${(width * 0.28).toFixed(1)}" height="${(height - 1.6).toFixed(1)}" rx="1.05" fill="url(#day-brush-${id})"/><rect x="${(x + width * 0.31).toFixed(1)}" y="${(y + 0.55).toFixed(1)}" width="${(width * 0.38).toFixed(1)}" height="${(height - 1.1).toFixed(1)}" rx="1.2" fill="url(#day-polish-${id})"/><rect x="${(x + width * 0.72).toFixed(1)}" y="${(y + 0.8).toFixed(1)}" width="${(width * 0.26).toFixed(1)}" height="${(height - 1.6).toFixed(1)}" rx="1.05" fill="url(#day-brush-${id})"/></g>`;
+      };
+      const bracelet = braceletRow(0, 67, 14) + braceletRow(14, 73, 14) + braceletRow(28, 80, 13)
+        + braceletRow(159, 80, 13) + braceletRow(172, 73, 14) + braceletRow(186, 67, 14);
+      const tachyVals = [400,300,240,200,180,160,140,130,120,110,100,90,80,70,60];
+      let tachy = "", tachyTicks = "";
+      for (const value of tachyVals) {
+        const deg = (21600 / value) % 360, a = deg * Math.PI / 180, [x,y] = P(a, 75.8);
+        const flip = deg > 90 && deg < 270 ? 180 : 0;
+        tachy += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" transform="rotate(${(deg + flip).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})" font-family="'Arial Narrow', Arial, sans-serif" font-size="${value >= 200 ? 4.55 : 5.1}" font-weight="700" fill="#ded8c9" stroke="#050505" stroke-width="0.3" paint-order="stroke">${value}</text>`;
+        const [x1,y1] = P(a, 82.1), [x2,y2] = P(a, 78.7);
+        tachyTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#ddd7c8" stroke-width="0.74"/>`;
+      }
+      let chapter = "";
+      for (let i = 0; i < 60; i++) {
+        const a = i / 60 * Math.PI * 2, [x1,y1] = P(a, 62.2), [x2,y2] = P(a, i % 5 === 0 ? 57.7 : 60.2);
+        chapter += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#1e2022" stroke-width="${i % 5 === 0 ? 0.68 : 0.28}"/>`;
+      }
+      let markers = "";
+      for (let hour = 0; hour < 12; hour++) {
+        if ([0,3,6,9].includes(hour)) continue;
+        const a = hour / 12 * Math.PI * 2, [x,y] = P(a, 51.8);
+        markers += `<g transform="rotate(${hour * 30} ${x.toFixed(1)} ${y.toFixed(1)})"><path d="M${(x - 2.15).toFixed(1)} ${(y - 6.1).toFixed(1)} H${(x + 2.15).toFixed(1)} L${(x + 1.35).toFixed(1)} ${(y + 6.1).toFixed(1)} H${(x - 1.35).toFixed(1)} Z" fill="url(#day-metal-${id})" stroke="#62686b" stroke-width="0.27"/><rect x="${(x - 0.86).toFixed(1)}" y="${(y - 4.3).toFixed(1)}" width="1.72" height="8.6" rx="0.48" fill="url(#day-lume-${id})"/></g>`;
+      }
+      const subDial = (cx, cy, labels) => {
+        let s = `<circle cx="${cx}" cy="${(cy + 1.15).toFixed(1)}" r="17.8" fill="#000" opacity="0.12"/><circle cx="${cx}" cy="${cy}" r="16.1" fill="#111214" stroke="#050505" stroke-width="0.65"/><circle cx="${cx}" cy="${cy}" r="12.8" fill="url(#day-sub-${id})" stroke="#c4c5c0" stroke-width="0.4"/>`;
+        for (let r = 10.5; r >= 3; r -= 2.1) s += `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none" stroke="#c6c6c0" stroke-width="0.24" opacity="0.7"/>`;
+        for (let i = 0; i < 60; i++) {
+          const a = i / 60 * Math.PI * 2, x1 = cx + Math.sin(a) * 11.7, y1 = cy - Math.cos(a) * 11.7, x2 = cx + Math.sin(a) * (i % 5 === 0 ? 8.9 : 10.25), y2 = cy - Math.cos(a) * (i % 5 === 0 ? 8.9 : 10.25);
+          s += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#101113" stroke-width="${i % 5 === 0 ? 0.45 : 0.2}"/>`;
+        }
+        for (const [value, minute] of labels) {
+          const a = minute / 60 * Math.PI * 2, x = cx + Math.sin(a) * 7.3, y = cy - Math.cos(a) * 7.3;
+          s += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow', Arial, sans-serif" font-size="3.2" font-weight="700" fill="#161719">${value}</text>`;
+        }
+        return s;
+      };
+      const S9 = [66, 99], S3 = [134, 99], S6 = [100, 135];
+
+      return `<defs>${caseDefs(id, "steel")}
+        <linearGradient id="day-brush-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f1f4f5"/><stop offset="37%" stop-color="#99a3aa"/><stop offset="56%" stop-color="#dce2e5"/><stop offset="100%" stop-color="#657079"/></linearGradient>
+        <linearGradient id="day-polish-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#59636b"/><stop offset="38%" stop-color="#ffffff"/><stop offset="60%" stop-color="#dce2e5"/><stop offset="100%" stop-color="#606a72"/></linearGradient>
+        <linearGradient id="day-metal-${id}" x1="0.16" y1="0" x2="0.84" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="44%" stop-color="#d7dedf"/><stop offset="65%" stop-color="#879095"/><stop offset="100%" stop-color="#f3f5f4"/></linearGradient>
+        <linearGradient id="day-lume-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fbfff3"/><stop offset="100%" stop-color="#d8e7c7"/></linearGradient>
+        <radialGradient id="day-dial-${id}" cx="47%" cy="32%" r="82%"><stop offset="0%" stop-color="#ffffff"/><stop offset="62%" stop-color="#f4f3ed"/><stop offset="100%" stop-color="#deded7"/></radialGradient>
+        <radialGradient id="day-sub-${id}" cx="45%" cy="33%" r="78%"><stop offset="0%" stop-color="#fffef9"/><stop offset="100%" stop-color="#e7e6df"/></radialGradient>
+        <radialGradient id="day-bezel-${id}" cx="50%" cy="30%" r="86%"><stop offset="0%" stop-color="#252525"/><stop offset="60%" stop-color="#101010"/><stop offset="100%" stop-color="#020202"/></radialGradient>
+        <linearGradient id="day-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/><stop offset="42%" stop-color="#ffffff" stop-opacity="0.04"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <path id="day-arc-${id}" d="M83 124 A21 21 0 0 1 117 124" fill="none"/>
+        <clipPath id="day-dialclip-${id}"><circle cx="100" cy="100" r="64.8"/></clipPath>
+      </defs>
+      <!-- Three-piece Oyster bracelet and steel lugs behind the 40 mm case. -->
+      ${bracelet}
+      <path d="M45 57 L56 29 Q63 31 77 43 L84 52 Z M155 57 L144 29 Q137 31 123 43 L116 52 Z M45 143 L56 171 Q63 169 77 157 L84 148 Z M155 143 L144 171 Q137 169 123 157 L116 148 Z" fill="url(#day-polish-${id})" stroke="#657079" stroke-width="0.48"/>
+      <circle cx="100" cy="100" r="85" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="84.1" fill="none" stroke="url(#rim-${id})" stroke-width="0.82"/><circle cx="100" cy="100" r="80.2" fill="url(#day-bezel-${id})"/><circle cx="100" cy="100" r="66.6" fill="url(#day-metal-${id})"/><circle cx="100" cy="100" r="64.8" fill="url(#day-dial-${id})"/>
+      <!-- Screw-down chronograph pushers and Triplock crown at three. -->
+      <g transform="rotate(-29 174 70)"><rect x="165" y="65.5" width="18" height="8.8" rx="2" fill="url(#day-polish-${id})" stroke="#5d6870" stroke-width="0.48"/><rect x="179.8" y="67" width="4.3" height="5.8" rx="0.8" fill="#e8edef"/></g><g transform="rotate(29 174 130)"><rect x="165" y="125.7" width="18" height="8.8" rx="2" fill="url(#day-polish-${id})" stroke="#5d6870" stroke-width="0.48"/><rect x="179.8" y="127.2" width="4.3" height="5.8" rx="0.8" fill="#e8edef"/></g>
+      <rect x="180.5" y="95.8" width="6.9" height="8.4" rx="1.2" fill="url(#day-polish-${id})"/><circle cx="191.6" cy="100" r="5.9" fill="url(#day-metal-${id})" stroke="#59636b" stroke-width="0.52"/><path d="M187.7 96.4 V103.6 M189.5 95.2 V104.8 M191.3 94.5 V105.5 M193.1 95.2 V104.8 M194.9 96.4 V103.6" stroke="#56616a" stroke-width="0.48"/><path d="M188.15 96.4 V103.6 M189.95 95.2 V104.8 M191.75 94.5 V105.5 M193.55 95.2 V104.8 M195.35 96.4 V103.6" stroke="#ffffff" stroke-width="0.2" opacity="0.7"/>
+      ${tachyTicks}${tachy}<text x="100" y="22.6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="2.45" font-weight="600" letter-spacing="0.32" fill="#ded8c9">UNITS PER HOUR</text>
+      <g clip-path="url(#day-dialclip-${id})">
+        ${chapter}${markers}<rect x="37.8" y="96.7" width="7.3" height="4.6" rx="1.2" fill="url(#day-metal-${id})"/><rect x="154.9" y="96.7" width="7.3" height="4.6" rx="1.2" fill="url(#day-metal-${id})"/>
+        ${subDial(S9[0], S9[1], [[12,0],[3,15],[6,30],[9,45]])}${subDial(S3[0], S3[1], [[30,0],[10,20],[20,40]])}${subDial(S6[0], S6[1], [[60,0],[20,20],[40,40]])}
+        ${rolexCrown(100, 48, 1.22, "#171717")}${dt(100,57,"ROLEX",5.25,"#171717",700,0.94)}${dt(100,67.5,"OYSTER PERPETUAL",2.55,"#171717",600,0.42)}${dt(100,76.5,"SUPERLATIVE CHRONOMETER",2.1,"#171717",600,0.22)}${dt(100,81.2,"OFFICIALLY CERTIFIED",2.1,"#171717",600,0.28)}${dt(100,86.2,"COSMOGRAPH",2.7,"#171717",600,0.42)}
+        <text font-family="Arial, Helvetica, sans-serif" font-size="4.05" font-weight="800" letter-spacing="0.7" fill="#d52c25"><textPath href="#day-arc-${id}" startOffset="50%" text-anchor="middle">DAYTONA</textPath></text>
+        <path d="M44 47 H88 L44 96 Z" fill="url(#day-glass-${id})" opacity="0.56"/>
+      </g>
+      <!-- Calibre 4131: only the 6 o'clock small seconds runs; chronograph registers rest at zero. -->
+      <g class="hand-subsec" data-pivot="${S6[0]} ${S6[1]}"><line x1="${S6[0]}" y1="${S6[1] + 4}" x2="${S6[0]}" y2="${S6[1] - 10.5}" stroke="#17191c" stroke-width="0.88"/><circle cx="${S6[0]}" cy="${S6[1]}" r="1.35" fill="#17191c"/></g><g class="hand-chrono-hour-rest"><line x1="${S9[0]}" y1="${S9[1] + 3.5}" x2="${S9[0]}" y2="${S9[1] - 9.5}" stroke="#17191c" stroke-width="0.78"/><circle cx="${S9[0]}" cy="${S9[1]}" r="1.2" fill="#17191c"/></g><g class="hand-chrono-min-rest"><line x1="${S3[0]}" y1="${S3[1] + 3.5}" x2="${S3[0]}" y2="${S3[1] - 9.5}" stroke="#17191c" stroke-width="0.78"/><circle cx="${S3[0]}" cy="${S3[1]}" r="1.2" fill="#17191c"/></g>
+      <g class="hand-hour"><path d="M100 105 L96.1 77 L100 61 L103.9 77 L103.9 105 Z" fill="url(#day-metal-${id})" stroke="#596168" stroke-width="0.4"/><path d="M100 99 L98.15 77.5 L100 66.4 L101.85 77.5 L101.85 99 Z" fill="url(#day-lume-${id})"/></g><g class="hand-min"><path d="M100 106 L97.25 43 L100 32 L102.75 43 L102.75 106 Z" fill="url(#day-metal-${id})" stroke="#596168" stroke-width="0.36"/><path d="M100 101 L98.75 44.7 L100 37.5 L101.25 44.7 L101.25 101 Z" fill="url(#day-lume-${id})"/></g>
+      <g class="hand-chrono-rest"><line x1="100" y1="114" x2="100" y2="28.7" stroke="#17191c" stroke-width="0.8"/><line x1="100" y1="112" x2="100" y2="121" stroke="#17191c" stroke-width="1.08"/><circle cx="100" cy="100" r="2.85" fill="url(#day-metal-${id})" stroke="#596168" stroke-width="0.42"/></g><circle cx="100" cy="100" r="1" fill="#ffffff"/>`;
+    }
+  };
+  LOGOS.daytona = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
