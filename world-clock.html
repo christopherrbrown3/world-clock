@@ -10162,6 +10162,92 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   };
   LOGOS.gmt = () => "";
 
+  // ───────────────── Rolex Datejust 36 ─────────────────
+  // Reference object: Datejust 36 126233-0015. Yellow Rolesor combines a
+  // champagne sunray dial and yellow-gold fluted bezel with a five-piece
+  // Jubilee bracelet; the date sits under a modest sapphire Cyclops at three.
+  FACES.datejust = {
+    name: "Rolex Datejust",
+    cadence: "sweep",
+    render() {
+      const id = "dj126";
+      const jubileeRow = (y, width, height) => {
+        const x = 100 - width / 2, steel = width * 0.245, goldArea = width - steel * 2;
+        const gold = (goldArea - 1.2) / 3;
+        return `<g>
+          <rect x="${x.toFixed(1)}" y="${y}" width="${steel.toFixed(1)}" height="${height}" rx="1.15" fill="url(#dj-steel-${id})" stroke="#5c666d" stroke-width="0.34"/>
+          <rect x="${(x + width - steel).toFixed(1)}" y="${y}" width="${steel.toFixed(1)}" height="${height}" rx="1.15" fill="url(#dj-steel-${id})" stroke="#5c666d" stroke-width="0.34"/>
+          ${[0,1,2].map(i => { const gx = x + steel + i * (gold + 0.6); return `<rect x="${gx.toFixed(1)}" y="${(y + 0.4).toFixed(1)}" width="${gold.toFixed(1)}" height="${(height - 0.8).toFixed(1)}" rx="0.85" fill="url(#dj-gold-${id})" stroke="#896222" stroke-width="0.28"/>`; }).join("")}
+          <path d="M${(x + steel).toFixed(1)} ${(y + 1).toFixed(1)} H${(x + width - steel).toFixed(1)} M${(x + steel).toFixed(1)} ${(y + height - 1).toFixed(1)} H${(x + width - steel).toFixed(1)}" stroke="#4a3a1d" stroke-width="0.38" opacity="0.76"/>
+        </g>`;
+      };
+      const bracelet =
+        jubileeRow(0, 45, 9) + jubileeRow(9, 50, 10) + jubileeRow(19, 55, 10) + jubileeRow(29, 60, 10) + jubileeRow(39, 64, 10) +
+        jubileeRow(151, 64, 10) + jubileeRow(161, 60, 10) + jubileeRow(171, 55, 10) + jubileeRow(181, 50, 10) + jubileeRow(191, 45, 9);
+
+      let flutes = "";
+      for (let i = 0; i < 72; i++) {
+        const a0 = i / 72 * Math.PI * 2, a1 = (i + 1) / 72 * Math.PI * 2, am = (i + 0.5) / 72 * Math.PI * 2;
+        const [ox1, oy1] = P(a0, 79.3), [ox2, oy2] = P(a1, 79.3), [ix1, iy1] = P(a0, 69.5), [ix2, iy2] = P(a1, 69.5), [mx, my] = P(am, 79.3);
+        const light = i % 4 === 0 ? "#fff2bd" : i % 4 === 1 ? "#d6a43c" : i % 4 === 2 ? "#865518" : "#f2ca68";
+        flutes += `<polygon points="${ox1.toFixed(1)},${oy1.toFixed(1)} ${ox2.toFixed(1)},${oy2.toFixed(1)} ${ix2.toFixed(1)},${iy2.toFixed(1)} ${ix1.toFixed(1)},${iy1.toFixed(1)}" fill="${light}" stroke="#886023" stroke-width="0.16"/><path d="M${mx.toFixed(1)} ${my.toFixed(1)} L${((ix1 + ix2) / 2).toFixed(1)} ${((iy1 + iy2) / 2).toFixed(1)}" stroke="#fff4c8" stroke-width="0.38" opacity="0.42"/>`;
+      }
+
+      let minuteTrack = "", sunray = "", rehaut = "";
+      for (let minute = 0; minute < 60; minute++) {
+        const a = minute / 60 * Math.PI * 2, [x1, y1] = P(a, 65.2), [x2, y2] = P(a, minute % 5 === 0 ? 60.5 : 62.5);
+        minuteTrack += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#302313" stroke-width="${minute % 5 === 0 ? "0.78" : "0.36"}" opacity="${minute % 5 === 0 ? "0.94" : "0.72"}"/>`;
+        const [sx, sy] = P(a, 64.4);
+        sunray += `<line x1="100" y1="100" x2="${sx.toFixed(1)}" y2="${sy.toFixed(1)}" stroke="${minute % 2 ? "#fff4d4" : "#8c672c"}" stroke-width="0.34" opacity="${minute % 2 ? "0.047" : "0.025"}"/>`;
+      }
+      for (let i = 0; i < 12; i++) {
+        const a = (i + 0.5) / 12 * Math.PI * 2, [x, y] = P(a, 64.2), deg = (i + 0.5) * 30;
+        rehaut += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})" font-family="Arial, Helvetica, sans-serif" font-size="1.55" font-weight="700" letter-spacing="0.18" fill="#c7c7c2" opacity="0.62">ROLEX</text>`;
+      }
+
+      let markers = "";
+      for (let hour = 1; hour < 12; hour++) {
+        if (hour === 3) continue;
+        const a = hour / 12 * Math.PI * 2, [x, y] = P(a, 49.2);
+        const isSix = hour === 6, isNine = hour === 9;
+        const w = isNine ? 15.2 : isSix ? 6.5 : 5.3, h = isNine ? 6.5 : isSix ? 16.1 : 14.4;
+        markers += `<g transform="rotate(${hour * 30} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x - w / 2).toFixed(1)}" y="${(y - h / 2).toFixed(1)}" width="${w}" height="${h}" rx="0.76" fill="url(#dj-gold-${id})" stroke="#80591d" stroke-width="0.42"/><rect x="${(x - w / 2 + 1.18).toFixed(1)}" y="${(y - h / 2 + 1.25).toFixed(1)}" width="${(w - 2.36).toFixed(1)}" height="${(h - 2.5).toFixed(1)}" rx="0.38" fill="url(#dj-lume-${id})"/><path d="M${(x - w / 2 + 1).toFixed(1)} ${(y - h / 2 + 0.85).toFixed(1)} H${(x + w / 2 - 1).toFixed(1)}" stroke="#fff7d4" stroke-width="0.38" opacity="0.78"/></g>`;
+      }
+
+      return `<defs>${caseDefs(id, "steel")}
+        <linearGradient id="dj-steel-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f1f4f4"/><stop offset="31%" stop-color="#909aa0"/><stop offset="56%" stop-color="#e3e7e7"/><stop offset="100%" stop-color="#657077"/></linearGradient>
+        <linearGradient id="dj-polish-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#68737a"/><stop offset="30%" stop-color="#ffffff"/><stop offset="53%" stop-color="#c7d0d2"/><stop offset="74%" stop-color="#ffffff"/><stop offset="100%" stop-color="#667178"/></linearGradient>
+        <linearGradient id="dj-gold-${id}" x1="0.1" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#fff0b3"/><stop offset="36%" stop-color="#d8a943"/><stop offset="62%" stop-color="#a16a20"/><stop offset="100%" stop-color="#f1c96b"/></linearGradient>
+        <linearGradient id="dj-hand-${id}" x1="0.2" y1="0" x2="0.8" y2="1"><stop offset="0%" stop-color="#fff1bd"/><stop offset="42%" stop-color="#d5a23c"/><stop offset="63%" stop-color="#8c5917"/><stop offset="100%" stop-color="#f5d47c"/></linearGradient>
+        <linearGradient id="dj-lume-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fcfff6"/><stop offset="100%" stop-color="#d9e8cd"/></linearGradient>
+        <radialGradient id="dj-dial-${id}" cx="48%" cy="33%" r="82%"><stop offset="0%" stop-color="#fcecc0"/><stop offset="46%" stop-color="#e4bd65"/><stop offset="77%" stop-color="#c29845"/><stop offset="100%" stop-color="#9d7531"/></radialGradient>
+        <radialGradient id="dj-cyclops-${id}" cx="38%" cy="28%" r="78%"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.72"/><stop offset="38%" stop-color="#fff8db" stop-opacity="0.24"/><stop offset="100%" stop-color="#937333" stop-opacity="0.25"/></radialGradient>
+        <linearGradient id="dj-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.17"/><stop offset="45%" stop-color="#fff" stop-opacity="0.035"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <clipPath id="dj-dialclip-${id}"><circle cx="100" cy="100" r="65.75"/></clipPath><clipPath id="dj-cyclopsclip-${id}"><rect x="138.6" y="89.2" width="25.4" height="21.6" rx="10.8"/></clipPath>
+      </defs>
+      <!-- Yellow Rolesor Jubilee bracelet, brushed steel lugs and polished sides. -->
+      ${bracelet}
+      <path d="M47.5 60 L56.5 32 Q64 31 79.2 44 L85.5 53 Z M152.5 60 L143.5 32 Q136 31 120.8 44 L114.5 53 Z M47.5 140 L56.5 168 Q64 169 79.2 156 L85.5 147 Z M152.5 140 L143.5 168 Q136 169 120.8 156 L114.5 147 Z" fill="url(#dj-polish-${id})" stroke="#687179" stroke-width="0.46"/><path d="M51.8 57 L59.2 35 Q66 35.5 79.8 47 M148.2 57 L140.8 35 Q134 35.5 120.2 47 M51.8 143 L59.2 165 Q66 164.5 79.8 153 M148.2 143 L140.8 165 Q134 164.5 120.2 153" fill="none" stroke="#ffffff" stroke-width="0.52" opacity="0.72"/>
+      <circle cx="100" cy="100" r="83.2" fill="url(#dj-steel-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="82.25" fill="none" stroke="url(#rim-${id})" stroke-width="0.88"/><circle cx="100" cy="100" r="80.1" fill="url(#dj-polish-${id})" stroke="#586269" stroke-width="0.44"/>
+      ${flutes}<circle cx="100" cy="100" r="69.4" fill="url(#dj-steel-${id})" stroke="#896426" stroke-width="0.52"/><circle cx="100" cy="100" r="66.75" fill="#b8b8b3"/><circle cx="100" cy="100" r="65.75" fill="url(#dj-dial-${id})"/>
+      <!-- Small yellow-gold Twinlock crown at three. -->
+      <path d="M173.5 89.2 C181.3 89 185.2 94.2 186.5 96.6 L186.5 103.4 C185.2 105.8 181.3 111 173.5 110.8 L169 106 L169 94 Z" fill="url(#dj-polish-${id})" stroke="#5c666d" stroke-width="0.48"/><rect x="177" y="96.1" width="7" height="7.8" rx="1.2" fill="url(#dj-gold-${id})"/><circle cx="190" cy="100" r="5.85" fill="url(#dj-gold-${id})" stroke="#835b1d" stroke-width="0.54"/><path d="M186.5 96.7 V103.3 M188.15 95.2 V104.8 M189.8 94.4 V105.6 M191.45 95.2 V104.8 M193.1 96.7 V103.3" stroke="#865e1d" stroke-width="0.53"/><path d="M186.9 96.7 V103.3 M188.55 95.2 V104.8 M190.2 94.4 V105.6 M191.85 95.2 V104.8 M193.5 96.7 V103.3" stroke="#fff0ba" stroke-width="0.2" opacity="0.7"/>
+      <g clip-path="url(#dj-dialclip-${id})">
+        ${sunray}${minuteTrack}${rehaut}${markers}
+        ${rolexCrown(100,55.6,1.14,"#95691f")}${dt(100,66.8,"ROLEX",5.3,"#342611",700,0.9)}${dt(100,74.5,"OYSTER PERPETUAL",2.55,"#342611",650,0.36)}${dt(100,80.0,"DATEJUST",3.8,"#342611",650,0.52)}
+        ${dt(100,128.4,"SUPERLATIVE CHRONOMETER",2.12,"#342611",600,0.19)}${dt(100,132.8,"OFFICIALLY CERTIFIED",2.12,"#342611",600,0.21)}
+        <text x="87.3" y="159" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="2.35" font-weight="600" letter-spacing="0.32" fill="#352711">SWISS</text>${rolexCrown(100,157.8,0.45,"#352711")}<text x="112.7" y="159" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="2.35" font-weight="600" letter-spacing="0.32" fill="#352711">MADE</text>
+        <rect x="143.4" y="92" width="13.3" height="16" rx="0.35" fill="#8b661f" stroke="#755116" stroke-width="0.48"/><rect x="144.8" y="93.5" width="10.5" height="13" rx="0.06" fill="#fbfaf5" stroke="#332714" stroke-width="0.28"/><text class="date-win" data-date="dom" x="150.1" y="100.1" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow', Arial, Helvetica, sans-serif" font-size="10.15" font-weight="500" fill="#111214">1</text>
+        <path d="M43 47 H87 L43 96 Z" fill="url(#dj-glass-${id})" opacity="0.5"/>
+      </g>
+      <g class="hand-hour"><path d="M100 105.5 L96.55 74 L100 59.6 L103.45 74 L103.45 105.5 Z" fill="url(#dj-hand-${id})" stroke="#805919" stroke-width="0.36"/><path d="M100 101.5 L98.15 74.8 L100 65.2 L101.85 74.8 L101.85 101.5 Z" fill="url(#dj-lume-${id})"/></g><g class="hand-min"><path d="M100 106.5 L97.65 42 L100 32.3 L102.35 42 L102.35 106.5 Z" fill="url(#dj-hand-${id})" stroke="#805919" stroke-width="0.32"/><path d="M100 101.5 L99.05 45 L100 37.6 L100.95 45 L100.95 101.5 Z" fill="url(#dj-lume-${id})"/></g><g class="hand-sec"><line x1="100" y1="117.5" x2="100" y2="31" stroke="#9a6a20" stroke-width="1.06"/><line x1="100" y1="114.5" x2="100" y2="124" stroke="#9a6a20" stroke-width="1.42"/><circle cx="100" cy="32.5" r="1.05" fill="#9a6a20"/></g><circle cx="100" cy="100" r="3.45" fill="url(#dj-gold-${id})" stroke="#805a1b" stroke-width="0.42"/><circle cx="100" cy="100" r="1.05" fill="#fff0ba"/>
+      <!-- The Cyclops is intentionally modest and layers above the hands. -->
+      <g clip-path="url(#dj-cyclopsclip-${id})"><text class="date-win" data-date="dom" x="150.1" y="100.3" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow', Arial, Helvetica, sans-serif" font-size="14.5" font-weight="500" fill="#111214">1</text><ellipse cx="145.6" cy="94.5" rx="7.2" ry="3.25" fill="#ffffff" opacity="0.52" transform="rotate(-18 145.6 94.5)"/></g><rect x="138.6" y="89.2" width="25.4" height="21.6" rx="10.8" fill="url(#dj-cyclops-${id})"/><rect x="138.6" y="89.2" width="25.4" height="21.6" rx="10.8" fill="none" stroke="#fff8dc" stroke-width="1.02" opacity="0.78"/><rect x="138.15" y="88.75" width="26.3" height="22.5" rx="11.25" fill="none" stroke="#695424" stroke-width="0.52" opacity="0.56"/>`;
+    }
+  };
+  LOGOS.datejust = () => "";
+  FIDELITY_OVERLAYS.datejust = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.

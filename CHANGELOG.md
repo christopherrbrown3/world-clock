@@ -24,6 +24,7 @@ Notable project changes will be tracked here.
 - Rebuilt the IWC Portugieser Chronograph face against the IW371605, with its blue alligator strap, quarter-second flange, 12/6 recessed registers, blue Arabic appliqués and feuille hands, and authentic running-seconds behavior.
 - Rebuilt the Rolex Cosmograph Daytona face against the current Oystersteel 126500LN, with its Oyster bracelet, Cerachrom tachymeter bezel, white dial with black counter rings, Chromalight markers, and authentic chronograph-rest behavior.
 - Rebuilt the Rolex GMT-Master II face against the current Oystersteel 126710BLRO-0002, with its three-link Oyster bracelet, blue-and-red Cerachrom bezel, engraved 24-hour scale, white printed black dial, red luminous GMT arrow, Triplock crown, and Cyclops date.
+- Rebuilt the Rolex Datejust face against the current yellow-Rolesor Datejust 36 126233-0015, with its five-piece Jubilee bracelet, fluted yellow-gold bezel, subtle champagne sunray dial, applied crown and Chromalight batons, and restrained Cyclops date.
 - Added a simple version picker and model-version pages for Codex 5.5 and Claude Opus 4.8.
 - Refreshed the Codex 5.5 checkpoint with improved page chrome for the active world clock.
 - Added model and contributor guidance for future AI model runs and reference-driven SVG face work.
