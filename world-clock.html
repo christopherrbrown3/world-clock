@@ -9487,6 +9487,128 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
     timexindiglo: () => ``
   };
 
+  // ───────────────── Omega Speedmaster Moonwatch Professional ─────────────────
+  // Reference object: current steel/Hesalite Moonwatch ref. 310.30.42.50.01.001.
+  // This is intentionally a replacement rather than a cosmetic overlay: the
+  // chronograph seconds rests at twelve, while the actual running seconds lives
+  // in the left register.
+  FACES.speedmaster = {
+    name: "Omega Speedmaster Professional",
+    cadence: "sweep",
+    render() {
+      const id = "speed";
+      const DIAL_R = 72;
+      const SUB_R = 17.2;
+      const S9 = [63, 100], S3 = [137, 100], S6 = [100, 137];
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+
+      const register = (cx, cy, type) => {
+        const config = type === "seconds"
+          ? { count: 60, labels: [["60", 0], ["20", 120], ["40", 240]], major: 5 }
+          : type === "minutes"
+            ? { count: 30, labels: [["30", 0], ["10", 120], ["20", 240]], major: 5 }
+            : { count: 12, labels: [["12", 0], ["3", 90], ["6", 180], ["9", 270]], major: 1 };
+        let azurage = "", ticks = "", labels = "";
+        for (let r = SUB_R - 2.2; r > 5.1; r -= 1.75) {
+          azurage += `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none" stroke="#8a8a86" stroke-width="0.22" opacity="0.23"/>`;
+        }
+        for (let i = 0; i < config.count; i++) {
+          const deg = i / config.count * 360;
+          const [x1, y1] = at(deg, SUB_R - 1.15, cx, cy);
+          const major = i % config.major === 0;
+          const [x2, y2] = at(deg, SUB_R - (major ? 3.7 : 2.0), cx, cy);
+          ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#d8d8d2" stroke-width="${major ? 0.48 : 0.24}" opacity="${major ? 0.8 : 0.58}"/>`;
+        }
+        for (const [label, deg] of config.labels) {
+          const [x, y] = at(deg, SUB_R - 5.8, cx, cy);
+          labels += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="${type === "hours" ? 3.35 : 3.55}" font-weight="500" fill="#e1e1da">${label}</text>`;
+        }
+        return `<g data-complication="${type}"><circle cx="${cx}" cy="${cy + 0.7}" r="${(SUB_R + 0.8).toFixed(1)}" fill="#030303" opacity="0.72"/><circle cx="${cx}" cy="${cy}" r="${SUB_R}" fill="url(#subface-${id})" stroke="#4c4c49" stroke-width="0.72"/><circle cx="${cx}" cy="${cy}" r="${(SUB_R - 1.35).toFixed(1)}" fill="none" stroke="#060606" stroke-width="1.1"/>${azurage}${ticks}${labels}</g>`;
+      };
+
+      // A tachymetre is a seconds scale. One elapsed second equals six degrees;
+      // the printed values remain non-linear, as on the black anodised insert.
+      const TACHY_VALUES = [500, 400, 350, 300, 275, 250, 225, 200, 190, 180, 170, 160, 150, 140, 130, 120, 110, 100, 90, 85, 80, 75, 70, 65, 60];
+      let tachy = "";
+      for (let second = 7; second <= 60; second++) {
+        const deg = (second % 60) * 6;
+        const [x1, y1] = at(deg, 82.1);
+        const major = second % 5 === 0 || second === 7;
+        const [x2, y2] = at(deg, major ? 78.8 : 80.1);
+        tachy += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#ededE7" stroke-width="${major ? 0.72 : 0.36}" opacity="${major ? 0.93 : 0.74}"/>`;
+      }
+      for (const value of TACHY_VALUES) {
+        const deg = (21600 / value) % 360;
+        const [x, y] = at(deg, 76.8);
+        const flip = deg > 90 && deg < 270 ? 180 : 0;
+        const fs = value >= 300 ? 4.05 : value >= 150 ? 4.35 : 4.15;
+        tachy += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${fs}" font-weight="500" fill="#f1f1eb" transform="rotate(${(deg + flip).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${value}</text>`;
+      }
+      // Hallmark details of the current Moonwatch bezel: dot-over-90 and a
+      // diagonal dot adjacent to 70.
+      const [dot90x, dot90y] = at((21600 / 90) % 360, 80.4);
+      const [dot70x, dot70y] = at((21600 / 70) % 360 - 3.2, 80.4);
+      tachy += `<circle cx="${dot90x.toFixed(1)}" cy="${dot90y.toFixed(1)}" r="0.82" fill="#f1f1eb"/><circle cx="${dot70x.toFixed(1)}" cy="${dot70y.toFixed(1)}" r="0.68" fill="#f1f1eb"/>`;
+
+      // Three hashes per second communicate the 3861's 3 Hz one-third-second track.
+      let chapter = "";
+      for (let t = 0; t < 180; t++) {
+        const deg = t * 2;
+        const [x1, y1] = at(deg, 71.7);
+        const [x2, y2] = at(deg, t % 15 === 0 ? 65.8 : t % 3 === 0 ? 67.7 : 69.2);
+        chapter += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e7e7e1" stroke-width="${t % 15 === 0 ? 0.72 : t % 3 === 0 ? 0.42 : 0.24}" opacity="${t % 3 === 0 ? 0.86 : 0.65}"/>`;
+      }
+
+      // Short applied indexes stop before the minuterie. The twin 12 bars carry
+      // the two characteristic inboard lume dots, with no artificial night glow.
+      let markers = "";
+      for (let hour = 1; hour < 12; hour++) {
+        const deg = hour * 30;
+        const [x, y] = at(deg, 59.5);
+        markers += `<g transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x - 3.2).toFixed(1)}" y="${(y - 5.5).toFixed(1)}" width="6.4" height="11" rx="0.65" fill="url(#markmetal-${id})" stroke="#aeb4b6" stroke-width="0.35"/><rect x="${(x - 2.05).toFixed(1)}" y="${(y - 4.35).toFixed(1)}" width="4.1" height="8.7" rx="0.5" fill="#dbe3bd"/></g>`;
+      }
+      markers += `<g><rect x="91.6" y="34.9" width="5.1" height="11.7" rx="0.65" fill="url(#markmetal-${id})" stroke="#aeb4b6" stroke-width="0.35"/><rect x="103.3" y="34.9" width="5.1" height="11.7" rx="0.65" fill="url(#markmetal-${id})" stroke="#aeb4b6" stroke-width="0.35"/><rect x="92.65" y="36.0" width="3" height="9.45" rx="0.45" fill="#dbe3bd"/><rect x="104.45" y="36.0" width="3" height="9.45" rx="0.45" fill="#dbe3bd"/><circle cx="94.9" cy="50.6" r="1.55" fill="#dbe3bd"/><circle cx="105.1" cy="50.6" r="1.55" fill="#dbe3bd"/></g>`;
+
+      let crownGrooves = "";
+      for (let x = 184.2; x <= 195.2; x += 2.2) {
+        crownGrooves += `<line x1="${x.toFixed(1)}" y1="92.2" x2="${x.toFixed(1)}" y2="107.8" stroke="#4e565d" stroke-width="0.65"/><line x1="${(x + 0.6).toFixed(1)}" y1="92.3" x2="${(x + 0.6).toFixed(1)}" y2="107.7" stroke="#f4f5f5" stroke-width="0.28" opacity="0.55"/>`;
+      }
+
+      const dialPrint = `<g class="speedmaster-print"><text x="100" y="54.2" text-anchor="middle" dominant-baseline="central" font-family="Georgia,'Times New Roman',serif" font-size="8.1" font-weight="700" fill="#e9e9e3">Ω</text><text x="100" y="61.4" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="5.9" font-weight="500" letter-spacing="0.18" fill="#e9e9e3">OMEGA</text><text x="100" y="68.4" text-anchor="middle" dominant-baseline="central" font-family="Apple Chancery,Snell Roundhand,URW Chancery L,cursive" font-size="5.9" font-style="italic" font-weight="600" fill="#eeeeE8">Speedmaster</text><text x="100" y="75.2" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.75" font-weight="600" letter-spacing="0.65" fill="#e8e8e2">PROFESSIONAL</text><text x="89.1" y="169" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.05" font-weight="500" letter-spacing="0.38" fill="#d9d9d3">SWISS</text><text x="110.9" y="169" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.05" font-weight="500" letter-spacing="0.38" fill="#d9d9d3">MADE</text></g>`;
+
+      return `<defs>${caseDefs(id, "steel")}${lumeDefs(id)}
+        <radialGradient id="speed-dial-${id}" cx="43%" cy="34%" r="82%"><stop offset="0%" stop-color="#282826"/><stop offset="55%" stop-color="#151514"/><stop offset="100%" stop-color="#080808"/></radialGradient>
+        <radialGradient id="speed-inner-${id}" cx="47%" cy="38%" r="80%"><stop offset="0%" stop-color="#20201f"/><stop offset="100%" stop-color="#0b0b0b"/></radialGradient>
+        <radialGradient id="subface-${id}" cx="42%" cy="35%" r="78%"><stop offset="0%" stop-color="#20201e"/><stop offset="100%" stop-color="#070707"/></radialGradient>
+        <linearGradient id="acrylic-${id}" x1="0" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.27"/><stop offset="38%" stop-color="#ffffff" stop-opacity="0.05"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <pattern id="grain-${id}" width="3.2" height="3.2" patternUnits="userSpaceOnUse"><circle cx="0.55" cy="0.8" r="0.22" fill="#ffffff" opacity="0.18"/><circle cx="2.45" cy="1.65" r="0.16" fill="#ffffff" opacity="0.12"/><circle cx="1.2" cy="2.75" r="0.13" fill="#000000" opacity="0.32"/></pattern>
+        <clipPath id="dialclip-${id}"><circle cx="100" cy="100" r="${DIAL_R}"/></clipPath>
+        <path id="tachyword-${id}" d="M 116 18 A 83 83 0 0 1 164 41" fill="none"/></defs>
+        <!-- Twisted/lyre lugs behind Omega's fourth-generation asymmetric case. -->
+        <g filter="url(#shadow-${id})"><path d="M68 20 C57 17 48 18 41 25 L17 52 C24 58 35 62 45 59 C49 43 56 29 68 20 Z" fill="url(#case-${id})"/><path d="M132 20 C143 17 152 18 159 25 L183 52 C176 58 165 62 155 59 C151 43 144 29 132 20 Z" fill="url(#case-${id})"/><path d="M45 141 C35 138 24 142 17 148 L41 176 C48 182 58 183 68 180 C56 171 49 157 45 141 Z" fill="url(#case-${id})"/><path d="M155 141 C165 138 176 142 183 148 L159 176 C152 182 142 183 132 180 C144 171 151 157 155 141 Z" fill="url(#case-${id})"/><circle cx="100" cy="100" r="89.2" fill="url(#case-${id})"/></g>
+        <path d="M65 22 C55 21 48 24 42 30 L24 51 C31 54 38 55 45 53 C50 39 57 28 65 22 Z" fill="#ffffff" opacity="0.2"/><path d="M135 22 C145 21 152 24 158 30 L176 51 C169 54 162 55 155 53 C150 39 143 28 135 22 Z" fill="#ffffff" opacity="0.2"/>
+        <circle cx="100" cy="100" r="89.2" fill="none" stroke="url(#rim-${id})" stroke-width="1.15"/><circle cx="100" cy="100" r="84.2" fill="url(#bezel-${id})"/><circle cx="100" cy="100" r="82.35" fill="#0a0a0a" stroke="#30302f" stroke-width="0.72"/>
+        <!-- Unguarded fluted crown and two cylindrical pump pushers; nothing clips past x=200. -->
+        <g transform="rotate(-24 183 77)"><rect x="176.5" y="72.7" width="17.2" height="8.6" rx="2.6" fill="url(#case-${id})" stroke="#4a5055" stroke-width="0.55"/><rect x="185.1" y="73.6" width="8.8" height="6.8" rx="1.8" fill="#dce1e3" opacity="0.72"/></g><g transform="rotate(24 183 123)"><rect x="176.5" y="118.7" width="17.2" height="8.6" rx="2.6" fill="url(#case-${id})" stroke="#4a5055" stroke-width="0.55"/><rect x="185.1" y="119.6" width="8.8" height="6.8" rx="1.8" fill="#dce1e3" opacity="0.72"/></g><rect x="177.2" y="96.1" width="8.5" height="7.8" rx="1.5" fill="url(#case-${id})"/><circle cx="190" cy="100" r="9.15" fill="url(#case-${id})" stroke="#444c52" stroke-width="0.75"/>${crownGrooves}<circle cx="190" cy="100" r="9.15" fill="none" stroke="#d9dde0" stroke-width="0.35" opacity="0.6"/>
+        ${tachy}<text x="130" y="29" text-anchor="middle" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.8" font-weight="500" letter-spacing="0.42" fill="#f0f0ea" transform="rotate(30 130 29)">TACHYMÈTRE</text>
+        <circle cx="100" cy="100" r="${DIAL_R}" fill="url(#speed-dial-${id})"/><circle cx="100" cy="100" r="${DIAL_R}" fill="url(#grain-${id})" opacity="0.23"/>
+        <g clip-path="url(#dialclip-${id})"><circle cx="100" cy="100" r="67.2" fill="url(#speed-inner-${id})"/><circle cx="100" cy="100" r="67.2" fill="none" stroke="#454542" stroke-width="0.7"/><circle cx="100" cy="100" r="65.8" fill="none" stroke="#050505" stroke-width="0.8"/>${chapter}${markers}${register(S9[0], S9[1], "seconds")}${register(S3[0], S3[1], "minutes")}${register(S6[0], S6[1], "hours")}${dialPrint}
+          <!-- Running seconds at nine; the 30-minute and 12-hour registers are stopped. -->
+          <g class="hand-subsec" data-pivot="${S9[0]} ${S9[1]}"><line x1="${S9[0]}" y1="${S9[1] + 5.8}" x2="${S9[0]}" y2="${S9[1] - 11.8}" stroke="#f0f0eb" stroke-width="1.05"/><circle cx="${S9[0]}" cy="${S9[1] - 9.7}" r="1.42" fill="#f0f0eb"/><circle cx="${S9[0]}" cy="${S9[1]}" r="1.55" fill="#eeeeE8"/></g><line x1="${S3[0]}" y1="${S3[1] + 5.1}" x2="${S3[0]}" y2="${S3[1] - 11.1}" stroke="#ededE7" stroke-width="1.08"/><circle cx="${S3[0]}" cy="${S3[1]}" r="1.55" fill="#ededE7"/><line x1="${S6[0]}" y1="${S6[1] + 5.1}" x2="${S6[0]}" y2="${S6[1] - 11.1}" stroke="#ededE7" stroke-width="1.08"/><circle cx="${S6[0]}" cy="${S6[1]}" r="1.55" fill="#ededE7"/>
+          <ellipse cx="77" cy="56" rx="42" ry="19" fill="url(#acrylic-${id})" transform="rotate(-27 77 56)" opacity="0.22"/></g>
+        <circle cx="100" cy="100" r="73.1" fill="none" stroke="#f6f6ef" stroke-width="1.18" opacity="0.34"/>
+        <g filter="url(#handshadow-${id})"><g class="hand-hour"><path d="M100 106 L96.65 72 L100 61 L103.35 72 L103.35 106 Z" fill="url(#markmetal-${id})" stroke="#3f4548" stroke-width="0.48"/><path d="M100 98.5 L98.45 73 L100 66.4 L101.55 73 L101.55 98.5 Z" fill="#dbe3bd"/></g><g class="hand-min"><path d="M100 107 L97.9 43 L100 31.5 L102.1 43 L102.1 107 Z" fill="url(#markmetal-${id})" stroke="#3f4548" stroke-width="0.48"/><path d="M100 98.4 L99.05 44.8 L100 38.4 L100.95 44.8 L100.95 98.4 Z" fill="#dbe3bd"/></g></g>
+        <!-- The long central chronograph seconds hand rests at twelve until started. -->
+        <g class="hand-chrono-rest" filter="url(#handshadow-${id})"><line x1="100" y1="116" x2="100" y2="27.8" stroke="#3d4244" stroke-width="2.05"/><line x1="100" y1="115.2" x2="100" y2="28.4" stroke="#f1f1ec" stroke-width="1.05"/><path d="M100 23.5 L96.8 32.2 L100 35.4 L103.2 32.2 Z" fill="#f1f1ec" stroke="#53595b" stroke-width="0.45"/><path d="M100 107.2 C103.3 110.3 103.9 117.1 100 121.5 C96.1 117.1 96.7 110.3 100 107.2 Z" fill="#f1f1ec" stroke="#53595b" stroke-width="0.4"/></g><circle cx="100" cy="100" r="4.45" fill="#e9ebe9" stroke="#61696d" stroke-width="0.65"/><circle cx="100" cy="100" r="2.45" fill="#b8bec1" stroke="#f7f7f1" stroke-width="0.45"/><circle cx="100" cy="100" r="0.95" fill="#636a6d"/>`;
+    }
+  };
+  // The Hesalite ref. .001 prints the dial signature inside its dial plane; do
+  // not append the generic .002-style applied emblem above the hands.
+  LOGOS.speedmaster = () => "";
+
   Object.keys(FIDELITY_OVERLAYS).forEach((key) => {
     const face = FACES[key];
     if (!face || face.__fidelityOverlay) return;
