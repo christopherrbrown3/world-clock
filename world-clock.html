@@ -10594,7 +10594,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       const leftTrack = subTrack(65.2, 103, 30, 15.2);
       const rightTrack = subTrack(134.8, 103, 60, 15.2);
       let crownGrooves = "";
-      for (let y = 93; y <= 107; y += 2.2) crownGrooves += `<line x1="20.4" y1="${y.toFixed(1)}" x2="32.3" y2="${y.toFixed(1)}" stroke="#596269" stroke-width="0.58"/><line x1="20.9" y1="${(y + 0.38).toFixed(1)}" x2="31.8" y2="${(y + 0.38).toFixed(1)}" stroke="#f6f7f4" stroke-width="0.24" opacity="0.66"/>`;
+      for (let y = 94.2; y <= 105.8; y += 1.9) crownGrooves += `<line x1="17.2" y1="${y.toFixed(1)}" x2="31.6" y2="${y.toFixed(1)}" stroke="#596269" stroke-width="0.54"/><line x1="17.7" y1="${(y + 0.32).toFixed(1)}" x2="31.2" y2="${(y + 0.32).toFixed(1)}" stroke="#f6f7f4" stroke-width="0.22" opacity="0.66"/>`;
       return `<defs>
         <linearGradient id="mon-leather-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3a3b3b"/><stop offset="26%" stop-color="#0d0e0e"/><stop offset="60%" stop-color="#252626"/><stop offset="100%" stop-color="#030303"/></linearGradient>
         <linearGradient id="mon-steel-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#687176"/><stop offset="13%" stop-color="#f6f7f5"/><stop offset="34%" stop-color="#a7b0b4"/><stop offset="52%" stop-color="#eff1ef"/><stop offset="76%" stop-color="#8a959a"/><stop offset="100%" stop-color="#4f575b"/></linearGradient>
@@ -10604,7 +10604,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         <linearGradient id="mon-hand-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#566168"/><stop offset="18%" stop-color="#ffffff"/><stop offset="52%" stop-color="#c7cecf"/><stop offset="78%" stop-color="#f9faf7"/><stop offset="100%" stop-color="#6e787d"/></linearGradient>
         <linearGradient id="mon-glass-${id}" x1="0" y1="0" x2="0.82" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.20"/><stop offset="39%" stop-color="#ffffff" stop-opacity="0.045"/><stop offset="69%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
         <filter id="mon-shadow-${id}" x="-28%" y="-28%" width="156%" height="156%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.25" stdDeviation="1.65" flood-color="#101619" flood-opacity="0.34"/></filter>
-        <clipPath id="mon-dialclip-${id}"><rect x="42" y="48" width="116" height="104" rx="7.7"/></clipPath>
+        <clipPath id="mon-dialclip-${id}"><rect x="44" y="44" width="112" height="112" rx="5.2"/></clipPath>
       </defs>
       <!-- Perforated black racing-leather strap, with its stitching tucked under the squared lugs. -->
       <path d="M65 0 H135 L139 44 H61 L65 0 Z M61 156 H139 L135 200 H65 L61 156 Z" fill="url(#mon-leather-${id})" stroke="#080909" stroke-width="0.58"/>
@@ -10612,15 +10612,15 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       ${strapHoles}
       <!-- Four squared lugs and the brushed/polished steel Monaco case. -->
       <path d="M39 54 L36.7 33.5 Q37.4 30.8 42.4 30.8 H67.4 L72.6 48.8 Z M161 54 L163.3 33.5 Q162.6 30.8 157.6 30.8 H132.6 L127.4 48.8 Z M39 146 L36.7 166.5 Q37.4 169.2 42.4 169.2 H67.4 L72.6 151.2 Z M161 146 L163.3 166.5 Q162.6 169.2 157.6 169.2 H132.6 L127.4 151.2 Z" fill="url(#mon-brush-${id})" stroke="#6b757a" stroke-width="0.54"/>
-      <rect x="31.3" y="38.1" width="137.4" height="123.8" rx="10.3" fill="url(#mon-steel-${id})" filter="url(#mon-shadow-${id})"/>
-      <rect x="32.2" y="39.0" width="135.6" height="122" rx="9.5" fill="none" stroke="#d7dddc" stroke-width="0.6" opacity="0.58"/>
-      <rect x="36.2" y="43.0" width="127.6" height="114" rx="7.9" fill="url(#mon-brush-${id})" stroke="#707a80" stroke-width="0.62"/>
-      <rect x="39.1" y="46.0" width="121.8" height="108" rx="7.6" fill="#38464f" stroke="#f5f6f3" stroke-width="0.52"/>
-      <rect x="42" y="48" width="116" height="104" rx="7.7" fill="url(#mon-dial-${id})" stroke="#071d32" stroke-width="0.72"/>
+      <path d="M43 35 H157 L165 43 V157 L157 165 H43 L35 157 V43 Z" fill="url(#mon-steel-${id})" filter="url(#mon-shadow-${id})"/>
+      <path d="M44.4 36.4 H155.6 L163.6 44.4 V155.6 L155.6 163.6 H44.4 L36.4 155.6 V44.4 Z" fill="none" stroke="#d7dddc" stroke-width="0.58" opacity="0.62"/>
+      <path d="M46.1 40.3 H153.9 L159.7 46.1 V153.9 L153.9 159.7 H46.1 L40.3 153.9 V46.1 Z" fill="url(#mon-brush-${id})" stroke="#707a80" stroke-width="0.62"/>
+      <rect x="41.7" y="41.7" width="116.6" height="116.6" rx="5.9" fill="#38464f" stroke="#f5f6f3" stroke-width="0.52"/>
+      <rect x="44" y="44" width="112" height="112" rx="5.2" fill="url(#mon-dial-${id})" stroke="#071d32" stroke-width="0.72"/>
       <!-- The iconic left crown and diagonal right-side chronograph pushers. -->
-      <rect x="28.2" y="94.2" width="8.1" height="17.0" rx="1.8" fill="url(#mon-steel-${id})" stroke="#657077" stroke-width="0.48"/><rect x="17.1" y="90.5" width="15.4" height="24.4" rx="3.4" fill="url(#mon-steel-${id})" stroke="#505b61" stroke-width="0.65"/>${crownGrooves}<rect x="17.1" y="90.5" width="15.4" height="24.4" rx="3.4" fill="none" stroke="#f7f8f6" stroke-width="0.38" opacity="0.68"/>
-      <path d="M165.2 69.2 L176.7 57.4 Q180.1 54.2 184.3 57.4 L190.4 64.6 Q192.8 68.1 189.2 71.5 L176.8 83.3 Z" fill="url(#mon-steel-${id})" stroke="#58636a" stroke-width="0.62"/><path d="M168.4 72.1 L180.6 59.9" stroke="#f8f9f6" stroke-width="0.55" opacity="0.72"/>
-      <path d="M165.2 130.8 L176.7 142.6 Q180.1 145.8 184.3 142.6 L190.4 135.4 Q192.8 131.9 189.2 128.5 L176.8 116.7 Z" fill="url(#mon-steel-${id})" stroke="#58636a" stroke-width="0.62"/><path d="M168.4 127.9 L180.6 140.1" stroke="#f8f9f6" stroke-width="0.55" opacity="0.72"/>
+      <rect x="30.4" y="96.1" width="6.2" height="7.8" rx="1.1" fill="url(#mon-steel-${id})" stroke="#657077" stroke-width="0.48"/><path d="M18.1 92.4 H30.2 Q32.5 92.4 32.5 94.7 V105.3 Q32.5 107.6 30.2 107.6 H18.1 Q15.8 107.6 15.8 105.3 V94.7 Q15.8 92.4 18.1 92.4 Z" fill="url(#mon-steel-${id})" stroke="#505b61" stroke-width="0.62"/>${crownGrooves}<path d="M18.1 92.4 H30.2 Q32.5 92.4 32.5 94.7 V105.3 Q32.5 107.6 30.2 107.6 H18.1 Q15.8 107.6 15.8 105.3 V94.7 Q15.8 92.4 18.1 92.4 Z" fill="none" stroke="#f7f8f6" stroke-width="0.34" opacity="0.68"/>
+      <path d="M162.5 69.6 L172.5 59.7 Q175.2 57.1 178.0 59.4 L183.4 64.7 Q185.8 67.5 183.3 70.0 L173.4 80.0 Z" fill="url(#mon-steel-${id})" stroke="#58636a" stroke-width="0.58"/><path d="M165.4 72.3 L176.5 61.2" stroke="#f8f9f6" stroke-width="0.48" opacity="0.72"/>
+      <path d="M162.5 130.4 L172.5 140.3 Q175.2 142.9 178.0 140.6 L183.4 135.3 Q185.8 132.5 183.3 130.0 L173.4 120.0 Z" fill="url(#mon-steel-${id})" stroke="#58636a" stroke-width="0.58"/><path d="M165.4 127.7 L176.5 138.8" stroke="#f8f9f6" stroke-width="0.48" opacity="0.72"/>
       <g clip-path="url(#mon-dialclip-${id})">
         ${minuteTrack}
         <!-- Applied 12/3/9 markers and the red-accented round hour plots. -->
