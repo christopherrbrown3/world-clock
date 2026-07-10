@@ -10716,6 +10716,78 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.panerai = () => "";
   FIDELITY_OVERLAYS.panerai = () => "";
 
+  // ───────────────── Seiko 5 Sports SRPD51 ─────────────────
+  // Reference object: SRPD51K1, the blue 42.5 mm SKX-series 5 Sports with
+  // Caliber 4R36, a 4-o'clock crown, one-way blue bezel, steel bracelet, and
+  // separate day/date wheels at three.
+  FACES.seiko5 = {
+    name: "Seiko 5 Sports SRPD51",
+    cadence: "sweep",
+    render() {
+      const id = "srpd51";
+      const pt = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      let coinEdge = "", bezelTicks = "", bezelNumbers = "", dialTicks = "", dialMarkers = "";
+      for (let i = 0; i < 72; i++) {
+        const [x1, y1] = pt(i * 5, 78.1), [x2, y2] = pt(i * 5, 74.7);
+        coinEdge += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 2 ? "#f4f6f4" : "#6d777c"}" stroke-width="1.18" opacity="0.92"/>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const [x1, y1] = pt(i * 6, 70.1), [x2, y2] = pt(i * 6, i % 5 === 0 ? 65.3 : 67.6);
+        bezelTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e9edf0" stroke-width="${i % 5 === 0 ? "1.0" : "0.42"}" opacity="${i % 5 === 0 ? "0.94" : "0.76"}"/>`;
+      }
+      for (let n = 1; n <= 5; n++) {
+        const deg = n * 60, [x, y] = pt(deg, 68.1);
+        bezelNumbers += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="6.35" font-weight="700" fill="#eef1f2" transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})">${n * 10}</text>`;
+      }
+      for (let m = 0; m < 60; m++) {
+        const [x1, y1] = pt(m * 6, 56.7), [x2, y2] = pt(m * 6, m % 5 === 0 ? 52.6 : 54.6);
+        dialTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#dce3e5" stroke-width="${m % 5 === 0 ? "0.8" : "0.36"}" opacity="${m % 5 === 0 ? "0.78" : "0.62"}"/>`;
+      }
+      for (let hour = 1; hour < 12; hour++) {
+        if (hour === 3 || hour === 6 || hour === 9) continue;
+        const [x, y] = pt(hour * 30, 44.7);
+        dialMarkers += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.75" fill="#d5dbdc" stroke="#53616a" stroke-width="0.65"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.45" fill="#edf0df"/>`;
+      }
+      return `<defs>
+        <linearGradient id="sk-bracelet-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#788388"/><stop offset="18%" stop-color="#f4f6f5"/><stop offset="46%" stop-color="#a6b0b4"/><stop offset="72%" stop-color="#f8faf8"/><stop offset="100%" stop-color="#697378"/></linearGradient>
+        <linearGradient id="sk-case-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#687278"/><stop offset="14%" stop-color="#f7f8f6"/><stop offset="39%" stop-color="#aab4b8"/><stop offset="57%" stop-color="#eef1f0"/><stop offset="81%" stop-color="#7a858a"/><stop offset="100%" stop-color="#4e585e"/></linearGradient>
+        <radialGradient id="sk-bezel-${id}" cx="48%" cy="31%" r="82%"><stop offset="0%" stop-color="#10336d"/><stop offset="54%" stop-color="#072158"/><stop offset="100%" stop-color="#041632"/></radialGradient>
+        <radialGradient id="sk-dial-${id}" cx="46%" cy="31%" r="83%"><stop offset="0%" stop-color="#1b3f84"/><stop offset="47%" stop-color="#0a285f"/><stop offset="100%" stop-color="#041535"/></radialGradient>
+        <linearGradient id="sk-hand-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#536169"/><stop offset="19%" stop-color="#ffffff"/><stop offset="52%" stop-color="#c7cecf"/><stop offset="78%" stop-color="#f8f9f6"/><stop offset="100%" stop-color="#69757b"/></linearGradient>
+        <linearGradient id="sk-glass-${id}" x1="0" y1="0" x2="0.84" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.18"/><stop offset="43%" stop-color="#fff" stop-opacity="0.025"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="sk-shadow-${id}" x="-26%" y="-26%" width="152%" height="152%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.1" stdDeviation="1.6" flood-color="#0f1518" flood-opacity="0.32"/></filter>
+        <clipPath id="sk-dialclip-${id}"><circle cx="100" cy="100" r="57.8"/></clipPath>
+      </defs>
+      <!-- The 170 g SRPD51 is shown on its broad three-link stainless bracelet. -->
+      <path d="M65 0 H135 L140 48 H60 Z M60 152 H140 L135 200 H65 Z" fill="url(#sk-bracelet-${id})" stroke="#687278" stroke-width="0.5"/>
+      <path d="M66 5 H134 M64 20 H136 M62 35 H138 M62 165 H138 M64 180 H136 M66 195 H134" stroke="#5d686d" stroke-width="0.7"/><path d="M79 0 V47 M121 0 V47 M79 153 V200 M121 153 V200" stroke="#eef1f0" stroke-width="0.55" opacity="0.7"/><path d="M82 5 H118 M80 20 H120 M78 35 H122 M78 165 H122 M80 180 H120 M82 195 H118" stroke="#f6f8f7" stroke-width="0.44" opacity="0.65"/>
+      <path d="M53 62 L58 41 Q65 37 80 50 L85 59 Z M147 62 L142 41 Q135 37 120 50 L115 59 Z M53 138 L58 159 Q65 163 80 150 L85 141 Z M147 138 L142 159 Q135 163 120 150 L115 141 Z" fill="url(#sk-case-${id})" stroke="#677278" stroke-width="0.45"/>
+      <circle cx="100" cy="100" r="79.8" fill="url(#sk-case-${id})" filter="url(#sk-shadow-${id})"/><circle cx="100" cy="100" r="78.9" fill="none" stroke="#f5f7f6" stroke-width="0.64" opacity="0.72"/><circle cx="100" cy="100" r="77.1" fill="#778187"/>${coinEdge}
+      <circle cx="100" cy="100" r="73.1" fill="url(#sk-bezel-${id})" stroke="#061733" stroke-width="0.8"/>${bezelTicks}${bezelNumbers}
+      <path d="M94.0 29.2 H106.0 L100 39.2 Z" fill="#e7ebec" stroke="#061733" stroke-width="0.55"/><circle cx="100" cy="33.0" r="1.65" fill="#f4f5e7"/>
+      <circle cx="100" cy="100" r="58.6" fill="#06173c"/><circle cx="100" cy="100" r="57.8" fill="url(#sk-dial-${id})" stroke="#0a1c42" stroke-width="0.72"/>
+      <!-- Small 4-o'clock crown, a defining SKX-series detail. -->
+      <g transform="rotate(36 172 128)"><rect x="156.8" y="123.8" width="13.6" height="8.1" rx="1.35" fill="url(#sk-case-${id})" stroke="#59656c" stroke-width="0.5"/><rect x="169.3" y="121.8" width="12.8" height="12.2" rx="2.1" fill="url(#sk-case-${id})" stroke="#536069" stroke-width="0.58"/><path d="M172 123.2 V132.8 M174.1 122.6 V133.4 M176.2 122.2 V133.8 M178.3 122.6 V133.4 M180.4 123.2 V132.8" stroke="#5c676d" stroke-width="0.48"/></g>
+      <g clip-path="url(#sk-dialclip-${id})">
+        ${dialTicks}
+        <path d="M93.2 52.0 H106.8 L100 64.4 Z" fill="#d3d9da" stroke="#56646c" stroke-width="0.62"/><path d="M95.1 53.6 H104.9 L100 61.5 Z" fill="#edf0df"/>
+        <rect x="97.0" y="136.8" width="6.0" height="14.0" rx="2.4" fill="#d4dbdc" stroke="#53616a" stroke-width="0.62"/><rect x="98.15" y="138.5" width="3.7" height="10.6" rx="1.6" fill="#edf0df"/>
+        <rect x="48.6" y="97.0" width="14.0" height="6.0" rx="2.4" fill="#d4dbdc" stroke="#53616a" stroke-width="0.62"/><rect x="50.3" y="98.15" width="10.6" height="3.7" rx="1.6" fill="#edf0df"/>
+        ${dialMarkers}
+        <text x="100" y="73.2" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="7.0" font-weight="700" letter-spacing="0.36" fill="#f0f3f1">SEIKO</text><text x="100" y="82.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="8.4" font-weight="800" font-style="italic" fill="#eef1f0">5</text>
+        <text x="100" y="121.7" text-anchor="middle" dominant-baseline="central" font-family="'Brush Script MT',Georgia,cursive" font-size="5.65" font-style="italic" fill="#f0f3f1">Automatic</text>
+        <rect x="117.6" y="93.3" width="35.6" height="13.5" rx="1.0" fill="#111923" stroke="#89949b" stroke-width="0.58"/><rect x="119.0" y="94.5" width="32.8" height="11.1" fill="#eef0ec"/><line x1="136.5" y1="94.5" x2="136.5" y2="105.6" stroke="#879199" stroke-width="0.5"/><text class="date-win" data-date="dow" x="127.8" y="100.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="5.45" font-weight="700" fill="#171a1c">MON</text><text class="date-win" data-date="dom" x="144.1" y="100.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="8.0" font-weight="700" fill="#171a1c">6</text>
+        <path d="M43 48 H83 L43 91 Z" fill="url(#sk-glass-${id})" opacity="0.38"/>
+      </g>
+      <g class="hand-hour"><path d="M100 106 L92.6 96.2 L94.1 74.0 L100 62.2 L105.9 74.0 L107.4 96.2 Z" fill="url(#sk-hand-${id})" stroke="#526069" stroke-width="0.48"/><path d="M100 100 L95.9 94.6 L96.9 76.2 L100 68.2 L103.1 76.2 L104.1 94.6 Z" fill="#edf0df"/></g><g class="hand-min"><path d="M100 107 L96.5 96.8 L97.2 48.3 L100 35.0 L102.8 48.3 L103.5 96.8 Z" fill="url(#sk-hand-${id})" stroke="#526069" stroke-width="0.43"/><path d="M100 101 L98.3 94.6 L98.85 50.5 L100 41.1 L101.15 50.5 L101.7 94.6 Z" fill="#edf0df"/></g><g class="hand-sec"><line x1="100" y1="116" x2="100" y2="43.0" stroke="#f3f4ef" stroke-width="0.78"/><line x1="100" y1="111.5" x2="100" y2="121.5" stroke="#f3f4ef" stroke-width="1.02"/><circle cx="100" cy="47.8" r="1.65" fill="#f3f4ef"/></g><circle cx="100" cy="100" r="3.25" fill="#2a353a" stroke="#e8ecea" stroke-width="0.55"/><circle cx="100" cy="100" r="1.12" fill="#e8ecea"/>`;
+    }
+  };
+  LOGOS.seiko5 = () => "";
+  FIDELITY_OVERLAYS.seiko5 = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
