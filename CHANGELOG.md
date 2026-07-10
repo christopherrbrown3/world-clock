@@ -31,6 +31,7 @@ Notable project changes will be tracked here.
 - Refined the Apple Watch face against the current Activity Analog/Rings layout, with curved lower-arc weather text, matching complication placement, and a continuously gliding orange seconds hand.
 - Rebuilt the Swatch Once Again face against GB743-S26, with its compact black polymer Gent case, narrow Arabic dial, split white/black day-date discs, black seconds hand, and quartz-tick motion.
 - Rebuilt the Braun face against the black-dial BN0021BKBKG, with its thin matte-steel case, black leather, sparse white dial, simple baton hands, and hairline yellow quartz seconds.
+- Rebuilt the Mondaine stop2go face against the Vegan Grape Leather 41 mm MST.4101B.LBV.2SE, with its crown-less brushed-steel case, stitched black strap, segmented railway scale, squared SBB hands, lollipop-tipped red seconds hand, quarter-second steps, and correct 58-second pause.
 - Added a simple version picker and model-version pages for Codex 5.5 and Claude Opus 4.8.
 - Refreshed the Codex 5.5 checkpoint with improved page chrome for the active world clock.
 - Added model and contributor guidance for future AI model runs and reference-driven SVG face work.
