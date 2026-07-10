@@ -10404,6 +10404,50 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.f91w = () => "";
   FIDELITY_OVERLAYS.f91w = () => "";
 
+  // ───────────────── Swatch Once Again GB743-S26 ─────────────────
+  // Reference object: the 34 mm Classic Gent Once Again. It is a deliberately
+  // light black-polymer quartz watch, with a white day/date dial and no red
+  // seconds or Swiss-cross logo accent.
+  FACES.swatch = {
+    name: "Swatch Once Again",
+    cadence: "tick",
+    render() {
+      const id = "gb743";
+      let nums = "", ticks = "";
+      for (let hour = 1; hour <= 12; hour++) {
+        if (hour === 3) continue;
+        const a = hour / 12 * Math.PI * 2, [x, y] = P(a, 51.2);
+        nums += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="'Arial Rounded MT Bold', 'Arial Narrow', Arial, sans-serif" font-size="${hour === 12 || hour === 6 ? "13.6" : "12.5"}" font-weight="800" letter-spacing="-1.0" fill="#171717">${hour}</text>`;
+      }
+      for (let minute = 0; minute < 60; minute++) {
+        const a = minute / 60 * Math.PI * 2, [x1, y1] = P(a, 63.6), [x2, y2] = P(a, minute % 5 === 0 ? 59.0 : 60.6);
+        ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#212121" stroke-width="${minute % 5 === 0 ? "0.85" : "0.48"}"/>`;
+      }
+      return `<defs>${caseDefs(id, "dark")}
+        <linearGradient id="sw-strap-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a2c2d"/><stop offset="55%" stop-color="#0e1011"/><stop offset="100%" stop-color="#020303"/></linearGradient>
+        <linearGradient id="sw-case-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#2a2b2c"/><stop offset="40%" stop-color="#070809"/><stop offset="100%" stop-color="#1b1c1d"/></linearGradient>
+        <linearGradient id="sw-ring-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f3f3ef"/><stop offset="34%" stop-color="#a9abad"/><stop offset="66%" stop-color="#f5f5f1"/><stop offset="100%" stop-color="#6b6d6d"/></linearGradient>
+        <linearGradient id="sw-hand-${id}" x1="0.2" y1="0" x2="0.8" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="50%" stop-color="#eaf0d9"/><stop offset="100%" stop-color="#c8d1ba"/></linearGradient>
+        <radialGradient id="sw-dial-${id}" cx="47%" cy="33%" r="82%"><stop offset="0%" stop-color="#ffffff"/><stop offset="74%" stop-color="#fafaf7"/><stop offset="100%" stop-color="#e7e7e2"/></radialGradient>
+        <linearGradient id="sw-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.18"/><stop offset="48%" stop-color="#fff" stop-opacity="0.025"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <clipPath id="sw-dialclip-${id}"><circle cx="100" cy="100" r="66.1"/></clipPath>
+      </defs>
+      <!-- Wide molded biosourced strap, compact polymer case and a small crown. -->
+      <path d="M66 0 H134 L140 42 H60 Z M60 158 H140 L134 200 H66 Z" fill="url(#sw-strap-${id})"/><path d="M69 6 H131 M66 22 H134 M64 38 H136 M64 162 H136 M66 178 H134 M69 194 H131" stroke="#303234" stroke-width="0.55" opacity="0.58"/>
+      <path d="M50 58 Q58 47 72 42 H128 Q142 47 150 58 L157 100 L150 142 Q142 153 128 158 H72 Q58 153 50 142 L43 100 Z" fill="url(#sw-case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="73.3" fill="url(#sw-case-${id})"/><circle cx="100" cy="100" r="70.5" fill="#050606" stroke="#4b4d4d" stroke-width="0.64"/><circle cx="100" cy="100" r="68.4" fill="url(#sw-ring-${id})"/><circle cx="100" cy="100" r="66.1" fill="url(#sw-dial-${id})"/>
+      <rect x="169.5" y="96.8" width="7.2" height="6.4" rx="1" fill="#161718"/><circle cx="181.5" cy="100" r="5.4" fill="url(#sw-ring-${id})" stroke="#555757" stroke-width="0.48"/><path d="M178.1 96.7 V103.3 M179.8 95.5 V104.5 M181.5 95.1 V104.9 M183.2 95.5 V104.5 M184.9 96.7 V103.3" stroke="#575959" stroke-width="0.5"/>
+      <g clip-path="url(#sw-dialclip-${id})">
+        ${ticks}${nums}
+        <text x="100" y="66.8" text-anchor="middle" dominant-baseline="central" font-family="'Arial Rounded MT Bold', Arial, sans-serif" font-size="7.0" font-weight="500" letter-spacing="-0.45" fill="#757575">swatch</text><text x="100" y="73" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="3.05" font-weight="500" letter-spacing="0.34" fill="#6d6d6d">SWISS</text>
+        <rect x="127.5" y="91" width="29.4" height="18" rx="0.45" fill="url(#sw-ring-${id})" stroke="#777979" stroke-width="0.55"/><rect x="129" y="92.5" width="14.1" height="15" fill="#fbfbf8"/><rect x="143.1" y="92.5" width="12.3" height="15" fill="#101010"/><path d="M143.1 92.5 V107.5" stroke="#747676" stroke-width="0.7"/><text class="date-win" data-date="dow" x="136.05" y="100.2" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow', Arial, sans-serif" font-size="6.3" font-weight="500" fill="#141414">FRI</text><text class="date-win" data-date="dom" x="149.2" y="100.2" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow', Arial, sans-serif" font-size="8.1" font-weight="500" fill="#ffffff">16</text>
+        <text x="100" y="164.2" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="1.82" font-weight="500" letter-spacing="0.16" fill="#5e5e5b">© SWATCH AG 1990</text><path d="M43 48 H86 L43 95 Z" fill="url(#sw-glass-${id})" opacity="0.52"/>
+      </g>
+      <g class="hand-hour"><path d="M100 105 L94.6 75 L100 61 L105.4 75 L105.4 105 Z" fill="#121212"/><path d="M100 100 L97.25 75.7 L100 66.1 L102.75 75.7 L102.75 100 Z" fill="url(#sw-hand-${id})"/></g><g class="hand-min"><path d="M100 106 L96.65 45 L100 33.2 L103.35 45 L103.35 106 Z" fill="#121212"/><path d="M100 101 L98.45 47.7 L100 38.6 L101.55 47.7 L101.55 101 Z" fill="url(#sw-hand-${id})"/></g><g class="hand-sec"><line x1="100" y1="117" x2="100" y2="32.6" stroke="#161616" stroke-width="1.0"/><line x1="100" y1="113" x2="100" y2="123.5" stroke="#161616" stroke-width="1.35"/></g><circle cx="100" cy="100" r="4.35" fill="#121212"/><circle cx="100" cy="100" r="1.35" fill="#f4f4ee"/>`;
+    }
+  };
+  LOGOS.swatch = () => "";
+  FIDELITY_OVERLAYS.swatch = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
