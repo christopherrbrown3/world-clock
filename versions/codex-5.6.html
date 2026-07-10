@@ -10650,6 +10650,72 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.monaco = () => "";
   FIDELITY_OVERLAYS.monaco = () => "";
 
+  // ───────────────── Panerai Luminor Marina ─────────────────
+  // Reference object: current Luminor Marina PAM03312. It pairs the 44 mm
+  // brushed-steel Luminor case and polished bezel with a black sandwich dial,
+  // large beveled date at three, rhodium small seconds at nine, and the
+  // crown-protecting bridge that defines the collection.
+  FACES.panerai = {
+    name: "Panerai Luminor Marina PAM03312",
+    cadence: "sweep",
+    render() {
+      const id = "pam3312";
+      const at = (deg, radius, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * radius, cy - Math.cos(a) * radius];
+      };
+      let markers = "", subTicks = "", stitching = "", scales = "";
+      for (const hour of [1, 2, 4, 5, 7, 8, 10, 11]) {
+        const [x, y] = at(hour * 30, 51.2);
+        markers += `<g transform="rotate(${hour * 30} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x - 2.25).toFixed(1)}" y="${(y - 6.8).toFixed(1)}" width="4.5" height="13.6" rx="1.5" fill="#151615" stroke="#3b3e3b" stroke-width="0.48"/><rect x="${(x - 1.42).toFixed(1)}" y="${(y - 5.55).toFixed(1)}" width="2.84" height="11.1" rx="0.9" fill="#d9dfc9"/><path d="M${(x - 0.95).toFixed(1)} ${(y - 5.0).toFixed(1)} H${(x + 0.25).toFixed(1)} V${(y + 5.0).toFixed(1)} H${(x - 0.95).toFixed(1)} Z" fill="#f2f5df" opacity="0.45"/></g>`;
+      }
+      for (let m = 0; m < 60; m++) {
+        const [x1, y1] = at(m * 6, 63.2);
+        const [x2, y2] = at(m * 6, m % 5 === 0 ? 59.8 : 61.35);
+        scales += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#5f635e" stroke-width="${m % 5 === 0 ? "0.62" : "0.32"}" opacity="${m % 5 === 0 ? "0.72" : "0.46"}"/>`;
+      }
+      for (let m = 0; m < 60; m++) {
+        const [x1, y1] = at(m * 6, 15.4, 64.2, 100);
+        const [x2, y2] = at(m * 6, m % 5 === 0 ? 11.5 : 13.05, 64.2, 100);
+        subTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#9ba09c" stroke-width="${m % 5 === 0 ? "0.62" : "0.3"}" opacity="${m % 5 === 0 ? "0.84" : "0.68"}"/>`;
+      }
+      for (let y = 8; y <= 38; y += 7.5) {
+        stitching += `<path d="M72 ${y} H75 M125 ${y} H128 M72 ${200 - y} H75 M125 ${200 - y} H128" stroke="#c7b994" stroke-width="0.62" stroke-linecap="round" opacity="0.82"/>`;
+      }
+      return `<defs>
+        <linearGradient id="pam-leather-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#383632"/><stop offset="29%" stop-color="#11110f"/><stop offset="65%" stop-color="#27251f"/><stop offset="100%" stop-color="#060605"/></linearGradient>
+        <linearGradient id="pam-steel-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#697277"/><stop offset="15%" stop-color="#f4f6f5"/><stop offset="39%" stop-color="#a7b0b4"/><stop offset="58%" stop-color="#eff1f0"/><stop offset="81%" stop-color="#899398"/><stop offset="100%" stop-color="#565f64"/></linearGradient>
+        <linearGradient id="pam-brush-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6f787d"/><stop offset="19%" stop-color="#f5f7f5"/><stop offset="49%" stop-color="#aab2b5"/><stop offset="78%" stop-color="#f6f8f6"/><stop offset="100%" stop-color="#70797e"/></linearGradient>
+        <linearGradient id="pam-bezel-${id}" x1="0.12" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#515b61"/><stop offset="16%" stop-color="#f6f8f6"/><stop offset="41%" stop-color="#aab3b6"/><stop offset="68%" stop-color="#f2f4f2"/><stop offset="100%" stop-color="#566067"/></linearGradient>
+        <radialGradient id="pam-dial-${id}" cx="47%" cy="33%" r="82%"><stop offset="0%" stop-color="#1c1d1b"/><stop offset="62%" stop-color="#090a09"/><stop offset="100%" stop-color="#020302"/></radialGradient>
+        <linearGradient id="pam-hand-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#536067"/><stop offset="22%" stop-color="#f5f7f5"/><stop offset="53%" stop-color="#bfc7c8"/><stop offset="80%" stop-color="#f5f6f2"/><stop offset="100%" stop-color="#657177"/></linearGradient>
+        <linearGradient id="pam-glass-${id}" x1="0" y1="0" x2="0.84" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.16"/><stop offset="43%" stop-color="#fff" stop-opacity="0.025"/><stop offset="70%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="pam-shadow-${id}" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.25" stdDeviation="1.7" flood-color="#101416" flood-opacity="0.34"/></filter>
+        <clipPath id="pam-dialclip-${id}"><circle cx="100" cy="100" r="67.2"/></clipPath>
+      </defs>
+      <!-- Black alligator with warm ecru stitching, emerging from the short Luminor lugs. -->
+      <path d="M68 0 H132 L137 47 H63 L68 0 Z M63 153 H137 L132 200 H68 L63 153 Z" fill="url(#pam-leather-${id})" stroke="#090908" stroke-width="0.62"/><path d="M73 3 H127 M70 16 H130 M67 30 H133 M67 170 H133 M70 184 H130 M73 197 H127" stroke="#504c44" stroke-width="0.5" opacity="0.64"/>${stitching}
+      <path d="M52 65 L58 40 Q62 36 78 49 L86 58 Z M148 65 L142 40 Q138 36 122 49 L114 58 Z M52 135 L58 160 Q62 164 78 151 L86 142 Z M148 135 L142 160 Q138 164 122 151 L114 142 Z" fill="url(#pam-brush-${id})" stroke="#6d777d" stroke-width="0.5"/>
+      <circle cx="100" cy="100" r="78.5" fill="url(#pam-steel-${id})" filter="url(#pam-shadow-${id})"/><circle cx="100" cy="100" r="77.6" fill="none" stroke="#f5f7f5" stroke-width="0.68" opacity="0.72"/><circle cx="100" cy="100" r="73.5" fill="#566066"/><circle cx="100" cy="100" r="72.5" fill="url(#pam-bezel-${id})" stroke="#4f5a60" stroke-width="0.65"/><circle cx="100" cy="100" r="67.2" fill="url(#pam-dial-${id})" stroke="#151715" stroke-width="0.78"/>
+      <!-- Luminor's crown-protecting bridge: compact, asymmetric and bolted into the case side. -->
+      <path d="M165.2 77.4 H184.3 Q190.8 77.4 192.3 84.0 V116.0 Q190.8 122.6 184.3 122.6 H165.2 Z" fill="url(#pam-brush-${id})" stroke="#566169" stroke-width="0.68"/><path d="M168.2 81.6 H183.5 Q187.5 81.6 188.2 85.8 V114.2 Q187.5 118.4 183.5 118.4 H168.2 Z" fill="#8e999d" stroke="#59646b" stroke-width="0.52"/><circle cx="171.5" cy="100" r="7.35" fill="url(#pam-steel-${id})" stroke="#536069" stroke-width="0.58"/><path d="M184.0 86.7 Q192.2 91.2 192.2 100 Q192.2 108.8 184.0 113.3" fill="none" stroke="#f5f6f4" stroke-width="1.6" stroke-linecap="round"/><path d="M187.3 85.2 L191.3 90.4 L191.3 109.6 L187.3 114.8" fill="none" stroke="#47525a" stroke-width="0.9" stroke-linejoin="round"/>
+      <g clip-path="url(#pam-dialclip-${id})">
+        ${scales}<circle cx="100" cy="100" r="64.8" fill="none" stroke="#242624" stroke-width="0.72"/>
+        <text x="100" y="58.9" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="17.8" font-weight="800" fill="#dce2cd">12</text><text x="100" y="151.9" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="17.8" font-weight="800" fill="#dce2cd">6</text>
+        ${markers}
+        <text x="100" y="76.3" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="5.35" font-weight="700" letter-spacing="0.55" fill="#dfe4d7">LUMINOR MARINA</text>
+        <!-- Rhodium-ring small seconds at nine, driven by the live running seconds. -->
+        <circle cx="64.2" cy="100" r="18.6" fill="#070807" stroke="#4b514d" stroke-width="0.92"/><circle cx="64.2" cy="100" r="16.8" fill="none" stroke="#202421" stroke-width="0.64"/>${subTicks}<g class="hand-subsec" data-pivot="64.2 100"><line x1="64.2" y1="106.2" x2="64.2" y2="84.3" stroke="#d7ddda" stroke-width="1.05"/><line x1="64.2" y1="104.8" x2="64.2" y2="85.5" stroke="#7d898e" stroke-width="0.34"/><circle cx="64.2" cy="100" r="1.85" fill="#d7ddda"/><circle cx="64.2" cy="100" r="0.72" fill="#3b4447"/></g>
+        <!-- The enlarged beveled date aperture sits opposite the seconds register. -->
+        <rect x="135.8" y="92.0" width="20.2" height="16.0" rx="1.25" fill="#1a1c1a" stroke="#5b625e" stroke-width="0.75"/><rect x="137.3" y="93.4" width="17.2" height="13.2" rx="0.65" fill="#f0f1e8" stroke="#a8afa7" stroke-width="0.42"/><text class="date-win" data-date="dom" x="145.9" y="100.2" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="8.3" font-weight="700" fill="#171917">28</text>
+        <path d="M43 49 H85 L43 93 Z" fill="url(#pam-glass-${id})" opacity="0.38"/>
+      </g>
+      <g class="hand-hour"><path d="M100 106 L95.3 97.2 L96.0 68.2 L100 59.0 L104.0 68.2 L104.7 97.2 Z" fill="url(#pam-hand-${id})" stroke="#535e63" stroke-width="0.52"/><path d="M100 100 L97.95 95.0 L98.2 70.2 L100 64.2 L101.8 70.2 L102.05 95.0 Z" fill="#dce3cd"/></g><g class="hand-min"><path d="M100 107 L96.8 97.0 L97.5 42.2 L100 30.5 L102.5 42.2 L103.2 97.0 Z" fill="url(#pam-hand-${id})" stroke="#535e63" stroke-width="0.48"/><path d="M100 101 L98.75 95.0 L99.0 45.2 L100 36.4 L101.0 45.2 L101.25 95.0 Z" fill="#dce3cd"/></g><circle cx="100" cy="100" r="3.9" fill="url(#pam-hand-${id})" stroke="#535e63" stroke-width="0.52"/><circle cx="100" cy="100" r="1.34" fill="#202624"/>`;
+    }
+  };
+  LOGOS.panerai = () => "";
+  FIDELITY_OVERLAYS.panerai = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
