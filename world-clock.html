@@ -10328,6 +10328,49 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.snowflake = () => "";
   FIDELITY_OVERLAYS.snowflake = () => "";
 
+  // ───────────────── Casio G-SHOCK DW-5600UE-1 ─────────────────
+  // Reference object: current DW-5600UE-1 / module 3525. The compact 5600
+  // uses a positive LCD, white LED "ILLUMINATOR" print and the classic black
+  // resin square with aqua, silver and gold printed accents.
+  FACES.gshock = {
+    name: "Casio G-Shock DW-5600UE-1",
+    cadence: "digital",
+    render() {
+      const id = "dw5600";
+      const screw = (x, y) => `<g><circle cx="${x}" cy="${y}" r="3.25" fill="#0a0c0f" stroke="#4b535a" stroke-width="0.55"/><circle cx="${(x - 0.65).toFixed(1)}" cy="${(y - 0.75).toFixed(1)}" r="1.4" fill="#2b3137"/><path d="M${(x - 1.9).toFixed(1)} ${y} H${(x + 1.9).toFixed(1)}" stroke="#06080a" stroke-width="0.72" stroke-linecap="round"/></g>`;
+      return `<defs>${caseDefs(id, "dark")}
+        <linearGradient id="dw-resin-${id}" x1="0.1" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#454a51"/><stop offset="36%" stop-color="#252a30"/><stop offset="72%" stop-color="#12161b"/><stop offset="100%" stop-color="#06080b"/></linearGradient>
+        <linearGradient id="dw-face-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#171b20"/><stop offset="100%" stop-color="#030507"/></linearGradient>
+        <linearGradient id="dw-lcd-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#cbd1bf"/><stop offset="56%" stop-color="#b7bda9"/><stop offset="100%" stop-color="#9aa28f"/></linearGradient>
+        <linearGradient id="dw-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.28"/><stop offset="45%" stop-color="#fff" stop-opacity="0.04"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <clipPath id="dw-lcdclip-${id}"><rect x="57.5" y="83.5" width="85" height="43" rx="3.2"/></clipPath>
+      </defs>
+      <!-- Tapered, ribbed black resin strap. -->
+      <path d="M61 0 H139 Q145 1 146 8 L151 48 H49 L54 8 Q55 1 61 0 Z M49 152 H151 L146 192 Q145 199 139 200 H61 Q55 199 54 192 Z" fill="url(#dw-resin-${id})"/><path d="M55 11 H145 M52 24 H148 M50 36 H150 M50 164 H150 M52 177 H148 M55 190 H145" stroke="#07090c" stroke-width="2.45" opacity="0.9"/><path d="M59 12 H141 M56 25 H144 M55 165 H145 M58 178 H142" stroke="#485058" stroke-width="0.56" opacity="0.5"/>
+      ${screw(61, 19)}${screw(139, 19)}${screw(61, 181)}${screw(139, 181)}
+      <!-- Four side buttons recessed into the bumper guards. -->
+      <rect x="15" y="76" width="13.5" height="17" rx="4.4" fill="#13181d" stroke="#465058" stroke-width="0.6"/><rect x="15" y="107" width="13.5" height="17" rx="4.4" fill="#13181d" stroke="#465058" stroke-width="0.6"/><rect x="171.5" y="76" width="13.5" height="17" rx="4.4" fill="#13181d" stroke="#465058" stroke-width="0.6"/><rect x="171.5" y="107" width="13.5" height="17" rx="4.4" fill="#13181d" stroke="#465058" stroke-width="0.6"/><rect x="181.4" y="79.5" width="3.2" height="10" rx="1.5" fill="#b6bcc0" opacity="0.68"/><rect x="181.4" y="110.5" width="3.2" height="10" rx="1.5" fill="#b6bcc0" opacity="0.68"/>
+      <!-- The DW-5600's compact square resin bumper. -->
+      <path d="M49 42 H151 L165 55 H173 Q181 63 181 76 V124 Q181 137 173 145 H165 L151 158 H49 L35 145 H27 Q19 137 19 124 V76 Q19 63 27 55 H35 Z" fill="url(#dw-resin-${id})" filter="url(#shadow-${id})"/><path d="M50 44 H150 L163 57 H171 Q178 64 178 77 V123 Q178 136 171 143 H163 L150 156 H50 L37 143 H29 Q22 136 22 123 V77 Q22 64 29 57 H37 Z" fill="none" stroke="url(#rim-${id})" stroke-width="0.92"/><path d="M41 53 L31 65 M159 53 L169 65 M41 147 L31 135 M159 147 L169 135" stroke="#07090c" stroke-width="1.9" opacity="0.62"/>
+      ${screw(47, 58)}${screw(153, 58)}${screw(47, 142)}${screw(153, 142)}
+      <path d="M56 58 H144 Q151 58 155 66 L160 76 V124 L155 134 Q151 142 144 142 H56 Q49 142 45 134 L40 124 V76 L45 66 Q49 58 56 58 Z" fill="url(#dw-face-${id})" stroke="#050709" stroke-width="1.75"/><path d="M57 61 H143 Q149 61 152 68 L157 78 V122 L152 132 Q149 139 143 139 H57 Q51 139 48 132 L43 122 V78 L48 68 Q51 61 57 61 Z" fill="none" stroke="#f1f3f1" stroke-width="1.18"/>
+      <text x="100" y="55.4" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="6.1" font-weight="900" letter-spacing="0.68" fill="#dfe4e6" stroke="#6a737c" stroke-width="0.25" paint-order="stroke">PROTECTION</text><text x="100" y="151.7" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="8.3" font-weight="900" letter-spacing="0.48" fill="#dfe4e6" stroke="#66717a" stroke-width="0.28" paint-order="stroke">G-SHOCK</text>
+      <text x="100" y="68.2" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="6.1" font-weight="900" letter-spacing="0.3" fill="#f0f2f1">CASIO</text><text x="100" y="74.1" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="3.82" font-weight="800" letter-spacing="0.5" fill="#20bed6">WATER 20BAR RESIST</text><text x="100" y="79.1" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="3.75" font-weight="800" font-style="italic" letter-spacing="0.28" fill="#f1f3f1">◂ILLUMINATOR▸</text>
+      <circle cx="48" cy="81.7" r="1.62" fill="#d8ba70"/><circle cx="48" cy="124.8" r="1.62" fill="#d8ba70"/><circle cx="152" cy="81.7" r="1.62" fill="#d8ba70"/><circle cx="152" cy="124.8" r="1.62" fill="#d8ba70"/><text x="50.7" y="95" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 50.7 95)" font-family="Arial, Helvetica, sans-serif" font-size="3.55" font-weight="800" fill="#f0f2f1">ADJUST</text><text x="50.7" y="116.5" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 50.7 116.5)" font-family="Arial, Helvetica, sans-serif" font-size="3.55" font-weight="800" fill="#f0f2f1">MODE</text><text x="149.3" y="95" text-anchor="middle" dominant-baseline="central" transform="rotate(90 149.3 95)" font-family="Arial, Helvetica, sans-serif" font-size="3.35" font-weight="800" fill="#f0f2f1">START·STOP</text><text x="149.3" y="116.5" text-anchor="middle" dominant-baseline="central" transform="rotate(90 149.3 116.5)" font-family="Arial, Helvetica, sans-serif" font-size="3.55" font-weight="800" fill="#f0f2f1">LIGHT</text>
+      <!-- Positive module 3525 LCD: weekday, month-date, large time and seconds. -->
+      <rect x="53" y="80" width="94" height="50" rx="5.1" fill="#303638" stroke="#050708" stroke-width="1.65"/><rect x="57.5" y="83.5" width="85" height="43" rx="3.2" fill="url(#dw-lcd-${id})" stroke="#161b17" stroke-width="0.95"/><path d="M58 84 H142" stroke="#f6faf4" stroke-width="0.5" opacity="0.45"/>
+      <g clip-path="url(#dw-lcdclip-${id})">
+        <text x="66.2" y="95.2" text-anchor="middle" font-family="'Share Tech Mono', 'Roboto Mono', monospace" font-size="8.8" font-weight="700" fill="#89927f" opacity="0.4">888</text><text x="66.2" y="95.2" text-anchor="middle" data-digital="dow" font-family="'Share Tech Mono', 'Roboto Mono', monospace" font-size="8.8" font-weight="700" fill="#161b13">SUN</text>
+        <rect x="104" y="86.2" width="34.5" height="15.6" rx="1.6" fill="none" stroke="#77806f" stroke-width="0.65" opacity="0.86"/><text x="121.3" y="96.4" text-anchor="middle" font-family="'Share Tech Mono', 'Roboto Mono', monospace" font-size="11.1" font-weight="700" fill="#89927f" opacity="0.4">8-88</text><text x="121.3" y="96.4" text-anchor="middle" data-digital="md" font-family="'Share Tech Mono', 'Roboto Mono', monospace" font-size="11.1" font-weight="700" fill="#161b13">6-30</text>
+        <path d="M61 101 l1.8 1.8 l2.2 -0.8 l0.8 2.2 l2.2 0.8 l-1.8 1.8 l0.8 2.2 l-2.2 -0.8 l-1.8 1.8 l-1.8 -1.8 l-2.2 0.8 l0.8 -2.2 l-1.8 -1.8 l2.2 -0.8 Z" fill="none" stroke="#1a2017" stroke-width="0.58" opacity="0.82"/>
+        <text x="91" y="119.2" text-anchor="middle" textLength="56" lengthAdjust="spacingAndGlyphs" font-family="'Share Tech Mono', 'Roboto Mono', monospace" font-size="23.4" font-weight="700" fill="#87907e" opacity="0.38">88:88</text><text x="91" y="119.2" text-anchor="middle" textLength="56" lengthAdjust="spacingAndGlyphs" data-digital="hm" font-family="'Share Tech Mono', 'Roboto Mono', monospace" font-size="23.4" font-weight="700" fill="#131810">--:--</text><text x="133.5" y="119.2" text-anchor="middle" textLength="14.5" lengthAdjust="spacingAndGlyphs" font-family="'Share Tech Mono', 'Roboto Mono', monospace" font-size="13.2" font-weight="700" fill="#87907e" opacity="0.38">88</text><text x="133.5" y="119.2" text-anchor="middle" textLength="14.5" lengthAdjust="spacingAndGlyphs" data-digital="ss" font-family="'Share Tech Mono', 'Roboto Mono', monospace" font-size="13.2" font-weight="700" fill="#131810">--</text><rect x="57.5" y="83.5" width="85" height="43" fill="url(#dw-glass-${id})"/>
+      </g>
+      <text x="100" y="134.8" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="3.38" font-weight="800" letter-spacing="0.3" fill="#f1f3f1">LED BACKLIGHT</text><text x="72.2" y="142.6" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="5.25" font-weight="800" letter-spacing="0.2" fill="#d6b56a">ALARM</text><path d="M90 138.4 h20 l4 3.6 l-4 3.8 h-20 l-4 -3.8 Z" fill="#351b13" stroke="#d6b56a" stroke-width="0.74"/><text x="100" y="141.1" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="3.1" font-weight="900" letter-spacing="0.18" fill="#d6b56a">SHOCK</text><text x="100" y="144.1" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="2.9" font-weight="900" letter-spacing="0.14" fill="#d6b56a">RESIST</text><text x="127.8" y="142.6" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="5.25" font-weight="800" letter-spacing="0.2" fill="#d6b56a">CHRONO</text>`;
+    }
+  };
+  LOGOS.gshock = () => "";
+  FIDELITY_OVERLAYS.gshock = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
@@ -11145,6 +11188,11 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       switch (el.dataset.digital) {
         case "hm":  el.textContent = `${pad(H)}:${pad(mm)}`; break;
         case "ss":  el.textContent = pad(ss); break;
+        case "md": {
+          const month = new Intl.DateTimeFormat("en-US", { timeZone: c.tz, month: "numeric" }).format(now);
+          const day = new Intl.DateTimeFormat("en-US", { timeZone: c.tz, day: "numeric" }).format(now);
+          el.textContent = `${month}-${day}`; break;
+        }
         case "ssPrev": el.textContent = pad((ss + 59) % 60); break;
         case "ssNext": el.textContent = pad((ss + 1) % 60); break;
         case "dow": el.textContent = new Intl.DateTimeFormat("en-US", { timeZone: c.tz, weekday: "short" }).format(now).toUpperCase(); break;
