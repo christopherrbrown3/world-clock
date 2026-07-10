@@ -35,7 +35,7 @@ Total faces: 62.
 | `seiko5` | Seiko 5 Sports SRPD51 | `sweep` |
 | `moonphase` | Blancpain Villeret Quantième Complet | `sweep` |
 | `richardmille` | Richard Mille RM 011 Felipe Massa | `sweep` |
-| `blackbay58` | Tudor Black Bay 58 | `sweep` |
+| `blackbay58` | TUDOR Black Bay Fifty-Eight M79030N | `sweep` |
 | `navitimer` | Breitling Navitimer | `sweep` |
 | `elprimero` | Zenith Chronomaster El Primero | `sweep` |
 | `overseas` | Vacheron Constantin Overseas | `sweep` |
