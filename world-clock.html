@@ -10248,6 +10248,86 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.datejust = () => "";
   FIDELITY_OVERLAYS.datejust = () => "";
 
+  // ───────────────── Grand Seiko Snowflake ─────────────────
+  // Reference object: Heritage Collection SBGA211. Its 41 mm High-Intensity
+  // Titanium case, wind-swept "Snowflake" dial and continuously gliding blue
+  // Spring Drive seconds hand define the whole composition.
+  FACES.snowflake = {
+    name: "Grand Seiko Snowflake",
+    cadence: "glide",
+    render() {
+      const id = "sbga211", PRX = 69, PRY = 130;
+      const braceletRow = (y, width, height) => {
+        const x = 100 - width / 2, side = width * 0.23, centre = width - side * 2;
+        return `<g><rect x="${x.toFixed(1)}" y="${y}" width="${side.toFixed(1)}" height="${height}" rx="1.15" fill="url(#gs-brush-${id})" stroke="#67727b" stroke-width="0.33"/><rect x="${(x + side).toFixed(1)}" y="${(y + 0.35).toFixed(1)}" width="${centre.toFixed(1)}" height="${(height - 0.7).toFixed(1)}" rx="1.1" fill="url(#gs-brush-${id})" stroke="#6a747c" stroke-width="0.28"/><rect x="${(x + side - 1.1).toFixed(1)}" y="${(y + 0.7).toFixed(1)}" width="1.15" height="${(height - 1.4).toFixed(1)}" fill="url(#gs-polish-${id})"/><rect x="${(x + width - side - 0.05).toFixed(1)}" y="${(y + 0.7).toFixed(1)}" width="1.15" height="${(height - 1.4).toFixed(1)}" fill="url(#gs-polish-${id})"/><path d="M${(x + side).toFixed(1)} ${(y + 1).toFixed(1)} H${(x + width - side).toFixed(1)} M${(x + side).toFixed(1)} ${(y + height - 1).toFixed(1)} H${(x + width - side).toFixed(1)}" stroke="#313a42" stroke-width="0.36" opacity="0.65"/></g>`;
+      };
+      const bracelet =
+        braceletRow(0, 50, 11) + braceletRow(11, 55, 11) + braceletRow(22, 60, 11) + braceletRow(33, 64, 11) +
+        braceletRow(156, 64, 11) + braceletRow(167, 60, 11) + braceletRow(178, 55, 11) + braceletRow(189, 50, 11);
+
+      let snow = "";
+      for (let i = 0; i < 360; i++) {
+        const angle = i * 2.399963, r = 4 + Math.sqrt(i) * 3.05;
+        if (r > 63.5) continue;
+        const x = 100 + Math.cos(angle) * r, y = 100 + Math.sin(angle) * r;
+        const length = 1.2 + (i % 9) * 0.28, drift = Math.sin(i * 1.71) * 0.62, bend = Math.cos(i * 0.83) * 0.32;
+        snow += `<path d="M${(x - drift * 0.3).toFixed(1)} ${(y - length / 2).toFixed(1)} q${bend.toFixed(2)} ${(length * 0.24).toFixed(2)} ${drift.toFixed(2)} ${length.toFixed(2)}" fill="none" stroke="${i % 3 ? "#9ba6b0" : "#ffffff"}" stroke-width="${(0.24 + (i % 4) * 0.05).toFixed(2)}" opacity="${(0.11 + (i % 5) * 0.022).toFixed(3)}" stroke-linecap="round"/>`;
+      }
+
+      let minuteTrack = "", markers = "", rehaut = "", reserveTicks = "";
+      for (let minute = 0; minute < 60; minute++) {
+        const a = minute / 60 * Math.PI * 2, [x1, y1] = P(a, 63.7), [x2, y2] = P(a, minute % 5 === 0 ? 59.2 : 61.4);
+        minuteTrack += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#252b32" stroke-width="${minute % 5 === 0 ? "0.85" : "0.42"}" opacity="${minute % 5 === 0 ? "0.9" : "0.74"}"/>`;
+      }
+      for (let hour = 0; hour < 12; hour++) {
+        if (hour === 3) continue;
+        const a = hour / 12 * Math.PI * 2, [x, y] = P(a, 50.1);
+        const wide = hour === 0 || hour === 6 ? 8.3 : 5.4, tall = hour === 0 || hour === 6 ? 16.2 : 13.7;
+        markers += `<g transform="rotate(${hour * 30} ${x.toFixed(1)} ${y.toFixed(1)})"><path d="M${(x - wide / 2).toFixed(1)} ${(y - tall / 2).toFixed(1)} L${(x + wide / 2).toFixed(1)} ${(y - tall / 2).toFixed(1)} L${(x + wide * 0.32).toFixed(1)} ${(y + tall / 2).toFixed(1)} L${(x - wide * 0.32).toFixed(1)} ${(y + tall / 2).toFixed(1)} Z" fill="url(#gs-index-${id})" stroke="#4d5860" stroke-width="0.34"/><path d="M${(x - wide * 0.25).toFixed(1)} ${(y - tall / 2 + 1.05).toFixed(1)} L${x.toFixed(1)} ${(y - tall / 2 + 0.55).toFixed(1)} L${x.toFixed(1)} ${(y + tall / 2 - 1).toFixed(1)} L${(x - wide * 0.18).toFixed(1)} ${(y + tall / 2 - 0.75).toFixed(1)} Z" fill="#ffffff" opacity="0.48"/></g>`;
+      }
+      for (let i = 0; i < 12; i++) {
+        const a = (i + 0.5) / 12 * Math.PI * 2, [x, y] = P(a, 62.5), deg = (i + 0.5) * 30;
+        rehaut += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})" font-family="Arial, Helvetica, sans-serif" font-size="1.38" font-weight="700" letter-spacing="0.18" fill="#77818b" opacity="0.42">GS</text>`;
+      }
+      for (let i = 0; i <= 15; i++) {
+        const theta = Math.PI + i * (Math.PI / 2 / 15), long = i % 3 === 0, r1 = 23.2, r2 = long ? 15.1 : 17.2;
+        const x1 = PRX + Math.cos(theta) * r1, y1 = PRY + Math.sin(theta) * r1, x2 = PRX + Math.cos(theta) * r2, y2 = PRY + Math.sin(theta) * r2;
+        reserveTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#87919a" stroke-width="${long ? "0.9" : "0.46"}" opacity="${long ? "0.9" : "0.7"}"/>`;
+      }
+
+      return `<defs>${caseDefs(id, "steel")}
+        <linearGradient id="gs-brush-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f6f8f8"/><stop offset="29%" stop-color="#aeb8be"/><stop offset="53%" stop-color="#e7ebeb"/><stop offset="100%" stop-color="#718089"/></linearGradient>
+        <linearGradient id="gs-polish-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#66717a"/><stop offset="30%" stop-color="#ffffff"/><stop offset="52%" stop-color="#cdd5d7"/><stop offset="72%" stop-color="#ffffff"/><stop offset="100%" stop-color="#657079"/></linearGradient>
+        <linearGradient id="gs-index-${id}" x1="0.12" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="43%" stop-color="#c1cbd0"/><stop offset="66%" stop-color="#6f7a83"/><stop offset="100%" stop-color="#f3f6f5"/></linearGradient>
+        <linearGradient id="gs-hand-${id}" x1="0.15" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#fbffff"/><stop offset="40%" stop-color="#b8c2c7"/><stop offset="61%" stop-color="#63717a"/><stop offset="100%" stop-color="#eaf0ef"/></linearGradient>
+        <linearGradient id="gs-blue-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3e7ece"/><stop offset="47%" stop-color="#0b4da8"/><stop offset="100%" stop-color="#092f6d"/></linearGradient>
+        <radialGradient id="gs-dial-${id}" cx="46%" cy="32%" r="84%"><stop offset="0%" stop-color="#ffffff"/><stop offset="54%" stop-color="#f2f4f4"/><stop offset="100%" stop-color="#cbd2d4"/></radialGradient>
+        <radialGradient id="gs-reserve-${id}" cx="41%" cy="31%" r="84%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#d0d7d9"/></radialGradient>
+        <linearGradient id="gs-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/><stop offset="45%" stop-color="#ffffff" stop-opacity="0.035"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <clipPath id="gs-dialclip-${id}"><circle cx="100" cy="100" r="65.3"/></clipPath>
+      </defs>
+      <!-- Broad titanium bracelet, faceted lugs and narrow Zaratsu-polished bezel. -->
+      ${bracelet}
+      <path d="M46.2 58 L55.3 28 Q63 28 79.5 42 L85.7 52.5 Z M153.8 58 L144.7 28 Q137 28 120.5 42 L114.3 52.5 Z M46.2 142 L55.3 172 Q63 172 79.5 158 L85.7 147.5 Z M153.8 142 L144.7 172 Q137 172 120.5 158 L114.3 147.5 Z" fill="url(#gs-brush-${id})" stroke="#5b6770" stroke-width="0.5"/><path d="M49.6 60 L57.8 33 Q65 33 80.2 46 M150.4 60 L142.2 33 Q135 33 119.8 46 M49.6 140 L57.8 167 Q65 167 80.2 154 M150.4 140 L142.2 167 Q135 167 119.8 154" fill="none" stroke="#ffffff" stroke-width="0.66" opacity="0.86"/>
+      <circle cx="100" cy="100" r="81.5" fill="url(#gs-brush-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="80.55" fill="none" stroke="url(#rim-${id})" stroke-width="0.84"/><circle cx="100" cy="100" r="75.6" fill="url(#gs-polish-${id})" stroke="#67737b" stroke-width="0.45"/><circle cx="100" cy="100" r="72.9" fill="url(#gs-brush-${id})" stroke="#f8fbfb" stroke-width="0.55"/><circle cx="100" cy="100" r="66.6" fill="#9ca7ad"/><circle cx="100" cy="100" r="65.3" fill="url(#gs-dial-${id})"/>
+      <!-- Small ridged titanium crown at three. -->
+      <path d="M171.7 90 C180.2 89.4 184.3 94.4 185.9 96.7 L185.9 103.3 C184.3 105.6 180.2 110.6 171.7 110 L168.3 105.5 L168.3 94.5 Z" fill="url(#gs-polish-${id})" stroke="#56626b" stroke-width="0.5"/><rect x="176" y="96.2" width="6.7" height="7.6" rx="1.2" fill="url(#gs-brush-${id})"/><circle cx="189.3" cy="100" r="6.2" fill="url(#gs-brush-${id})" stroke="#59656e" stroke-width="0.55"/><path d="M185.5 96.6 V103.4 M187.05 95.2 V104.8 M188.6 94.4 V105.6 M190.15 95.2 V104.8 M191.7 96.6 V103.4" stroke="#59656e" stroke-width="0.52"/><path d="M185.9 96.6 V103.4 M187.45 95.2 V104.8 M189 94.4 V105.6 M190.55 95.2 V104.8 M192.1 96.6 V103.4" stroke="#f7faf9" stroke-width="0.2" opacity="0.74"/>
+      <g clip-path="url(#gs-dialclip-${id})">
+        ${snow}${minuteTrack}${markers}
+        <path d="M45.7 130 A23.3 23.3 0 0 1 69 106.7 L69 130 Z" fill="url(#gs-reserve-${id})" stroke="#9da7ae" stroke-width="0.62"/><path d="M48.3 130 A20.7 20.7 0 0 1 69 109.3" fill="none" stroke="#ffffff" stroke-width="0.82" opacity="0.82"/>${reserveTicks}<path d="M45.7 130 A23.3 23.3 0 0 1 69 106.7" fill="none" stroke="#8e989f" stroke-width="0.78"/><line class="hand-pr" x1="${PRX}" y1="${PRY}" x2="52.7" y2="126.1" stroke="#7d8991" stroke-width="1.08" data-pivot="${PRX} ${PRY}"/><circle cx="${PRX}" cy="${PRY}" r="1.9" fill="url(#gs-index-${id})" stroke="#737f88" stroke-width="0.36"/>
+        <text x="100" y="58.2" text-anchor="middle" dominant-baseline="central" font-family="Georgia, 'Times New Roman', serif" font-size="8.3" font-weight="700" font-style="italic" letter-spacing="-0.55" fill="#26303b">GS</text><text x="100" y="67" text-anchor="middle" dominant-baseline="central" font-family="Georgia, 'Times New Roman', serif" font-size="5.0" font-weight="700" letter-spacing="-0.05" fill="#26303b">Grand Seiko</text>
+        <text x="100" y="143.2" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="3.55" font-weight="700" letter-spacing="0.48" fill="#173d71">SPRING DRIVE</text>
+        <rect x="143.2" y="92" width="16.3" height="15.9" rx="0.42" fill="url(#gs-index-${id})" stroke="#68737c" stroke-width="0.55"/><rect x="145.5" y="94.2" width="11.6" height="11.5" rx="0.08" fill="#ffffff" stroke="#bdc6ca" stroke-width="0.28"/><text class="date-win" data-date="dom" x="151.3" y="100.15" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow', Arial, Helvetica, sans-serif" font-size="9.45" font-weight="500" fill="#14191e">1</text>
+        <path d="M43 47 H87 L43 95 Z" fill="url(#gs-glass-${id})" opacity="0.48"/>
+      </g>
+      <!-- Solid faceted dauphine hands and the continuously gliding blue needle. -->
+      <g class="hand-hour"><path d="M100 105 L96.35 70.4 L100 57.3 L103.65 70.4 Z" fill="url(#gs-hand-${id})" stroke="#52606a" stroke-width="0.35"/><path d="M100 103 L100 58.5 L102.55 70.8 Z" fill="#ffffff" opacity="0.48"/><path d="M100 59 L100 103" stroke="#56636c" stroke-width="0.38" opacity="0.58"/></g><g class="hand-min"><path d="M100 106 L97.6 45.6 L100 36.2 L102.4 45.6 Z" fill="url(#gs-hand-${id})" stroke="#52606a" stroke-width="0.33"/><path d="M100 104 L100 37.3 L101.75 46 Z" fill="#ffffff" opacity="0.5"/><path d="M100 37.3 L100 104" stroke="#56636c" stroke-width="0.36" opacity="0.55"/></g><g class="hand-sec"><line x1="100" y1="116.5" x2="100" y2="38.5" stroke="url(#gs-blue-${id})" stroke-width="0.88"/><line x1="100" y1="112" x2="100" y2="122.5" stroke="url(#gs-blue-${id})" stroke-width="1.18"/><circle cx="100" cy="40.1" r="0.86" fill="#0d4a9d"/></g><circle cx="100" cy="100" r="3.15" fill="url(#gs-index-${id})" stroke="#52606a" stroke-width="0.42"/><circle cx="100" cy="100" r="1.25" fill="#1b5cab"/>
+      `;
+    }
+  };
+  LOGOS.snowflake = () => "";
+  FIDELITY_OVERLAYS.snowflake = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
