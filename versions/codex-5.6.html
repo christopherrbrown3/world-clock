@@ -11351,6 +11351,100 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.overseas = () => "";
   FIDELITY_OVERLAYS.overseas = () => "";
 
+  // ───────────────── Hublot Big Bang Unico Red Magic 42 ─────────────────
+  // Reference object: Big Bang Unico Red Magic 42 (441.CF.8513.RX), a limited
+  // polished red-ceramic, bi-compax Unico with a dial-side skeleton movement.
+  FACES.bigbang = {
+    name: "Hublot Big Bang Unico Red Magic 42",
+    cadence: "sweep",
+    render() {
+      const id = "hbb441redmagic";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const gear = (cx, cy, outer, inner, teeth, fill, stroke) => {
+        let points = "";
+        for (let i = 0; i < teeth * 2; i++) {
+          const a = -Math.PI / 2 + i * Math.PI / teeth;
+          const r = i % 2 === 0 ? outer : inner;
+          points += `${(cx + Math.cos(a) * r).toFixed(1)},${(cy + Math.sin(a) * r).toFixed(1)} `;
+        }
+        return `<polygon points="${points}" fill="${fill}" stroke="${stroke}" stroke-width="0.58"/>`;
+      };
+      let strapRibs = "", bezelScrews = "", flange = "", numerals = "", bridges = "";
+      for (let x = 68; x <= 132; x += 8) {
+        strapRibs += `<path d="M${x} 0 L${x - 5.3} 43 M${x + 5.3} 157 L${x} 200" fill="none" stroke="#7d0d13" stroke-width="3.8" stroke-linecap="round"/><path d="M${x + 1.1} 0 L${x - 4.2} 43 M${x + 6.4} 157 L${x + 1.1} 200" fill="none" stroke="#ee4341" stroke-width="0.62" opacity="0.64"/>`;
+      }
+      for (let i = 0; i < 6; i++) {
+        const deg = i * 60, [x,y] = at(deg, 73.3);
+        bezelScrews += `<g transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.35" fill="#12171a" stroke="#5e6669" stroke-width="0.62"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.95" fill="#242a2d" stroke="#06090a" stroke-width="0.42"/><path d="M${(x - 2.25).toFixed(1)} ${(y - 2.15).toFixed(1)} V${(y + 2.15).toFixed(1)} M${(x + 2.25).toFixed(1)} ${(y - 2.15).toFixed(1)} V${(y + 2.15).toFixed(1)} M${(x - 2.25).toFixed(1)} ${y.toFixed(1)} H${(x + 2.25).toFixed(1)}" stroke="#070a0c" stroke-width="1.55" stroke-linecap="square"/><path d="M${(x - 1.8).toFixed(1)} ${(y - 1.75).toFixed(1)} V${(y + 1.75).toFixed(1)} M${(x + 1.8).toFixed(1)} ${(y - 1.75).toFixed(1)} V${(y + 1.75).toFixed(1)} M${(x - 1.8).toFixed(1)} ${(y - 0.15).toFixed(1)} H${(x + 1.8).toFixed(1)}" stroke="#8d9697" stroke-width="0.44" opacity="0.72"/></g>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const deg = i * 6, [x1,y1] = at(deg, 64.7), [x2,y2] = at(deg, i % 5 === 0 ? 59.2 : 61.9);
+        flange += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e23231" stroke-width="${i % 5 === 0 ? "0.86" : "0.40"}" opacity="${i % 5 === 0 ? "0.98" : "0.72"}"/>`;
+      }
+      for (const [word,deg] of [["60",0],["05",30],["10",60],["15",90],["20",120],["25",150],["30",180],["35",210],["40",240],["45",270],["50",300],["55",330]]) {
+        const [x,y] = at(deg, 61.0);
+        flange += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.55" font-weight="700" fill="#df302f">${word}</text>`;
+      }
+      for (const [word,deg] of [["12",0],["2",60],["4",120],["6",180],["8",240],["10",300]]) {
+        const [x,y] = at(deg, 46.6);
+        numerals += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${word === "12" || word === "10" ? "11.0" : "10.2"}" font-weight="700" fill="none" stroke="#df302f" stroke-width="1.05" paint-order="stroke" opacity="0.97">${word}</text>`;
+      }
+      for (const deg of [30,150,210,330]) {
+        const [x,y] = at(deg, 48.0);
+        numerals += `<g transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x - 2.85).toFixed(1)}" y="${(y - 7.5).toFixed(1)}" width="5.7" height="15.0" rx="0.7" fill="#d52529" stroke="#561014" stroke-width="0.5"/><rect x="${(x - 1.45).toFixed(1)}" y="${(y - 5.9).toFixed(1)}" width="2.9" height="11.8" rx="0.36" fill="#171c1e"/></g>`;
+      }
+      // Layered smoked bridges and gears deliberately remain visible beneath
+      // the hands—the Unico's column wheel and movement are dial-side features.
+      bridges += `<path d="M45 76 C60 61 82 63 92 77 L87 88 C73 78 62 80 49 91 Z" fill="#30383b" stroke="#080b0d" stroke-width="0.85"/><path d="M111 70 C130 59 149 68 155 84 L145 93 C137 78 126 79 116 89 Z" fill="#283135" stroke="#080b0d" stroke-width="0.85"/><path d="M69 124 C83 113 105 115 119 132 L111 148 C99 136 84 133 71 144 Z" fill="#2f383b" stroke="#080b0d" stroke-width="0.85"/><path d="M74 87 L96 75 L111 87 L99 107 L78 102 Z M105 105 L129 94 L145 110 L130 127 L111 121 Z" fill="#1b2225" stroke="#0a0d0f" stroke-width="0.75"/>${gear(88,83,10.4,8.1,15,"#9ba2a3","#151b1e")}${gear(113,79,7.4,5.7,12,"#c1c4c1","#202629")}${gear(92,129,12.0,9.3,18,"#737b7d","#171d20")}${gear(121,125,8.6,6.5,13,"#aeb5b4","#1a2023")}<circle cx="102" cy="91" r="7.0" fill="#181e21" stroke="#9ba2a1" stroke-width="0.75"/><circle cx="102" cy="91" r="4.8" fill="#c2c8c5" stroke="#30383a" stroke-width="0.65"/><circle cx="102" cy="91" r="2.35" fill="#9e1018"/><g fill="#d4d7d2" stroke="#1a2023" stroke-width="0.4"><circle cx="75" cy="72" r="2.0"/><circle cx="126" cy="72" r="2.0"/><circle cx="62" cy="119" r="2.0"/><circle cx="139" cy="139" r="2.0"/><circle cx="104" cy="145" r="2.0"/></g>`;
+
+      const counter = (cx, cy, label, nums) => {
+        let ticks = "", labels = "";
+        for (let i = 0; i < 60; i++) {
+          const deg = i * 6, [x1,y1] = at(deg,16.35,cx,cy), [x2,y2] = at(deg,i % 5 === 0 ? 12.65 : 14.25,cx,cy);
+          ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#df3130" stroke-width="${i % 5 === 0 ? "0.62" : "0.32"}" opacity="0.9"/>`;
+        }
+        for (const [word,deg] of nums) {
+          const [x,y] = at(deg,10.2,cx,cy);
+          labels += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.6" font-weight="700" fill="#e63633">${word}</text>`;
+        }
+        return `<circle cx="${cx}" cy="${cy}" r="17.6" fill="#0d1214" stroke="#d5282d" stroke-width="2.1"/><circle cx="${cx}" cy="${cy}" r="15.6" fill="#171d20" stroke="#080b0d" stroke-width="0.68"/>${ticks}${labels}<text x="${cx}" y="${cy + 4.15}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.2" font-weight="700" letter-spacing="0.32" fill="#d93633" opacity="0.86">${label}</text>`;
+      };
+
+      return `<defs>
+        <linearGradient id="hbb-red-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#761017"/><stop offset="16%" stop-color="#ef4b46"/><stop offset="42%" stop-color="#bd1e25"/><stop offset="69%" stop-color="#fa554c"/><stop offset="100%" stop-color="#741017"/></linearGradient>
+        <radialGradient id="hbb-bezel-${id}" cx="41%" cy="30%" r="79%"><stop offset="0%" stop-color="#ff6155"/><stop offset="34%" stop-color="#dc2f31"/><stop offset="72%" stop-color="#9e161e"/><stop offset="100%" stop-color="#590c12"/></radialGradient>
+        <linearGradient id="hbb-black-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#42484b"/><stop offset="22%" stop-color="#111517"/><stop offset="58%" stop-color="#020405"/><stop offset="100%" stop-color="#343a3d"/></linearGradient>
+        <radialGradient id="hbb-dial-${id}" cx="43%" cy="34%" r="80%"><stop offset="0%" stop-color="#31393b"/><stop offset="48%" stop-color="#151a1c"/><stop offset="100%" stop-color="#050708"/></radialGradient>
+        <linearGradient id="hbb-glass-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.18"/><stop offset="36%" stop-color="#fff" stop-opacity="0.025"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="hbb-shadow-${id}" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.5" stdDeviation="1.8" flood-color="#0b1012" flood-opacity="0.40"/></filter>
+        <filter id="hbb-handshadow-${id}" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="1.1" stdDeviation="0.75" flood-color="#06090a" flood-opacity="0.55"/></filter>
+        <clipPath id="hbb-dialclip-${id}"><circle cx="100" cy="100" r="63.8"/></clipPath>
+      </defs>
+      <!-- Red structured-line rubber strap, black sidewalls and the two lug modules. -->
+      <path d="M58 0 H142 L149 45 H51 Z M51 155 H149 L142 200 H58 Z" fill="#101517" stroke="#050708" stroke-width="0.85"/><path d="M64 0 H136 L143 45 H57 Z M57 155 H143 L136 200 H64 Z" fill="url(#hbb-red-${id})" stroke="#841018" stroke-width="0.65"/>${strapRibs}<path d="M54 47 L44 37 L31 47 L23 64 L43 76 L59 65 Z M146 47 L156 37 L169 47 L177 64 L157 76 L141 65 Z M54 153 L44 163 L31 153 L23 136 L43 124 L59 135 Z M146 153 L156 163 L169 153 L177 136 L157 124 L141 135 Z" fill="url(#hbb-black-${id})" stroke="#12181b" stroke-width="0.72"/>
+      <circle cx="100" cy="100" r="80.3" fill="url(#hbb-red-${id})" filter="url(#hbb-shadow-${id})"/><circle cx="100" cy="100" r="78.6" fill="none" stroke="#ff776b" stroke-width="0.72" opacity="0.66"/><circle cx="100" cy="100" r="75.2" fill="url(#hbb-bezel-${id})" stroke="#6f0c13" stroke-width="0.86"/>${bezelScrews}<circle cx="100" cy="100" r="66.5" fill="#1c2225" stroke="#040607" stroke-width="1.15"/><circle cx="100" cy="100" r="63.8" fill="url(#hbb-dial-${id})" stroke="#4e080d" stroke-width="0.78"/>
+      <!-- Big Bang's black crown, faceted pusher modules and exposed screw hardware. -->
+      <g transform="rotate(-27 178 76)"><rect x="166.5" y="71.5" width="25.0" height="9.4" rx="2.4" fill="url(#hbb-black-${id})" stroke="#0b1012" stroke-width="0.65"/><rect x="177.9" y="72.7" width="10.2" height="6.9" rx="1.55" fill="#333a3c"/></g><g transform="rotate(27 178 124)"><rect x="166.5" y="119.1" width="25.0" height="9.4" rx="2.4" fill="url(#hbb-black-${id})" stroke="#0b1012" stroke-width="0.65"/><rect x="177.9" y="120.3" width="10.2" height="6.9" rx="1.55" fill="#333a3c"/></g><rect x="173.0" y="94.4" width="12.1" height="11.2" rx="1.95" fill="url(#hbb-black-${id})" stroke="#0a0e10" stroke-width="0.55"/><circle cx="190.0" cy="100" r="10.1" fill="url(#hbb-black-${id})" stroke="#1a2225" stroke-width="0.78"/><path d="M184.3 94.0 V106.0 M186.5 92.0 V108.0 M188.7 90.7 V109.3 M190.9 90.5 V109.5 M193.1 90.7 V109.3 M195.3 92.0 V108.0 M197.3 94.0 V106.0" stroke="#687174" stroke-width="0.74"/><path d="M185.2 94.2 V105.8 M189.6 91.2 V108.8 M194.0 92.2 V107.8 M196.0 94.0 V106.0" stroke="#070a0c" stroke-width="0.42"/>
+      <g clip-path="url(#hbb-dialclip-${id})">
+        ${flange}${bridges}${numerals}
+        <!-- Hublot's printed H and wordmark lie above the movement and below the hands. -->
+        <g transform="translate(100 65)" fill="none" stroke="#e23331" stroke-width="1.45"><path d="M-3.0 -2.9 V2.9 M3.0 -2.9 V2.9 M-3.0 0 H3.0"/></g><text x="100" y="73.8" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="5.45" font-weight="700" letter-spacing="0.78" fill="#e43532">HUBLOT</text>
+        ${counter(66,100,"SEC",[["20",120],["40",240],["60",0]])}${counter(134,100,"MIN",[["15",90],["30",180],["45",270],["60",0]])}
+        <!-- The open nine register is the live small seconds; the chronograph's minute register and long red hand stay zeroed. -->
+        <g class="hand-subsec" data-pivot="66 100"><line x1="66" y1="105.5" x2="66" y2="87.1" stroke="#eb3a35" stroke-width="1.35"/><circle cx="66" cy="100" r="2.2" fill="#d9272e" stroke="#661016" stroke-width="0.5"/></g><line x1="134" y1="105.3" x2="134" y2="87.5" stroke="#e33a35" stroke-width="1.25"/><circle cx="134" cy="100" r="2.12" fill="#d9272e" stroke="#661016" stroke-width="0.5"/>
+        <!-- Date disc is inset inside the three o'clock sixty-minute counter. -->
+        <rect x="140.2" y="99.4" width="10.6" height="8.0" rx="0.5" fill="#050708" stroke="#5c6465" stroke-width="0.48"/><text class="date-win" data-date="dom" x="145.5" y="103.4" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="5.35" font-weight="700" fill="#f0f0eb">1</text><text x="88.3" y="157.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.05" font-weight="700" letter-spacing="0.4" fill="#dc3633">SWISS</text><text x="111.7" y="157.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.05" font-weight="700" letter-spacing="0.4" fill="#dc3633">MADE</text><path d="M42 52 C66 40 90 40 116 54 C83 47 60 59 42 89 Z" fill="url(#hbb-glass-${id})" opacity="0.24"/>
+      </g>
+      <!-- Broad openworked red hands show the mechanical dial below; central chrono hand is at 12 while stopped. -->
+      <g filter="url(#hbb-handshadow-${id})"><g class="hand-hour"><path d="M100 106 L94.2 98.3 L95.4 79.4 L100 62.7 L104.6 79.4 L105.8 98.3 Z" fill="#d9282d" stroke="#590d13" stroke-width="0.72"/><path d="M100 97.8 L97.55 80.2 L100 69.3 L102.45 80.2 L102.45 97.8 Z" fill="#1a1f21" stroke="#f14640" stroke-width="0.48"/></g><g class="hand-min"><path d="M100 107 L96.7 98.1 L97.85 53.2 L100 37.0 L102.15 53.2 L103.3 98.1 Z" fill="#d9282d" stroke="#590d13" stroke-width="0.68"/><path d="M100 98.6 L98.75 54.9 L100 43.4 L101.25 54.9 L101.25 98.6 Z" fill="#1a1f21" stroke="#f14640" stroke-width="0.45"/></g></g><g class="hbb-chrono-rest"><line x1="100" y1="118.0" x2="100" y2="28.8" stroke="#e83732" stroke-width="1.1"/><path d="M100 24.2 L97.2 31.8 H102.8 Z" fill="#ef423b" stroke="#6d1016" stroke-width="0.42"/><circle cx="100" cy="52.0" r="1.75" fill="none" stroke="#ed3b35" stroke-width="0.78"/></g><circle cx="100" cy="100" r="4.35" fill="#d8292e" stroke="#581017" stroke-width="0.68"/><circle cx="100" cy="100" r="2.1" fill="#1b2123" stroke="#ef5048" stroke-width="0.38"/><circle cx="100" cy="100" r="0.74" fill="#e2493e"/><circle cx="100" cy="100" r="63.8" fill="none" stroke="#f14a42" stroke-width="0.62" opacity="0.54"/>`;
+    }
+  };
+  LOGOS.bigbang = () => "";
+  FIDELITY_OVERLAYS.bigbang = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
