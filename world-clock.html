@@ -9878,6 +9878,97 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   };
   LOGOS.lange1 = () => "";
 
+  // ───────────────── IWC Portugieser Chronograph ─────────────────
+  // Reference object: Portugieser Chronograph IW371605. Steel 41 mm case,
+  // silver-plated dial, blued hands/appliqués, blue alligator strap, Cal. 69355.
+  // The 12 o'clock counter is chronograph minutes; the running seconds are at six.
+  FACES.portugieser = {
+    name: "IWC Portugieser",
+    cadence: "sweep",
+    render() {
+      const id = "iwc371605";
+      const topX = 100, topY = 67, subR = 17;
+      const bottomX = 100, bottomY = 133;
+      let quarterTicks = "";
+      for (let i = 0; i < 240; i++) {
+        const a = i / 240 * Math.PI * 2;
+        const r1 = 77.6, r2 = i % 20 === 0 ? 71.8 : i % 4 === 0 ? 74.1 : 75.6;
+        const [x1, y1] = P(a, r1), [x2, y2] = P(a, r2);
+        quarterTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 20 === 0 ? "#1c2430" : "#626a70"}" stroke-width="${i % 20 === 0 ? 0.75 : i % 4 === 0 ? 0.45 : 0.24}" opacity="${i % 20 === 0 ? 0.95 : 0.78}"/>`;
+      }
+      let quarterLabels = "";
+      for (let second = 5; second <= 60; second += 5) {
+        const a = second / 60 * Math.PI * 2, [x, y] = P(a, 74.1);
+        const deg = second * 6, flip = deg > 90 && deg < 270 ? 180 : 0;
+        const label = second === 60 ? "60" : String(second);
+        quarterLabels += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" transform="rotate(${deg + flip} ${x.toFixed(1)} ${y.toFixed(1)})" font-family="'Arial Narrow', Arial, sans-serif" font-size="3.7" font-weight="600" fill="#25272b">${label}</text>`;
+      }
+      let minuteDots = "";
+      for (let i = 0; i < 60; i++) {
+        const a = i / 60 * Math.PI * 2, [x, y] = P(a, 64.3);
+        minuteDots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${i % 5 === 0 ? 1.16 : 0.62}" fill="#173963" opacity="${i % 5 === 0 ? 0.92 : 0.57}"/>`;
+      }
+      let arabics = "";
+      for (let h = 1; h <= 12; h++) {
+        const a = h / 12 * Math.PI * 2, [x, y] = P(a, 54.6);
+        const size = h === 12 || h === 6 ? 11.8 : 11.35;
+        arabics += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow', 'Avenir Next Condensed', Arial, sans-serif" font-stretch="condensed" font-size="${size}" font-weight="600" fill="#183a66" stroke="#0b2140" stroke-width="0.34" paint-order="stroke">${h}</text><text x="${(x - 0.3).toFixed(1)}" y="${(y - 0.45).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow', 'Avenir Next Condensed', Arial, sans-serif" font-stretch="condensed" font-size="${size}" font-weight="600" fill="#90a7c7" opacity="0.32">${h}</text>`;
+      }
+      const subDial = (cx, cy, labels) => {
+        let s = `<circle cx="${cx}" cy="${(cy + 1.1).toFixed(1)}" r="${(subR + 1.5).toFixed(1)}" fill="#000" opacity="0.075"/><circle cx="${cx}" cy="${cy}" r="${subR}" fill="url(#iwc-sub-${id})" stroke="#9aa3aa" stroke-width="0.6"/>`;
+        for (let r = 13.6; r >= 4; r -= 2.35) s += `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none" stroke="#b9c1c6" stroke-width="0.24" opacity="0.56"/>`;
+        for (let i = 0; i < 60; i++) {
+          const a = i / 60 * Math.PI * 2;
+          const x1 = cx + Math.sin(a) * 15.2, y1 = cy - Math.cos(a) * 15.2;
+          const x2 = cx + Math.sin(a) * (i % 5 === 0 ? 11.8 : 13.5), y2 = cy - Math.cos(a) * (i % 5 === 0 ? 11.8 : 13.5);
+          s += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#1d2530" stroke-width="${i % 5 === 0 ? 0.56 : 0.24}"/>`;
+        }
+        for (const [value, minute] of labels) {
+          const a = minute / 60 * Math.PI * 2, x = cx + Math.sin(a) * 9, y = cy - Math.cos(a) * 9;
+          s += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow', Arial, sans-serif" font-size="3.65" font-weight="600" fill="#1b3154">${value}</text>`;
+        }
+        return s;
+      };
+      const topLabels = [[30,0],[5,10],[10,20],[15,30],[20,40],[25,50]];
+      const bottomLabels = [[60,0],[15,15],[30,30],[45,45]];
+
+      return `<defs>${caseDefs(id, "steel")}
+        <linearGradient id="iwc-strap-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2a3e57"/><stop offset="32%" stop-color="#07111e"/><stop offset="70%" stop-color="#14283e"/><stop offset="100%" stop-color="#03070d"/></linearGradient>
+        <linearGradient id="iwc-case-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#fdfefe"/><stop offset="25%" stop-color="#c5cdd2"/><stop offset="52%" stop-color="#f8fafb"/><stop offset="75%" stop-color="#8d989f"/><stop offset="100%" stop-color="#525c64"/></linearGradient>
+        <linearGradient id="iwc-blue-${id}" x1="0.18" y1="0" x2="0.82" y2="1"><stop offset="0%" stop-color="#5682c9"/><stop offset="38%" stop-color="#1e477f"/><stop offset="66%" stop-color="#102a57"/><stop offset="100%" stop-color="#07142e"/></linearGradient>
+        <radialGradient id="iwc-dial-${id}" cx="48%" cy="33%" r="82%"><stop offset="0%" stop-color="#fffefa"/><stop offset="62%" stop-color="#f2f0e8"/><stop offset="100%" stop-color="#dfdbd1"/></radialGradient>
+        <radialGradient id="iwc-sub-${id}" cx="44%" cy="35%" r="78%"><stop offset="0%" stop-color="#faf9f4"/><stop offset="100%" stop-color="#e3e2db"/></radialGradient>
+        <linearGradient id="iwc-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.2"/><stop offset="42%" stop-color="#ffffff" stop-opacity="0.035"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <clipPath id="iwc-dialclip-${id}"><circle cx="100" cy="100" r="72.5"/></clipPath>
+      </defs>
+      <!-- Navy alligator strap and polished lugs surrounding the thin Portugieser bezel. -->
+      <path d="M76 0 H124 L131 34 H69 Z" fill="url(#iwc-strap-${id})" stroke="#04080e" stroke-width="0.65"/><path d="M69 166 H131 L124 200 H76 Z" fill="url(#iwc-strap-${id})" stroke="#04080e" stroke-width="0.65"/>
+      <path d="M78 6 H122 M75 17 H125 M72 28 H128 M72 172 H128 M75 183 H125 M78 194 H122" stroke="#70869d" stroke-width="0.62" opacity="0.36"/>
+      <path d="M48 57 L57 25 Q64 22 78 40 L86 48 Z M152 57 L143 25 Q136 22 122 40 L114 48 Z M48 143 L57 175 Q64 178 78 160 L86 152 Z M152 143 L143 175 Q136 178 122 160 L114 152 Z" fill="url(#iwc-case-${id})" stroke="#657078" stroke-width="0.45"/>
+      <circle cx="100" cy="100" r="82" fill="url(#iwc-case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="81.1" fill="none" stroke="url(#rim-${id})" stroke-width="0.78"/><circle cx="100" cy="100" r="77.2" fill="#f4f6f7"/><circle cx="100" cy="100" r="75.7" fill="url(#iwc-case-${id})"/><circle cx="100" cy="100" r="72.7" fill="url(#iwc-dial-${id})"/>
+      <!-- Steel pump pushers at 2 and 4, and the large fluted crown at 3. -->
+      <g transform="rotate(-31 174 68)"><rect x="165" y="63.5" width="18.5" height="9.2" rx="2.1" fill="url(#iwc-case-${id})" stroke="#5b656d" stroke-width="0.48"/><rect x="180.5" y="65.1" width="4.2" height="6" rx="0.9" fill="#e5eaec"/></g><g transform="rotate(31 174 132)"><rect x="165" y="127.3" width="18.5" height="9.2" rx="2.1" fill="url(#iwc-case-${id})" stroke="#5b656d" stroke-width="0.48"/><rect x="180.5" y="128.9" width="4.2" height="6" rx="0.9" fill="#e5eaec"/></g>
+      <rect x="180" y="95.8" width="6.8" height="8.4" rx="1.25" fill="url(#iwc-case-${id})"/><circle cx="191.1" cy="100" r="5.8" fill="url(#iwc-case-${id})" stroke="#58626a" stroke-width="0.5"/><path d="M187.2 96.5 V103.5 M189 95.3 V104.7 M190.8 94.5 V105.5 M192.6 95.3 V104.7 M194.4 96.5 V103.5" stroke="#56616a" stroke-width="0.48"/><path d="M187.65 96.5 V103.5 M189.45 95.3 V104.7 M191.25 94.5 V105.5 M193.05 95.3 V104.7 M194.85 96.5 V103.5" stroke="#ffffff" stroke-width="0.2" opacity="0.7"/>
+      ${quarterTicks}${quarterLabels}
+      <g clip-path="url(#iwc-dialclip-${id})">
+        ${minuteDots}${arabics}
+        ${subDial(topX, topY, topLabels)}${subDial(bottomX, bottomY, bottomLabels)}
+        <text x="137" y="96" text-anchor="middle" dominant-baseline="central" font-family="Georgia, 'Times New Roman', serif" font-size="6.2" font-weight="600" letter-spacing="0.1" fill="#183763">IWC</text><text x="137" y="103" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="2.6" font-weight="600" letter-spacing="0.52" fill="#183763">SCHAFFHAUSEN</text>
+        <text x="62.5" y="95" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="2.8" font-weight="500" letter-spacing="0.32" fill="#1e365a">CHRONOGRAPH</text><text x="62.5" y="101.6" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="2.8" font-weight="500" letter-spacing="0.56" fill="#1e365a">AUTOMATIC</text>
+        <text x="87" y="160.5" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="2.25" font-weight="600" letter-spacing="0.42" fill="#283e5e">SWISS</text><text x="113" y="160.5" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="2.25" font-weight="600" letter-spacing="0.42" fill="#283e5e">MADE</text>
+        <!-- Minute counter remains at rest at 12; its 30-minute scale is static. -->
+        <line class="hand-chrono-min-rest" x1="${topX}" y1="${topY + 4}" x2="${topX}" y2="${topY - 12.2}" stroke="#183d73" stroke-width="0.9"/><circle cx="${topX}" cy="${topY}" r="1.5" fill="url(#iwc-blue-${id})"/>
+        <path d="M44 48 H89 L44 99 Z" fill="url(#iwc-glass-${id})" opacity="0.56"/>
+      </g>
+      <!-- The real Cal. 69355 drives the six-o'clock small seconds; the central chronograph needle rests at 12. -->
+      <g class="hand-subsec" data-pivot="${bottomX} ${bottomY}"><line x1="${bottomX}" y1="${bottomY + 4.5}" x2="${bottomX}" y2="${bottomY - 13.1}" stroke="#193f75" stroke-width="1.02"/><line x1="${bottomX}" y1="${bottomY + 3.8}" x2="${bottomX}" y2="${bottomY - 12.3}" stroke="#7da2d9" stroke-width="0.24" opacity="0.72"/><circle cx="${bottomX}" cy="${bottomY}" r="1.55" fill="url(#iwc-blue-${id})"/></g>
+      <g class="hand-hour"><path d="M100 105 C97.3 88 97.8 72 100 59 C102.2 72 102.7 88 100 105 Z" fill="url(#iwc-blue-${id})" stroke="#0d254c" stroke-width="0.34"/><path d="M100 60 L101.35 94 L100 100 Z" fill="#0e2955" opacity="0.66"/></g><g class="hand-min"><path d="M100 106 C98.4 77 99.1 49 100 36 C100.9 49 101.6 77 100 106 Z" fill="url(#iwc-blue-${id})" stroke="#0d254c" stroke-width="0.3"/><path d="M100 37 L100.9 97 L100 102 Z" fill="#0e2955" opacity="0.66"/></g>
+      <g class="hand-chrono-rest"><line x1="100" y1="115" x2="100" y2="31.5" stroke="#173d73" stroke-width="0.72"/><line x1="100" y1="113" x2="100" y2="121" stroke="#173d73" stroke-width="1.02"/><circle cx="100" cy="100" r="2.75" fill="url(#iwc-blue-${id})" stroke="#0d254c" stroke-width="0.4"/></g>
+      <circle cx="100" cy="100" r="1.15" fill="#dce8f7"/>`;
+    }
+  };
+  LOGOS.portugieser = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
