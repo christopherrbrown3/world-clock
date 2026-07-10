@@ -1088,12 +1088,15 @@
     // 1. Rolex Submariner
     submariner: { name: "Rolex Submariner", cadence: "sweep", render() {
       const id = "sub";
+      const DATE_CX = 151;
+      const DATE_CY = 100;
+      const SUB_LUME = `url(#sub-lume-${id})`;
       let knurl = "";
       for (let i = 0; i < 120; i++) {
         const a = (i / 120) * 2 * Math.PI;
-        const [x1, y1] = P(a, 98);
-        const [x2, y2] = P(a, 94.2);
-        knurl += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 2 ? '#6f7880' : '#f7f9fa'}" stroke-width="0.9" opacity="0.55"/>`;
+        const [x1, y1] = P(a, 97.5);
+        const [x2, y2] = P(a, 95.4);
+        knurl += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 2 ? '#69737c' : '#f0f3f4'}" stroke-width="${i % 2 ? 0.62 : 0.82}" stroke-linecap="round" opacity="0.64"/>`;
       }
       // dive bezel: graduated 60-min insert, numerals every 10, lume pip at 12
       let bezel = "";
@@ -1103,10 +1106,10 @@
         const grad = i <= 15;
         const a = (i/60)*2*Math.PI, [x1,y1]=P(a,91.5),[x2,y2]=P(a, i%5===0?84:(grad?87:88.5));
         const w = i%5===0 ? (grad?2.2:1.6) : (grad?1.1:0.7);
-        bezel += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#d9dce0" stroke-width="${w}" opacity="0.95"/>`;
+        bezel += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="url(#platinum-${id})" stroke-width="${w}" opacity="0.9"/>`;
       }
       let bnum="";
-      for(let i=1;i<6;i++){const a=(i/6)*2*Math.PI,[x,y]=P(a,88.5);bnum+=`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Inter,Arial,sans-serif" font-size="10.2" font-weight="800" fill="#d8dadd" stroke="#ffffff" stroke-width="0.25" paint-order="stroke" transform="rotate(${i*60} ${x.toFixed(1)} ${y.toFixed(1)})">${i*10}</text>`;}
+      for(let i=1;i<6;i++){const a=(i/6)*2*Math.PI,[x,y]=P(a,88.2);bnum+=`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,sans-serif" font-size="9.5" font-weight="800" fill="url(#platinum-${id})" stroke="#111315" stroke-width="0.72" paint-order="stroke" transform="rotate(${i*60} ${x.toFixed(1)} ${y.toFixed(1)})">${i*10}</text>`;}
       // Canonical Submariner "Maxi dial" markers:
       //  - large round lume dots at 1,2,4,5,7,8,10,11
       //  - vertical rectangular (baton) lume markers at 6 and 9
@@ -1115,23 +1118,30 @@
       let pips = "";
       for (let i=0;i<12;i++){
         if(i===3) continue;                 // date window
-        const a=(i/12)*2*Math.PI,[x,y]=P(a,68.5);
+        const markerR = i === 6 ? 64.2 : 68.5;
+        const a=(i/12)*2*Math.PI,[x,y]=P(a,markerR);
         if(i===0){
           // inverted triangle at 12, apex pointing inward (down toward centre)
           pips+=`<g filter="url(#handshadow-${id})"><polygon points="${(x-8).toFixed(1)},${(y-7).toFixed(1)} ${(x+8).toFixed(1)},${(y-7).toFixed(1)} ${x.toFixed(1)},${(y+8).toFixed(1)}" fill="url(#markmetal-${id})" stroke="#aeb4b8" stroke-width="0.6"/>`
-               +`<polygon points="${(x-6).toFixed(1)},${(y-5.4).toFixed(1)} ${(x+6).toFixed(1)},${(y-5.4).toFixed(1)} ${x.toFixed(1)},${(y+5.6).toFixed(1)}" fill="url(#lume-${id})" filter="url(#lumeglow-${id})"/></g>`;
+               +`<polygon points="${(x-6).toFixed(1)},${(y-5.4).toFixed(1)} ${(x+6).toFixed(1)},${(y-5.4).toFixed(1)} ${x.toFixed(1)},${(y+5.6).toFixed(1)}" fill="${SUB_LUME}"/></g>`;
         } else if(i===6||i===9){
           // rectangular baton (radial), metal surround + lume
           pips+=`<g filter="url(#handshadow-${id})"><rect x="${(x-4.8).toFixed(1)}" y="${(y-8.5).toFixed(1)}" width="9.6" height="17" rx="2" fill="url(#markmetal-${id})" stroke="#aeb4b8" stroke-width="0.6" transform="rotate(${i*30} ${x.toFixed(1)} ${y.toFixed(1)})"/>`
-               +`<rect x="${(x-3.4).toFixed(1)}" y="${(y-7).toFixed(1)}" width="6.8" height="14" rx="1.6" fill="url(#lume-${id})" transform="rotate(${i*30} ${x.toFixed(1)} ${y.toFixed(1)})" filter="url(#lumeglow-${id})"/></g>`;
+               +`<rect x="${(x-3.4).toFixed(1)}" y="${(y-7).toFixed(1)}" width="6.8" height="14" rx="1.6" fill="${SUB_LUME}" transform="rotate(${i*30} ${x.toFixed(1)} ${y.toFixed(1)})"/></g>`;
         } else {
           // large round lume dot, polished metal surround
-          pips+=`<g filter="url(#handshadow-${id})"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6.7" fill="url(#markmetal-${id})" stroke="#aeb4b8" stroke-width="0.6"/>`
-               +`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.95" fill="url(#lume-${id})" filter="url(#lumeglow-${id})"/></g>`;
+          pips+=`<g filter="url(#handshadow-${id})"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6.35" fill="url(#markmetal-${id})" stroke="#aeb4b8" stroke-width="0.6"/>`
+               +`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.65" fill="${SUB_LUME}"/></g>`;
         }
       }
       let dialTrack = "";
-      for(let m=0;m<60;m++){const a=(m/60)*2*Math.PI,[x1,y1]=P(a,77.5),[x2,y2]=P(a,m%5===0?73.6:74.8);dialTrack+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e8edf0" stroke-width="${m%5===0?0.8:0.35}" opacity="0.9"/>`;}
+      for(let m=0;m<60;m++){const a=(m/60)*2*Math.PI,[x1,y1]=P(a,77.5),[x2,y2]=P(a,m%5===0?73.6:74.8);dialTrack+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e2e7e8" stroke-width="${m%5===0?0.78:0.34}" opacity="0.76"/>`;}
+      let rehaut = "";
+      for (let i = 0; i < 12; i++) {
+        const a = (i / 12) * 2 * Math.PI;
+        const [x, y] = P(a, 75.8);
+        rehaut += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,sans-serif" font-size="1.7" font-weight="600" letter-spacing="0.22" fill="#c7cccd" opacity="0.22" transform="rotate(${i*30} ${x.toFixed(1)} ${y.toFixed(1)})">ROLEX</text>`;
+      }
       const dialPrint = rolexCrown(100,47,1.7,"#eef0f0")
         + dt(100,57,"ROLEX",6,"#eef0f0",700,1.1)
         + dt(100,65,"OYSTER PERPETUAL DATE",3,"#eef0f0",500,0.5)
@@ -1143,38 +1153,44 @@
         + rolexCrown(100,176,0.55,"#cfd2d2")
         + dt(112,176,"MADE",2.3,"#cfd2d2",500,0.5);
       return `<defs>${caseDefs(id,"steel")}${lumeDefs(id)}${dialDefs(id,"lacquer","#0b0b0b","#242424")}
+        <linearGradient id="sub-lume-${id}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fcfffa"/><stop offset="58%" stop-color="#e7efeb"/><stop offset="100%" stop-color="#b9c9c7"/>
+        </linearGradient>
+        <linearGradient id="platinum-${id}" x1="0" y1="0" x2="0.9" y2="1">
+          <stop offset="0%" stop-color="#f8fbfb"/><stop offset="30%" stop-color="#aeb7ba"/><stop offset="54%" stop-color="#f1f4f4"/><stop offset="100%" stop-color="#778286"/>
+        </linearGradient>
         <radialGradient id="bzlins-${id}" cx="50%" cy="34%" r="80%"><stop offset="0%" stop-color="#2a2c2e"/><stop offset="55%" stop-color="#161718"/><stop offset="100%" stop-color="#050505"/></radialGradient>
-        <clipPath id="dialclip-${id}"><circle cx="100" cy="100" r="78"/></clipPath></defs>
+        <radialGradient id="cycg-${id}" cx="38%" cy="28%" r="74%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/><stop offset="54%" stop-color="#cbd8e1" stop-opacity="0.08"/><stop offset="100%" stop-color="#8596a3" stop-opacity="0.20"/>
+        </radialGradient>
+        <clipPath id="dialclip-${id}"><circle cx="100" cy="100" r="78"/></clipPath>
+        <clipPath id="cyc-${id}"><ellipse cx="${DATE_CX}" cy="${DATE_CY}" rx="12.5" ry="10.7"/></clipPath></defs>
         <rect x="89" y="2" width="22" height="30" rx="5" fill="url(#case-${id})"/>
         <rect x="89" y="168" width="22" height="30" rx="5" fill="url(#case-${id})"/>
         ${crown(id,"steel",100,true)}
         <circle cx="100" cy="100" r="96" fill="url(#case-${id})" filter="url(#shadow-${id})"/>
         <circle cx="100" cy="100" r="96" fill="none" stroke="url(#rim-${id})" stroke-width="1.2"/>
-        ${knurl}
         <circle cx="100" cy="100" r="96" fill="url(#bezel-${id})"/>
+        ${knurl}
         <!-- dark dive insert widened to r92 so the 10-50 numerals (r88.5) and ticks land on BLACK, not the silver ring -->
         <circle cx="100" cy="100" r="92" fill="url(#bzlins-${id})"/>
         <circle cx="100" cy="100" r="92" fill="none" stroke="#050505" stroke-width="1"/>
         ${bezel}${bnum}
-        <!-- bezel triangle plus recessed lume pearl at 12 -->
-        <polygon points="100,8 91.5,22 108.5,22" fill="#eef3f6" stroke="#050505" stroke-width="0.8"/>
-        <circle cx="100" cy="15.4" r="4.2" fill="#d9dde0" stroke="#aeb4b8" stroke-width="0.6"/>
-        <circle cx="100" cy="15.4" r="2.8" fill="url(#lume-${id})" filter="url(#lumeglow-${id})"/>
+        <!-- Zero marker: inward-pointing platinum triangle with a Chromalight pearl. -->
+        <polygon points="91.5,8 108.5,8 100,22" fill="#0a0b0c" stroke="url(#platinum-${id})" stroke-width="1.15" stroke-linejoin="round"/>
+        <circle cx="100" cy="14.5" r="4.05" fill="url(#platinum-${id})" stroke="#3e464a" stroke-width="0.55"/>
+        <circle cx="100" cy="14.5" r="2.55" fill="${SUB_LUME}"/>
         <circle cx="100" cy="100" r="79" fill="url(#dial-${id})"/>
         <circle cx="100" cy="100" r="79" fill="none" stroke="#000" stroke-width="2"/>
         <g clip-path="url(#dialclip-${id})">
+          ${rehaut}
           ${dialTrack}
           ${pips}
           ${dialPrint}
           <!-- date at 3: crisp 2-layer portrait window (metal frame + white disc),
                hugging the rehaut, centered on y=100; 3-marker suppressed (r2). -->
-          <rect x="142.5" y="91" width="14" height="18" rx="1" fill="#6e7174"/>
-          <rect x="143.5" y="92" width="12" height="16" rx="0.5" fill="#ffffff"/>
-          <radialGradient id="cycg-${id}" cx="42%" cy="34%" r="70%">
-            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.40"/>
-            <stop offset="55%" stop-color="#cfe0f2" stop-opacity="0.16"/>
-            <stop offset="100%" stop-color="#9fb4cc" stop-opacity="0.26"/>
-          </radialGradient>
+          <rect x="${DATE_CX - 8.1}" y="${DATE_CY - 9.2}" width="16.2" height="18.4" rx="1" fill="#555d61"/>
+          <rect x="${DATE_CX - 7}" y="${DATE_CY - 8}" width="14" height="16" rx="0.5" fill="#fbfbf8"/>
           ${vignette(id,79)}
           ${glass(id,79)}
         </g>
@@ -1183,30 +1199,31 @@
           <g class="hand-hour">
             <line x1="100" y1="108" x2="100" y2="72" stroke="#f4f6f6" stroke-width="7" stroke-linecap="butt"/>
             <circle cx="100" cy="66" r="8" fill="#f4f6f6"/>
-            <circle cx="100" cy="66" r="6" fill="url(#lume-${id})"/>
+            <circle cx="100" cy="66" r="6" fill="${SUB_LUME}"/>
             <!-- three spokes from centre dividing the circle into thirds (Mercedes star) -->
             <path d="M100 66 L100 58.5 M100 66 L106.5 69.75 M100 66 L93.5 69.75" stroke="#06160e" stroke-width="1.6" stroke-linecap="round"/>
             <circle cx="100" cy="66" r="1.4" fill="#06160e"/>
           </g>
           <g class="hand-min">
             <polygon points="100,106 97,38 100,31 103,38 103,106" fill="url(#markmetal-${id})"/>
-            <polygon points="100,99 98.4,42 100,36 101.6,42 101.6,99" fill="url(#lume-${id})"/>
+            <polygon points="100,99 98.4,42 100,36 101.6,42 101.6,99" fill="${SUB_LUME}"/>
           </g>
           <!-- steel sweep seconds with luminous round lollipop near the tip -->
           <g class="hand-sec">
             <line x1="100" y1="118" x2="100" y2="40" stroke="#e8ecec" stroke-width="1.6"/>
             <circle cx="100" cy="46" r="4.2" fill="#e8ecec"/>
-            <circle cx="100" cy="46" r="2.6" fill="url(#lume-${id})" filter="url(#lumeglow-${id})"/>
+            <circle cx="100" cy="46" r="2.6" fill="${SUB_LUME}"/>
             <line x1="100" y1="118" x2="100" y2="126" stroke="#e8ecec" stroke-width="2.2"/>
           </g>
         </g>
-        <circle cx="100" cy="100" r="4" fill="#cfd4d6"/>
-        <clipPath id="cyc-${id}"><rect x="139.5" y="89.5" width="25" height="21" rx="6"/></clipPath>
-        <g clip-path="url(#cyc-${id})"><text class="date-win" data-date="dom" x="151.4" y="100.5" text-anchor="middle" dominant-baseline="central" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="800" fill="#000000">1</text></g>
-        <rect x="139.5" y="89.5" width="25" height="21" rx="6" fill="url(#cycg-${id})"/>
-        <g clip-path="url(#cyc-${id})"><ellipse cx="146" cy="94.5" rx="8" ry="3.7" fill="#ffffff" opacity="0.65" transform="rotate(-18 146 94.5)"/></g>
-        <rect x="139.5" y="89.5" width="25" height="21" rx="6" fill="none" stroke="#ffffff" stroke-width="1.4" opacity="0.82"/>
-        <rect x="139.1" y="89.1" width="25.8" height="21.8" rx="6.4" fill="none" stroke="#2b3036" stroke-width="0.7" opacity="0.45"/>`;
+        <circle cx="100" cy="100" r="4.6" fill="url(#platinum-${id})" stroke="#566168" stroke-width="0.7"/>
+        <circle cx="100" cy="100" r="2.75" fill="#edf1f0" stroke="#919a9f" stroke-width="0.45"/>
+        <circle cx="100" cy="100" r="1.15" fill="#535c60"/>
+        <g clip-path="url(#cyc-${id})"><text class="date-win" data-date="dom" x="${DATE_CX}" y="${DATE_CY + 0.5}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="700" fill="#111111" stroke="#ffffff" stroke-width="0.3" paint-order="stroke">1</text></g>
+        <ellipse cx="${DATE_CX}" cy="${DATE_CY}" rx="12.5" ry="10.7" fill="url(#cycg-${id})"/>
+        <g clip-path="url(#cyc-${id})"><ellipse cx="${DATE_CX - 5.2}" cy="${DATE_CY - 5.3}" rx="6.2" ry="2.6" fill="#ffffff" opacity="0.34" transform="rotate(-18 ${DATE_CX - 5.2} ${DATE_CY - 5.3})"/></g>
+        <ellipse cx="${DATE_CX}" cy="${DATE_CY}" rx="12.5" ry="10.7" fill="none" stroke="#d8e0e3" stroke-width="1.0" opacity="0.76"/>
+        <ellipse cx="${DATE_CX}" cy="${DATE_CY}" rx="13.25" ry="11.45" fill="none" stroke="#3e474d" stroke-width="0.72" opacity="0.76"/>`;
     }},
 
     // 2. Omega Speedmaster Professional
