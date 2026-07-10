@@ -33,7 +33,7 @@ Total faces: 62.
 | `f1` | Rolex Trackside Clock | `sweep` |
 | `bigben` | Big Ben (Elizabeth Tower) | `tick` |
 | `seiko5` | Seiko 5 Sports SRPD51 | `sweep` |
-| `moonphase` | Blancpain Villeret | `sweep` |
+| `moonphase` | Blancpain Villeret Quantième Complet | `sweep` |
 | `richardmille` | Richard Mille RM 011 | `sweep` |
 | `blackbay58` | Tudor Black Bay 58 | `sweep` |
 | `navitimer` | Breitling Navitimer | `sweep` |
