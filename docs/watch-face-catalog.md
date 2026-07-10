@@ -37,7 +37,7 @@ Total faces: 62.
 | `richardmille` | Richard Mille RM 011 Felipe Massa | `sweep` |
 | `blackbay58` | TUDOR Black Bay Fifty-Eight M79030N | `sweep` |
 | `navitimer` | Breitling Navitimer B01 Chronograph 43 | `sweep` |
-| `elprimero` | Zenith Chronomaster El Primero | `sweep` |
+| `elprimero` | Zenith Chronomaster Sport 03.3100.3600/69.M3100 | `sweep` |
 | `overseas` | Vacheron Constantin Overseas | `sweep` |
 | `bigbang` | Hublot Big Bang | `sweep` |
 | `prx` | Tissot PRX | `sweep` |
