@@ -22,7 +22,7 @@ Total faces: 62.
 | `gmt` | Rolex GMT-Master II | `sweep` |
 | `datejust` | Rolex Datejust | `sweep` |
 | `snowflake` | Grand Seiko Snowflake | `glide` |
-| `gshock` | Casio G-Shock DW-5600 | `digital` |
+| `gshock` | Casio G-Shock DW-5600UE-1 | `digital` |
 | `f91w` | Casio F-91W | `digital` |
 | `apple` | Apple Watch | `smooth` |
 | `swatch` | Swatch Once Again | `tick` |
