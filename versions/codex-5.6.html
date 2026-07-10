@@ -9801,6 +9801,83 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   };
   LOGOS.seamaster = () => "";
 
+  // ───────────────── A. Lange & Söhne LANGE 1 ─────────────────
+  // Reference object: LANGE 1 191.032 / LSLS1914AD, 38.5 mm pink gold,
+  // argenté solid-silver dial and manually wound L121.1. Its outsize date,
+  // reserve and small seconds form the characteristic asymmetric layout.
+  FACES.lange1 = {
+    name: "A. Lange & Söhne Lange 1",
+    cadence: "sweep",
+    render() {
+      const id = "lange191";
+      const MX = 63, MY = 96, MR = 42;
+      const SX = 122, SY = 130, SR = 22;
+      const PX = 122, PY = 96;
+      let mainTicks = "";
+      for (let minute = 0; minute < 60; minute++) {
+        const a = minute / 60 * Math.PI * 2;
+        const r1 = MR - 1.3, r2 = MR - (minute % 5 === 0 ? 4.5 : 2.8);
+        const x1 = MX + Math.sin(a) * r1, y1 = MY - Math.cos(a) * r1;
+        const x2 = MX + Math.sin(a) * r2, y2 = MY - Math.cos(a) * r2;
+        mainTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#4c453d" stroke-width="${minute % 5 === 0 ? 0.6 : 0.28}" opacity="0.86"/>`;
+      }
+      let applied = "";
+      for (let hour = 0; hour < 12; hour++) {
+        if ([0, 3, 6, 9].includes(hour)) continue;
+        const a = hour / 12 * Math.PI * 2, x = MX + Math.sin(a) * (MR - 9.2), y = MY - Math.cos(a) * (MR - 9.2);
+        applied += `<g transform="rotate(${hour * 30} ${x.toFixed(1)} ${y.toFixed(1)})"><path d="M${(x - 1.35).toFixed(1)} ${(y + 4.8).toFixed(1)} L${(x - 1.35).toFixed(1)} ${(y - 2.7).toFixed(1)} L${x.toFixed(1)} ${(y - 5.3).toFixed(1)} L${(x + 1.35).toFixed(1)} ${(y - 2.7).toFixed(1)} L${(x + 1.35).toFixed(1)} ${(y + 4.8).toFixed(1)} Z" fill="url(#lange-gold-${id})" stroke="#8e5037" stroke-width="0.25"/><path d="M${x.toFixed(1)} ${(y - 5.3).toFixed(1)} L${(x + 1.35).toFixed(1)} ${(y - 2.7).toFixed(1)} L${(x + 1.35).toFixed(1)} ${(y + 4.8).toFixed(1)} L${x.toFixed(1)} ${(y + 2.6).toFixed(1)} Z" fill="#8e5037" opacity="0.48"/></g>`;
+      }
+      let secondsTicks = "";
+      for (let second = 0; second < 60; second++) {
+        const a = second / 60 * Math.PI * 2, r1 = SR - 1.1, r2 = SR - (second % 5 === 0 ? 4.4 : 2.5);
+        const x1 = SX + Math.sin(a) * r1, y1 = SY - Math.cos(a) * r1;
+        const x2 = SX + Math.sin(a) * r2, y2 = SY - Math.cos(a) * r2;
+        secondsTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#494139" stroke-width="${second % 5 === 0 ? 0.54 : 0.24}"/>`;
+      }
+      let reserveTicks = "";
+      const start = -66, end = 66, reserveRadius = 43;
+      for (let i = 0; i <= 7; i++) {
+        const deg = start + (end - start) * i / 7, a = deg * Math.PI / 180;
+        const x = PX + Math.cos(a) * reserveRadius, y = PY + Math.sin(a) * reserveRadius;
+        reserveTicks += `<path d="M${(x - 2.4).toFixed(1)} ${y.toFixed(1)} L${(x + 1.8).toFixed(1)} ${(y - 2.1).toFixed(1)} L${(x + 1.8).toFixed(1)} ${(y + 2.1).toFixed(1)} Z" fill="#3b352e" transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+      }
+      const a0 = start * Math.PI / 180, a1 = end * Math.PI / 180;
+      const arc = `M ${(PX + Math.cos(a0) * reserveRadius).toFixed(1)} ${(PY + Math.sin(a0) * reserveRadius).toFixed(1)} A ${reserveRadius} ${reserveRadius} 0 0 1 ${(PX + Math.cos(a1) * reserveRadius).toFixed(1)} ${(PY + Math.sin(a1) * reserveRadius).toFixed(1)}`;
+
+      return `<defs>${caseDefs(id, "rose")}
+        <linearGradient id="lange-strap-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#84472d"/><stop offset="30%" stop-color="#422014"/><stop offset="68%" stop-color="#69351f"/><stop offset="100%" stop-color="#2c120b"/></linearGradient>
+        <linearGradient id="lange-case-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#ffe9d5"/><stop offset="20%" stop-color="#e5a77e"/><stop offset="47%" stop-color="#bc714d"/><stop offset="72%" stop-color="#8f4c36"/><stop offset="100%" stop-color="#6d3526"/></linearGradient>
+        <linearGradient id="lange-gold-${id}" x1="0.1" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#ffe7c5"/><stop offset="40%" stop-color="#d48658"/><stop offset="62%" stop-color="#a85b3f"/><stop offset="100%" stop-color="#743827"/></linearGradient>
+        <radialGradient id="lange-dial-${id}" cx="43%" cy="32%" r="82%"><stop offset="0%" stop-color="#fdfcf7"/><stop offset="58%" stop-color="#ece9df"/><stop offset="100%" stop-color="#cbc6b9"/></radialGradient>
+        <radialGradient id="lange-subdial-${id}" cx="38%" cy="30%" r="82%"><stop offset="0%" stop-color="#fffef9"/><stop offset="60%" stop-color="#f5f2e9"/><stop offset="100%" stop-color="#dbd5c8"/></radialGradient>
+        <linearGradient id="lange-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.2"/><stop offset="42%" stop-color="#ffffff" stop-opacity="0.035"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+      </defs>
+      <!-- Brown alligator strap and the four understated pink-gold lugs. -->
+      <path d="M75 0 H125 L132 34 H68 Z" fill="url(#lange-strap-${id})" stroke="#2b110a" stroke-width="0.65"/><path d="M68 166 H132 L125 200 H75 Z" fill="url(#lange-strap-${id})" stroke="#2b110a" stroke-width="0.65"/>
+      <path d="M77 5 H123 M74 16 H126 M72 27 H128 M72 173 H128 M74 184 H126 M77 195 H123" stroke="#ca8b64" stroke-width="0.64" opacity="0.48"/>
+      <path d="M63 52 L55 20 Q61 15 76 15 L88 40 Z M137 52 L145 20 Q139 15 124 15 L112 40 Z M63 148 L55 180 Q61 185 76 185 L88 160 Z M137 148 L145 180 Q139 185 124 185 L112 160 Z" fill="url(#lange-case-${id})" stroke="#89432f" stroke-width="0.45"/>
+      <circle cx="100" cy="100" r="82" fill="url(#lange-case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="81" fill="none" stroke="url(#rim-${id})" stroke-width="0.9"/><circle cx="100" cy="100" r="75.2" fill="url(#lange-gold-${id})"/><circle cx="100" cy="100" r="72.2" fill="url(#lange-dial-${id})" stroke="#b78f6a" stroke-width="0.62"/>
+      <!-- Small fluted pink-gold crown, held inside the fixed 200-unit canvas. -->
+      <rect x="178.5" y="96.8" width="7.5" height="6.4" rx="1.1" fill="url(#lange-case-${id})"/><circle cx="191.4" cy="100" r="5.4" fill="url(#lange-gold-${id})" stroke="#87412e" stroke-width="0.52"/><path d="M187.6 96.5 V103.5 M189.3 95.4 V104.6 M191 95 V105 M192.7 95.4 V104.6 M194.4 96.5 V103.5" stroke="#8a4933" stroke-width="0.52"/><path d="M188.05 96.5 V103.5 M189.75 95.4 V104.6 M191.45 95 V105 M193.15 95.4 V104.6 M194.85 96.5 V103.5" stroke="#ffe1bf" stroke-width="0.21" opacity="0.68"/>
+      <!-- Fine typography and four non-overlapping Lange 1 indications. -->
+      <text x="88" y="40.7" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="4.15" font-weight="600" letter-spacing="0.34" fill="#2e2924">A. LANGE &amp; SÖHNE</text><text x="88" y="47.1" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="2.3" font-weight="600" letter-spacing="0.52" fill="#50483f">GLASHÜTTE I/SA</text>
+      <circle cx="${MX}" cy="${MY}" r="${MR}" fill="url(#lange-subdial-${id})" stroke="#b89970" stroke-width="0.9"/><circle cx="${MX}" cy="${MY}" r="${MR - 2.5}" fill="none" stroke="#fff9ed" stroke-width="0.45"/>${mainTicks}${applied}
+      <text x="${MX}" y="${MY - MR + 10.5}" text-anchor="middle" dominant-baseline="central" font-family="Georgia, 'Times New Roman', serif" font-size="8.6" font-weight="700" fill="url(#lange-gold-${id})">XII</text><text x="${MX + MR - 9.4}" y="${MY}" text-anchor="middle" dominant-baseline="central" font-family="Georgia, 'Times New Roman', serif" font-size="8.1" font-weight="700" fill="url(#lange-gold-${id})">III</text><text x="${MX}" y="${MY + MR - 10}" text-anchor="middle" dominant-baseline="central" font-family="Georgia, 'Times New Roman', serif" font-size="8.2" font-weight="700" fill="url(#lange-gold-${id})">VI</text><text x="${MX - MR + 9.4}" y="${MY}" text-anchor="middle" dominant-baseline="central" font-family="Georgia, 'Times New Roman', serif" font-size="8.1" font-weight="700" fill="url(#lange-gold-${id})">IX</text>
+      <text x="${MX}" y="${MY + MR - 3.9}" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="2.05" font-weight="600" letter-spacing="0.25" fill="#4b433b">MADE IN GERMANY</text><text x="74" y="143.7" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="2.65" font-weight="600" letter-spacing="0.22" fill="#50453b" transform="rotate(22 74 143.7)">DOPPELFEDERHAUS</text>
+      <!-- Oversized two-window date at two o'clock, matching the large black discs. -->
+      <rect x="106" y="47" width="40" height="25" rx="0.9" fill="url(#lange-gold-${id})" stroke="#864530" stroke-width="0.6"/><rect x="108.2" y="49.2" width="16.4" height="20.6" rx="0.25" fill="#fffdf8"/><rect x="127.4" y="49.2" width="16.4" height="20.6" rx="0.25" fill="#fffdf8"/><rect x="124.6" y="47.8" width="2.7" height="23.2" rx="0.35" fill="#884630"/>
+      <text class="date-win" data-date="bigdate-t" x="116.3" y="59.8" text-anchor="middle" dominant-baseline="central" font-family="Georgia, 'Times New Roman', serif" font-size="16.8" font-weight="700" fill="#191715">0</text><text class="date-win" data-date="bigdate-u" x="135.6" y="59.8" text-anchor="middle" dominant-baseline="central" font-family="Georgia, 'Times New Roman', serif" font-size="16.8" font-weight="700" fill="#191715">1</text>
+      <!-- Right-side 72-hour reserve fan: AUF above, AB below. -->
+      <path d="${arc}" fill="none" stroke="#bd976b" stroke-width="1.25"/><path d="${arc}" fill="none" stroke="#fff5e5" stroke-width="0.36" opacity="0.72" transform="translate(-2.1 0)"/>${reserveTicks}<text x="151.5" y="64.5" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="3.2" fill="#3f3932" transform="rotate(-24 151.5 64.5)">AUF</text><text x="151.5" y="129.2" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="3.2" fill="#3f3932" transform="rotate(24 151.5 129.2)">AB</text><g class="hand-pr" data-pivot="${PX} ${PY}"><line x1="${PX}" y1="${PY}" x2="${PX}" y2="${PY - 39}" stroke="#9f563b" stroke-width="1.18"/><line x1="${PX}" y1="${PY - 1}" x2="${PX}" y2="${PY - 38}" stroke="#ffd7ae" stroke-width="0.27" opacity="0.78"/><circle cx="${PX}" cy="${PY}" r="1.7" fill="url(#lange-gold-${id})"/></g>
+      <!-- Lower-right running seconds, separate from the off-centre main time. -->
+      <circle cx="${SX}" cy="${SY}" r="${SR}" fill="url(#lange-subdial-${id})" stroke="#b89970" stroke-width="0.82"/><circle cx="${SX}" cy="${SY}" r="${SR - 2.1}" fill="none" stroke="#fff9ed" stroke-width="0.42"/>${secondsTicks}<g class="hand-subsec" data-pivot="${SX} ${SY}"><line x1="${SX}" y1="${SY + 5}" x2="${SX}" y2="${SY - 17}" stroke="#9f563b" stroke-width="0.9"/><line x1="${SX}" y1="${SY + 4}" x2="${SX}" y2="${SY - 16}" stroke="#ffd7ae" stroke-width="0.22" opacity="0.78"/><circle cx="${SX}" cy="${SY}" r="1.55" fill="url(#lange-gold-${id})"/></g>
+      <!-- Faceted pink-gold time hands have their own main-dial pivot. -->
+      <g class="hand-hour" data-pivot="${MX} ${MY}"><path d="M${MX} ${MY + 6.5} L${MX - 2.55} ${MY - 16} L${MX} ${MY - 25.5} L${MX + 2.55} ${MY - 16} L${MX + 2.55} ${MY + 6.5} Z" fill="url(#lange-gold-${id})" stroke="#88422e" stroke-width="0.34"/><path d="M${MX} ${MY - 25.5} L${MX + 2.55} ${MY - 16} L${MX} ${MY + 1.8} Z" fill="#8b4832" opacity="0.54"/></g><g class="hand-min" data-pivot="${MX} ${MY}"><path d="M${MX} ${MY + 7.5} L${MX - 1.85} ${MY - 31} L${MX} ${MY - 40} L${MX + 1.85} ${MY - 31} L${MX + 1.85} ${MY + 7.5} Z" fill="url(#lange-gold-${id})" stroke="#88422e" stroke-width="0.32"/><path d="M${MX} ${MY - 40} L${MX + 1.85} ${MY - 31} L${MX} ${MY + 2} Z" fill="#8b4832" opacity="0.54"/></g><circle cx="${MX}" cy="${MY}" r="3" fill="url(#lange-gold-${id})" stroke="#88422e" stroke-width="0.38"/><circle cx="${MX}" cy="${MY}" r="0.9" fill="#ffe2bf"/>
+      <path d="M43 45 H93 L43 100 Z" fill="url(#lange-glass-${id})" opacity="0.58"/>`;
+    }
+  };
+  LOGOS.lange1 = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
