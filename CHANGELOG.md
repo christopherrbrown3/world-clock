@@ -10,6 +10,8 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added the Codex 5.6 Terra standalone checkpoint and froze the Codex 5.5 page as a benchmark snapshot.
+- Built the Codex 5.6 Terra active version with per-city date and time-difference context, phase accents, accessible city search, safer versioned state, and DST-aware ordering.
 - Added a simple version picker and model-version pages for Codex 5.5 and Claude Opus 4.8.
 - Refreshed the Codex 5.5 checkpoint with improved page chrome for the active world clock.
 - Added model and contributor guidance for future AI model runs and reference-driven SVG face work.

@@ -170,7 +170,8 @@
         <label for="version-select">Version</label>
         <select id="version-select">
           <option value="world-clock.html">Active working build</option>
-          <option value="versions/codex-5.5.html">Codex 5.5 current checkpoint</option>
+          <option value="versions/codex-5.6.html">Codex 5.6 Terra current checkpoint</option>
+          <option value="versions/codex-5.5.html">Codex 5.5 snapshot</option>
           <option value="versions/claude-opus-4.8.html">Claude Opus 4.8 snapshot</option>
         </select>
         <button type="button" id="open-selected">Open</button>
@@ -180,14 +181,21 @@
         <article class="card">
           <span class="tag">Active</span>
           <h2>Working Build</h2>
-          <p class="meta">Current development page. Future model work, including Codex 5.6, starts here before it becomes a model-version page.</p>
+          <p class="meta">Current development page for the Codex 5.6 Terra cycle. It remains the place for ongoing work before a checkpoint is refreshed.</p>
           <a class="button" href="world-clock.html">Open</a>
         </article>
 
         <article class="card">
           <span class="tag">Current Model</span>
+          <h2>Codex 5.6 Terra</h2>
+          <p class="meta">Current Codex 5.6 Terra checkpoint, preserved as a standalone world-clock page while this model is under review.</p>
+          <a class="button" href="versions/codex-5.6.html">Open</a>
+        </article>
+
+        <article class="card">
+          <span class="tag">Snapshot</span>
           <h2>Codex 5.5</h2>
-          <p class="meta">Current Codex 5.5 checkpoint. This page can be refreshed while Codex 5.5 is the active model under review.</p>
+          <p class="meta">Frozen Codex 5.5 checkpoint, retained as a standalone benchmark snapshot.</p>
           <a class="button" href="versions/codex-5.5.html">Open</a>
         </article>
 
@@ -199,7 +207,7 @@
         </article>
       </section>
 
-      <p class="note">When a new model version is ready, freeze the current working build into a new file under <code>versions/</code>, add it to this page, and keep editing <code>world-clock.html</code> as the active build.</p>
+      <p class="note">When a new model version is ready, freeze the current working build into a new file under <code>versions/</code>, add it to this page, and keep editing <code>world-clock.html</code> as the active build. Older model pages remain available as immutable snapshots.</p>
     </main>
 
     <script>
