@@ -24,7 +24,7 @@ Total faces: 62.
 | `snowflake` | Grand Seiko Snowflake | `glide` |
 | `gshock` | Casio G-Shock DW-5600UE-1 | `digital` |
 | `f91w` | Casio F-91W | `digital` |
-| `apple` | Apple Watch | `smooth` |
+| `apple` | Apple Watch | `glide` |
 | `swatch` | Swatch Once Again | `tick` |
 | `braun` | Braun BN0021 | `tick` |
 | `mondaine` | Mondaine Swiss Railway | `mondaine` |
