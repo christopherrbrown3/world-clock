@@ -28,6 +28,7 @@ Notable project changes will be tracked here.
 - Rebuilt the Grand Seiko Snowflake face against the SBGA211, with its high-intensity-titanium case and bracelet, wind-swept snow texture, faceted markers and dauphine hands, lower-left power reserve, framed date, and continuously gliding blue Spring Drive seconds hand.
 - Rebuilt the Casio G-SHOCK face against the current DW-5600UE-1, with its compact resin bumper, module-3525 positive LCD, weekday/month-date display, aqua and gold printed accents, four buttons, and white-LED Illuminator markings.
 - Rebuilt the Casio F-91W face against the current F-91W-1, with its lightweight three-button resin case, narrow blue pinstripes, compact original print, and correct 12-hour weekday/date LCD layout.
+- Refined the Apple Watch face against the current Activity Analog/Rings layout, with curved lower-arc weather text, matching complication placement, and a continuously gliding orange seconds hand.
 - Added a simple version picker and model-version pages for Codex 5.5 and Claude Opus 4.8.
 - Refreshed the Codex 5.5 checkpoint with improved page chrome for the active world clock.
 - Added model and contributor guidance for future AI model runs and reference-driven SVG face work.
