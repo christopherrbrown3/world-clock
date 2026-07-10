@@ -8,11 +8,18 @@
   },
   "snapshots": [
     {
+      "id": "codex-5.6",
+      "label": "Codex 5.6 Terra",
+      "file": "versions/codex-5.6.html",
+      "snapshotDate": "2026-07-09",
+      "notes": "Current Codex 5.6 Terra checkpoint. Refresh this page while Codex 5.6 Terra is the active model under review."
+    },
+    {
       "id": "codex-5.5",
       "label": "Codex 5.5",
       "file": "versions/codex-5.5.html",
       "snapshotDate": "2026-07-09",
-      "notes": "Current Codex 5.5 checkpoint. Refresh this page while Codex 5.5 is the active model under review."
+      "notes": "Frozen Codex 5.5 checkpoint, preserved for benchmark viewing."
     },
     {
       "id": "claude-opus-4.8",

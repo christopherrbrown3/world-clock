@@ -15,7 +15,8 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
-- `versions/codex-5.5.html`: current Codex 5.5 checkpoint.
+- `versions/codex-5.6.html`: current Codex 5.6 Terra checkpoint.
+- `versions/codex-5.5.html`: finalized Codex 5.5 snapshot.
 - `versions/claude-opus-4.8.html`: Claude Opus 4.8 baseline.
 
 ## Creating A New Model Page
@@ -41,4 +42,4 @@ When a new model version is ready:
 
 After the new model page is created, continue using `world-clock.html` as the active working file for the next iteration.
 
-For example, when Codex 5.6 work begins, create `versions/codex-5.6.html`, add a `codex-5.6` manifest entry, and freeze `versions/codex-5.5.html` unless a maintainer asks for a correction.
+For example, Codex 5.6 Terra uses `versions/codex-5.6.html` and the `codex-5.6` manifest entry, while the earlier Codex 5.5 page remains frozen unless a maintainer asks for a correction.
