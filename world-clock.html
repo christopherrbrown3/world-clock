@@ -10876,6 +10876,124 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.moonphase = () => "";
   FIDELITY_OVERLAYS.moonphase = () => "";
 
+  // ───────────────── Richard Mille RM 011 Felipe Massa ─────────────────
+  // Reference object: RM011 AJ RG. The original RM 011 (not the later RM 11-03)
+  // combines a brushed pink-gold tonneau bezel, dark titanium caseband, red
+  // integrated rubber strap, RMAC1 skeleton chronograph, centred oversize date,
+  // tyre-like crown and paired flyback pushers.
+  FACES.richardmille = {
+    name: "Richard Mille RM 011 Felipe Massa",
+    cadence: "sweep",
+    render() {
+      const id = "rm011fm";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const ovalAt = (deg, rx, ry, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * rx, cy - Math.cos(a) * ry];
+      };
+      const caseP = "M61 17 C80 11 120 11 139 17 C156 24 166 47 170 72 C173 88 173 112 170 128 C166 153 156 176 139 183 C120 189 80 189 61 183 C44 176 34 153 30 128 C27 112 27 88 30 72 C34 47 44 24 61 17 Z";
+      const bandP = "M65 28 C82 22 118 22 135 28 C149 35 158 54 161 76 C164 91 164 109 161 124 C158 146 149 165 135 172 C118 178 82 178 65 172 C51 165 42 146 39 124 C36 109 36 91 39 76 C42 54 51 35 65 28 Z";
+      const dialP = "M68 39 C83 34 117 34 132 39 C145 46 153 63 155 81 C157 93 157 107 155 119 C153 137 145 154 132 161 C117 166 83 166 68 161 C55 154 47 137 45 119 C43 107 43 93 45 81 C47 63 55 46 68 39 Z";
+      const torx = (cx, cy, r = 3.05) => {
+        let pts = "";
+        for (let i = 0; i < 10; i++) {
+          const a = i * Math.PI * 2 / 10 - Math.PI / 2;
+          const rr = i % 2 ? r * 0.66 : r;
+          pts += `${(cx + Math.cos(a) * rr).toFixed(1)},${(cy + Math.sin(a) * rr).toFixed(1)} `;
+        }
+        return `<g><circle cx="${cx}" cy="${(cy + 0.45).toFixed(1)}" r="${(r + 1.1).toFixed(1)}" fill="#482d1c" opacity="0.45"/><circle cx="${cx}" cy="${cy}" r="${(r + 0.95).toFixed(1)}" fill="url(#rm-screw-${id})" stroke="#624532" stroke-width="0.42"/><polygon points="${pts}" fill="#22272a" stroke="#090c0e" stroke-width="0.48"/><circle cx="${cx}" cy="${cy}" r="${(r * 0.45).toFixed(1)}" fill="#3e474b" opacity="0.72"/></g>`;
+      };
+      const screwPos = [[75,25],[125,25],[49,53],[36,83],[36,117],[49,147],[75,175],[125,175],[151,147],[164,117],[164,83],[151,53]];
+      const screws = screwPos.map(([x, y]) => torx(x, y)).join("");
+      const gear = (cx, cy, r, teeth, fill) => {
+        let teethLines = "", spokes = "";
+        for (let i = 0; i < teeth; i++) {
+          const deg = i / teeth * 360;
+          const [x1, y1] = at(deg, r - 0.4, cx, cy);
+          const [x2, y2] = at(deg, r + 2.0, cx, cy);
+          teethLines += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#aeb5b8" stroke-width="0.72" opacity="0.68"/>`;
+        }
+        for (let i = 0; i < 5; i++) {
+          const deg = i * 72;
+          const [x, y] = at(deg, r * 0.76, cx, cy);
+          spokes += `<path d="M${cx} ${cy} L${(x - 1.15).toFixed(1)} ${(y + 1.15).toFixed(1)} L${(x + 1.15).toFixed(1)} ${(y - 1.15).toFixed(1)} Z" fill="${fill}" opacity="0.88"/>`;
+        }
+        return `<g><circle cx="${cx}" cy="${cy}" r="${(r + 1.8).toFixed(1)}" fill="#121619" stroke="#4d565a" stroke-width="0.5"/>${teethLines}<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="#0c1013" stroke="#b8bec0" stroke-width="0.42"/>${spokes}<circle cx="${cx}" cy="${cy}" r="${(r * 0.27).toFixed(1)}" fill="#a6abad" stroke="#3e474c" stroke-width="0.55"/><circle cx="${cx}" cy="${cy}" r="1.08" fill="#b93435"/><circle cx="${(cx - 0.32).toFixed(1)}" cy="${(cy - 0.36).toFixed(1)}" r="0.35" fill="#ffd6d1"/></g>`;
+      };
+      const counter = (cx, cy, r, kind) => {
+        let ticks = "", labels = "";
+        for (let i = 0; i < 60; i++) {
+          const deg = i * 6;
+          const [x1, y1] = at(deg, r - 0.75, cx, cy);
+          const [x2, y2] = at(deg, r - (i % 5 === 0 ? 3.0 : 1.65), cx, cy);
+          ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#eff1ed" stroke-width="${i % 5 === 0 ? "0.65" : "0.28"}" opacity="${i % 5 === 0 ? "0.92" : "0.64"}"/>`;
+          if (i > 0 && i % 10 === 0) {
+            const [lx, ly] = at(deg, r - 5.0, cx, cy);
+            labels += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.0" font-weight="600" fill="#e9ebe6">${i}</text>`;
+          }
+        }
+        const liveHand = kind === "seconds"
+          ? `<g class="hand-subsec" data-pivot="${cx} ${cy}"><path d="M${cx} ${(cy + 3.6).toFixed(1)} L${(cx - 1.45).toFixed(1)} ${(cy - r + 5.1).toFixed(1)} L${cx} ${(cy - r + 1.8).toFixed(1)} L${(cx + 1.45).toFixed(1)} ${(cy - r + 5.1).toFixed(1)} Z" fill="#f1cf31" stroke="#342d10" stroke-width="0.45"/><line x1="${cx}" y1="${(cy + 4.0).toFixed(1)}" x2="${cx}" y2="${(cy - r + 5.0).toFixed(1)}" stroke="#f1cf31" stroke-width="1.0"/><circle cx="${cx}" cy="${cy}" r="2.0" fill="#272b2d" stroke="#d6d8d3" stroke-width="0.42"/></g>`
+          : `<g><line x1="${cx}" y1="${(cy + 3.2).toFixed(1)}" x2="${cx}" y2="${(cy - r + 4.2).toFixed(1)}" stroke="${kind === "minutes" ? "#d8292f" : "#e4e7e2"}" stroke-width="1.0"/><rect x="${(cx - 1.55).toFixed(1)}" y="${(cy - r + 5.0).toFixed(1)}" width="3.1" height="5.1" rx="0.7" fill="${kind === "minutes" ? "#df2a31" : "#d9ded9"}"/><circle cx="${cx}" cy="${cy}" r="1.72" fill="#272b2d" stroke="#d6d8d3" stroke-width="0.4"/></g>`;
+        return `<g><circle cx="${cx}" cy="${cy}" r="${(r + 1.25).toFixed(1)}" fill="#0a0d0f" stroke="#60696d" stroke-width="0.75"/><circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="url(#rm-sub-${id})" stroke="#171b1e" stroke-width="1.15"/><circle cx="${cx}" cy="${cy}" r="${(r - 1.3).toFixed(1)}" fill="none" stroke="#596166" stroke-width="0.44"/>${ticks}${labels}${liveHand}</g>`;
+      };
+      let rehautTicks = "";
+      for (let i = 0; i < 120; i++) {
+        const deg = i * 3;
+        const [x1, y1] = ovalAt(deg, 56.8, 62.1);
+        const [x2, y2] = ovalAt(deg, i % 10 === 0 ? 52.4 : 54.5, i % 10 === 0 ? 57.8 : 59.6);
+        rehautTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e8e9e5" stroke-width="${i % 10 === 0 ? "0.7" : "0.27"}" opacity="${i % 10 === 0 ? "0.88" : "0.58"}"/>`;
+      }
+      return `<defs>
+        <linearGradient id="rm-strap-${id}" x1="0.16" y1="0" x2="0.84" y2="1"><stop offset="0%" stop-color="#f04a4c"/><stop offset="22%" stop-color="#ce0c1e"/><stop offset="52%" stop-color="#ee2531"/><stop offset="78%" stop-color="#b40717"/><stop offset="100%" stop-color="#ed3640"/></linearGradient>
+        <linearGradient id="rm-rose-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#8f5233"/><stop offset="16%" stop-color="#f1bd96"/><stop offset="39%" stop-color="#bf7652"/><stop offset="58%" stop-color="#f7c8a3"/><stop offset="83%" stop-color="#9f5b3c"/><stop offset="100%" stop-color="#e9b087"/></linearGradient>
+        <pattern id="rm-brush-${id}" width="3.1" height="3.1" patternUnits="userSpaceOnUse"><path d="M0.7 0 V3.1 M2.15 0 V3.1" stroke="#6b3f28" stroke-width="0.2" opacity="0.28"/><path d="M1.15 0 V3.1" stroke="#fff5df" stroke-width="0.16" opacity="0.30"/></pattern>
+        <linearGradient id="rm-band-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#687076"/><stop offset="18%" stop-color="#171c20"/><stop offset="52%" stop-color="#383f43"/><stop offset="82%" stop-color="#080b0d"/><stop offset="100%" stop-color="#535b60"/></linearGradient>
+        <radialGradient id="rm-screw-${id}" cx="36%" cy="28%" r="72%"><stop offset="0%" stop-color="#f5f5ed"/><stop offset="48%" stop-color="#9da4a7"/><stop offset="100%" stop-color="#474e52"/></radialGradient>
+        <linearGradient id="rm-plate-${id}" x1="0.1" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#c4c9c8"/><stop offset="18%" stop-color="#555e62"/><stop offset="55%" stop-color="#151a1d"/><stop offset="78%" stop-color="#7d8588"/><stop offset="100%" stop-color="#1a1e21"/></linearGradient>
+        <radialGradient id="rm-sub-${id}" cx="42%" cy="34%" r="78%"><stop offset="0%" stop-color="#31383b"/><stop offset="58%" stop-color="#111619"/><stop offset="100%" stop-color="#050708"/></radialGradient>
+        <linearGradient id="rm-hand-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#5e6669"/><stop offset="20%" stop-color="#f5f4ed"/><stop offset="50%" stop-color="#a7afb1"/><stop offset="74%" stop-color="#fbfbf4"/><stop offset="100%" stop-color="#4a5358"/></linearGradient>
+        <pattern id="rm-date-${id}" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#bf1a25"/><rect width="3.15" height="8" fill="#f4f4eb"/></pattern>
+        <linearGradient id="rm-glass-${id}" x1="0.1" y1="0" x2="0.86" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.2"/><stop offset="38%" stop-color="#fff" stop-opacity="0.028"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="rm-shadow-${id}" x="-24%" y="-24%" width="148%" height="148%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.25" stdDeviation="1.85" flood-color="#0b0e10" flood-opacity="0.36"/></filter>
+        <clipPath id="rm-dialclip-${id}"><path d="${dialP}"/></clipPath>
+      </defs>
+      <!-- Red rubber strap with the three broad ventilation channels of the AJ RG. -->
+      <path d="M58 0 H142 L148 37 H52 Z M52 163 H148 L142 200 H58 Z" fill="url(#rm-strap-${id})" stroke="#8a0714" stroke-width="0.65"/><path d="M68 7 H132 M66 16 H134 M64 25 H136 M64 175 H136 M66 184 H134 M68 193 H132" stroke="#780611" stroke-width="4.0" stroke-linecap="round" opacity="0.83"/><path d="M68 5 H132 M66 14 H134 M64 23 H136 M64 177 H136 M66 186 H134 M68 195 H132" stroke="#ff7070" stroke-width="0.58" opacity="0.48"/>
+      <!-- Crown and aerodynamically ribbed pushers project from the dark titanium caseband. -->
+      <g><path d="M161 62 L181 56 L193 65 L193 81 L181 89 L163 84 Z" fill="url(#rm-band-${id})" stroke="#14191c" stroke-width="0.65"/><path d="M169 65 L186 61 L189 66 L189 80 L186 84 L169 81 Z" fill="#30383c" stroke="#788086" stroke-width="0.42"/><path d="M171 66 L187 63 M170 70 L189 67 M170 74 L189 71 M170 78 L189 75" stroke="#0b0e10" stroke-width="1.0"/><text x="181.5" y="73" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,sans-serif" font-size="3.15" font-weight="700" fill="#db1d28" transform="rotate(67 181.5 73)">START/STOP</text></g>
+      <g><path d="M163 116 L181 111 L193 120 L193 136 L181 144 L161 138 Z" fill="url(#rm-band-${id})" stroke="#14191c" stroke-width="0.65"/><path d="M169 119 L186 116 L189 121 L189 135 L186 139 L169 135 Z" fill="#30383c" stroke="#788086" stroke-width="0.42"/><path d="M170 120 L189 117 M170 124 L190 121 M170 128 L190 125 M170 132 L189 129" stroke="#0b0e10" stroke-width="1.0"/><text x="180.5" y="129" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,sans-serif" font-size="2.75" font-weight="700" fill="#db1d28" transform="rotate(62 180.5 129)">RESET/FLY-BACK</text></g>
+      <rect x="169" y="94" width="13.5" height="12" rx="2.3" fill="url(#rm-band-${id})" stroke="#15191c" stroke-width="0.6"/><circle cx="187.6" cy="100" r="12.1" fill="#151a1d" stroke="#60686c" stroke-width="0.72"/><circle cx="187.6" cy="100" r="8.35" fill="url(#rm-band-${id})" stroke="#0b0e10" stroke-width="0.7"/><circle cx="187.6" cy="100" r="6.25" fill="#2e363a" stroke="#7a8387" stroke-width="0.42"/><path d="M187.6 93.8 V106.2 M181.4 100 H193.8 M183.2 95.6 L192.0 104.4 M183.2 104.4 L192.0 95.6" stroke="#aab1b1" stroke-width="0.65"/><circle cx="187.6" cy="100" r="2.05" fill="#111518" stroke="#d4d8d4" stroke-width="0.38"/>
+      <!-- The wide satin-brushed pink-gold bezel is a sharply shouldered tonneau, not an oval. -->
+      <path d="${caseP}" fill="url(#rm-rose-${id})" filter="url(#rm-shadow-${id})"/><path d="${caseP}" fill="url(#rm-brush-${id})" opacity="0.44"/><path d="${caseP}" fill="none" stroke="#f8dec0" stroke-width="0.82" opacity="0.72"/><path d="${bandP}" fill="url(#rm-band-${id})" stroke="#744b34" stroke-width="0.68"/><path d="${bandP}" fill="none" stroke="#c9ccd0" stroke-width="0.46" opacity="0.52"/><path d="${dialP}" fill="#0d1113" stroke="#687074" stroke-width="1.15"/>${screws}
+      <g clip-path="url(#rm-dialclip-${id})">
+        <path d="${dialP}" fill="#111619"/>${rehautTicks}
+        <!-- Grade-5 titanium bridges and a deliberately dark, layered movement. -->
+        <path d="M48 83 L78 76 L94 88 L87 105 L48 101 Z" fill="url(#rm-plate-${id})" stroke="#0a0d0f" stroke-width="0.72"/><path d="M109 59 L145 73 L139 90 L111 85 Z" fill="url(#rm-plate-${id})" stroke="#0a0d0f" stroke-width="0.72"/><path d="M111 119 L148 128 L139 148 L104 139 Z" fill="url(#rm-plate-${id})" stroke="#0a0d0f" stroke-width="0.72"/><path d="M51 137 L80 125 L91 144 L61 154 Z" fill="#242b2e" stroke="#06090b" stroke-width="0.72"/>
+        ${gear(75,68,8.4,18,"#aeb5b7")}${gear(119,67,7.5,16,"#8e989a")}${gear(91,90,5.3,14,"#bcc2c1")}${gear(116,94,6.2,16,"#697377")}${gear(79,133,5.5,14,"#9ca6a8")}${gear(125,136,5.8,15,"#b4baba")}
+        <g fill="url(#rm-screw-${id})" stroke="#20262a" stroke-width="0.42"><circle cx="57" cy="74" r="1.75"/><circle cx="84" cy="82" r="1.75"/><circle cx="132" cy="76" r="1.75"/><circle cx="145" cy="121" r="1.75"/><circle cx="110" cy="147" r="1.75"/><circle cx="65" cy="143" r="1.75"/></g><g fill="#c94042"><circle cx="102" cy="65" r="1.35"/><circle cx="96" cy="128" r="1.35"/><circle cx="135" cy="101" r="1.35"/></g>
+        <!-- Large skeleton numerals are printed on the inner flange, above the movement plates. -->
+        <g font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="10.4" font-weight="700" fill="none" stroke="#e6e9e2" stroke-width="1.15" paint-order="stroke"><text x="100" y="55.4" text-anchor="middle">12</text><text x="149" y="102.1" text-anchor="middle">3</text><text x="100" y="154.0" text-anchor="middle">6</text><text x="51" y="102.1" text-anchor="middle">9</text></g>
+        <text x="100" y="44.6" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.65" font-weight="800" letter-spacing="0.24" fill="#f1f1eb">RICHARD MILLE</text><text x="153.0" y="83" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,sans-serif" font-size="3.15" font-weight="700" letter-spacing="0.32" fill="#d9ddd9" transform="rotate(90 153 83)">TACHYMÈTRE</text>
+        <!-- Annual-calendar twin date: red diagonal frame below twelve, with its local day wheel. -->
+        <rect x="82.1" y="70.2" width="35.8" height="20.0" rx="1.2" fill="url(#rm-date-${id})" stroke="#121619" stroke-width="1.05"/><rect x="85.0" y="73.0" width="13.2" height="14.4" fill="#eceee9" stroke="#1f2528" stroke-width="0.58"/><rect x="101.8" y="73.0" width="13.2" height="14.4" fill="#eceee9" stroke="#1f2528" stroke-width="0.58"/><text class="date-win" data-date="bigdate-t" x="91.6" y="80.2" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,sans-serif" font-size="12.1" font-weight="700" fill="#171b1e">0</text><text class="date-win" data-date="bigdate-u" x="108.4" y="80.2" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,sans-serif" font-size="12.1" font-weight="700" fill="#171b1e">1</text><rect x="131.5" y="131.4" width="13.2" height="7.2" rx="0.85" fill="#121719" stroke="#737b7d" stroke-width="0.48"/><text class="date-win" data-date="month" x="138.1" y="135.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.45" font-weight="700" fill="#e9ebe6">MAR</text>
+        <!-- Countdown at nine, live running seconds at three (yellow arrow), and 12-hour totalizer at six. -->
+        ${counter(63,110,15.5,"minutes")}${counter(137,110,15.5,"seconds")}${counter(100,141.5,16.2,"hours")}
+        <rect x="49.6" y="136.5" width="20.8" height="6.5" rx="0.9" fill="#161b1e" stroke="#d0353b" stroke-width="0.72"/><text x="60.0" y="139.8" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,sans-serif" font-size="3.35" font-weight="700" fill="#f0f0ea">RM011-FM</text>
+        <text x="100" y="160.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.4" font-weight="600" letter-spacing="0.55" fill="#e5e7e2">SWISS 120 MADE</text><path d="M42 52 H77 L42 87 Z" fill="url(#rm-glass-${id})" opacity="0.34"/>
+      </g>
+      <!-- Broad white-gold skeleton hands are timekeeping hands; the thin red chrono hand remains parked at 12. -->
+      <g class="hand-hour"><path d="M100 106 L94.3 98.1 L95.9 80.6 L100 61.8 L104.1 80.6 L105.7 98.1 Z" fill="url(#rm-hand-${id})" stroke="#343c40" stroke-width="0.62"/><path d="M100 98.6 L97.65 81.7 L100 69.3 L102.35 81.7 L100 93.0 L97.9 90.8 Z" fill="#f1f1e8" stroke="#626a6d" stroke-width="0.38"/></g><g class="hand-min"><path d="M100 107 L96.65 98.0 L97.9 57.0 L100 39.0 L102.1 57.0 L103.35 98.0 Z" fill="url(#rm-hand-${id})" stroke="#343c40" stroke-width="0.58"/><path d="M100 99.0 L98.75 58.8 L100 46.5 L101.25 58.8 L100 89.5 L98.9 87.9 Z" fill="#f2f2e9" stroke="#626a6d" stroke-width="0.36"/></g><g class="rm-chrono-rest"><line x1="100" y1="116" x2="100" y2="47.2" stroke="#ca1824" stroke-width="1.16"/><rect x="98.6" y="50.0" width="2.8" height="8.8" rx="0.8" fill="#e42b35"/><path d="M100 42.5 L96.8 50.0 H103.2 Z" fill="#e52a34" stroke="#741119" stroke-width="0.45"/><circle cx="100" cy="57.4" r="1.22" fill="#f0d83b"/></g>
+      <circle cx="100" cy="100" r="4.35" fill="url(#rm-hand-${id})" stroke="#3f484c" stroke-width="0.6"/><circle cx="100" cy="100" r="2.2" fill="#30383b" stroke="#ecefe9" stroke-width="0.46"/><circle cx="100" cy="100" r="0.86" fill="#d9ddd8"/>
+      <path d="${dialP}" fill="none" stroke="#e8e1d8" stroke-width="0.72" opacity="0.54"/>`;
+    }
+  };
+  LOGOS.richardmille = () => "";
+  FIDELITY_OVERLAYS.richardmille = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.

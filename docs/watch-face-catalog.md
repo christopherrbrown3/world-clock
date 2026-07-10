@@ -34,7 +34,7 @@ Total faces: 62.
 | `bigben` | Big Ben (Elizabeth Tower) | `tick` |
 | `seiko5` | Seiko 5 Sports SRPD51 | `sweep` |
 | `moonphase` | Blancpain Villeret Quantième Complet | `sweep` |
-| `richardmille` | Richard Mille RM 011 | `sweep` |
+| `richardmille` | Richard Mille RM 011 Felipe Massa | `sweep` |
 | `blackbay58` | Tudor Black Bay 58 | `sweep` |
 | `navitimer` | Breitling Navitimer | `sweep` |
 | `elprimero` | Zenith Chronomaster El Primero | `sweep` |
