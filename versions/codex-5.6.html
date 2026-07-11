@@ -12814,6 +12814,71 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.rainbow = () => "";
   FIDELITY_OVERLAYS.rainbow = () => "";
 
+  // ─────────── Norfolk Southern Railroad Pocket Watch (1994) ───────────
+  // The commemorative's dial is its own object: black Roman hours, red 24-hour
+  // rail-time scale, a miniature green train and the Norfolk Southern wordmark.
+  FACES.railroad = {
+    name: "Norfolk Southern Railroad Pocket Watch (1994)",
+    cadence: "tick",
+    render() {
+      const id = "ns-1994", CX = 100, CY = 108;
+      const at = (deg, r, cx = CX, cy = CY) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const romans = ["XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"];
+      let hourScale = "", redScale = "", minuteTrack = "", innerRail = "", coinEdge = "";
+      for (let i = 0; i < 12; i++) {
+        const [x, y] = at(i * 30, 45.6);
+        hourScale += `<text x="${x.toFixed(1)}" y="${(y + 3.0).toFixed(1)}" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="${i === 0 ? "10.2" : "9.35"}" font-weight="700" fill="#141512">${romans[i]}</text>`;
+        const [rx, ry] = at(i * 30, 62.2);
+        redScale += `<text x="${rx.toFixed(1)}" y="${(ry + 1.85).toFixed(1)}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="4.45" font-weight="700" fill="#bd2a21">${i === 0 ? 24 : i + 12}</text>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const deg = i * 6, [x1, y1] = at(deg, 58.6), [x2, y2] = at(deg, i % 5 === 0 ? 54.7 : 56.8);
+        minuteTrack += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#24241f" stroke-width="${i % 5 === 0 ? "0.76" : "0.34"}"/>`;
+      }
+      innerRail += `<circle cx="${CX}" cy="${CY}" r="24.0" fill="none" stroke="#45483e" stroke-width="0.72"/><circle cx="${CX}" cy="${CY}" r="20.8" fill="none" stroke="#45483e" stroke-width="0.48"/>`;
+      for (let i = 0; i < 48; i++) {
+        const deg = i * 7.5, [x1, y1] = at(deg, 25.5), [x2, y2] = at(deg, 19.3);
+        innerRail += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#41443a" stroke-width="0.42" opacity="0.90"/>`;
+      }
+      for (let i = 0; i < 112; i++) {
+        const [x1, y1] = at(i * 360 / 112, 77.4), [x2, y2] = at(i * 360 / 112, 73.3);
+        coinEdge += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#8a621d" stroke-width="0.58" opacity="${i % 2 ? "0.60" : "0.40"}"/>`;
+      }
+      const trainCar = (deg, locomotive, scale) => {
+        const [x, y] = at(deg, 33.0);
+        const body = locomotive
+          ? `<path d="M-7.8 -2.9 H-2.1 L-0.4 -6.4 H4.2 V-2.9 H7.4 V3.0 H-8.6 Z"/><rect x="-5.8" y="-6.7" width="3.0" height="3.7" rx="0.42" fill="#d7dfc8" opacity="0.70"/><rect x="0.8" y="-5.3" width="2.55" height="2.35" rx="0.34" fill="#d7dfc8" opacity="0.70"/><circle cx="-5.0" cy="4.15" r="1.45"/><circle cx="0" cy="4.15" r="1.45"/><circle cx="5.25" cy="4.15" r="1.25"/>`
+          : `<rect x="-6.4" y="-3.1" width="12.8" height="6.1" rx="0.72"/><rect x="-4.65" y="-1.62" width="2.55" height="2.25" fill="#d7dfc8" opacity="0.66"/><rect x="0.5" y="-1.62" width="2.55" height="2.25" fill="#d7dfc8" opacity="0.66"/><circle cx="-3.9" cy="4.0" r="1.15"/><circle cx="3.9" cy="4.0" r="1.15"/>`;
+        return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${deg.toFixed(1)}) scale(${scale})" fill="#3e5b42" stroke="#1d3021" stroke-width="0.55" stroke-linejoin="round">${body}<path d="M-8.3 5.5 H8.1" fill="none" stroke="#2a412e" stroke-width="0.85" stroke-linecap="round"/></g>`;
+      };
+      const train = `<path d="M${at(56, 33).map(v => v.toFixed(1)).join(" ")} A33 33 0 0 1 ${at(156, 33).map(v => v.toFixed(1)).join(" ")}" fill="none" stroke="#4a674d" stroke-width="1.0" opacity="0.58"/>${trainCar(64, true, 0.59)}${trainCar(87, false, 0.53)}${trainCar(110, false, 0.53)}${trainCar(133, false, 0.50)}${trainCar(153, false, 0.46)}`;
+      return `<defs>
+        <radialGradient id="ns-case-${id}" cx="34%" cy="24%" r="86%"><stop offset="0%" stop-color="#fff2c4"/><stop offset="31%" stop-color="#e7bd54"/><stop offset="64%" stop-color="#bc8b26"/><stop offset="100%" stop-color="#785317"/></radialGradient>
+        <linearGradient id="ns-rim-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff1b9"/><stop offset="34%" stop-color="#c99631"/><stop offset="58%" stop-color="#f5d37a"/><stop offset="100%" stop-color="#8c631b"/></linearGradient>
+        <radialGradient id="ns-dial-${id}" cx="43%" cy="34%" r="84%"><stop offset="0%" stop-color="#fffefa"/><stop offset="72%" stop-color="#fbf7ec"/><stop offset="100%" stop-color="#e6dfcf"/></radialGradient>
+        <linearGradient id="ns-glass-${id}" x1="0" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.34"/><stop offset="35%" stop-color="#fff" stop-opacity="0.07"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <clipPath id="ns-dial-clip-${id}"><circle cx="${CX}" cy="${CY}" r="68.0"/></clipPath>
+        <filter id="ns-shadow-${id}" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2.2" stdDeviation="3.0" flood-color="#342107" flood-opacity="0.45"/></filter>
+        <filter id="ns-hand-shadow-${id}" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0.55" dy="0.75" stdDeviation="0.48" flood-color="#000" flood-opacity="0.42"/></filter>
+      </defs>
+      <!-- Pendant bow, crown, and coin-edged gold-filled open-face case. -->
+      <g filter="url(#ns-shadow-${id})"><circle cx="100" cy="15.6" r="10.8" fill="none" stroke="url(#ns-rim-${id})" stroke-width="4.1"/><path d="M91.3 28.0 Q100 20.4 108.7 28.0 Q112.6 31.7 108.5 36.3 H91.5 Q87.4 31.7 91.3 28.0 Z" fill="url(#ns-case-${id})" stroke="#8a621d" stroke-width="0.55"/><rect x="94.3" y="35.0" width="11.4" height="8.4" rx="2.1" fill="url(#ns-rim-${id})" stroke="#8a621d" stroke-width="0.48"/><circle cx="${CX}" cy="${CY}" r="79.4" fill="url(#ns-case-${id})"/><circle cx="${CX}" cy="${CY}" r="77.6" fill="none" stroke="#f9d87a" stroke-width="0.72"/>${coinEdge}<circle cx="${CX}" cy="${CY}" r="72.2" fill="url(#ns-rim-${id})" stroke="#8b641d" stroke-width="0.65"/><circle cx="${CX}" cy="${CY}" r="68.0" fill="url(#ns-dial-${id})" stroke="#a07524" stroke-width="0.72"/></g>
+      <g clip-path="url(#ns-dial-clip-${id})">${minuteTrack}${redScale}${hourScale}${innerRail}${train}
+        <text x="${CX}" y="75.4" text-anchor="middle" font-family="'Snell Roundhand','Apple Chancery',cursive" font-style="italic" font-size="5.0" font-weight="600" fill="#392d17">Spirit of</text><text x="${CX}" y="80.2" text-anchor="middle" font-family="'Snell Roundhand','Apple Chancery',cursive" font-style="italic" font-size="4.95" font-weight="600" fill="#392d17">Norfolk Southern</text>
+        <path d="M80.5 128.2 Q105 123.4 131.0 128.2 L127.5 142.5 Q105 146.0 84.3 142.5 Z" fill="url(#ns-dial-${id})" opacity="0.96"/>
+        <g transform="translate(84.7 134.7)" fill="#151612"><text x="0" y="0" font-family="Arial,Helvetica,sans-serif" font-size="9.25" font-weight="900" font-style="italic" letter-spacing="-1.03">NS</text><path d="M-3.4 -4.75 H1.8 M-3.4 -2.25 H0.1 M-3.4 0.25 H1.6" fill="none" stroke="#151612" stroke-width="0.79"/><text x="14.4" y="-1.05" font-family="Arial,Helvetica,sans-serif" font-size="2.68" font-weight="800" letter-spacing="0.05">NORFOLK</text><text x="14.4" y="2.68" font-family="Arial,Helvetica,sans-serif" font-size="2.68" font-weight="800" letter-spacing="0.05">SOUTHERN</text></g>
+        <ellipse cx="75" cy="69" rx="51" ry="23" fill="url(#ns-glass-${id})" transform="rotate(-27 75 69)"/>
+      </g>
+      <!-- Heavy open-face railroad hands: no generic wristwatch seconds hand. -->
+      <g filter="url(#ns-hand-shadow-${id})" fill="#171815" stroke="#0c0d0b" stroke-width="0.32"><g class="hand-hour" data-pivot="${CX} ${CY}"><path d="M${CX} ${CY+5.2} L${CX-2.0} ${CY-19.4} Q${CX} ${CY-25.0} ${CX+2.0} ${CY-19.4} L${CX+1.25} ${CY+4.2} Z"/><circle cx="${CX}" cy="${CY-16.4}" r="2.35" fill="url(#ns-dial-${id})" stroke="#171815" stroke-width="0.83"/><path d="M${CX-0.58} ${CY-26.6} H${CX+0.58} V${CY+6.3} H${CX-0.58} Z"/></g><g class="hand-min" data-pivot="${CX} ${CY}"><path d="M${CX} ${CY+6.0} L${CX-1.58} ${CY-40.8} Q${CX} ${CY-47.0} ${CX+1.58} ${CY-40.8} L${CX+1.02} ${CY+5.0} Z"/><circle cx="${CX}" cy="${CY-35.2}" r="2.08" fill="url(#ns-dial-${id})" stroke="#171815" stroke-width="0.76"/><path d="M${CX-0.46} ${CY-48.3} H${CX+0.46} V${CY+7.1} H${CX-0.46} Z"/></g></g><circle cx="${CX}" cy="${CY}" r="2.7" fill="#151612" stroke="#d3aa42" stroke-width="0.68"/><circle cx="${CX}" cy="${CY}" r="0.94" fill="#f4df98"/>`;
+    }
+  };
+  LOGOS.railroad = () => "";
+  FIDELITY_OVERLAYS.railroad = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
