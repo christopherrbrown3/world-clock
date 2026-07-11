@@ -67,6 +67,6 @@ Total faces: 62.
 | `howardmiller` | Howard Miller Chateau 610-520 Grandfather Clock | `tick` |
 | `mickey` | Ingersoll Mickey Mouse (1933) | `tick` |
 | `kingkhaki` | Hamilton Khaki Field King Auto H64455533 | `sweep` |
-| `casiomq24` | Casio MQ-24 | `tick` |
+| `casiomq24` | CASIO MQ-24-7B2LL | `tick` |
 | `bigtic` | Fossil Big Tic | `tick` |
 | `timexindiglo` | Timex Indiglo | `tick` |
