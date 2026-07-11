@@ -46,7 +46,7 @@ Total faces: 62.
 | `twinbell` | Westclox Twin Bell Alarm Clock 70010A | `tick` |
 | `grandfather` | Comtoise Longcase Clock — Musée du Temps, c. 1850 | `tick` |
 | `orloj` | Prague Old Town Astronomical Clock (2018-restored astrolabe) | `tick` |
-| `marine` | Ulysse Nardin Marine Chronometer | `sweep` |
+| `marine` | Ulysse Nardin Marine Torpilleur 1182-310/42 | `sweep` |
 | `freak` | Ulysse Nardin Freak X | `sweep` |
 | `patek` | Patek Philippe Perpetual Calendar | `sweep` |
 | `explorer` | Rolex Explorer | `sweep` |
