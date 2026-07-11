@@ -48,7 +48,7 @@ Total faces: 62.
 | `orloj` | Prague Old Town Astronomical Clock (2018-restored astrolabe) | `tick` |
 | `marine` | Ulysse Nardin Marine Torpilleur 1182-310/42 | `sweep` |
 | `freak` | Ulysse Nardin Freak X Carb 2303-270/CARB | `sweep` |
-| `patek` | Patek Philippe Perpetual Calendar | `sweep` |
+| `patek` | Patek Philippe Perpetual Calendar Chronograph 5270J-001 | `sweep` |
 | `explorer` | Rolex Explorer | `sweep` |
 | `santos` | Cartier Santos | `tick` |
 | `bigpilot` | IWC Big Pilot | `sweep` |

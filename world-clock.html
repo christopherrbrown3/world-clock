@@ -11946,6 +11946,101 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.freak = () => "";
   FIDELITY_OVERLAYS.freak = () => "";
 
+  // ─────────────── Patek Philippe Perpetual Calendar Chronograph 5270J-001 ───────────────
+  // Reference object: yellow gold, silvery opaline dial, tachymeter and the
+  // classic perpetual-calendar / chronograph layout introduced with ref. 5270.
+  FACES.patek = {
+    name: "Patek Philippe Perpetual Calendar Chronograph 5270J-001",
+    cadence: "sweep",
+    render() {
+      const id = "pp5270j";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const S9 = [64, 102], S3 = [136, 102], S6 = [100, 137];
+      let stitch = "", scales = "", chronoBoxes = "", tach = "", batons = "", dateRing = "", secTicks = "", minTicks = "", alligator = "";
+      for (const y of [7.5, 18, 181.5, 192]) stitch += `<path d="M75 ${y} H125" fill="none" stroke="#b77943" stroke-width="0.64" stroke-dasharray="2.25 1.42" opacity="0.92"/>`;
+      for (let i = 0; i < 8; i++) {
+        const y = i < 4 ? 5 + i * 8.2 : 164 + (i - 4) * 8.2;
+        alligator += `<path d="M74 ${y.toFixed(1)} Q100 ${(y + (i % 2 ? 4.3 : -3.2)).toFixed(1)} 126 ${y.toFixed(1)}" fill="none" stroke="#4c1e12" stroke-width="0.75" opacity="0.60"/>`;
+      }
+      for (let i = 0; i < 300; i++) {
+        const d = i * 1.2, [x1, y1] = at(d, 72.0), [x2, y2] = at(d, i % 25 === 0 ? 68.8 : i % 5 === 0 ? 70.0 : 70.9);
+        scales += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#171716" stroke-width="${i % 25 === 0 ? "0.68" : i % 5 === 0 ? "0.42" : "0.24"}"/>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const d = i * 6, [x, y] = at(d, 65.0);
+        chronoBoxes += `<rect x="${(x - 1.20).toFixed(1)}" y="${(y - 1.52).toFixed(1)}" width="2.40" height="3.04" fill="${i % 5 === 0 ? "#eeeae0" : "#fcfaf3"}" stroke="#292725" stroke-width="${i % 5 === 0 ? "0.46" : "0.28"}" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+      }
+      const tachValues = ["60","500","400","300","250","200","180","160","140","120","100","90","80","70","65"].map(v => [v, Number(v) === 60 ? 0 : (3600 / Number(v)) * 6]);
+      tachValues.forEach(([v, d]) => {
+        const normalized = ((Number(d) % 360) + 360) % 360;
+        const [x, y] = at(normalized, 69.0);
+        const orient = normalized > 90 && normalized < 270 ? normalized + 180 : normalized;
+        tach += `<text x="${x.toFixed(1)}" y="${(y + 0.3).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${v === "500" || v === "400" ? "2.55" : "2.35"}" font-weight="700" fill="#161513" transform="rotate(${orient.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${v}</text>`;
+      });
+      for (let h = 0; h < 12; h++) {
+        if (h === 3 || h === 6 || h === 9) continue;
+        const d = h * 30, [x, y] = at(d, h === 0 ? 55.4 : 57.0);
+        if (h === 0) {
+          batons += `<rect x="95.5" y="47.3" width="3.6" height="12.2" rx="0.34" fill="url(#pp-gold-${id})" stroke="#875414" stroke-width="0.42"/><rect x="100.9" y="47.3" width="3.6" height="12.2" rx="0.34" fill="url(#pp-gold-${id})" stroke="#875414" stroke-width="0.42"/>`;
+        } else {
+          batons += `<rect x="${(x - 1.65).toFixed(1)}" y="${(y - 6.1).toFixed(1)}" width="3.3" height="12.2" rx="0.38" fill="url(#pp-gold-${id})" stroke="#875414" stroke-width="0.42" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+        }
+      }
+      for (let i = 0; i < 31; i++) {
+        const d = i * 360 / 31, [x, y] = at(d, 22.8, S6[0], S6[1]);
+        const orient = d > 90 && d < 270 ? d + 180 : d;
+        dateRing += `<text x="${x.toFixed(1)}" y="${(y + 0.22).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Georgia,'Times New Roman',serif" font-size="${i % 2 === 0 ? "3.05" : "2.55"}" font-weight="${i % 5 === 0 ? "700" : "500"}" fill="#181715" transform="rotate(${orient.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${i + 1}</text>`;
+      }
+      const subScale = (cx, cy, r, labels, type) => {
+        let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#f8f5ed" stroke="#25231f" stroke-width="0.62"/><circle cx="${cx}" cy="${cy}" r="${(r - 2.0).toFixed(1)}" fill="none" stroke="#a39b8a" stroke-width="0.34"/>`;
+        for (let i = 0; i < 60; i++) {
+          const d = i * 6, [x1, y1] = at(d, r - 0.55, cx, cy), [x2, y2] = at(d, r - (i % 5 === 0 ? 3.5 : 1.9), cx, cy);
+          s += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#1d1c19" stroke-width="${i % 5 === 0 ? "0.54" : "0.25"}"/>`;
+        }
+        labels.forEach(([txt, d]) => {
+          const [x, y] = at(d, r - 6.0, cx, cy);
+          s += `<text x="${x.toFixed(1)}" y="${(y + 0.28).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${type === "min" ? "3.6" : "3.45"}" font-weight="700" fill="#191815">${txt}</text>`;
+        });
+        return s;
+      };
+      secTicks = subScale(S9[0], S9[1], 15.3, [["60",0],["10",60],["20",120],["30",180],["40",240],["50",300]], "sec");
+      minTicks = subScale(S3[0], S3[1], 15.3, [["30",0],["5",60],["10",120],["15",180],["20",240],["25",300]], "min");
+
+      return `<defs>${caseDefs(id,"gold")}
+        <radialGradient id="pp-opaline-${id}" cx="45%" cy="29%" r="88%"><stop offset="0%" stop-color="#fffdf7"/><stop offset="48%" stop-color="#f5f1e7"/><stop offset="82%" stop-color="#e8e0ce"/><stop offset="100%" stop-color="#cfc4ad"/></radialGradient>
+        <linearGradient id="pp-strap-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#9a5436"/><stop offset="20%" stop-color="#5b2518"/><stop offset="54%" stop-color="#34140e"/><stop offset="80%" stop-color="#74351f"/><stop offset="100%" stop-color="#3b180f"/></linearGradient>
+        <linearGradient id="pp-gold-${id}" x1="0.12" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#9f641c"/><stop offset="20%" stop-color="#ffe4a0"/><stop offset="48%" stop-color="#d59b36"/><stop offset="75%" stop-color="#ffe7a5"/><stop offset="100%" stop-color="#8b5016"/></linearGradient>
+        <radialGradient id="pp-night-${id}" cx="40%" cy="30%" r="78%"><stop offset="0%" stop-color="#315183"/><stop offset="100%" stop-color="#07183b"/></radialGradient>
+        <linearGradient id="pp-glass-${id}" x1="0" y1="0" x2="0.84" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.24"/><stop offset="38%" stop-color="#fff" stop-opacity="0.035"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="pp-handshadow-${id}" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB"><feDropShadow dx="0.8" dy="1.05" stdDeviation="0.60" flood-color="#241503" flood-opacity="0.45"/></filter>
+        <clipPath id="pp-dialclip-${id}"><circle cx="100" cy="100" r="72.3"/></clipPath>
+      </defs>
+      <!-- Warm chocolate large-square alligator strap and the 5270's slender gold lugs. -->
+      <path d="M68 0 H132 L141 47 H59 Z M59 153 H141 L132 200 H68 Z" fill="url(#pp-strap-${id})" stroke="#3a170d" stroke-width="0.86"/><path d="M72 0 H128 L136 47 H64 M64 153 H136 L128 200 H72" fill="none" stroke="#d48b55" stroke-width="0.42" opacity="0.62"/>${stitch}${alligator}<path d="M59 47 L47 31 Q44 27 40 32 L29 50 Q35 57 52 60 L69 51 Z M141 47 L153 31 Q156 27 160 32 L171 50 Q165 57 148 60 L131 51 Z M59 153 L47 169 Q44 173 40 168 L29 150 Q35 143 52 140 L69 149 Z M141 153 L153 169 Q156 173 160 168 L171 150 Q165 143 148 140 L131 149 Z" fill="url(#case-${id})" stroke="#835016" stroke-width="0.58"/>
+      <!-- Thin concave bezel, rounded middle and gold chronograph controls. -->
+      <circle cx="100" cy="100" r="80.0" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="78.7" fill="none" stroke="url(#rim-${id})" stroke-width="0.94"/><circle cx="100" cy="100" r="75.9" fill="url(#bezel-${id})" stroke="#9a611d" stroke-width="0.52"/><circle cx="100" cy="100" r="73.2" fill="#b87a26" opacity="0.48"/><circle cx="100" cy="100" r="72.3" fill="url(#pp-opaline-${id})" stroke="#8f5a19" stroke-width="0.46"/><rect x="174.4" y="95.1" width="9.5" height="9.8" rx="1.55" fill="url(#case-${id})" stroke="#8b5418" stroke-width="0.50"/><circle cx="190.1" cy="100" r="8.9" fill="url(#case-${id})" stroke="#885016" stroke-width="0.68"/><path d="M184.6 94.7 V105.3 M186.5 92.9 V107.1 M188.5 91.7 V108.3 M190.5 91.5 V108.5 M192.5 92.0 V108 M194.4 93.7 V106.3" stroke="#8c5519" stroke-width="0.74"/><path d="M185.3 94.7 V105.3 M189.4 91.9 V108.1 M193.5 93 V107" stroke="#fff1bd" stroke-width="0.25" opacity="0.85"/><g fill="url(#case-${id})" stroke="#875016" stroke-width="0.55"><path d="M169 66 L184 58 L190 64 L176 74 Z"/><path d="M169 134 L184 142 L190 136 L176 126 Z"/></g><path d="M174 65 L185 60 M174 135 L185 140" stroke="#ffe9a5" stroke-width="0.44" opacity="0.8"/>
+      <g clip-path="url(#pp-dialclip-${id})">
+        <circle cx="100" cy="100" r="70.5" fill="none" stroke="#161513" stroke-width="0.42"/>${scales}<circle cx="100" cy="100" r="69.1" fill="none" stroke="#24221e" stroke-width="0.58"/>${tach}<text x="112.5" y="33.3" text-anchor="middle" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="2.35" font-weight="700" letter-spacing="0.12" fill="#151411">BASE 1000</text>${chronoBoxes}<circle cx="100" cy="100" r="61.8" fill="none" stroke="#1d1b17" stroke-width="0.52"/>
+        ${batons}
+        <!-- Day and month sit in their gold-framed double aperture at twelve. -->
+        <rect x="77.1" y="62.4" width="20.4" height="10.2" rx="1.2" fill="url(#pp-gold-${id})" stroke="#7f4b12" stroke-width="0.56"/><rect x="79.0" y="64.0" width="16.6" height="7.0" rx="0.42" fill="#faf7ef" stroke="#aca18a" stroke-width="0.30"/><text class="date-win" data-date="dow" x="87.3" y="67.5" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="4.4" font-weight="700" fill="#171613">SAT</text><rect x="102.5" y="62.4" width="20.4" height="10.2" rx="1.2" fill="url(#pp-gold-${id})" stroke="#7f4b12" stroke-width="0.56"/><rect x="104.4" y="64.0" width="16.6" height="7.0" rx="0.42" fill="#faf7ef" stroke="#aca18a" stroke-width="0.30"/><text class="date-win" data-date="month" x="112.7" y="67.5" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="4.4" font-weight="700" fill="#171613">APR</text>
+        <text x="100" y="79.1" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="5.15" font-weight="700" letter-spacing="0.26" fill="#141310">PATEK PHILIPPE</text><text x="100" y="84.7" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="3.45" font-weight="600" letter-spacing="1.05" fill="#201e19">GENÈVE</text>
+        <!-- Running small seconds at nine and the normally parked 30-minute counter at three. -->
+        ${secTicks}${minTicks}<g class="hand-subsec" data-pivot="64 102"><path d="M64 105.0 L63.30 102.0 L64 89.0 L64.70 102.0 Z" fill="#b17a23" stroke="#74430d" stroke-width="0.28"/></g><circle cx="64" cy="102" r="1.5" fill="url(#pp-gold-${id})" stroke="#805015" stroke-width="0.34"/><path d="M136 105.0 L135.35 102.0 L136 90.2 L136.65 102.0 Z" fill="#b17a23" stroke="#74430d" stroke-width="0.28"/><circle cx="136" cy="102" r="1.5" fill="url(#pp-gold-${id})" stroke="#805015" stroke-width="0.34"/>
+        <!-- Circular date, moon aperture, day/night and leap-year displays at six. -->
+        <circle cx="100" cy="137" r="25.3" fill="#f8f5ed" stroke="#332e26" stroke-width="0.62"/><circle cx="100" cy="137" r="22.9" fill="none" stroke="#9f9788" stroke-width="0.34"/>${dateRing}<g class="hand-date" data-pivot="100 137"><path d="M100 139.5 L99.25 136.9 L100 113.2 L100.75 136.9 Z" fill="#b01722"/><path d="M100 111.7 l-1.8 3.3 h3.6 z" fill="#b01722"/></g><circle cx="100" cy="137" r="2.1" fill="url(#pp-gold-${id})" stroke="#845016" stroke-width="0.42"/>
+        <clipPath id="pp-moonclip-${id}"><path d="M87.9 139.5 A12.1 9.2 0 0 1 112.1 139.5 Z"/></clipPath><path d="M87.9 139.5 A12.1 9.2 0 0 1 112.1 139.5 Z" fill="url(#pp-night-${id})" stroke="#6d501a" stroke-width="0.68"/><g clip-path="url(#pp-moonclip-${id})"><g class="moon-disc" data-r="7"><circle cx="92.1" cy="137.4" r="4.35" fill="#e9d98f"/><circle cx="107.9" cy="137.4" r="4.35" fill="#e9d98f"/></g></g><path d="M87.9 139.5 A12.1 9.2 0 0 1 112.1 139.5" fill="none" stroke="#76561c" stroke-width="0.70"/><circle cx="74.0" cy="137.0" r="6.15" fill="#f7f3e9" stroke="url(#pp-gold-${id})" stroke-width="0.88"/><path d="M74 131.5 A5.5 5.5 0 0 1 74 142.5 A5.5 5.5 0 0 1 74 131.5" fill="#173a72"/><circle cx="71.7" cy="134.4" r="1.8" fill="#ebd77b"/><circle cx="126.0" cy="137.0" r="6.15" fill="#f7f3e9" stroke="url(#pp-gold-${id})" stroke-width="0.88"/><text x="126" y="137.35" text-anchor="middle" dominant-baseline="central" font-family="Georgia,'Times New Roman',serif" font-size="6.35" font-weight="700" fill="#1c1915">3</text><text x="86.4" y="161.1" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.25" font-weight="700" letter-spacing="0.28" fill="#26231e">SWISS</text><text x="113.6" y="161.1" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.25" font-weight="700" letter-spacing="0.28" fill="#26231e">MADE</text><ellipse cx="80" cy="61" rx="53" ry="35" fill="url(#pp-glass-${id})" transform="rotate(-27 80 61)"/>
+      </g>
+      <!-- Feuille time hands move; the long central chronograph seconds is parked at twelve. -->
+      <g filter="url(#pp-handshadow-${id})"><g class="hand-hour"><path d="M100 104 L96.1 98.0 L97.1 82.0 L100 61.5 L102.9 82.0 L103.9 98.0 Z" fill="url(#pp-gold-${id})" stroke="#845014" stroke-width="0.52"/><path d="M100 95.2 L98.5 81.4 L100 70.1 L101.5 81.4 Z" fill="#ffe49d"/></g><g class="hand-min"><path d="M100 105 L97.2 98.4 L98.15 55.5 L100 40.2 L101.85 55.5 L102.8 98.4 Z" fill="url(#pp-gold-${id})" stroke="#845014" stroke-width="0.52"/><path d="M100 95.9 L98.95 58.4 L100 47.4 L101.05 58.4 Z" fill="#ffe49d"/></g><path d="M100 108 L99.5 100 L99.5 35.6 L100 28.4 L100.5 35.6 L100.5 100 Z" fill="#bd8324" stroke="#74440f" stroke-width="0.30"/></g><circle cx="100" cy="100" r="3.35" fill="url(#pp-gold-${id})" stroke="#805017" stroke-width="0.48"/><circle cx="100" cy="100" r="1.18" fill="#f8d678"/><circle cx="100" cy="100" r="72.3" fill="none" stroke="#9a611b" stroke-width="0.50"/>`;
+    }
+  };
+  LOGOS.patek = () => "";
+  FIDELITY_OVERLAYS.patek = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
