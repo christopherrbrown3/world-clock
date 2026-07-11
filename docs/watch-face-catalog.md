@@ -62,7 +62,7 @@ Total faces: 62.
 | `jorggray` | Jorg Gray JGC6500 Secret Service Edition | `tick` |
 | `rainbow` | Rolex Cosmograph Daytona 116595RBOW-0001 | `sweep` |
 | `railroad` | Norfolk Southern Railroad Pocket Watch (1994) | `tick` |
-| `nomosmetro` | Nomos Glashütte Metro | `sweep` |
+| `nomosmetro` | NOMOS Glashütte Metro date power reserve 1101 | `sweep` |
 | `grandcentral` | Grand Central Terminal Clock | `tick` |
 | `howardmiller` | Howard Miller Grandfather Clock | `tick` |
 | `mickey` | Ingersoll Mickey Mouse (1933) | `tick` |
