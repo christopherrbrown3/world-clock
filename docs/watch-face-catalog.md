@@ -57,7 +57,7 @@ Total faces: 62.
 | `radiomir` | Panerai Radiomir Black Seal Logo PAM00754 | `sweep` |
 | `carrera` | TAG Heuer Carrera Chronograph CBN2011.BA0642 | `sweep` |
 | `snoopy` | Omega Speedmaster "Silver Snoopy Award" 50th Anniversary 310.32.42.50.02.001 | `sweep` |
-| `milgauss` | Rolex Milgauss | `sweep` |
+| `milgauss` | Rolex Milgauss 116400GV-0002 "Z-Blue" | `sweep` |
 | `yachtmaster2` | Rolex Yacht-Master II | `sweep` |
 | `jorggray` | Jorg Gray JG6500 | `sweep` |
 | `rainbow` | Rolex Daytona Rainbow | `sweep` |
