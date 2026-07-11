@@ -13211,6 +13211,49 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.casiomq24 = () => "";
   FIDELITY_OVERLAYS.casiomq24 = () => "";
 
+  // ───────── Fossil Big Tic JR-7845 ─────────
+  // A 37 mm Y2K Big Tic: brushed steel bracelet/case, no hour indices, analog
+  // hour/minute hands over an oversized animated black digital-seconds display.
+  FACES.bigtic = {
+    name: "Fossil Big Tic JR-7845",
+    cadence: "tick",
+    render() {
+      const id = "fossil-jr7845", CX = 100, CY = 100;
+      let bracelet = "", brushed = "", crownLines = "";
+      for (let i = 0; i < 4; i++) {
+        const topY = i * 10, botY = 200 - i * 10;
+        const topW = 46 + i * 4.2, botW = 46 + i * 4.2;
+        bracelet += `<path d="M${(100-topW/2).toFixed(1)} ${topY} H${(100+topW/2).toFixed(1)} L${(100+topW/2+1.6).toFixed(1)} ${topY+9.4} H${(100-topW/2-1.6).toFixed(1)}Z" fill="url(#bt-brush-${id})" stroke="#4f565b" stroke-width="0.52"/><path d="M${(100-botW/2-1.6).toFixed(1)} ${botY-9.4} H${(100+botW/2+1.6).toFixed(1)} L${(100+botW/2).toFixed(1)} ${botY} H${(100-botW/2).toFixed(1)}Z" fill="url(#bt-brush-${id})" stroke="#4f565b" stroke-width="0.52"/>`;
+      }
+      for (let x = 41; x <= 159; x += 3.1) brushed += `<path d="M${x.toFixed(1)} 52 Q${(x-3).toFixed(1)} 100 ${x.toFixed(1)} 148" fill="none" stroke="#f4f5f4" stroke-width="0.45" opacity="0.17"/>`;
+      for (let x = 171.5; x <= 177.5; x += 1.15) crownLines += `<line x1="${x.toFixed(1)}" y1="95.0" x2="${x.toFixed(1)}" y2="105.0" stroke="#6c747a" stroke-width="0.52"/>`;
+      return `<defs>
+        <linearGradient id="bt-brush-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#eef1f1"/><stop offset="24%" stop-color="#abb4b8"/><stop offset="49%" stop-color="#f6f7f6"/><stop offset="76%" stop-color="#6f797e"/><stop offset="100%" stop-color="#cbd1d3"/></linearGradient>
+        <radialGradient id="bt-case-${id}" cx="35%" cy="29%" r="87%"><stop offset="0%" stop-color="#ffffff"/><stop offset="28%" stop-color="#d9dee0"/><stop offset="57%" stop-color="#8c969b"/><stop offset="82%" stop-color="#4a5359"/><stop offset="100%" stop-color="#283035"/></radialGradient>
+        <radialGradient id="bt-screen-${id}" cx="43%" cy="32%" r="85%"><stop offset="0%" stop-color="#273238"/><stop offset="43%" stop-color="#10171c"/><stop offset="100%" stop-color="#04080b"/></radialGradient>
+        <linearGradient id="bt-digit-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d8e0ce"/><stop offset="47%" stop-color="#95a08e"/><stop offset="100%" stop-color="#59635a"/></linearGradient>
+        <linearGradient id="bt-hand-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="43%" stop-color="#c9d1d0"/><stop offset="100%" stop-color="#78848a"/></linearGradient>
+        <linearGradient id="bt-glass-${id}" x1="0" y1="0" x2="0.87" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.26"/><stop offset="43%" stop-color="#fff" stop-opacity="0.05"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <clipPath id="bt-screenclip-${id}"><circle cx="${CX}" cy="${CY}" r="52.4"/></clipPath><clipPath id="bt-caseclip-${id}"><ellipse cx="${CX}" cy="${CY}" rx="71.5" ry="73.2"/></clipPath>
+        <filter id="bt-shadow-${id}" x="-28%" y="-28%" width="156%" height="156%"><feDropShadow dx="0" dy="2.8" stdDeviation="3.3" flood-color="#000" flood-opacity="0.48"/></filter>
+        <filter id="bt-handshadow-${id}" x="-42%" y="-42%" width="184%" height="184%"><feDropShadow dx="0.66" dy="1.02" stdDeviation="0.55" flood-color="#000" flood-opacity="0.52"/></filter>
+      </defs>
+      <!-- Integrated steel bracelet: end links are widest at the case, then taper outward. -->
+      <g filter="url(#bt-shadow-${id})">${bracelet}</g>
+      <!-- Rounded 37 mm case and vertical end-link shoulders follow the bracelet axis. -->
+      <g filter="url(#bt-shadow-${id})"><path d="M75 45 V29 Q75 24 81 23 H119 Q125 24 125 29 V45 M75 155 V171 Q75 176 81 177 H119 Q125 176 125 171 V155" fill="none" stroke="url(#bt-case-${id})" stroke-width="7.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="${CX}" cy="${CY}" rx="71.5" ry="73.2" fill="url(#bt-case-${id})"/><ellipse cx="${CX}" cy="${CY}" rx="66.0" ry="67.4" fill="url(#bt-brush-${id})" stroke="#596268" stroke-width="0.66"/><g clip-path="url(#bt-caseclip-${id})">${brushed}</g></g><ellipse cx="${CX}" cy="${CY}" rx="58.0" ry="59.2" fill="#11191e" stroke="#e2e5e4" stroke-width="1.1"/><circle cx="${CX}" cy="${CY}" r="54.1" fill="url(#bt-screen-${id})" stroke="#69757a" stroke-width="0.80"/>
+      <rect x="160" y="95" width="9" height="10" rx="1.4" fill="url(#bt-case-${id})" stroke="#50595f" stroke-width="0.50"/><circle cx="175" cy="100" r="6.1" fill="url(#bt-case-${id})" stroke="#4d565c" stroke-width="0.66"/>${crownLines}
+      <g clip-path="url(#bt-screenclip-${id})">
+        <!-- the digital animation visibly scrolls across the smoke-black display -->
+        <text x="43" y="111" data-digital="ssPrev" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Impact,sans-serif" font-size="61" font-weight="900" fill="#637067" opacity="0.24">29</text><text x="100" y="109" data-digital="ss" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Impact,sans-serif" font-size="78" font-weight="900" letter-spacing="-7" fill="url(#bt-digit-${id})">30</text><text x="157" y="111" data-digital="ssNext" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Impact,sans-serif" font-size="61" font-weight="900" fill="#637067" opacity="0.24">31</text><path d="M50 58 Q100 39 147 56" fill="none" stroke="url(#bt-glass-${id})" stroke-width="11" opacity="0.58"/>
+      </g><text x="100" y="143.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="5.1" font-weight="700" letter-spacing="0.72" fill="#e6e9e5">FOSSIL</text>
+      <!-- The physical analog layer supplies only time; seconds live in the display. -->
+      <g filter="url(#bt-handshadow-${id})"><g class="hand-hour"><path d="M100 106.4 L96.6 99.8 L97.4 78.5 L100 64.0 L102.6 78.5 L103.4 99.8Z" fill="url(#bt-hand-${id})" stroke="#303a40" stroke-width="0.54"/><path d="M100 69 L101.0 80 L100 96.3 L99 80Z" fill="#f2f4ee"/></g><g class="hand-min"><path d="M100 108.2 L98.1 100 L98.8 52.0 L100 37.0 L101.2 52.0 L101.9 100Z" fill="url(#bt-hand-${id})" stroke="#303a40" stroke-width="0.48"/><path d="M100 42.4 L100.75 54 L100 97.0 L99.25 54Z" fill="#f2f4ee"/></g></g><circle cx="100" cy="100" r="4.05" fill="url(#bt-hand-${id})" stroke="#364047" stroke-width="0.72"/><circle cx="100" cy="100" r="1.4" fill="#f7f9f6"/>`;
+    }
+  };
+  LOGOS.bigtic = () => "";
+  FIDELITY_OVERLAYS.bigtic = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
