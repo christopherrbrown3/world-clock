@@ -61,7 +61,7 @@ Total faces: 62.
 | `yachtmaster2` | Rolex Yacht-Master II 126680 | `sweep` |
 | `jorggray` | Jorg Gray JGC6500 Secret Service Edition | `tick` |
 | `rainbow` | Rolex Cosmograph Daytona 116595RBOW-0001 | `sweep` |
-| `railroad` | Norfolk Southern Railroad Pocket Watch | `tick` |
+| `railroad` | Norfolk Southern Railroad Pocket Watch (1994) | `tick` |
 | `nomosmetro` | Nomos Glashütte Metro | `sweep` |
 | `grandcentral` | Grand Central Terminal Clock | `tick` |
 | `howardmiller` | Howard Miller Grandfather Clock | `tick` |
