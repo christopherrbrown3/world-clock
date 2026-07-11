@@ -64,7 +64,7 @@ Total faces: 62.
 | `railroad` | Norfolk Southern Railroad Pocket Watch (1994) | `tick` |
 | `nomosmetro` | NOMOS Glashütte Metro date power reserve 1101 | `sweep` |
 | `grandcentral` | Grand Central Terminal Information Booth Clock (1913) | `tick` |
-| `howardmiller` | Howard Miller Grandfather Clock | `tick` |
+| `howardmiller` | Howard Miller Chateau 610-520 Grandfather Clock | `tick` |
 | `mickey` | Ingersoll Mickey Mouse (1933) | `tick` |
 | `kingkhaki` | Hamilton Khaki King | `sweep` |
 | `casiomq24` | Casio MQ-24 | `tick` |
