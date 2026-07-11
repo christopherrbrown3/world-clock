@@ -13171,6 +13171,46 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.kingkhaki = () => "";
   FIDELITY_OVERLAYS.kingkhaki = () => "";
 
+  // ───────── CASIO MQ-24-7B2LL ─────────
+  // Casio's 20 g resin basic: a shallow 38.8 × 34.9 mm black case, ribbed resin
+  // band, black dot minute track, plain printed numerals and three black hands.
+  FACES.casiomq24 = {
+    name: "CASIO MQ-24-7B2LL",
+    cadence: "tick",
+    render() {
+      const id = "mq24-7b2ll", CX = 100, CY = 100;
+      let nums = "", dots = "", ribs = "", crownGrooves = "";
+      for (let h = 1; h <= 12; h++) {
+        const [x, y] = P(h / 12 * Math.PI * 2, 49.5, CX, CY);
+        nums += `<text x="${x.toFixed(1)}" y="${(y + 0.7).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${h === 12 ? "12.8" : "12.1"}" font-weight="700" fill="#181818" stroke="#a2a09a" stroke-width="0.32" paint-order="stroke">${h}</text>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const [x, y] = P(i / 60 * Math.PI * 2, 57.3, CX, CY);
+        dots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${i % 5 === 0 ? "1.12" : "0.63"}" fill="#1a1a1a"/>`;
+      }
+      [6, 17, 28, 172, 183, 194].forEach((y, index) => { const top = y < 100; ribs += `<path d="M${top ? 80 : 74} ${y} H${top ? 120 : 126} L${top ? 121.2 : 127.2} ${y + (top ? 5.7 : -5.7)} H${top ? 78.8 : 72.8}Z" fill="${index % 2 ? '#202326' : '#34383a'}" stroke="#101113" stroke-width="0.58"/>`; });
+      for (let x = 169.8; x <= 175.8; x += 1.15) crownGrooves += `<line x1="${x.toFixed(1)}" y1="96.0" x2="${x.toFixed(1)}" y2="104.0" stroke="#767b7d" stroke-width="0.42"/>`;
+      return `<defs>
+        <linearGradient id="mq-resin-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#515558"/><stop offset="24%" stop-color="#25282a"/><stop offset="58%" stop-color="#111214"/><stop offset="100%" stop-color="#3e4143"/></linearGradient>
+        <linearGradient id="mq-bezel-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#0b0c0d"/><stop offset="22%" stop-color="#4f5558"/><stop offset="44%" stop-color="#111315"/><stop offset="73%" stop-color="#3e4244"/><stop offset="100%" stop-color="#08090a"/></linearGradient>
+        <radialGradient id="mq-dial-${id}" cx="45%" cy="31%" r="88%"><stop offset="0%" stop-color="#fffefa"/><stop offset="62%" stop-color="#f8f7f1"/><stop offset="100%" stop-color="#dfded8"/></radialGradient>
+        <linearGradient id="mq-glass-${id}" x1="0" y1="0" x2="0.86" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.22"/><stop offset="40%" stop-color="#fff" stop-opacity="0.04"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="mq-shadow-${id}" x="-28%" y="-28%" width="156%" height="156%"><feDropShadow dx="0" dy="2.4" stdDeviation="3.0" flood-color="#000" flood-opacity="0.44"/></filter>
+        <filter id="mq-hand-${id}" x="-45%" y="-45%" width="190%" height="190%"><feDropShadow dx="0.42" dy="0.72" stdDeviation="0.38" flood-color="#000" flood-opacity="0.36"/></filter>
+        <clipPath id="mq-clip-${id}"><circle cx="${CX}" cy="${CY}" r="60.5"/></clipPath>
+      </defs>
+      <!-- Flexible black resin band: widest at the case and progressively narrower away from it. -->
+      <path d="M80 0 H120 L126 37 H74Z M74 163 H126 L120 200 H80Z" fill="url(#mq-resin-${id})" stroke="#0c0d0e" stroke-width="0.72"/>${ribs}
+      <!-- The MQ-24 has an inexpensive, shallow resin tonneau/circle housing with aligned strap shoulders. -->
+      <path d="M65 31 H135 Q153 32 161 48 Q167 67 166 100 Q167 133 161 152 Q153 168 135 169 H65 Q47 168 39 152 Q33 133 34 100 Q33 67 39 48 Q47 32 65 31Z" fill="url(#mq-resin-${id})" stroke="#08090a" stroke-width="0.85" filter="url(#mq-shadow-${id})"/><path d="M66 35 H134 Q151 36 158 51 Q163 68 162 100 Q163 132 158 149 Q151 164 134 165 H66 Q49 164 42 149 Q37 132 38 100 Q37 68 42 51 Q49 36 66 35Z" fill="#08090a"/><circle cx="${CX}" cy="${CY}" r="65.0" fill="url(#mq-bezel-${id})"/><circle cx="${CX}" cy="${CY}" r="62.5" fill="none" stroke="#666a6a" stroke-width="0.68"/><circle cx="${CX}" cy="${CY}" r="60.5" fill="url(#mq-dial-${id})" stroke="#27292a" stroke-width="0.84"/>
+      <rect x="164.6" y="96.3" width="7.2" height="7.4" rx="1.1" fill="#1d2022"/><circle cx="174" cy="100" r="4.55" fill="#e6e6df" stroke="#45494b" stroke-width="0.62"/>${crownGrooves}
+      <g clip-path="url(#mq-clip-${id})">${dots}${nums}<text x="100" y="79.0" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.25" font-weight="700" letter-spacing="0.18" fill="#151515">CASIO</text><text x="100" y="85.1" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="4.15" font-weight="600" letter-spacing="0.45" fill="#1d1d1d">QUARTZ</text><text x="100" y="129.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="3.65" font-weight="700" letter-spacing="0.32" fill="#292929">WATER RESIST</text><path d="M62 56 Q88 41 116 48" fill="none" stroke="url(#mq-glass-${id})" stroke-width="9" opacity="0.52"/></g>
+      <g filter="url(#mq-hand-${id})"><g class="hand-hour"><path d="M100 104.5 L97.9 99.2 L98.3 75.4 L100 61.8 L101.7 75.4 L102.1 99.2Z" fill="#161616"/><path d="M100 61.8 L101.7 75.4 L100.65 96.0 L100 99.2Z" fill="#343434" opacity="0.70"/></g><g class="hand-min"><path d="M100 106.2 L98.65 99.1 L99.0 47.4 L100 35.1 L101.0 47.4 L101.35 99.1Z" fill="#151515"/><path d="M100 35.1 L101 47.4 L100.45 96.4 L100 99.1Z" fill="#353535" opacity="0.68"/></g><g class="hand-sec"><line x1="100" y1="113.0" x2="100" y2="41.0" stroke="#191919" stroke-width="0.82"/></g></g><circle cx="100" cy="100" r="2.62" fill="#161616"/><circle cx="100" cy="100" r="1.02" fill="#bab9b2"/>`;
+    }
+  };
+  LOGOS.casiomq24 = () => "";
+  FIDELITY_OVERLAYS.casiomq24 = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
