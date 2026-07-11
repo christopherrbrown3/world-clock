@@ -13112,6 +13112,65 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.mickey = () => "";
   FIDELITY_OVERLAYS.mickey = () => "";
 
+  // ───────── Hamilton Khaki Field King Auto H64455533 ─────────
+  // The King is not a generic field dial: its arced weekday aperture, date
+  // beneath it, 12/24-hour white numerals, leather strap and guarded crown are
+  // all specific to the current 40 mm H-40 automatic reference.
+  FACES.kingkhaki = {
+    name: "Hamilton Khaki Field King Auto H64455533",
+    cadence: "sweep",
+    render() {
+      const id = "kk-h64455533", CX = 100, CY = 100;
+      const pos = (fraction, r) => P(fraction * Math.PI * 2, r, CX, CY);
+      let outer = "", inner = "", minutes = "", minuteNumbers = "", stitches = "", radial = "";
+      for (let h = 1; h <= 12; h++) {
+        if (![11, 12, 1].includes(h)) {
+          const [x, y] = pos(h / 12, 59.8);
+          outer += `<text x="${x.toFixed(1)}" y="${(y + 1.1).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="${h === 6 ? "12.4" : "11.7"}" font-weight="700" fill="#efefec">${h}</text>`;
+        }
+        const [ix, iy] = pos(h / 12, 42.0);
+        const twentyFour = h === 12 ? 24 : h + 12;
+        inner += `<text x="${ix.toFixed(1)}" y="${(iy + 0.7).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="5.1" font-weight="600" fill="#f1f1ed">${twentyFour}</text>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const major = i % 5 === 0, [x1, y1] = pos(i / 60, 76.5), [x2, y2] = pos(i / 60, major ? 71.3 : 73.5);
+        minutes += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#f0f1ef" stroke-width="${major ? "1.05" : "0.47"}" opacity="${major ? "0.98" : "0.84"}"/>`;
+        if (major) { const [x, y] = pos(i / 60, 67.7); minuteNumbers += `<text x="${x.toFixed(1)}" y="${(y + 1.3).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.75" font-weight="700" fill="#f2f2ef">${i === 0 ? "60" : String(i).padStart(2, "0")}</text>`; }
+      }
+      for (let y = 4.5; y <= 25.5; y += 5.2) stitches += `<path d="M80.4 ${y.toFixed(1)} l1.6 2.7 M119.6 ${y.toFixed(1)} l-1.6 2.7" stroke="#f3e1bc" stroke-width="1.25" stroke-linecap="round"/>`;
+      for (let y = 174.5; y <= 195.5; y += 5.2) stitches += `<path d="M80.4 ${y.toFixed(1)} l1.6 -2.7 M119.6 ${y.toFixed(1)} l-1.6 -2.7" stroke="#f3e1bc" stroke-width="1.25" stroke-linecap="round"/>`;
+      for (let i = 0; i < 48; i++) { const a = i / 48 * Math.PI * 2, [x, y] = P(a, 73.2); radial += `<line x1="100" y1="100" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${i % 2 ? '#768087' : '#171b1f'}" stroke-width="0.5" opacity="0.16"/>`; }
+      return `<defs>
+        <linearGradient id="kk-strap-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#9b633d"/><stop offset="30%" stop-color="#6a3b20"/><stop offset="63%" stop-color="#4a2514"/><stop offset="100%" stop-color="#2d160d"/></linearGradient>
+        <radialGradient id="kk-steel-${id}" cx="35%" cy="27%" r="86%"><stop offset="0%" stop-color="#ffffff"/><stop offset="26%" stop-color="#e7eaeb"/><stop offset="55%" stop-color="#aab2b6"/><stop offset="78%" stop-color="#687178"/><stop offset="100%" stop-color="#323940"/></radialGradient>
+        <linearGradient id="kk-bezel-${id}" x1="0.15" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#626a70"/><stop offset="18%" stop-color="#fbfcfc"/><stop offset="42%" stop-color="#b8c0c4"/><stop offset="62%" stop-color="#fafbfa"/><stop offset="100%" stop-color="#596167"/></linearGradient>
+        <radialGradient id="kk-dial-${id}" cx="47%" cy="34%" r="84%"><stop offset="0%" stop-color="#454a4e"/><stop offset="48%" stop-color="#25292c"/><stop offset="100%" stop-color="#0e1012"/></radialGradient>
+        <linearGradient id="kk-hand-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="38%" stop-color="#d5dadb"/><stop offset="68%" stop-color="#787f83"/><stop offset="100%" stop-color="#edf0ef"/></linearGradient>
+        <linearGradient id="kk-lume-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fbffe9"/><stop offset="100%" stop-color="#b9caa8"/></linearGradient>
+        <linearGradient id="kk-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.25"/><stop offset="40%" stop-color="#fff" stop-opacity="0.045"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <clipPath id="kk-clip-${id}"><circle cx="${CX}" cy="${CY}" r="78.0"/></clipPath>
+        <filter id="kk-shadow-${id}" x="-28%" y="-28%" width="156%" height="156%"><feDropShadow dx="0" dy="2.7" stdDeviation="3.3" flood-color="#000" flood-opacity="0.46"/></filter>
+        <filter id="kk-handshadow-${id}" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0.6" dy="1.0" stdDeviation="0.58" flood-color="#000" flood-opacity="0.48"/></filter>
+      </defs>
+      <!-- 20 mm cow-leather strap, broadest at the lugs and tapering toward the buckle. -->
+      <path d="M77 0 H123 L126 29 H74Z M74 171 H126 L123 200 H77Z" fill="url(#kk-strap-${id})" stroke="#2d160d" stroke-width="0.78"/>${stitches}
+      <!-- Natural top/bottom shoulders follow the strap axis; no crossed lug geometry. -->
+      <g fill="url(#kk-steel-${id})" stroke="#596268" stroke-width="0.54" filter="url(#kk-shadow-${id})"><path d="M72 43 V28 Q72 23 78 22 H88 V39Z M128 43 V28 Q128 23 122 22 H112 V39Z M72 157 V172 Q72 177 78 178 H88 V161Z M128 157 V172 Q128 177 122 178 H112 V161Z"/><path d="M76 27 H124 M76 173 H124" fill="none" stroke="#f7faf9" stroke-width="1.05" opacity="0.78"/></g>
+      <circle cx="${CX}" cy="${CY}" r="83.8" fill="url(#kk-steel-${id})" filter="url(#kk-shadow-${id})"/><circle cx="${CX}" cy="${CY}" r="81.7" fill="none" stroke="#ffffff" stroke-width="0.72" opacity="0.8"/><circle cx="${CX}" cy="${CY}" r="79.6" fill="url(#kk-bezel-${id})"/><circle cx="${CX}" cy="${CY}" r="76.8" fill="#111417" stroke="#050607" stroke-width="0.78"/><circle cx="${CX}" cy="${CY}" r="74.9" fill="url(#kk-dial-${id})"/>
+      <!-- Crown guards and the notably fluted three-o'clock crown. -->
+      <path d="M176 93 H184 V107 H176Z" fill="url(#kk-steel-${id})" stroke="#596268" stroke-width="0.54"/><path d="M169 92 Q177 90 181 95 V105 Q177 110 169 108Z" fill="url(#kk-steel-${id})" stroke="#596268" stroke-width="0.54"/><circle cx="189" cy="100" r="7.2" fill="url(#kk-steel-${id})" stroke="#515a60" stroke-width="0.68"/>${Array.from({length:8},(_,i)=>`<line x1="${184.5+i*1.24}" y1="94.3" x2="${184.5+i*1.24}" y2="105.7" stroke="#6d767b" stroke-width="0.50"/>`).join("")}
+      <g clip-path="url(#kk-clip-${id})">${radial}${minutes}${minuteNumbers}${outer}${inner}
+        <!-- Slanted day aperture and framed date sit under twelve exactly as on the King Auto. -->
+        <path d="M78.0 63.0 Q100 52.6 122.0 63.0 L119.1 70.1 Q100 62.8 80.9 70.1Z" fill="#e7e8e3" stroke="#7a7e7e" stroke-width="0.68"/><path d="M80.4 63.0 Q100 55.0 119.6 63.0" fill="none" stroke="#fff" stroke-width="0.52" opacity="0.72"/><text class="date-win" data-date="dow" x="100" y="64.3" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="5.75" font-weight="800" letter-spacing="0.62" fill="#17191a">SATURDAY</text><rect x="93.0" y="68.4" width="14.0" height="11.9" rx="0.72" fill="#e7e8e3" stroke="#727878" stroke-width="0.66"/><text class="date-win" data-date="dom" x="100" y="74.5" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="8.35" font-weight="700" fill="#17191a">8</text>
+        <text x="100" y="88.7" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="6.6" font-weight="700" letter-spacing="0.80" fill="#f1f1ed">HAMILTON</text><path d="M79.0 86.6 h6.0 M115.0 86.6 h6.0" stroke="#f1f1ed" stroke-width="0.56" opacity="0.85"/><text x="100" y="118.8" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="4.5" font-weight="700" letter-spacing="1.10" fill="#f0f0ec">KHAKI</text><text x="100" y="124.1" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.65" font-weight="600" letter-spacing="0.90" fill="#e5e5df">AUTOMATIC</text><text x="100" y="169.0" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.15" font-weight="600" letter-spacing="0.52" fill="#e9e9e4">SWISS MADE</text><path d="M54 62 Q91 38 127 48" fill="none" stroke="url(#kk-glass-${id})" stroke-width="11" opacity="0.48"/>
+      </g>
+      <!-- Brushed-steel syringe hands and a fine steel central seconds hand. -->
+      <g filter="url(#kk-handshadow-${id})"><g class="hand-hour"><path d="M100 106 L96.8 99 L97.5 67.0 L100 52.2 L102.5 67.0 L103.2 99Z" fill="url(#kk-hand-${id})" stroke="#50585d" stroke-width="0.46"/><path d="M100 57.5 L101.2 68.2 L100 93.5 L98.8 68.2Z" fill="url(#kk-lume-${id})"/></g><g class="hand-min"><path d="M100 109 L98.1 100 L98.6 45.0 L100 30.2 L101.4 45.0 L101.9 100Z" fill="url(#kk-hand-${id})" stroke="#50585d" stroke-width="0.42"/><path d="M100 35.8 L100.7 47.2 L100 96.2 L99.3 47.2Z" fill="url(#kk-lume-${id})"/></g><g class="hand-sec"><line x1="100" y1="117" x2="100" y2="33.4" stroke="#e6e9e7" stroke-width="0.92"/><circle cx="100" cy="71.5" r="2.55" fill="none" stroke="#e6e9e7" stroke-width="0.78"/></g></g><circle cx="100" cy="100" r="3.15" fill="url(#kk-hand-${id})" stroke="#565d61" stroke-width="0.58"/><circle cx="100" cy="100" r="1.0" fill="#f8faf8"/>`;
+    }
+  };
+  LOGOS.kingkhaki = () => "";
+  FIDELITY_OVERLAYS.kingkhaki = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
