@@ -12196,6 +12196,70 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.bigpilot = () => "";
   FIDELITY_OVERLAYS.bigpilot = () => "";
 
+  // ───────────── Blancpain Fifty Fathoms Automatique 5015 1130 71S ─────────────
+  // Reference object: 45 mm steel Fifty Fathoms on bracelet, calibre 1315.
+  FACES.fiftyfathoms = {
+    name: "Blancpain Fifty Fathoms Automatique 5015 1130 71S",
+    cadence: "sweep",
+    render() {
+      const id = "ff5015113071s";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      let bezelTicks = "", scallops = "", dialTicks = "", markers = "", bracelet = "";
+      for (let i = 0; i < 96; i++) {
+        const d = i * 3.75, [x1, y1] = at(d, 80.1), [x2, y2] = at(d, 76.8);
+        scallops += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 2 ? "#f1f4f4" : "#7a858b"}" stroke-width="1.04" opacity="0.80"/>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const d = i * 6, [x1, y1] = at(d, 70.8), [x2, y2] = at(d, i % 5 === 0 ? 63.0 : 66.8);
+        bezelTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#f3f0d5" stroke-width="${i % 5 === 0 ? "1.55" : "0.72"}" opacity="${i % 5 === 0 ? "0.95" : "0.86"}"/>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const d = i * 6, [x1, y1] = at(d, 57.5), [x2, y2] = at(d, i % 5 === 0 ? 54.3 : 55.8);
+        dialTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 5 === 0 ? "#e4e0ca" : "#8b8d86"}" stroke-width="${i % 5 === 0 ? "0.55" : "0.25"}" opacity="${i % 5 === 0 ? "0.78" : "0.52"}"/>`;
+      }
+      const numerals = {0:"12",3:"3",6:"6",9:"9"};
+      for (let h = 0; h < 12; h++) {
+        const d = h * 30;
+        if (numerals[h]) {
+          const [x,y] = at(d, 44.5);
+          markers += `<text x="${x.toFixed(1)}" y="${(y + 0.6).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="${h === 0 ? "11.8" : "11.0"}" font-weight="800" fill="#f1efd8" stroke="#777b77" stroke-width="1.00" paint-order="stroke fill">${numerals[h]}</text>`;
+        } else {
+          const [x,y] = at(d, 47.5);
+          markers += `<polygon points="${x.toFixed(1)},${(y - 7.2).toFixed(1)} ${(x + 4.1).toFixed(1)},${(y + 5.0).toFixed(1)} ${(x - 4.1).toFixed(1)},${(y + 5.0).toFixed(1)}" fill="#f3f0d7" stroke="#70756f" stroke-width="0.58" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+        }
+      }
+      for (let i = 0; i < 4; i++) {
+        const y = 0 + i * 11.5, by = 154 + i * 11.5, wide = 37 - i * 1.2;
+        bracelet += `<path d="M${(100 - wide).toFixed(1)} ${y} H${(100 + wide).toFixed(1)} L${(100 + wide - 2.4).toFixed(1)} ${(y + 12.0).toFixed(1)} H${(100 - wide + 2.4).toFixed(1)} Z" fill="url(#ff-brush-${id})" stroke="#59636a" stroke-width="0.46"/><path d="M${(100 - wide - 13).toFixed(1)} ${y + 1} H${(100 - wide - 1).toFixed(1)} L${(100 - wide + 1.6).toFixed(1)} ${(y + 11).toFixed(1)} H${(100 - wide - 10.5).toFixed(1)} Z M${(100 + wide + 1).toFixed(1)} ${y + 1} H${(100 + wide + 13).toFixed(1)} L${(100 + wide + 10.5).toFixed(1)} ${(y + 11).toFixed(1)} H${(100 + wide - 1.6).toFixed(1)} Z" fill="url(#ff-side-${id})" stroke="#59636a" stroke-width="0.38"/><path d="M${(100 - wide).toFixed(1)} ${by} H${(100 + wide).toFixed(1)} L${(100 + wide - 2.4).toFixed(1)} ${(by + 12.0).toFixed(1)} H${(100 - wide + 2.4).toFixed(1)} Z" fill="url(#ff-brush-${id})" stroke="#59636a" stroke-width="0.46"/><path d="M${(100 - wide - 13).toFixed(1)} ${by + 1} H${(100 - wide - 1).toFixed(1)} L${(100 - wide + 1.6).toFixed(1)} ${(by + 11).toFixed(1)} H${(100 - wide - 10.5).toFixed(1)} Z M${(100 + wide + 1).toFixed(1)} ${by + 1} H${(100 + wide + 13).toFixed(1)} L${(100 + wide + 10.5).toFixed(1)} ${(by + 11).toFixed(1)} H${(100 + wide - 1.6).toFixed(1)} Z" fill="url(#ff-side-${id})" stroke="#59636a" stroke-width="0.38"/>`;
+      }
+      const bezelNum = (s, deg) => {
+        const [x,y] = at(deg, 69.0);
+        const rot = deg > 90 && deg < 270 ? deg + 180 : deg;
+        return `<text x="${x.toFixed(1)}" y="${(y + 0.6).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="${s === "30" ? "11.4" : "9.1"}" font-weight="900" fill="#f3f0d5" transform="rotate(${rot} ${x.toFixed(1)} ${y.toFixed(1)})">${s}</text>`;
+      };
+      return `<defs>${caseDefs(id,"steel")}
+        <linearGradient id="ff-brush-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f6f8f8"/><stop offset="44%" stop-color="#b6bec3"/><stop offset="100%" stop-color="#5e686e"/></linearGradient>
+        <linearGradient id="ff-side-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6c767c"/><stop offset="42%" stop-color="#f4f6f6"/><stop offset="100%" stop-color="#586269"/></linearGradient>
+        <radialGradient id="ff-dial-${id}" cx="43%" cy="31%" r="88%"><stop offset="0%" stop-color="#3a3c3b"/><stop offset="48%" stop-color="#1d1f1f"/><stop offset="100%" stop-color="#090a0b"/></radialGradient>
+        <radialGradient id="ff-bezel-${id}" cx="40%" cy="32%" r="83%"><stop offset="0%" stop-color="#34383a"/><stop offset="40%" stop-color="#111416"/><stop offset="78%" stop-color="#040506"/><stop offset="100%" stop-color="#000"/></radialGradient>
+        <linearGradient id="ff-metal-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#fcfcfa"/><stop offset="35%" stop-color="#bec5c6"/><stop offset="61%" stop-color="#6c7479"/><stop offset="82%" stop-color="#f7f8f6"/><stop offset="100%" stop-color="#777f83"/></linearGradient>
+        <linearGradient id="ff-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.16"/><stop offset="41%" stop-color="#fff" stop-opacity="0.018"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="ff-handshadow-${id}" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB"><feDropShadow dx="0.70" dy="0.92" stdDeviation="0.56" flood-color="#000" flood-opacity="0.68"/></filter>
+        <clipPath id="ff-dialclip-${id}"><circle cx="100" cy="100" r="58.5"/></clipPath>
+      </defs>
+      <!-- Steel bracelet, sculpted lugs and the domed sapphire-topped bezel. -->
+      ${bracelet}<path d="M62 42 L50 28 Q47 24 42 30 L30 51 Q38 58 53 60 L70 51 Z M138 42 L150 28 Q153 24 158 30 L170 51 Q162 58 147 60 L130 51 Z M62 158 L50 172 Q47 176 42 170 L30 149 Q38 142 53 140 L70 149 Z M138 158 L150 172 Q153 176 158 170 L170 149 Q162 142 147 140 L130 149 Z" fill="url(#ff-brush-${id})" stroke="#596369" stroke-width="0.62"/><circle cx="100" cy="100" r="78.2" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="80.5" fill="none" stroke="#5b666b" stroke-width="2.4"/>${scallops}<circle cx="100" cy="100" r="76.4" fill="url(#ff-bezel-${id})" stroke="#b4bcc0" stroke-width="0.56"/><circle cx="100" cy="100" r="72.9" fill="none" stroke="#111518" stroke-width="1.9"/>${bezelTicks}${bezelNum("15",90)}${bezelNum("30",180)}${bezelNum("45",270)}<polygon points="100,25.4 94.0,32.3 100,39.2 106.0,32.3" fill="#f3f0d5" stroke="#c1bc92" stroke-width="0.55"/><circle cx="100" cy="100" r="61.6" fill="#090b0c" stroke="#6c7478" stroke-width="1.25"/><circle cx="100" cy="100" r="58.5" fill="url(#ff-dial-${id})" stroke="#030405" stroke-width="0.70"/><rect x="170.4" y="94.5" width="9.7" height="11" rx="1.45" fill="url(#case-${id})" stroke="#526068" stroke-width="0.46"/><circle cx="187.0" cy="100" r="9.0" fill="url(#ff-metal-${id})" stroke="#58636a" stroke-width="0.68"/><path d="M181.4 94.7 V105.3 M183.3 92.9 V107.1 M185.2 91.8 V108.2 M187.1 91.5 V108.5 M189.0 91.8 V108.2 M190.9 92.9 V107.1 M192.7 94.7 V105.3" stroke="#4e5a62" stroke-width="0.70"/><path d="M182.0 94.7 V105.3 M186.0 91.9 V108.1 M190.0 92.4 V107.6" stroke="#f6f8f8" stroke-width="0.24" opacity="0.80"/>
+      <g clip-path="url(#ff-dialclip-${id})">${dialTicks}${markers}<text x="100" y="74.0" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="2.55" font-weight="700" fill="#e6e3d5">JB</text><text x="100" y="77.0" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="2.40" font-weight="700" fill="#e6e3d5">1735</text><text x="100" y="82.3" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="5.35" font-weight="700" letter-spacing="0.28" fill="#edeadf">BLANCPAIN</text><text x="100" y="124.1" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="5.1" font-style="italic" font-weight="600" fill="#ece8d8">Fifty Fathoms</text><text x="100" y="130.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.55" font-weight="700" letter-spacing="0.36" fill="#e5e1d4">300m / 1000ft</text><g transform="rotate(45 135.5 135.5)"><rect x="126.2" y="130.3" width="18.6" height="10.4" rx="1.05" fill="#141718" stroke="#747a78" stroke-width="0.66"/><rect x="128.0" y="132.0" width="15.0" height="7.0" rx="0.34" fill="#25292a" stroke="#050607" stroke-width="0.34"/><text class="date-win" data-date="dom" x="135.5" y="135.5" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="5.0" font-weight="700" fill="#f2efe4">31</text></g><text x="87.7" y="151.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.92" font-weight="700" letter-spacing="0.36" fill="#eae7da">SWISS</text><text x="112.3" y="151.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.92" font-weight="700" letter-spacing="0.36" fill="#eae7da">MADE</text><path d="M46 59 C65 42 91 42 114 54 C85 49 63 59 46 86 Z" fill="url(#ff-glass-${id})" opacity="0.22"/></g>
+      <!-- Black-edged ivory spear hands and the signature red-tipped central seconds. -->
+      <g filter="url(#ff-handshadow-${id})"><g class="hand-hour"><path d="M100 106 L91.8 98.7 L88.6 84.8 L100 61.2 L111.4 84.8 L108.2 98.7 Z" fill="url(#ff-metal-${id})" stroke="#15191a" stroke-width="0.72"/><path d="M100 99.5 L95.8 92.2 L100 69.0 L104.2 92.2 Z" fill="#f2f0d6"/></g><g class="hand-min"><path d="M100 107 L95.8 99.0 L96.5 59.8 L100 39.2 L103.5 59.8 L104.2 99.0 Z" fill="url(#ff-metal-${id})" stroke="#15191a" stroke-width="0.66"/><path d="M100 98.2 L98.1 60.8 L100 47.0 L101.9 60.8 Z" fill="#f2f0d6"/></g><g class="hand-sec"><path d="M100 114 L99.55 100 L99.55 48.3 L100 31.0 L100.45 48.3 L100.45 100 L100 114 Z" fill="#ecefec"/><path d="M99.35 43.5 H100.65 V50.5 H99.35 Z" fill="#d9272b"/><circle cx="100" cy="73.5" r="1.85" fill="none" stroke="#ecefec" stroke-width="0.64"/></g></g><circle cx="100" cy="100" r="3.65" fill="url(#ff-metal-${id})" stroke="#161a1c" stroke-width="0.54"/><circle cx="100" cy="100" r="1.25" fill="#efeee4"/><circle cx="100" cy="100" r="58.5" fill="none" stroke="#e5e7e2" stroke-width="0.34" opacity="0.45"/>`;
+    }
+  };
+  LOGOS.fiftyfathoms = () => "";
+  FIDELITY_OVERLAYS.fiftyfathoms = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.

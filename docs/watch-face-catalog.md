@@ -52,7 +52,7 @@ Total faces: 62.
 | `explorer` | Rolex Explorer 36 124270 | `sweep` |
 | `santos` | Cartier Santos de Cartier Large WSSA0018 | `sweep` |
 | `bigpilot` | IWC Big Pilot's Watch 43 IW329301 | `sweep` |
-| `fiftyfathoms` | Blancpain Fifty Fathoms | `sweep` |
+| `fiftyfathoms` | Blancpain Fifty Fathoms Automatique 5015 1130 71S | `sweep` |
 | `typexx` | Breguet Type XX | `sweep` |
 | `radiomir` | Panerai Radiomir | `sweep` |
 | `carrera` | TAG Heuer Carrera | `sweep` |
