@@ -12690,6 +12690,72 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.yachtmaster2 = () => "";
   FIDELITY_OVERLAYS.yachtmaster2 = () => "";
 
+  // ───────────── Jorg Gray JGC6500 Secret Service chronograph ─────────────
+  // The 0S20 quartz layout puts chrono minutes at nine, 24-hour time at three,
+  // and the only running seconds at six. The red centre chrono hand is parked.
+  FACES.jorggray = {
+    name: "Jorg Gray JGC6500 Secret Service Edition",
+    cadence: "tick",
+    render() {
+      const id = "jgc6500";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const S9 = [66,100], S3 = [134,100], S6 = [100,134];
+      let outer = "", outerNums = "", hours = "", markers = "", stitches = "";
+      for (let i = 0; i < 60; i++) {
+        const d = i * 6, [x1,y1] = at(d,60.9), [x2,y2] = at(d, i % 5 === 0 ? 56.4 : 58.8);
+        outer += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e3e3dc" stroke-width="${i % 5 === 0 ? "0.85" : "0.36"}" opacity="${i % 5 === 0 ? "0.92" : "0.72"}"/>`;
+      }
+      for (let n = 5; n <= 60; n += 5) {
+        const d = n === 60 ? 0 : n * 6, [x,y] = at(d, 55.0), rot = d > 90 && d < 270 ? d + 180 : d;
+        outerNums += `<text x="${x.toFixed(1)}" y="${(y + .35).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.5" font-weight="700" fill="#e6e6df" transform="rotate(${rot} ${x.toFixed(1)} ${y.toFixed(1)})">${n}</text>`;
+      }
+      for (let h = 1; h <= 12; h++) {
+        const d = h === 12 ? 0 : h * 30;
+        if (h !== 12 && h !== 3 && h !== 6 && h !== 9) {
+          const [x,y] = at(d, 47.2);
+          hours += `<text x="${x.toFixed(1)}" y="${(y + .35).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="6.3" font-weight="700" fill="#f0f0e9">${h}</text>`;
+        }
+      }
+      for (let h = 0; h < 12; h++) {
+        if (h === 0 || h === 3 || h === 6 || h === 9) continue;
+        const d = h * 30, [x,y] = at(d, 49.8);
+        markers += `<rect x="${(x-2.25).toFixed(1)}" y="${(y-6.7).toFixed(1)}" width="4.5" height="13.4" rx="0.45" fill="url(#jg-metal-${id})" stroke="#7f878b" stroke-width="0.40" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/><rect x="${(x-1.26).toFixed(1)}" y="${(y-5.25).toFixed(1)}" width="2.52" height="10.5" rx="0.26" fill="#f1f1df" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+      }
+      for (const x of [68,132]) stitches += `<path d="M${x} 0 V46 M${x} 154 V200" fill="none" stroke="#d5d1c9" stroke-width="0.56" stroke-dasharray="2.0 1.3" opacity="0.76"/>`;
+      const sub = (cx,cy,labels) => {
+        let s = `<circle cx="${cx}" cy="${cy}" r="16.3" fill="#090a0b" stroke="#878b8c" stroke-width="0.70"/><circle cx="${cx}" cy="${cy}" r="14.8" fill="#111214" stroke="#303337" stroke-width="0.50"/>`;
+        for (let i = 0; i < 60; i++) { const d = i * 6, [x1,y1] = at(d,14.2,cx,cy), [x2,y2] = at(d, i % 5 === 0 ? 10.9 : 12.5,cx,cy); s += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#deded7" stroke-width="${i % 5 === 0 ? "0.52" : "0.25"}" opacity="${i % 5 === 0 ? "0.92" : "0.66"}"/>`; }
+        labels.forEach(([n,d]) => { const [x,y] = at(d,9.7,cx,cy); s += `<text x="${x.toFixed(1)}" y="${(y+.22).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.55" font-weight="700" fill="#ecece4">${n}</text>`; });
+        return s;
+      };
+      return `<defs>${caseDefs(id,"steel")}
+        <linearGradient id="jg-strap-${id}" x1="0.10" y1="0" x2="0.90" y2="1"><stop offset="0%" stop-color="#3c3b3a"/><stop offset="22%" stop-color="#121212"/><stop offset="54%" stop-color="#282624"/><stop offset="100%" stop-color="#090909"/></linearGradient>
+        <linearGradient id="jg-metal-${id}" x1="0.10" y1="0" x2="0.90" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="41%" stop-color="#c7ced0"/><stop offset="68%" stop-color="#727a7e"/><stop offset="86%" stop-color="#f5f7f6"/><stop offset="100%" stop-color="#7c8588"/></linearGradient>
+        <radialGradient id="jg-dial-${id}" cx="43%" cy="31%" r="86%"><stop offset="0%" stop-color="#252526"/><stop offset="49%" stop-color="#111112"/><stop offset="100%" stop-color="#030303"/></radialGradient>
+        <filter id="jg-hands-${id}" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0.62" dy="0.85" stdDeviation="0.52" flood-color="#000" flood-opacity="0.70"/></filter>
+        <clipPath id="jg-dialclip-${id}"><circle cx="100" cy="100" r="61.8"/></clipPath>
+      </defs>
+      <!-- Black leather strap with narrow contrast edge stitching and direct lugs. -->
+      <path d="M70 0 H130 L137 47 H63 Z M63 153 H137 L130 200 H70 Z" fill="url(#jg-strap-${id})" stroke="#080808" stroke-width="0.78"/>${stitches}<path d="M60 54 L63 37 Q65 31 72 31 H85 L84 50 Z M140 54 L137 37 Q135 31 128 31 H115 L116 50 Z M60 146 L63 163 Q65 169 72 169 H85 L84 150 Z M140 146 L137 163 Q135 169 128 169 H115 L116 150 Z" fill="url(#jg-metal-${id})" stroke="#586268" stroke-width="0.58"/>
+      <circle cx="100" cy="100" r="75.0" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="73.8" fill="none" stroke="#f5f7f7" stroke-width="0.55" opacity="0.78"/><circle cx="100" cy="100" r="68.4" fill="url(#jg-metal-${id})" stroke="#69747a" stroke-width="0.68"/><circle cx="100" cy="100" r="63.0" fill="#050505" stroke="#17191b" stroke-width="0.78"/><circle cx="100" cy="100" r="61.8" fill="url(#jg-dial-${id})" stroke="#000" stroke-width="0.58"/>
+      <g clip-path="url(#jg-dialclip-${id})">${outer}${outerNums}${hours}${markers}<text x="100" y="49.6" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="6.15" font-weight="700" fill="#f0f0e9">12</text><circle cx="100" cy="53.8" r="1.35" fill="#f0f0dd"/><polygon points="100,56.0 93.4,67.2 106.6,67.2" fill="#f4f5e9" stroke="#b8bcb9" stroke-width="0.56"/>
+        <!-- Secret Service five-point badge with an engraved shield and rim text. -->
+        <g transform="translate(100 77.0)" fill="none" stroke="#ecece4" stroke-linejoin="round"><path d="M0 -11.2 L2.9 -4.0 L10.7 -3.5 L4.6 1.8 L6.5 9.4 L0 5.2 L-6.5 9.4 L-4.6 1.8 L-10.7 -3.5 L-2.9 -4.0 Z" stroke-width="0.95"/><circle r="6.1" stroke-width="0.68"/><path d="M-2.5 -2.3 H2.5 V2.9 L0 4.5 L-2.5 2.9 Z M-1.9 -0.5 H1.9 M-1.9 1.2 H1.9" stroke-width="0.54"/><text x="0" y="-7.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.45" font-weight="700" fill="#ecece4" stroke="none">SECRET</text><text x="0" y="8.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.25" font-weight="700" fill="#ecece4" stroke="none">SERVICE</text></g>
+        ${sub(S9[0],S9[1],[["60",0],["15",90],["30",180],["45",270]])}${sub(S3[0],S3[1],[["24",0],["6",90],["12",180],["18",270]])}${sub(S6[0],S6[1],[["60",0],["10",60],["20",120],["30",180],["40",240],["50",300]])}
+        <text x="72.5" y="117.5" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="3.25" font-style="italic" font-weight="700" fill="#ecece4">Jorg Gray</text><text x="72.5" y="121.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.85" font-weight="700" letter-spacing="0.36" fill="#d5d5ce">JG</text><g transform="rotate(45 132 132)"><rect x="123.6" y="124.0" width="16.8" height="16.0" fill="#f5f5ee" stroke="#aeb2b2" stroke-width="0.72"/><rect x="125.2" y="125.6" width="13.6" height="12.8" fill="#fdfdf8" stroke="#191a1b" stroke-width="0.38"/></g><text class="date-win" data-date="dom" x="132" y="132.4" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="7.2" font-weight="700" fill="#131415">28</text><text x="83.2" y="154.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.15" font-weight="700" letter-spacing="0.38" fill="#e2e2dc">JAPAN</text><text x="116.8" y="154.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.15" font-weight="700" letter-spacing="0.38" fill="#e2e2dc">MOVT</text><path d="M46 59 C65 43 91 43 113 55 C85 49 63 60 46 86 Z" fill="#fff" opacity="0.08"/></g>
+      <!-- Pushers/crown sit outside the polished 41 mm case. -->
+      <g fill="url(#jg-metal-${id})" stroke="#566168" stroke-width="0.52"><path d="M164 65 L180 57 L186 64 L171 75 Z"/><path d="M164 135 L180 143 L186 136 L171 125 Z"/></g><rect x="170" y="94.4" width="9.8" height="11.2" rx="1.42" fill="url(#case-${id})" stroke="#566168" stroke-width="0.46"/><circle cx="187" cy="100" r="8.55" fill="url(#jg-metal-${id})" stroke="#566168" stroke-width="0.66"/><path d="M181.8 94.7 V105.3 M183.5 93.0 V107.0 M185.2 92.0 V108.0 M186.9 91.7 V108.3 M188.6 92.0 V108.0 M190.3 93.0 V107.0 M192.0 94.7 V105.3" stroke="#536068" stroke-width="0.58"/>
+      <!-- Static chronograph counters; only the six-o'clock small seconds is live. -->
+      <path d="M66 104 L65.34 100 L66 87.2 L66.66 100 Z" fill="#e8e8e1"/><circle cx="66" cy="100" r="1.38" fill="#e8e8e1"/><g class="hand-gmt" data-pivot="134 100"><path d="M134 104 L133.35 100 L134 87.2 L134.65 100 Z" fill="#e8e8e1"/><circle cx="134" cy="100" r="1.36" fill="#e8e8e1"/></g><g class="hand-subsec" data-pivot="100 134"><path d="M100 138.4 L99.34 134 L100 120.8 L100.66 134 Z" fill="#d93133" stroke="#a61d22" stroke-width="0.26"/><circle cx="100" cy="134" r="1.38" fill="#e9e9e2"/></g>
+      <g filter="url(#jg-hands-${id})"><g class="hand-hour"><path d="M100 106 L94.3 99.0 L95.7 82.0 L100 60.5 L104.3 82.0 L105.7 99.0 Z" fill="url(#jg-metal-${id})" stroke="#101315" stroke-width="0.62"/><path d="M100 97.7 L97.8 91.8 L100 68.4 L102.2 91.8 Z" fill="#f1f1df"/></g><g class="hand-min"><path d="M100 107 L97.15 99.0 L98.0 53.0 L100 36.2 L102.0 53.0 L102.85 99.0 Z" fill="url(#jg-metal-${id})" stroke="#101315" stroke-width="0.60"/><path d="M100 97.2 L98.9 55.7 L100 44.3 L101.1 55.7 Z" fill="#f1f1df"/></g><path d="M100 113 L99.5 100 L99.5 45 L100 29.4 L100.5 45 L100.5 100 L100 113 Z" fill="#d62a31" stroke="#9f1d24" stroke-width="0.28"/></g><circle cx="100" cy="100" r="3.4" fill="url(#jg-metal-${id})" stroke="#364047" stroke-width="0.48"/><circle cx="100" cy="100" r="1.15" fill="#f1f2ec"/><circle cx="100" cy="100" r="61.8" fill="none" stroke="#c0c4c3" stroke-width="0.30" opacity="0.56"/>`;
+    }
+  };
+  LOGOS.jorggray = () => "";
+  FIDELITY_OVERLAYS.jorggray = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
