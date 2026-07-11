@@ -55,7 +55,7 @@ Total faces: 62.
 | `fiftyfathoms` | Blancpain Fifty Fathoms Automatique 5015 1130 71S | `sweep` |
 | `typexx` | Breguet Type XX Chronographe 2067 2067ST/92/3WU | `sweep` |
 | `radiomir` | Panerai Radiomir Black Seal Logo PAM00754 | `sweep` |
-| `carrera` | TAG Heuer Carrera | `sweep` |
+| `carrera` | TAG Heuer Carrera Chronograph CBN2011.BA0642 | `sweep` |
 | `snoopy` | Omega Snoopy Speedmaster | `sweep` |
 | `milgauss` | Rolex Milgauss | `sweep` |
 | `yachtmaster2` | Rolex Yacht-Master II | `sweep` |
