@@ -44,7 +44,7 @@ Total faces: 62.
 | `khaki` | Hamilton Khaki Field Mechanical 38mm H69439931 | `sweep` |
 | `br03` | Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB | `sweep` |
 | `twinbell` | Westclox Twin Bell Alarm Clock 70010A | `tick` |
-| `grandfather` | Comtoise Longcase Clock | `tick` |
+| `grandfather` | Comtoise Longcase Clock — Musée du Temps, c. 1850 | `tick` |
 | `orloj` | Prague Astronomical Clock | `tick` |
 | `marine` | Ulysse Nardin Marine Chronometer | `sweep` |
 | `freak` | Ulysse Nardin Freak X | `sweep` |
