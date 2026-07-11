@@ -66,7 +66,7 @@ Total faces: 62.
 | `grandcentral` | Grand Central Terminal Information Booth Clock (1913) | `tick` |
 | `howardmiller` | Howard Miller Chateau 610-520 Grandfather Clock | `tick` |
 | `mickey` | Ingersoll Mickey Mouse (1933) | `tick` |
-| `kingkhaki` | Hamilton Khaki King | `sweep` |
+| `kingkhaki` | Hamilton Khaki Field King Auto H64455533 | `sweep` |
 | `casiomq24` | Casio MQ-24 | `tick` |
 | `bigtic` | Fossil Big Tic | `tick` |
 | `timexindiglo` | Timex Indiglo | `tick` |
