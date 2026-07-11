@@ -11671,6 +11671,67 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.twinbell = () => "";
   FIDELITY_OVERLAYS.twinbell = () => "";
 
+  // ───────────────── Comtoise Longcase Clock — Musée du Temps, c. 1850 ─────────────────
+  // Reference object: a mid-19th-century Comtoise longcase in the Musée du
+  // Temps, Besançon (inv. 1982.17.22), with narrow walnut case and brass head.
+  FACES.grandfather = {
+    name: "Comtoise Longcase Clock — Musée du Temps, c. 1850",
+    cadence: "tick",
+    render() {
+      const id = "comtoise1850", cx = 100, cy = 48;
+      const at = (deg, r, ox = cx, oy = cy) => {
+        const a = deg * Math.PI / 180;
+        return [ox + Math.sin(a) * r, oy - Math.cos(a) * r];
+      };
+      let brassDots = "", railway = "", romans = "", marquetry = "";
+      const roman = ["XII","I","II","III","IV","V","VI","VII","VIII","IX","X","XI"];
+      for (let i = 0; i < 84; i++) {
+        const deg = i * (360 / 84), [x1,y1] = at(deg,18.0), [x2,y2] = at(deg,i % 7 === 0 ? 15.75 : 16.7);
+        railway += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#251e17" stroke-width="${i % 7 === 0 ? "0.54" : "0.27"}"/>`;
+      }
+      for (let h = 0; h < 12; h++) {
+        const deg = h * 30, [x,y] = at(deg,13.8);
+        romans += `<text x="${x.toFixed(1)}" y="${(y + 0.3).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Georgia,'Times New Roman',serif" font-size="4.25" font-weight="700" fill="#211b16">${roman[h]}</text>`;
+      }
+      for (let i = 0; i < 46; i++) {
+        const deg = i * (360 / 46), [x,y] = at(deg,25.2);
+        brassDots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="0.62" fill="url(#cto-brass-${id})" stroke="#74521d" stroke-width="0.16"/>`;
+      }
+      // Painted/floral marquetry around the pendulum oculus and lower panel.
+      for (let i = 0; i < 14; i++) {
+        const deg = i * (360 / 14), a = deg * Math.PI / 180, x = 100 + Math.sin(a) * 18, y = 142 - Math.cos(a) * 12;
+        marquetry += `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="2.15" ry="4.1" fill="${i % 3 === 0 ? "#cb6b34" : i % 3 === 1 ? "#77904a" : "#e0b36d"}" stroke="#4b2d1d" stroke-width="0.25" transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+      }
+
+      return `<defs>
+        <linearGradient id="cto-walnut-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#29140b"/><stop offset="18%" stop-color="#874522"/><stop offset="47%" stop-color="#542612"/><stop offset="72%" stop-color="#9c5428"/><stop offset="100%" stop-color="#291309"/></linearGradient>
+        <radialGradient id="cto-wood-${id}" cx="42%" cy="30%" r="82%"><stop offset="0%" stop-color="#b36a35"/><stop offset="43%" stop-color="#6f351a"/><stop offset="78%" stop-color="#3d1d0f"/><stop offset="100%" stop-color="#211007"/></radialGradient>
+        <linearGradient id="cto-brass-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#7b571d"/><stop offset="20%" stop-color="#f5d987"/><stop offset="52%" stop-color="#b68731"/><stop offset="74%" stop-color="#f0cf72"/><stop offset="100%" stop-color="#744e18"/></linearGradient>
+        <radialGradient id="cto-dial-${id}" cx="42%" cy="31%" r="82%"><stop offset="0%" stop-color="#fffdf5"/><stop offset="66%" stop-color="#f1eadb"/><stop offset="100%" stop-color="#d4c8b0"/></radialGradient>
+        <linearGradient id="cto-glass-${id}" x1="0.1" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.28"/><stop offset="39%" stop-color="#fff" stop-opacity="0.035"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="cto-shadow-${id}" x="-30%" y="-20%" width="160%" height="140%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.1" stdDeviation="1.45" flood-color="#211109" flood-opacity="0.34"/></filter>
+        <filter id="cto-handshadow-${id}" x="-45%" y="-45%" width="190%" height="190%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="0.55" stdDeviation="0.38" flood-color="#120d09" flood-opacity="0.52"/></filter>
+        <clipPath id="cto-dialclip-${id}"><circle cx="100" cy="48" r="19.0"/></clipPath>
+      </defs>
+      <!-- Narrow walnut longcase with curved/scalloped hood, waist and base. -->
+      <path d="M73 10 Q78 4 88 5 Q100 0 112 5 Q122 4 127 10 L126 76 Q123 82 126 88 C131 102 130 119 123 130 L128 185 H72 L77 130 C70 119 69 102 74 88 Q77 82 74 76 Z" fill="url(#cto-walnut-${id})" filter="url(#cto-shadow-${id})"/><path d="M74 11 Q80 7 89 8 Q100 4 111 8 Q120 7 126 11 L124 74 Q120 81 122 89 C127 103 126 116 119 128 L123 181 H77 L81 128 C74 116 73 103 78 89 Q80 81 76 74 Z" fill="url(#cto-wood-${id})" stroke="#3c1d0e" stroke-width="0.72"/><path d="M76 10 Q84 5 90 8 Q100 2 110 8 Q117 5 124 10 L126 14 H74 Z" fill="#4a2513" stroke="#bd7440" stroke-width="0.42"/><path d="M70 181 H130 L135 189 H65 Z" fill="#4b2613" stroke="#2e160b" stroke-width="0.72"/><path d="M68 189 Q72 196 80 193 H120 Q128 196 132 189 Z" fill="#32170c" stroke="#1e0f08" stroke-width="0.58"/>
+      <!-- Gilt stamped head surrounds the small enamel dial. -->
+      <path d="M78 28 Q80 16 88 14 Q91 19 95 14 Q100 17 105 14 Q109 19 112 14 Q120 16 122 28 L119 67 Q110 72 100 69 Q90 72 81 67 Z" fill="url(#cto-brass-${id})" stroke="#704e1b" stroke-width="0.62"/>${brassDots}<path d="M82 29 Q91 20 100 27 Q109 20 118 29" fill="none" stroke="#6d4b1c" stroke-width="0.65"/><path d="M85 25 Q89 17 93 24 Q96 18 100 24 Q104 18 107 24 Q111 17 115 25" fill="none" stroke="#f4d77f" stroke-width="0.43" opacity="0.72"/>
+      <circle cx="100" cy="48" r="20.5" fill="#835f23" stroke="#5a3c16" stroke-width="0.58"/><circle cx="100" cy="48" r="19.0" fill="url(#cto-dial-${id})" stroke="#d8c49a" stroke-width="0.58"/>
+      <g clip-path="url(#cto-dialclip-${id})">
+        ${railway}${romans}<circle cx="93.0" cy="57.2" r="1.25" fill="#3a2e22" stroke="#b79553" stroke-width="0.28"/><circle cx="107.0" cy="57.2" r="1.25" fill="#3a2e22" stroke="#b79553" stroke-width="0.28"/><path d="M82 32 C88 27 94 28 100 31 C91 31 87 35 82 42 Z" fill="url(#cto-glass-${id})" opacity="0.30"/>
+      </g>
+      <!-- Pierced black Comtoise hands have their own compact dial pivot. -->
+      <g filter="url(#cto-handshadow-${id})"><g class="hand-hour" data-pivot="100 48"><path d="M100 51 L96.8 47.2 L97.5 39.5 L100 33.7 L102.5 39.5 L103.2 47.2 Z" fill="#1b140f"/><path d="M100 45.8 L98.6 40.2 L100 37.0 L101.4 40.2 Z" fill="#efe2bb" opacity="0.55"/></g><g class="hand-min" data-pivot="100 48"><path d="M100 51 L98.3 47.0 L98.9 35.0 L100 28.5 L101.1 35.0 L101.7 47.0 Z" fill="#1b140f"/><circle cx="100" cy="35.0" r="1.25" fill="#efe2bb" opacity="0.48"/></g></g><circle cx="100" cy="48" r="1.85" fill="#1a130e"/>
+      <!-- Curved waist, circular pendulum oculus, floral inlay and lower panel. -->
+      <path d="M78 88 Q70 106 81 128 Q88 135 100 132 Q112 135 119 128 Q130 106 122 88 Q111 84 100 88 Q89 84 78 88 Z" fill="#542714" stroke="#2e160b" stroke-width="0.62"/><path d="M81 91 Q76 107 85 125 Q91 130 100 127 Q109 130 115 125 Q124 107 119 91 Q109 89 100 93 Q91 89 81 91 Z" fill="#7d3b1c" stroke="#b56b36" stroke-width="0.46"/><ellipse cx="100" cy="142" rx="21.5" ry="16.0" fill="#402011" stroke="#bc713c" stroke-width="0.64"/>${marquetry}<ellipse cx="100" cy="142" rx="11.3" ry="9.0" fill="#1c1009" stroke="#d89b4e" stroke-width="0.55"/><path d="M80 153 Q100 163 120 153 L124 180 H76 Z" fill="#542714" stroke="#32170b" stroke-width="0.64"/><path d="M82 157 Q100 164 118 157 L120 176 H80 Z" fill="#6f3419" stroke="#c47a40" stroke-width="0.38"/><g transform="translate(100 168)" fill="#d88442" stroke="#3b2113" stroke-width="0.28"><circle r="3.2"/><ellipse rx="8.4" ry="2.2"/><ellipse rx="2.2" ry="8.0"/></g>
+      <!-- Global CSS keeps this brass pendulum oscillating about y=126 inside the oculus. -->
+      <g class="pendulum"><line x1="100" y1="126" x2="100" y2="140.0" stroke="url(#cto-brass-${id})" stroke-width="1.45"/><ellipse cx="100" cy="144.0" rx="5.6" ry="6.6" fill="url(#cto-brass-${id})" stroke="#725018" stroke-width="0.58"/></g><circle cx="100" cy="126" r="1.35" fill="#c49538"/>`;
+    }
+  };
+  LOGOS.grandfather = () => "";
+  FIDELITY_OVERLAYS.grandfather = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
