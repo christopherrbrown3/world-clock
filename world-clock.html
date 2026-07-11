@@ -11732,6 +11732,73 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.grandfather = () => "";
   FIDELITY_OVERLAYS.grandfather = () => "";
 
+  // ───────────────── Prague Old Town Astronomical Clock — astrolabe ─────────────────
+  // Reference: the present 2018-restored Prague Orloj astrolabe, with its
+  // sidereal zodiac, 24-hour Sun hand and weathered Gothic façade.
+  FACES.orloj = {
+    name: "Prague Old Town Astronomical Clock (2018-restored astrolabe)",
+    cadence: "tick",
+    render() {
+      const id = "orloj2018";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const upright = (d) => d > 90 && d < 270 ? d + 180 : d;
+      let old = "", roman = "", ladder = "", zlabels = "", babylonian = "", curves = "";
+      const romans = ["XII","I","II","III","IV","V","VI","VII","VIII","IX","X","XI"];
+      // Use historic-style Latin zodiac abbreviations: many system fonts render
+      // Unicode zodiac glyphs as colorful emoji, which is wrong for the painted
+      // blue-grey astrolabe ring.
+      const glyphs = ["ARI","TAU","GEM","CAN","LEO","VIR","LIB","SCO","SAG","CAP","AQU","PIS"];
+      for (let n = 1; n <= 24; n++) {
+        const d = n * 15, [x,y] = at(d,87);
+        old += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Georgia,'Times New Roman',serif" font-size="${n % 3 === 0 ? "5.4" : "4.45"}" font-weight="700" fill="#d6ad43" transform="rotate(${upright(d).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${n}</text>`;
+      }
+      for (let n = 0; n < 24; n++) {
+        const d = n * 15, [x,y] = at(d,72);
+        roman += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Georgia,'Times New Roman',serif" font-size="4.8" font-weight="700" fill="#d3b160" transform="rotate(${upright(d).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${romans[n % 12]}</text>`;
+      }
+      for (let i = 0; i < 72; i++) {
+        const d = i * 5, [x1,y1] = at(d,54,104,97), [x2,y2] = at(d,i % 6 === 0 ? 49.2 : 51.7,104,97);
+        ladder += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#d0a542" stroke-width="${i % 6 === 0 ? "0.78" : "0.30"}" opacity="0.86"/>`;
+      }
+      for (let i = 0; i < 12; i++) {
+        const d = i * 30 - 18, [x,y] = at(d,47,104,97);
+        zlabels += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Georgia,'Times New Roman',serif" font-size="3.2" font-weight="700" letter-spacing="0.18" fill="#e1d4ad" transform="rotate(${upright(d).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${glyphs[i]}</text>`;
+      }
+      for (let n = 1; n <= 12; n++) {
+        const d = n * 30, [x,y] = at(d,31);
+        babylonian += `<text x="${x.toFixed(1)}" y="${(y + .25).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.25" font-weight="700" fill="#172340">${n}</text>`;
+      }
+      for (let i = 1; i <= 9; i++) {
+        const y = 58 + i * 4.15, bend = 10 + i * 1.65;
+        curves += `<path d="M42 ${y.toFixed(1)} Q100 ${(y-bend).toFixed(1)} 158 ${y.toFixed(1)}" fill="none" stroke="#d9b14b" stroke-width="0.48" opacity="0.58"/>`;
+      }
+      return `<defs>
+        <radialGradient id="or-iron-${id}" cx="40%" cy="30%" r="82%"><stop offset="0%" stop-color="#53524b"/><stop offset="45%" stop-color="#252723"/><stop offset="78%" stop-color="#141511"/><stop offset="100%" stop-color="#070806"/></radialGradient>
+        <linearGradient id="or-gilt-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#7d5a1c"/><stop offset="20%" stop-color="#f1d371"/><stop offset="51%" stop-color="#ad7a29"/><stop offset="76%" stop-color="#eecd66"/><stop offset="100%" stop-color="#6c4a16"/></linearGradient>
+        <radialGradient id="or-sky-${id}" cx="46%" cy="29%" r="83%"><stop offset="0%" stop-color="#8bb9da"/><stop offset="48%" stop-color="#527fae"/><stop offset="100%" stop-color="#24466f"/></radialGradient>
+        <radialGradient id="or-night-${id}" cx="50%" cy="38%" r="80%"><stop offset="0%" stop-color="#22365f"/><stop offset="100%" stop-color="#0b1634"/></radialGradient>
+        <linearGradient id="or-glass-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.14"/><stop offset="36%" stop-color="#fff" stop-opacity="0.018"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="or-shadow-${id}" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.1" stdDeviation="1.6" flood-color="#080a09" flood-opacity="0.48"/></filter>
+        <clipPath id="or-skyclip-${id}"><circle cx="100" cy="100" r="62.8"/></clipPath>
+      </defs>
+      <!-- Weathered Gothic portal, corner leaves and gilt astrolabe rims. -->
+      <rect x="5.5" y="5.5" width="189" height="189" rx="18" fill="url(#or-iron-${id})" filter="url(#or-shadow-${id})"/><path d="M8 46 Q28 16 48 8 Q39 29 49 47 Q27 37 8 46 Z M152 8 Q172 16 192 46 Q173 37 151 47 Q161 29 152 8 Z M8 154 Q28 184 48 192 Q39 171 49 153 Q27 163 8 154 Z M152 192 Q172 184 192 154 Q173 163 151 153 Q161 171 152 192 Z" fill="url(#or-gilt-${id})" opacity="0.76"/><circle cx="100" cy="100" r="92.6" fill="#171914" stroke="url(#or-gilt-${id})" stroke-width="2.25"/><circle cx="100" cy="100" r="83" fill="none" stroke="#c89b36" stroke-width="1.05"/>
+      <!-- Old Czech 1–24 annulus turns with the sunset seasonal relation. -->
+      <g class="orloj-oldczech"><circle cx="100" cy="100" r="88.5" fill="none" stroke="#0d0e0c" stroke-width="8.1"/><circle cx="100" cy="100" r="88.5" fill="none" stroke="#d3aa45" stroke-width="0.64"/>${old}</g><circle cx="100" cy="100" r="77" fill="#171714" stroke="#d7b154" stroke-width="0.78"/>${roman}
+      <!-- Fixed astrolabe: day/night fields, horizontal labels, Earth and Babylonian unequal-hour lines. -->
+      <circle cx="100" cy="100" r="64" fill="url(#or-sky-${id})" stroke="url(#or-gilt-${id})" stroke-width="1.0"/><g clip-path="url(#or-skyclip-${id})"><path d="M34 100 H166 V166 H34 Z" fill="url(#or-night-${id})"/><path d="M36 86 Q54 72 70 78 Q83 90 100 84 Q117 90 130 78 Q146 72 164 86 V100 H36 Z" fill="#9a785e" opacity="0.78"/><path d="M36 100 Q60 90 100 92 Q140 90 164 100" fill="none" stroke="#e2bd58" stroke-width="1.15"/><path d="M36 93 Q55 81 66 84 L62 100 H36 Z M164 93 Q145 81 134 84 L138 100 H164 Z" fill="#d3783c" opacity="0.82"/>${curves}${babylonian}<circle cx="100" cy="100" r="23" fill="#16376b" stroke="#d1a947" stroke-width="0.82"/><circle cx="100" cy="100" r="17" fill="#224a83" stroke="#d1a947" stroke-width="0.55"/><text x="54" y="91" font-family="Georgia,'Times New Roman',serif" font-size="3.35" font-weight="700" fill="#e4bd55" transform="rotate(-50 54 91)">AURORA / ORTVS</text><text x="145" y="91" text-anchor="end" font-family="Georgia,'Times New Roman',serif" font-size="3.15" font-weight="700" fill="#e4bd55" transform="rotate(50 145 91)">OCCASVS / CREPVSCVLVM</text><path d="M37 54 C61 39 136 39 163 54" fill="none" stroke="url(#or-glass-${id})" stroke-width="8" opacity="0.22"/></g>
+      <!-- Eccentric slate zodiac band and star rotate at sidereal rate. -->
+      <g class="orloj-sidereal"><circle cx="104" cy="97" r="51" fill="none" stroke="#384a59" stroke-width="8.0"/><circle cx="104" cy="97" r="54.4" fill="none" stroke="#d2a844" stroke-width="0.72"/><circle cx="104" cy="97" r="47.1" fill="none" stroke="#d2a844" stroke-width="0.52"/>${ladder}${zlabels}<path d="M100 38 L102 43.7 H108.1 L103.15 47.25 L105 53.1 L100 49.55 L95 53.1 L96.85 47.25 L91.9 43.7 H98 Z" fill="url(#or-gilt-${id})" stroke="#684916" stroke-width="0.35"/></g>
+      <!-- Distinct Sun and Moon arms: civil 24h vs. lunar-day motion. -->
+      <g class="orloj-sun"><line x1="100" y1="119" x2="100" y2="37.4" stroke="url(#or-gilt-${id})" stroke-width="2.0"/><path d="M100 31 L96.6 39.2 H103.4 Z" fill="#edcd60"/><circle cx="100" cy="54" r="6" fill="#efca54" stroke="#7b591b" stroke-width="0.58"/><path d="M100 45.6 V41 M100 67 V62.4 M91.6 54 H87 M113 54 H108.4 M94 48 L90.9 44.9 M106 48 L109.1 44.9 M94 60 L90.9 63.1 M106 60 L109.1 63.1" stroke="#f3d86d" stroke-width="1.1"/></g><g class="orloj-moon"><line x1="100" y1="110" x2="100" y2="60" stroke="#c7c5ba" stroke-width="1.15"/><circle cx="100" cy="64.5" r="5.25" fill="#dad7ca" stroke="#6d6d67" stroke-width="0.55"/><path d="M100 59.25 A5.25 5.25 0 0 1 100 69.75 A4 5.25 0 0 0 100 59.25 Z" fill="#22242a"/></g><circle cx="100" cy="100" r="4.0" fill="url(#or-gilt-${id})" stroke="#6d4e17" stroke-width="0.62"/><circle cx="100" cy="100" r="1.55" fill="#e3c163"/><circle cx="100" cy="100" r="64" fill="none" stroke="#e4c26a" stroke-width="0.55" opacity="0.55"/>`;
+    }
+  };
+  LOGOS.orloj = () => "";
+  FIDELITY_OVERLAYS.orloj = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
@@ -12490,6 +12557,23 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       rotate(svg, ".hand-sec", s * 6);
       rotate(svg, ".hand-sec-cap", s * 6);
       rotate(svg, ".hand-subsec", s * 6);
+    }
+
+    // Prague's astrolabe is not a 12-hour watch: the Sun completes one turn
+    // per civil day, the lunar pointer follows the longer lunar day, and the
+    // star/zodiac assembly follows sidereal time. Keep these independent of the
+    // generic hour/minute/seconds selectors above.
+    if (c.face === "orloj") {
+      const solarHours = H + mm / 60 + ss / 3600 + frac / 3600;
+      const absoluteHours = now.getTime() / 3600000;
+      const siderealDeg = (absoluteHours * 360 / 23.9344696) % 360;
+      const lunarDeg = (absoluteHours * 360 / 24.8412) % 360;
+      const yearStart = Date.UTC(now.getUTCFullYear(), 0, 1);
+      const dayOfYear = (now.getTime() - yearStart) / 86400000;
+      rotate(svg, ".orloj-sun", solarHours * 15);
+      rotate(svg, ".orloj-moon", lunarDeg);
+      rotate(svg, ".orloj-sidereal", siderealDeg - 18);
+      rotate(svg, ".orloj-oldczech", ((dayOfYear - 80) / 365.2422) * 360);
     }
 
     // GMT hand: one rotation per 24h from the city's 24h time.
