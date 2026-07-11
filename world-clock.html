@@ -13056,6 +13056,62 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.howardmiller = () => "";
   FIDELITY_OVERLAYS.howardmiller = () => "";
 
+  // ───────── Ingersoll Mickey Mouse wristwatch (1933) ─────────
+  // Reference object: the first American Ingersoll-Waterbury wristwatch. Its
+  // pie-eyed Mickey, yellow-gloved arm-hands and spinning three-Mickey seconds
+  // disc are the identifying mechanics, rather than an ordinary cartoon dial.
+  FACES.mickey = {
+    name: "Ingersoll Mickey Mouse (1933)",
+    cadence: "tick",
+    render() {
+      const id = "ingersoll-1933", CX = 100, CY = 100, SX = 100, SY = 145;
+      const at = (i, r, cx = CX, cy = CY) => P(i / 60 * Math.PI * 2, r, cx, cy);
+      let numerals = "", track = "", secondTrack = "";
+      for (let h = 1; h <= 12; h++) {
+        if (h === 6) continue;
+        const [x, y] = P(h / 12 * Math.PI * 2, 65);
+        numerals += `<text x="${x.toFixed(1)}" y="${(y + 0.7).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Arial,sans-serif" font-size="${h === 12 ? "13.2" : "11.4"}" font-weight="900" fill="#171715">${h}</text>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const [x1, y1] = at(i, 75.3), [x2, y2] = at(i, i % 5 === 0 ? 71.0 : 73.2);
+        track += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#272522" stroke-width="${i % 5 === 0 ? "1.12" : "0.55"}" stroke-linecap="round"/>`;
+        const [sx1, sy1] = P(i / 60 * Math.PI * 2, 14.1, SX, SY), [sx2, sy2] = P(i / 60 * Math.PI * 2, i % 5 === 0 ? 11.1 : 12.55, SX, SY);
+        secondTrack += `<line x1="${sx1.toFixed(1)}" y1="${sy1.toFixed(1)}" x2="${sx2.toFixed(1)}" y2="${sy2.toFixed(1)}" stroke="#5c5547" stroke-width="${i % 5 === 0 ? "0.56" : "0.30"}"/>`;
+      }
+      const glove = (x, y, scale = 1) => `<g transform="translate(${x} ${y}) scale(${scale})"><path d="M-4.7 5.3 C-7.8 2.9 -7.2 -1.9 -4.2 -3.4 C-5.6 -7.8 -1.4 -9.3 -0.2 -5.0 C0.9 -9.4 4.9 -8.1 4.0 -3.8 C7.7 -3.3 8.5 1.5 5.7 4.7 C3.0 7.5 -2.2 7.9 -4.7 5.3Z" fill="url(#im-glove-${id})" stroke="#171512" stroke-width="0.95" stroke-linejoin="round"/><path d="M-0.2 -4.5 q0 4.2 0.1 8.1 M3.6 -3.5 q-0.4 3.8 -1.2 6.8 M-4.2 5.2 q4.1 2.25 8.0 0" fill="none" stroke="#3c3316" stroke-width="0.66" stroke-linecap="round"/></g>`;
+      const arm = (length, width, gloveScale) => `<path d="M${CX-width} ${CY+2} C${CX-width*1.15} ${CY-length*0.37} ${CX-width*0.82} ${CY-length*0.74} ${CX-width*0.42} ${CY-length+7} Q${CX} ${CY-length+3} ${CX+width*0.42} ${CY-length+7} C${CX+width*0.82} ${CY-length*0.74} ${CX+width*1.15} ${CY-length*0.37} ${CX+width} ${CY+2} Q${CX} ${CY+5} ${CX-width} ${CY+2}Z" fill="#141412" stroke="#000" stroke-width="0.48"/>${glove(CX, CY-length, gloveScale)}`;
+      const smallMickey = (x, y, s, turn = 0) => `<g transform="translate(${x} ${y}) rotate(${turn}) scale(${s})"><circle cx="-2.4" cy="-3.0" r="1.8" fill="#171513"/><circle cx="2.4" cy="-3.0" r="1.8" fill="#171513"/><ellipse cx="0" cy="0" rx="3.05" ry="3.35" fill="#171513"/><path d="M-2.2 2.0 Q0 0.8 2.2 2.0 V4.1 Q0 5.4 -2.2 4.1Z" fill="#cf3024"/><path d="M-1.4 4.0 L-2.8 6.1 M1.4 4.0 L2.8 6.1" stroke="#171513" stroke-width="0.85" stroke-linecap="round"/></g>`;
+      const braceletMickey = (x, y, flip = 1) => `<g transform="translate(${x} ${y}) scale(${flip} 1)"><circle cx="-2.3" cy="-2.6" r="2" fill="#23272b"/><circle cx="2.3" cy="-2.6" r="2" fill="#23272b"/><circle cx="0" cy="0" r="3.25" fill="#23272b"/><path d="M-4 4 L-7 7 M4 4 L7 7" stroke="#23272b" stroke-width="1.35" stroke-linecap="round"/></g>`;
+      return `<defs>
+        <radialGradient id="im-steel-${id}" cx="35%" cy="25%" r="88%"><stop offset="0%" stop-color="#ffffff"/><stop offset="28%" stop-color="#e6ebed"/><stop offset="56%" stop-color="#a7afb5"/><stop offset="78%" stop-color="#697178"/><stop offset="100%" stop-color="#30363b"/></radialGradient>
+        <linearGradient id="im-bezel-${id}" x1="0" y1="0" x2="0.82" y2="1"><stop offset="0%" stop-color="#656b70"/><stop offset="19%" stop-color="#f8fbfc"/><stop offset="41%" stop-color="#b8c0c5"/><stop offset="66%" stop-color="#f0f2f3"/><stop offset="100%" stop-color="#555c62"/></linearGradient>
+        <radialGradient id="im-dial-${id}" cx="46%" cy="32%" r="86%"><stop offset="0%" stop-color="#fff9e9"/><stop offset="57%" stop-color="#f1e8d1"/><stop offset="100%" stop-color="#d6c6a3"/></radialGradient>
+        <radialGradient id="im-face-${id}" cx="39%" cy="29%" r="84%"><stop offset="0%" stop-color="#fffdf4"/><stop offset="100%" stop-color="#ead8b7"/></radialGradient>
+        <radialGradient id="im-black-${id}" cx="36%" cy="28%" r="86%"><stop offset="0%" stop-color="#3b3a36"/><stop offset="57%" stop-color="#171715"/><stop offset="100%" stop-color="#050505"/></radialGradient>
+        <radialGradient id="im-red-${id}" cx="40%" cy="30%" r="82%"><stop offset="0%" stop-color="#ee5845"/><stop offset="55%" stop-color="#d12b20"/><stop offset="100%" stop-color="#8e1510"/></radialGradient>
+        <radialGradient id="im-glove-${id}" cx="37%" cy="27%" r="82%"><stop offset="0%" stop-color="#ffe36d"/><stop offset="59%" stop-color="#e9bb31"/><stop offset="100%" stop-color="#a97c13"/></radialGradient>
+        <linearGradient id="im-glass-${id}" x1="0" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.24"/><stop offset="42%" stop-color="#fff" stop-opacity="0.045"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <clipPath id="im-clip-${id}"><circle cx="${CX}" cy="${CY}" r="76.3"/></clipPath>
+        <filter id="im-shadow-${id}" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2.7" stdDeviation="3.2" flood-color="#000" flood-opacity="0.46"/></filter>
+        <filter id="im-hand-${id}" x="-42%" y="-42%" width="184%" height="184%"><feDropShadow dx="0.65" dy="1.0" stdDeviation="0.55" flood-color="#000" flood-opacity="0.42"/></filter>
+      </defs>
+      <!-- The 1933 chromed case uses upright horns and a novelty-link bracelet, not diagonal lug blocks. -->
+      <g filter="url(#im-shadow-${id})"><path d="M79 0 H121 L118 21 H82Z M82 179 H118 L121 200 H79Z" fill="url(#im-steel-${id})" stroke="#505860" stroke-width="0.65"/><rect x="82" y="3" width="36" height="16" rx="2.4" fill="url(#im-bezel-${id})" stroke="#727a80" stroke-width="0.52"/><rect x="82" y="181" width="36" height="16" rx="2.4" fill="url(#im-bezel-${id})" stroke="#727a80" stroke-width="0.52"/>${braceletMickey(91,10)}${braceletMickey(109,10,-1)}${braceletMickey(91,190)}${braceletMickey(109,190,-1)}<path d="M70 40 V27 Q70 22 76 22 H86 V34 M130 40 V27 Q130 22 124 22 H114 V34 M70 160 V173 Q70 178 76 178 H86 V166 M130 160 V173 Q130 178 124 178 H114 V166" fill="none" stroke="url(#im-steel-${id})" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M78 27 H122 M78 173 H122" stroke="#f7f9f9" stroke-width="1.12" opacity="0.78"/></g>
+      <circle cx="${CX}" cy="${CY}" r="82.7" fill="url(#im-steel-${id})" filter="url(#im-shadow-${id})"/><circle cx="${CX}" cy="${CY}" r="80.5" fill="none" stroke="#fafcfc" stroke-width="0.72" opacity="0.83"/><circle cx="${CX}" cy="${CY}" r="77.8" fill="url(#im-bezel-${id})"/><circle cx="${CX}" cy="${CY}" r="75.9" fill="url(#im-dial-${id})" stroke="#8d877b" stroke-width="0.68"/>
+      <rect x="177.5" y="94" width="7" height="12" rx="1.2" fill="url(#im-steel-${id})" stroke="#5d656a" stroke-width="0.42"/><circle cx="188.5" cy="100" r="7.4" fill="url(#im-steel-${id})" stroke="#515a61" stroke-width="0.65"/>${Array.from({length:8},(_,i)=>`<line x1="${184.1+i*1.25}" y1="94.2" x2="${184.1+i*1.25}" y2="105.8" stroke="#697177" stroke-width="0.48"/>`).join("")}
+      <g clip-path="url(#im-clip-${id})">${track}${numerals}<text x="132" y="91.6" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="4.6" font-weight="900" fill="#292622">MICKEY</text><text x="132" y="97.1" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="4.6" font-weight="900" fill="#292622">MOUSE</text><text x="132" y="103.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="3.65" font-weight="700" letter-spacing="0.25" fill="#413a31">INGERSOLL</text><text x="70" y="116.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.55" font-weight="700" fill="#50483e">MADE IN</text><text x="70" y="120.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.55" font-weight="700" fill="#50483e">U.S.A.</text>
+        <!-- Full 1930s Mickey: pie-cut eyes, side-facing muzzle, red shorts and broad yellow shoes. -->
+        <path d="M89 155 C83 150 68 151 60 157 C54 161 58 166 73 165 C84 164 93 160 89 155Z M111 155 C117 150 132 151 140 157 C146 161 142 166 127 165 C116 164 107 160 111 155Z" fill="url(#im-glove-${id})" stroke="#876913" stroke-width="0.9"/><path d="M93 132 C91 142 88 151 84 157 M107 132 C109 142 112 151 116 157" fill="none" stroke="#151513" stroke-width="4.1" stroke-linecap="round"/><path d="M100 82 C91 84 87 93 89 104 C90 112 94 119 100 124 C106 119 110 112 111 104 C113 93 109 84 100 82Z" fill="url(#im-black-${id})" stroke="#000" stroke-width="0.5"/><path d="M86 116 C91 112 109 112 114 116 C117 124 114 134 106 136 C103 136.5 101.2 132 100 128 C98.8 132 97 136.5 94 136 C86 134 83 124 86 116Z" fill="url(#im-red-${id})" stroke="#81110d" stroke-width="0.82"/><circle cx="90" cy="122" r="2.3" fill="#fff5da" stroke="#b9ac92" stroke-width="0.48"/><circle cx="110" cy="122" r="2.3" fill="#fff5da" stroke="#b9ac92" stroke-width="0.48"/><circle cx="79" cy="52" r="13.1" fill="url(#im-black-${id})"/><circle cx="98" cy="40" r="12.7" fill="url(#im-black-${id})"/><ellipse cx="96" cy="66" rx="24.4" ry="23.8" fill="url(#im-black-${id})"/><path d="M81 68 C82 57 90 51 99 55 C108 55 118 61 122 70 C120 81 108 90 94 88 C85 86 80 77 81 68Z" fill="url(#im-face-${id})" stroke="#cdbd9e" stroke-width="0.48"/><path d="M88 57 C93 50 101 51 104 60 C99 55 94 55 88 57Z" fill="#181714"/><ellipse cx="97.2" cy="65.7" rx="2.7" ry="6.25" fill="#111" transform="rotate(-8 97.2 65.7)"/><ellipse cx="106.3" cy="65.6" rx="2.65" ry="6" fill="#111" transform="rotate(5 106.3 65.6)"/><ellipse cx="119.2" cy="70.6" rx="5.0" ry="3.2" fill="#111" transform="rotate(7 119.2 70.6)"/><path d="M94 80 C101 88 113 84 118 76" fill="none" stroke="#151515" stroke-width="1.25" stroke-linecap="round"/><path d="M98.2 81.2 Q107 87.7 115.5 78.5" fill="none" stroke="#d83228" stroke-width="2" stroke-linecap="round"/>
+        <!-- The original has a turning seconds disc, animated here by the same live sub-seconds transform. -->
+        <circle cx="${SX}" cy="${SY}" r="15.2" fill="#f8f0da" stroke="#6f6656" stroke-width="0.88"/>${secondTrack}<g class="hand-subsec" data-pivot="${SX} ${SY}">${smallMickey(100,136.5,0.82,0)}${smallMickey(107.4,148.8,0.82,120)}${smallMickey(92.6,148.8,0.82,-120)}</g><circle cx="${SX}" cy="${SY}" r="1.05" fill="#6a231b"/><path d="M66 53 Q92 35 124 42" fill="none" stroke="url(#im-glass-${id})" stroke-width="7" opacity="0.55"/>
+      </g>
+      <!-- Mickey's two black arms are the actual hour and minute hands. -->
+      <g filter="url(#im-hand-${id})"><g class="hand-hour" data-pivot="${CX} ${CY}">${arm(41,3.15,0.94)}</g><g class="hand-min" data-pivot="${CX} ${CY}">${arm(57,2.55,0.88)}</g></g><circle cx="${CX}" cy="${CY}" r="2.5" fill="#161513"/><circle cx="${CX}" cy="${CY}" r="0.88" fill="#5b554b"/>`;
+    }
+  };
+  LOGOS.mickey = () => "";
+  FIDELITY_OVERLAYS.mickey = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
