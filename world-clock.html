@@ -12532,6 +12532,71 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.snoopy = () => "";
   FIDELITY_OVERLAYS.snoopy = () => "";
 
+  // ───────────────── Rolex Milgauss 116400GV-0002 "Z-Blue" ─────────────────
+  // Reference object: the final Z-Blue Milgauss with Oyster bracelet, green
+  // sapphire, orange lightning seconds and orange minute numerals. No date.
+  FACES.milgauss = {
+    name: 'Rolex Milgauss 116400GV-0002 "Z-Blue"',
+    cadence: "sweep",
+    render() {
+      const id = "milgauss-zblue";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      let rays = "", minuteTrack = "", minuteNums = "", markers = "", rehaut = "";
+      for (let i = 0; i < 96; i++) {
+        const d = i * 3.75, [x, y] = at(d, 63.2);
+        rays += `<line x1="100" y1="100" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${i % 2 ? "#79c5d2" : "#063b54"}" stroke-width="0.54" opacity="0.065"/>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const d = i * 6, [x1, y1] = at(d, 60.5), [x2, y2] = at(d, i % 5 === 0 ? 56.8 : 58.6);
+        minuteTrack += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#f0832f" stroke-width="${i % 5 === 0 ? "0.82" : "0.44"}" opacity="${i % 5 === 0 ? "0.96" : "0.78"}"/>`;
+      }
+      [["60",0],["5",30],["10",60],["15",90],["20",120],["25",150],["30",180],["35",210],["40",240],["45",270],["50",300],["55",330]].forEach(([n,d]) => {
+        const [x,y] = at(d, 55.0);
+        minuteNums += `<text x="${x.toFixed(1)}" y="${(y + .35).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${n === "60" ? "5.0" : "4.55"}" font-weight="500" fill="#ef7c29" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})">${n}</text>`;
+      });
+      for (let h = 0; h < 12; h++) {
+        const d = h * 30, [x,y] = at(d, 45.5);
+        const w = h % 3 === 0 ? 6.4 : 5.0, hh = h % 3 === 0 ? 15.2 : 12.4;
+        markers += `<g transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x-w/2).toFixed(1)}" y="${(y-hh/2).toFixed(1)}" width="${w}" height="${hh}" rx="0.72" fill="url(#mg-metal-${id})" stroke="#294047" stroke-width="0.54"/><rect x="${(x-w/2+1.05).toFixed(1)}" y="${(y-hh/2+1.35).toFixed(1)}" width="${(w-2.1).toFixed(1)}" height="${(hh-2.7).toFixed(1)}" rx="0.42" fill="url(#mg-lume-${id})"/></g>`;
+      }
+      for (let i = 0; i < 12; i++) {
+        const d = i * 30 + 15, [x,y] = at(d, 62.15);
+        rehaut += `<text x="${x.toFixed(1)}" y="${(y + .15).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.72" font-weight="600" letter-spacing="0.20" fill="#c4d290" opacity="0.48" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})">ROLEX</text>`;
+      }
+      return `<defs>${caseDefs(id,"steel")}
+        <radialGradient id="mg-dial-${id}" cx="47%" cy="38%" r="82%"><stop offset="0%" stop-color="#208ca6"/><stop offset="34%" stop-color="#087a97"/><stop offset="72%" stop-color="#045c75"/><stop offset="100%" stop-color="#023e54"/></radialGradient>
+        <linearGradient id="mg-brush-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f9fbfc"/><stop offset="34%" stop-color="#b7c1c7"/><stop offset="62%" stop-color="#ecf0f1"/><stop offset="100%" stop-color="#86929a"/></linearGradient>
+        <linearGradient id="mg-polish-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="30%" stop-color="#c3ccd1"/><stop offset="50%" stop-color="#f8fafb"/><stop offset="76%" stop-color="#89959d"/><stop offset="100%" stop-color="#eff3f4"/></linearGradient>
+        <linearGradient id="mg-metal-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f5f6e1"/><stop offset="46%" stop-color="#819190"/><stop offset="73%" stop-color="#d9dfc8"/><stop offset="100%" stop-color="#35464a"/></linearGradient>
+        <radialGradient id="mg-lume-${id}" cx="45%" cy="35%" r="80%"><stop offset="0%" stop-color="#f8ffdc"/><stop offset="100%" stop-color="#b9d7a9"/></radialGradient>
+        <linearGradient id="mg-green-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b8ff94"/><stop offset="25%" stop-color="#1db15e"/><stop offset="62%" stop-color="#0b703d"/><stop offset="100%" stop-color="#89ed77"/></linearGradient>
+        <filter id="mg-hands-${id}" x="-35%" y="-35%" width="170%" height="170%"><feDropShadow dx="0.55" dy="0.85" stdDeviation="0.52" flood-color="#002a3d" flood-opacity="0.52"/></filter>
+        <clipPath id="mg-clip-${id}"><circle cx="100" cy="100" r="63.1"/></clipPath>
+      </defs>
+      <!-- Vertical three-link Oyster bracelet: brushed outer links, polished centre. -->
+      <path d="M60 0 H140 L135 46 H65 Z M65 154 H135 L140 200 H60 Z" fill="url(#mg-brush-${id})" stroke="#718087" stroke-width="0.55"/>
+      <path d="M80 0 H120 L117 46 H83 Z M83 154 H117 L120 200 H80 Z" fill="url(#mg-polish-${id})" stroke="#7d8a91" stroke-width="0.38"/>
+      <path d="M60 0 H80 L83 46 H65 Z M120 0 H140 L135 46 H117 Z M65 154 H83 L80 200 H60 Z M117 154 H135 L140 200 H120 Z" fill="url(#mg-brush-${id})" stroke="#8a979d" stroke-width="0.34"/>
+      <path d="M62 16 H138 M64 32 H136 M64 168 H136 M62 184 H138" stroke="#738087" stroke-width="0.66" opacity="0.72"/><path d="M82 16 H118 M83 32 H117 M83 168 H117 M82 184 H118" stroke="#f8fbfc" stroke-width="0.43" opacity="0.74"/>
+      <!-- Four Oyster case shoulders attach along the bracelet axis, not diagonally. -->
+      <path d="M62 57 L63 37 Q64 29 72 28 H86 L85 51 Z M138 57 L137 37 Q136 29 128 28 H114 L115 51 Z M62 143 L63 163 Q64 171 72 172 H86 L85 149 Z M138 143 L137 163 Q136 171 128 172 H114 L115 149 Z" fill="url(#mg-polish-${id})" stroke="#718087" stroke-width="0.56"/>
+      <circle cx="100" cy="100" r="77.2" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="76.1" fill="none" stroke="#f7fafb" stroke-width="0.58" opacity="0.80"/>
+      <circle cx="100" cy="100" r="71.3" fill="url(#mg-polish-${id})" stroke="#87939a" stroke-width="0.70"/><circle cx="100" cy="100" r="65.4" fill="url(#mg-green-${id})" stroke="#0e5d38" stroke-width="0.86"/><circle cx="100" cy="100" r="63.1" fill="url(#mg-dial-${id})" stroke="#093d48" stroke-width="0.48"/>
+      <g clip-path="url(#mg-clip-${id})">${rays}${rehaut}${minuteTrack}${minuteNums}${markers}
+        ${rolexCrown(100,65.0,1.34,"#e9ebc6")}<text x="100" y="75.4" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="6.5" font-weight="700" letter-spacing="0.78" fill="#eff0dc">ROLEX</text><text x="100" y="82.1" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="3.15" letter-spacing="0.25" fill="#eef0db">OYSTER PERPETUAL</text><text x="100" y="88.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="5.1" font-weight="600" letter-spacing="0.55" fill="#f1832c">MILGAUSS</text><text x="100" y="132.1" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.55" font-weight="600" letter-spacing="0.30" fill="#edf0db">SUPERLATIVE CHRONOMETER</text><text x="100" y="135.8" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.55" font-weight="600" letter-spacing="0.30" fill="#edf0db">OFFICIALLY CERTIFIED</text><text x="86.2" y="157.8" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.0" font-weight="600" letter-spacing="0.38" fill="#e9ebd6">SWISS</text><text x="113.8" y="157.8" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.0" font-weight="600" letter-spacing="0.38" fill="#e9ebd6">MADE</text><path d="M44 62 C63 42 91 43 116 55 C87 49 64 61 44 87 Z" fill="#fff" opacity="0.09"/></g>
+      <circle cx="100" cy="100" r="65.3" fill="none" stroke="#9dff86" stroke-width="0.46" opacity="0.82"/>
+      <!-- Screw-down crown with a short neck at three. -->
+      <rect x="171" y="95.2" width="10.2" height="9.6" rx="1.5" fill="url(#mg-brush-${id})" stroke="#6e7b82" stroke-width="0.48"/><circle cx="187" cy="100" r="8.1" fill="url(#mg-polish-${id})" stroke="#66737b" stroke-width="0.68"/><path d="M181.6 94.6 V105.4 M183.3 93.0 V107.0 M185.0 92.1 V107.9 M186.7 91.8 V108.2 M188.4 92.1 V107.9 M190.1 93.0 V107.0 M191.8 94.6 V105.4" stroke="#66737b" stroke-width="0.62"/>
+      <g filter="url(#mg-hands-${id})"><g class="hand-hour"><path d="M100 106 L95.9 100.8 L96.8 71.6 L100 58.5 L103.2 71.6 L104.1 100.8 Z" fill="url(#mg-metal-${id})" stroke="#263b42" stroke-width="0.54"/><path d="M100 97.2 L98.2 92.6 L98.7 73.6 L100 66.8 L101.3 73.6 L101.8 92.6 Z" fill="url(#mg-lume-${id})"/></g><g class="hand-min"><path d="M100 107 L97.7 100.8 L98.3 45.8 L100 32.8 L101.7 45.8 L102.3 100.8 Z" fill="url(#mg-metal-${id})" stroke="#263b42" stroke-width="0.54"/><path d="M100 96.8 L99.0 93.6 L99.3 48.8 L100 40.5 L100.7 48.8 L101.0 93.6 Z" fill="url(#mg-lume-${id})"/></g><g class="hand-sec"><line x1="100" y1="116" x2="100" y2="103" stroke="#f0802a" stroke-width="1.34"/><polyline points="100,103 96.3,93.1 104.1,82.0 97.7,70.4 102.4,58.5 100,34.1" fill="none" stroke="#f0802a" stroke-width="1.96" stroke-linejoin="miter" stroke-linecap="square"/><path d="M100 27.4 L96.4 36.6 H103.6 Z" fill="#f0802a" stroke="#be561d" stroke-width="0.30"/></g></g><circle cx="100" cy="100" r="4.0" fill="url(#mg-metal-${id})" stroke="#263b42" stroke-width="0.52"/><circle cx="100" cy="100" r="1.35" fill="#e8f3d4"/>
+      <circle cx="100" cy="100" r="63.1" fill="none" stroke="#0a3440" stroke-width="0.42"/>`;
+    }
+  };
+  LOGOS.milgauss = () => "";
+  FIDELITY_OVERLAYS.milgauss = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
