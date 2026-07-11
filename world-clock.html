@@ -12944,6 +12944,60 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.nomosmetro = () => "";
   FIDELITY_OVERLAYS.nomosmetro = () => "";
 
+  // ───── Grand Central Terminal Information Booth Clock (1913) ─────
+  // Henry Edward Bedford's four-faced brass clock: a milk-glass front face,
+  // a perspective side face, the Vanderbilt acorn and its information-booth base.
+  FACES.grandcentral = {
+    name: "Grand Central Terminal Information Booth Clock (1913)",
+    cadence: "tick",
+    render() {
+      const id = "gct-1913", CX = 111, CY = 82;
+      const at = (deg, r, cx = CX, cy = CY) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const numerals = ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+      let minuteMarks = "", dialNums = "", flutes = "", finialRibs = "", deskOrnament = "";
+      for (let i = 0; i < 60; i++) {
+        const deg = i * 6, [x, y] = at(deg, 43.5);
+        if (i % 5 === 0) minuteMarks += `<rect x="${(x - 1.18).toFixed(1)}" y="${(y - 1.18).toFixed(1)}" width="2.36" height="2.36" fill="#242017" transform="rotate(45 ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+        else { const [x1, y1] = at(deg, 44.2), [x2, y2] = at(deg, 42.0); minuteMarks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#353024" stroke-width="0.50"/>`; }
+      }
+      for (let i = 0; i < 12; i++) {
+        const [x, y] = at(i * 30, 33.2);
+        dialNums += `<text x="${x.toFixed(1)}" y="${(y + 2.85).toFixed(1)}" text-anchor="middle" font-family="Baskerville,'Times New Roman',serif" font-size="${i === 0 ? "8.25" : "7.9"}" font-weight="500" fill="#1d1a14">${numerals[i]}</text>`;
+      }
+      for (let i = 0; i < 13; i++) {
+        const x = 88 + i * 3.75;
+        flutes += `<path d="M${x.toFixed(1)} 138 Q${(x - 4.5).toFixed(1)} 153 ${x.toFixed(1)} 166" fill="none" stroke="${i % 2 ? "#d9b653" : "#6f4d11"}" stroke-width="1.1" opacity="0.84"/>`;
+      }
+      for (let i = 0; i < 6; i++) finialRibs += `<path d="M${(102 + i * 3.6).toFixed(1)} 8 Q${(99 + i * 4.0).toFixed(1)} 17 ${(102 + i * 3.6).toFixed(1)} 25" fill="none" stroke="#715017" stroke-width="0.62" opacity="0.85"/>`;
+      for (let i = 0; i < 12; i++) { const x = 23 + i * 14.0; deskOrnament += `<path d="M${x.toFixed(1)} 190 q3 -5 6 0 q3 5 6 0" fill="none" stroke="#bd9634" stroke-width="1.05" opacity="0.86"/>`; }
+      const sideTicks = (() => { let s = ""; for (let i = 0; i < 48; i++) { const a = i / 48 * Math.PI * 2; const x1 = 57 + Math.sin(a) * 13.0, y1 = CY - Math.cos(a) * 42.0, x2 = 57 + Math.sin(a) * (i % 4 === 0 ? 9.7 : 11.1), y2 = CY - Math.cos(a) * (i % 4 === 0 ? 36.3 : 39.0); s += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#40351e" stroke-width="${i % 4 === 0 ? "0.72" : "0.36"}"/>`; } return s; })();
+      return `<defs>
+        <radialGradient id="gc-brass-${id}" cx="34%" cy="25%" r="88%"><stop offset="0%" stop-color="#f2d678"/><stop offset="29%" stop-color="#be9335"/><stop offset="58%" stop-color="#8b641b"/><stop offset="100%" stop-color="#3e2a08"/></radialGradient>
+        <linearGradient id="gc-polish-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff0a5"/><stop offset="22%" stop-color="#c49129"/><stop offset="51%" stop-color="#f4ce6a"/><stop offset="76%" stop-color="#704c0e"/><stop offset="100%" stop-color="#d8aa42"/></linearGradient>
+        <radialGradient id="gc-opal-${id}" cx="45%" cy="35%" r="82%"><stop offset="0%" stop-color="#fff9df"/><stop offset="48%" stop-color="#ffeab0"/><stop offset="82%" stop-color="#e8bd5d"/><stop offset="100%" stop-color="#b58427"/></radialGradient>
+        <linearGradient id="gc-side-opal-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#a77b24"/><stop offset="36%" stop-color="#fff0bc"/><stop offset="66%" stop-color="#fff8d9"/><stop offset="100%" stop-color="#c38d2f"/></linearGradient>
+        <linearGradient id="gc-glass-${id}" x1="0" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.28"/><stop offset="38%" stop-color="#fff" stop-opacity="0.05"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="gc-shadow-${id}" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="2.4" stdDeviation="3.2" flood-color="#171005" flood-opacity="0.48"/></filter>
+        <filter id="gc-hand-shadow-${id}" x="-35%" y="-35%" width="170%" height="170%"><feDropShadow dx="0.55" dy="0.72" stdDeviation="0.50" flood-color="#000" flood-opacity="0.46"/></filter>
+        <clipPath id="gc-front-clip-${id}"><circle cx="${CX}" cy="${CY}" r="47.0"/></clipPath>
+      </defs>
+      <!-- The Vanderbilt acorn rises from the top of the brass globe. -->
+      <g filter="url(#gc-shadow-${id})"><rect x="107" y="20" width="8" height="9" rx="1.2" fill="url(#gc-polish-${id})"/><path d="M99 8 Q111 0 123 8 Q126 20 111 27 Q96 20 99 8 Z" fill="url(#gc-polish-${id})" stroke="#6d4e15" stroke-width="0.62"/>${finialRibs}<path d="M96 25 Q111 30 126 25 L123 33 Q111 37 99 33 Z" fill="url(#gc-brass-${id})" stroke="#644611" stroke-width="0.56"/></g>
+      <!-- Perspective left face and the solid brass spherical housing behind the front face. -->
+      <g filter="url(#gc-shadow-${id})"><ellipse cx="56" cy="${CY}" rx="24" ry="54" fill="url(#gc-brass-${id})" stroke="#51380d" stroke-width="0.85"/><ellipse cx="56" cy="${CY}" rx="17.2" ry="46.6" fill="url(#gc-side-opal-${id})" stroke="#876221" stroke-width="0.76"/><g opacity="0.92">${sideTicks}<text x="56" y="43" text-anchor="middle" font-family="Baskerville,'Times New Roman',serif" font-size="6.2" fill="#382e1a">12</text><text x="70" y="85" text-anchor="middle" font-family="Baskerville,'Times New Roman',serif" font-size="6.2" fill="#382e1a">3</text><text x="56" y="126" text-anchor="middle" font-family="Baskerville,'Times New Roman',serif" font-size="6.2" fill="#382e1a">6</text><text x="42" y="85" text-anchor="middle" font-family="Baskerville,'Times New Roman',serif" font-size="6.2" fill="#382e1a">9</text><path d="M56 86 L53 62 Q56 57 59 62 Z M56 86 L54.5 50 L57.5 45 L57.5 86 Z" fill="#252016"/></g><circle cx="${CX}" cy="${CY}" r="59.0" fill="url(#gc-brass-${id})" stroke="#4c330a" stroke-width="0.88"/><path d="M63 41 Q111 18 159 42 Q148 29 111 27 Q76 29 63 41 Z" fill="url(#gc-polish-${id})" opacity="0.34"/><circle cx="${CX}" cy="${CY}" r="52.2" fill="url(#gc-polish-${id})" stroke="#664714" stroke-width="0.82"/><circle cx="${CX}" cy="${CY}" r="48.3" fill="#aa7d25"/><circle cx="${CX}" cy="${CY}" r="47.0" fill="url(#gc-opal-${id})" stroke="#7b5a1a" stroke-width="0.68"/></g>
+      <g clip-path="url(#gc-front-clip-${id})">${minuteMarks}${dialNums}<text x="${CX}" y="103.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.95" font-weight="500" letter-spacing="0.18" fill="#65532e">SELF WINDING CLOCK CO. INC</text><text x="${CX}" y="106.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.75" letter-spacing="0.25" fill="#65532e">NEW YORK</text><path d="M69 47 Q102 36 142 49 Q109 44 84 51 Z" fill="url(#gc-glass-${id})" opacity="0.88"/></g>
+      <!-- Two hand-only faces; the original ball clock has no wristwatch seconds hand. -->
+      <g filter="url(#gc-hand-shadow-${id})" fill="#211c13" stroke="#16120d" stroke-width="0.36"><g class="hand-hour" data-pivot="${CX} ${CY}"><path d="M${CX} ${CY+5.2} L${CX-4.0} ${CY-2.1} L${CX-3.1} ${CY-17.6} L${CX} ${CY-27.4} L${CX+3.1} ${CY-17.6} L${CX+4.0} ${CY-2.1} Z"/><path d="M${CX-1.0} ${CY-31.6} L${CX} ${CY-36.2} L${CX+1.0} ${CY-31.6} L${CX+0.70} ${CY+4.4} H${CX-0.70} Z"/><path d="M${CX-5.9} ${CY+3.2} L${CX-1.5} ${CY-1.0} L${CX+1.5} ${CY-1.0} L${CX+5.9} ${CY+3.2} L${CX+1.3} ${CY+5.4} H${CX-1.3} Z" fill="#312718"/></g><g class="hand-min" data-pivot="${CX} ${CY}"><path d="M${CX} ${CY+6.2} L${CX-2.65} ${CY-1.2} L${CX-2.05} ${CY-36.8} L${CX} ${CY-45.2} L${CX+2.05} ${CY-36.8} L${CX+2.65} ${CY-1.2} Z"/><path d="M${CX-0.82} ${CY-48.2} L${CX} ${CY-52.6} L${CX+0.82} ${CY-48.2} L${CX+0.62} ${CY+6.0} H${CX-0.62} Z"/><path d="M${CX-5.6} ${CY+2.5} L${CX-1.4} ${CY-1.0} L${CX+1.4} ${CY-1.0} L${CX+5.6} ${CY+2.5} L${CX+1.2} ${CY+5.0} H${CX-1.2} Z" fill="#312718"/></g></g><circle cx="${CX}" cy="${CY}" r="3.1" fill="#211c13" stroke="#b18a2e" stroke-width="0.70"/><circle cx="${CX}" cy="${CY}" r="1.08" fill="#d9bb64"/>
+      <!-- Fluted brass pedestal and only the top of the 18-sided information booth. -->
+      <g filter="url(#gc-shadow-${id})"><ellipse cx="111" cy="136.5" rx="31.5" ry="5.8" fill="url(#gc-brass-${id})"/><path d="M80 137 Q111 147 142 137 L134 165 Q111 172 88 165 Z" fill="url(#gc-brass-${id})" stroke="#60430e" stroke-width="0.62"/>${flutes}<ellipse cx="111" cy="166.2" rx="42" ry="6.4" fill="url(#gc-polish-${id})"/><rect x="14" y="169" width="172" height="31" rx="2.3" fill="url(#gc-brass-${id})" stroke="#54390c" stroke-width="0.72"/><rect x="18" y="176" width="164" height="15.6" fill="#1e1a12" stroke="#c49635" stroke-width="0.68"/><circle cx="40" cy="168" r="8.1" fill="#fff7d8" stroke="#8b651c" stroke-width="1.6"/><circle cx="167" cy="168" r="8.1" fill="#fff7d8" stroke="#8b651c" stroke-width="1.6"/><text x="100" y="188.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11.2" font-weight="600" letter-spacing="0.22" fill="#fff2bc">Information</text><text x="55" y="187.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="5.4" font-weight="700" fill="#fff2bc">MTA</text>${deskOrnament}</g>`;
+    }
+  };
+  LOGOS.grandcentral = () => "";
+  FIDELITY_OVERLAYS.grandcentral = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.

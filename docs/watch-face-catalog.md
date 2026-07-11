@@ -63,7 +63,7 @@ Total faces: 62.
 | `rainbow` | Rolex Cosmograph Daytona 116595RBOW-0001 | `sweep` |
 | `railroad` | Norfolk Southern Railroad Pocket Watch (1994) | `tick` |
 | `nomosmetro` | NOMOS Glashütte Metro date power reserve 1101 | `sweep` |
-| `grandcentral` | Grand Central Terminal Clock | `tick` |
+| `grandcentral` | Grand Central Terminal Information Booth Clock (1913) | `tick` |
 | `howardmiller` | Howard Miller Grandfather Clock | `tick` |
 | `mickey` | Ingersoll Mickey Mouse (1933) | `tick` |
 | `kingkhaki` | Hamilton Khaki King | `sweep` |
