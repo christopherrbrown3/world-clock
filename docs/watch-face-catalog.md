@@ -47,7 +47,7 @@ Total faces: 62.
 | `grandfather` | Comtoise Longcase Clock — Musée du Temps, c. 1850 | `tick` |
 | `orloj` | Prague Old Town Astronomical Clock (2018-restored astrolabe) | `tick` |
 | `marine` | Ulysse Nardin Marine Torpilleur 1182-310/42 | `sweep` |
-| `freak` | Ulysse Nardin Freak X | `sweep` |
+| `freak` | Ulysse Nardin Freak X Carb 2303-270/CARB | `sweep` |
 | `patek` | Patek Philippe Perpetual Calendar | `sweep` |
 | `explorer` | Rolex Explorer | `sweep` |
 | `santos` | Cartier Santos | `tick` |
