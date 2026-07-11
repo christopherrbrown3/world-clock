@@ -13254,6 +13254,52 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.bigtic = () => "";
   FIDELITY_OVERLAYS.bigtic = () => "";
 
+  // ───────── Timex Easy Reader Day Date T20041 (INDIGLO) ─────────
+  // This current 35 mm Easy Reader has a polished silver-tone case, brown
+  // leather strap, full Arabic dial, red seconds hand, and split day/date at 3.
+  FACES.timexindiglo = {
+    name: "Timex Easy Reader Day Date T20041 (INDIGLO)",
+    cadence: "tick",
+    render() {
+      const id = "timex-t20041", CX = 100, CY = 100;
+      let nums = "", minuteMarks = "", stitches = "", crownGrooves = "";
+      for (let h = 1; h <= 12; h++) {
+        if (h === 3) continue;
+        const [x, y] = P(h / 12 * Math.PI * 2, 60.0, CX, CY);
+        nums += `<text x="${x.toFixed(1)}" y="${(y + 0.9).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="${h === 12 ? "13.8" : "12.8"}" font-weight="700" fill="#111214">${h}</text>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const major = i % 5 === 0, [x1, y1] = P(i / 60 * Math.PI * 2, 74.0, CX, CY), [x2, y2] = P(i / 60 * Math.PI * 2, major ? 69.9 : 71.9, CX, CY);
+        minuteMarks += major ? `<circle cx="${x1.toFixed(1)}" cy="${y1.toFixed(1)}" r="1.38" fill="#161719"/>` : `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#28292a" stroke-width="0.60" stroke-linecap="round"/>`;
+      }
+      for (let y = 5; y <= 30; y += 5.5) stitches += `<path d="M78.2 ${y.toFixed(1)} l1.85 3.15 M121.8 ${y.toFixed(1)} l-1.85 3.15" stroke="#aa6c42" stroke-width="1.1" stroke-linecap="round"/>`;
+      for (let y = 170; y <= 195; y += 5.5) stitches += `<path d="M78.2 ${y.toFixed(1)} l1.85 -3.15 M121.8 ${y.toFixed(1)} l-1.85 -3.15" stroke="#aa6c42" stroke-width="1.1" stroke-linecap="round"/>`;
+      for (let x = 172.1; x <= 178.2; x += 1.18) crownGrooves += `<line x1="${x.toFixed(1)}" y1="94.1" x2="${x.toFixed(1)}" y2="105.9" stroke="#6d7478" stroke-width="0.52"/>`;
+      return `<defs>
+        <linearGradient id="tx-strap-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#633020"/><stop offset="24%" stop-color="#8a4930"/><stop offset="56%" stop-color="#4b2117"/><stop offset="100%" stop-color="#2b110d"/></linearGradient>
+        <radialGradient id="tx-steel-${id}" cx="35%" cy="27%" r="86%"><stop offset="0%" stop-color="#ffffff"/><stop offset="27%" stop-color="#e9ebeb"/><stop offset="56%" stop-color="#b5bdc0"/><stop offset="79%" stop-color="#6c757b"/><stop offset="100%" stop-color="#3f484e"/></radialGradient>
+        <linearGradient id="tx-bezel-${id}" x1="0.14" y1="0" x2="0.86" y2="1"><stop offset="0%" stop-color="#626b70"/><stop offset="19%" stop-color="#ffffff"/><stop offset="41%" stop-color="#bcc4c7"/><stop offset="66%" stop-color="#fafbfa"/><stop offset="100%" stop-color="#5b656b"/></linearGradient>
+        <radialGradient id="tx-dial-${id}" cx="47%" cy="34%" r="86%"><stop offset="0%" stop-color="#fffefa"/><stop offset="66%" stop-color="#f2f2ee"/><stop offset="100%" stop-color="#d9d9d4"/></radialGradient>
+        <linearGradient id="tx-glass-${id}" x1="0" y1="0" x2="0.86" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.28"/><stop offset="42%" stop-color="#fff" stop-opacity="0.045"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="tx-shadow-${id}" x="-28%" y="-28%" width="156%" height="156%"><feDropShadow dx="0" dy="2.5" stdDeviation="3.1" flood-color="#000" flood-opacity="0.42"/></filter>
+        <filter id="tx-hand-${id}" x="-42%" y="-42%" width="184%" height="184%"><feDropShadow dx="0.52" dy="0.84" stdDeviation="0.48" flood-color="#000" flood-opacity="0.42"/></filter>
+        <clipPath id="tx-clip-${id}"><circle cx="${CX}" cy="${CY}" r="76.5"/></clipPath>
+      </defs>
+      <!-- Brown 18 mm leather is broadest at its wire-bar lugs and tapers away naturally. -->
+      <path d="M76 0 H124 L128 33 H72Z M72 167 H128 L124 200 H76Z" fill="url(#tx-strap-${id})" stroke="#2c120d" stroke-width="0.72"/>${stitches}
+      <g fill="url(#tx-steel-${id})" stroke="#5c656a" stroke-width="0.56" filter="url(#tx-shadow-${id})"><path d="M70 43 V28 Q70 23 76 22 H86 V40Z M130 43 V28 Q130 23 124 22 H114 V40Z M70 157 V172 Q70 177 76 178 H86 V160Z M130 157 V172 Q130 177 124 178 H114 V160Z"/><path d="M75 27 H125 M75 173 H125" fill="none" stroke="#f9fbfb" stroke-width="1.05" opacity="0.80"/></g>
+      <circle cx="${CX}" cy="${CY}" r="83.2" fill="url(#tx-steel-${id})" filter="url(#tx-shadow-${id})"/><circle cx="${CX}" cy="${CY}" r="81.0" fill="none" stroke="#fbfcfc" stroke-width="0.74" opacity="0.84"/><circle cx="${CX}" cy="${CY}" r="78.9" fill="url(#tx-bezel-${id})"/><circle cx="${CX}" cy="${CY}" r="76.5" fill="url(#tx-dial-${id})" stroke="#9da2a2" stroke-width="0.72"/>
+      <rect x="163.2" y="94.2" width="8.5" height="11.6" rx="1.3" fill="url(#tx-steel-${id})" stroke="#5d666b" stroke-width="0.52"/><circle cx="176" cy="100" r="6.7" fill="url(#tx-steel-${id})" stroke="#525c62" stroke-width="0.66"/>${crownGrooves}
+      <g clip-path="url(#tx-clip-${id})">${minuteMarks}${nums}<text x="100" y="79.0" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.0" font-weight="700" letter-spacing="0.34" fill="#171819">TIMEX</text>
+        <!-- Window geometry follows the real T20041: weekday in the left cell, date in the right. -->
+        <rect x="122.7" y="94.3" width="39.0" height="14.4" rx="0.72" fill="#f7f7f4" stroke="#85888a" stroke-width="0.66"/><line x1="149.2" y1="94.8" x2="149.2" y2="108.2" stroke="#aaaead" stroke-width="0.55"/><text class="date-win" data-date="dow" x="136" y="101.5" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="6.35" font-weight="700" fill="#202122">WED</text><text class="date-win" data-date="dom" x="155.4" y="101.5" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="8.1" font-weight="700" fill="#202122">14</text><text x="100" y="126.0" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="5.35" font-weight="700" letter-spacing="0.52" fill="#272829">INDIGLO</text><text x="100" y="132.0" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="3.30" font-weight="600" letter-spacing="0.50" fill="#2a2b2b">WR 30M</text><path d="M53 59 Q84 39 116 45" fill="none" stroke="url(#tx-glass-${id})" stroke-width="10" opacity="0.48"/>
+      </g>
+      <g filter="url(#tx-hand-${id})"><g class="hand-hour"><path d="M100 106.5 L96.0 99.7 L97.2 74.0 L100 57.2 L102.8 74.0 L104.0 99.7Z" fill="#141516"/><path d="M100 57.2 L102.8 74 L100 97.6 L97.2 74Z" fill="#252729" opacity="0.68"/></g><g class="hand-min"><path d="M100 108.0 L97.7 100.0 L98.5 48.0 L100 32.4 L101.5 48.0 L102.3 100.0Z" fill="#111213"/><path d="M100 32.4 L101.5 48 L100 97.5 L98.5 48Z" fill="#252729" opacity="0.68"/></g><g class="hand-sec"><line x1="100" y1="119.5" x2="100" y2="37.8" stroke="#d83b49" stroke-width="1.14"/><path d="M100 98 L104.2 104 L100 110 L95.8 104Z" fill="#d83b49"/></g></g><circle cx="100" cy="100" r="3.26" fill="#d83b49" stroke="#841c27" stroke-width="0.56"/><circle cx="100" cy="100" r="1.05" fill="#f6ded9"/>`;
+    }
+  };
+  LOGOS.timexindiglo = () => "";
+  FIDELITY_OVERLAYS.timexindiglo = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.

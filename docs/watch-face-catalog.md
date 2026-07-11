@@ -69,4 +69,4 @@ Total faces: 62.
 | `kingkhaki` | Hamilton Khaki Field King Auto H64455533 | `sweep` |
 | `casiomq24` | CASIO MQ-24-7B2LL | `tick` |
 | `bigtic` | Fossil Big Tic JR-7845 | `tick` |
-| `timexindiglo` | Timex Indiglo | `tick` |
+| `timexindiglo` | Timex Easy Reader Day Date T20041 (INDIGLO) | `tick` |
