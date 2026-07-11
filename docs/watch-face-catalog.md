@@ -49,7 +49,7 @@ Total faces: 62.
 | `marine` | Ulysse Nardin Marine Torpilleur 1182-310/42 | `sweep` |
 | `freak` | Ulysse Nardin Freak X Carb 2303-270/CARB | `sweep` |
 | `patek` | Patek Philippe Perpetual Calendar Chronograph 5270J-001 | `sweep` |
-| `explorer` | Rolex Explorer | `sweep` |
+| `explorer` | Rolex Explorer 36 124270 | `sweep` |
 | `santos` | Cartier Santos | `tick` |
 | `bigpilot` | IWC Big Pilot | `sweep` |
 | `fiftyfathoms` | Blancpain Fifty Fathoms | `sweep` |
