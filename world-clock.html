@@ -12260,6 +12260,81 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.fiftyfathoms = () => "";
   FIDELITY_OVERLAYS.fiftyfathoms = () => "";
 
+  // ───────────── Breguet Type XX Chronographe 2067 2067ST/92/3WU ─────────────
+  // Reference object: the current flyback Type XX with its 15/12/seconds registers.
+  FACES.typexx = {
+    name: "Breguet Type XX Chronographe 2067 2067ST/92/3WU",
+    cadence: "sweep",
+    render() {
+      const id = "breguet2067";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const S9 = [67,100], S3 = [133,100], S6 = [100,132];
+      let bezelKnurl = "", bezelNums = "", track = "", indices = "", stitch = "";
+      for (let i = 0; i < 120; i++) {
+        const d = i * 3, [x1,y1] = at(d,77.3), [x2,y2] = at(d,74.0);
+        bezelKnurl += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 2 ? "#81898f" : "#f2f4f4"}" stroke-width="0.62" opacity="0.88"/>`;
+      }
+      for (let i = 1; i <= 11; i++) {
+        const d = i * 30, [x,y] = at(d,70.6);
+        const rot = d > 90 && d < 270 ? d + 180 : d;
+        bezelNums += `<text x="${x.toFixed(1)}" y="${(y + 0.35).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.0" font-weight="700" fill="#202428" transform="rotate(${rot} ${x.toFixed(1)} ${y.toFixed(1)})">${i}</text>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const d = i * 6, [x1,y1] = at(d,59.3), [x2,y2] = at(d, i % 5 === 0 ? 55.1 : 57.3);
+        track += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 5 === 0 ? "#f0eee5" : "#b0b0ab"}" stroke-width="${i % 5 === 0 ? "0.72" : "0.30"}" opacity="${i % 5 === 0 ? "0.90" : "0.73"}"/>`;
+      }
+      const numerals = {0:"12",2:"2",4:"4",5:"5",7:"7",8:"8",10:"10"};
+      for (let h = 0; h < 12; h++) {
+        const d = h * 30;
+        if (numerals[h]) {
+          const [x,y] = at(d,45.0);
+          indices += `<text x="${x.toFixed(1)}" y="${(y + 0.55).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="${h === 0 ? "11.8" : "10.4"}" font-weight="600" fill="#f3e8c4" stroke="#967b44" stroke-width="0.40" paint-order="stroke fill">${numerals[h]}</text>`;
+        } else if (h === 1) {
+          const [x,y] = at(d,47.3);
+          indices += `<rect x="${(x - 1.5).toFixed(1)}" y="${(y - 5.5).toFixed(1)}" width="3.0" height="11.0" rx="0.42" fill="#eee5c2" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+        } else if (h === 11) {
+          const [x,y] = at(d,47.3);
+          indices += `<rect x="${(x - 3.4).toFixed(1)}" y="${(y - 5.4).toFixed(1)}" width="2.05" height="10.8" rx="0.34" fill="#eee5c2" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/><rect x="${(x + 1.35).toFixed(1)}" y="${(y - 5.4).toFixed(1)}" width="2.05" height="10.8" rx="0.34" fill="#eee5c2" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+        }
+      }
+      for (const y of [8,18,182,192]) stitch += `<path d="M75 ${y} H125" fill="none" stroke="#f0e3c3" stroke-width="0.62" stroke-dasharray="2.15 1.35" opacity="0.92"/>`;
+      const subdial = (cx,cy,r,labels,kind) => {
+        let s = `<circle cx="${cx}" cy="${cy}" r="${r + 1.1}" fill="#0d0f10" stroke="#363a3c" stroke-width="0.70"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#tx-sub-${id})" stroke="#77766f" stroke-width="0.40"/>`;
+        for (let i = 0; i < 60; i++) {
+          const d = i * 6, [x1,y1] = at(d,r - 0.5,cx,cy), [x2,y2] = at(d,r - (i % 5 === 0 ? 3.0 : 1.5),cx,cy);
+          s += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 5 === 0 ? "#e7e2d0" : "#b4b2aa"}" stroke-width="${i % 5 === 0 ? "0.44" : "0.22"}"/>`;
+        }
+        labels.forEach(([t,d]) => {
+          const [x,y] = at(d,r - 5.2,cx,cy);
+          s += `<text x="${x.toFixed(1)}" y="${(y + .25).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${kind === "minutes" ? "3.45" : "3.25"}" font-weight="700" fill="#ece6d2">${t}</text>`;
+        });
+        return s;
+      };
+      return `<defs>${caseDefs(id,"steel")}
+        <linearGradient id="tx-strap-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#c5a666"/><stop offset="22%" stop-color="#96753e"/><stop offset="57%" stop-color="#755726"/><stop offset="80%" stop-color="#b4955b"/><stop offset="100%" stop-color="#80632f"/></linearGradient>
+        <linearGradient id="tx-brush-${id}" x1="0.10" y1="0" x2="0.90" y2="1"><stop offset="0%" stop-color="#f5f7f7"/><stop offset="30%" stop-color="#bec6ca"/><stop offset="58%" stop-color="#777f85"/><stop offset="80%" stop-color="#f4f6f6"/><stop offset="100%" stop-color="#778087"/></linearGradient>
+        <radialGradient id="tx-dial-${id}" cx="43%" cy="30%" r="85%"><stop offset="0%" stop-color="#292b2c"/><stop offset="50%" stop-color="#151718"/><stop offset="100%" stop-color="#060708"/></radialGradient>
+        <radialGradient id="tx-sub-${id}" cx="42%" cy="31%" r="80%"><stop offset="0%" stop-color="#26292a"/><stop offset="100%" stop-color="#08090a"/></radialGradient>
+        <linearGradient id="tx-metal-${id}" x1="0.10" y1="0" x2="0.90" y2="1"><stop offset="0%" stop-color="#fffef6"/><stop offset="38%" stop-color="#d7d6cf"/><stop offset="66%" stop-color="#777a78"/><stop offset="83%" stop-color="#f1efe7"/><stop offset="100%" stop-color="#8b8b84"/></linearGradient>
+        <linearGradient id="tx-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.15"/><stop offset="40%" stop-color="#fff" stop-opacity="0.02"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="tx-handshadow-${id}" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB"><feDropShadow dx="0.7" dy="0.95" stdDeviation="0.56" flood-color="#000" flood-opacity="0.68"/></filter>
+        <clipPath id="tx-dialclip-${id}"><circle cx="100" cy="100" r="59.4"/></clipPath>
+      </defs>
+      <!-- Camel calfskin and its thick edge stitch, then narrow Breguet steel lugs. -->
+      <path d="M68 0 H132 L140 46 H60 Z M60 154 H140 L132 200 H68 Z" fill="url(#tx-strap-${id})" stroke="#745725" stroke-width="0.76"/><path d="M72 0 H128 L135 46 H65 M65 154 H135 L128 200 H72" fill="none" stroke="#f2e4c4" stroke-width="0.44" opacity="0.78"/>${stitch}<path d="M61 48 L49 31 Q46 27 42 32 L30 52 Q37 59 52 61 L69 53 Z M139 48 L151 31 Q154 27 158 32 L170 52 Q163 59 148 61 L131 53 Z M61 152 L49 169 Q46 173 42 168 L30 148 Q37 141 52 139 L69 147 Z M139 152 L151 169 Q154 173 158 168 L170 148 Q163 141 148 139 L131 147 Z" fill="url(#tx-brush-${id})" stroke="#606970" stroke-width="0.58"/>
+      <!-- Fluted steel bezel, cylindrical pump pushers and crown. -->
+      <circle cx="100" cy="100" r="76.5" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="75.0" fill="url(#tx-brush-${id})" stroke="#59636a" stroke-width="0.60"/>${bezelKnurl}<circle cx="100" cy="100" r="72.0" fill="#d9dfe0" stroke="#6c747a" stroke-width="0.52"/><circle cx="100" cy="100" r="68.0" fill="#141617" stroke="#4d5458" stroke-width="0.78"/>${bezelNums}<polygon points="100,26.7 96.4,33.0 103.6,33.0" fill="#f0dc9d" stroke="#a98f53" stroke-width="0.45"/><circle cx="100" cy="100" r="62.0" fill="#090a0b" stroke="#70787b" stroke-width="1.05"/><circle cx="100" cy="100" r="59.4" fill="url(#tx-dial-${id})" stroke="#040506" stroke-width="0.66"/><g fill="url(#tx-brush-${id})" stroke="#596269" stroke-width="0.56"><path d="M165 65 L181 56 L187 64 L172 75 Z"/><path d="M165 135 L181 144 L187 136 L172 125 Z"/></g><path d="M171 65 L182 60 M171 135 L182 140" stroke="#f8faf9" stroke-width="0.42" opacity="0.78"/><rect x="170.0" y="94.2" width="9.8" height="11.6" rx="1.45" fill="url(#case-${id})" stroke="#596269" stroke-width="0.44"/><circle cx="187.2" cy="100" r="8.8" fill="url(#tx-brush-${id})" stroke="#586169" stroke-width="0.68"/><path d="M181.7 94.8 V105.2 M183.6 92.9 V107.1 M185.5 91.9 V108.1 M187.4 91.6 V108.4 M189.3 92.0 V108.0 M191.2 93.0 V107.0 M192.8 94.8 V105.2" stroke="#515b62" stroke-width="0.68"/>
+      <g clip-path="url(#tx-dialclip-${id})">${track}${indices}<text x="100" y="78.1" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="7.7" font-style="italic" font-weight="600" fill="#eee7d0">Breguet</text>${subdial(S9[0],S9[1],15.0,[["60",0],["20",120],["40",240]],"seconds")}${subdial(S3[0],S3[1],18.7,[["15",0],["5",120],["10",240]],"minutes")}${subdial(S6[0],S6[1],16.9,[["12",0],["3",90],["6",180],["9",270]],"hours")}<g class="hand-subsec" data-pivot="67 100"><path d="M67 103.5 L66.3 100 L67 87.4 L67.7 100 Z" fill="#efebdb" stroke="#817b69" stroke-width="0.24"/></g><circle cx="67" cy="100" r="1.45" fill="#f0ece0"/><path d="M133 104.2 L132.25 100 L133 84.4 L133.75 100 Z" fill="#e8dcaf" stroke="#917d4c" stroke-width="0.28"/><circle cx="133" cy="100" r="1.48" fill="#e8dcaf"/><path d="M100 136.0 L99.25 132 L100 118.4 L100.75 132 Z" fill="#e8dcaf" stroke="#917d4c" stroke-width="0.28"/><circle cx="100" cy="132" r="1.45" fill="#e8dcaf"/><g transform="rotate(45 133.5 133.5)"><rect x="124.0" y="128.0" width="19" height="11" rx="0.9" fill="#101214" stroke="#777a76" stroke-width="0.56"/><text class="date-win" data-date="dom" x="133.5" y="133.5" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="5.4" font-weight="700" fill="#f1efe5">25</text></g><text x="141.5" y="147.8" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.55" font-weight="700" letter-spacing="0.22" fill="#e9e4d4" transform="rotate(45 141.5 147.8)">SWISS MADE</text><path d="M46 61 C65 43 91 43 113 55 C85 50 63 60 46 87 Z" fill="url(#tx-glass-${id})" opacity="0.20"/></g>
+      <!-- Two time hands move; the long central chronograph seconds is intentionally parked at 12. -->
+      <g filter="url(#tx-handshadow-${id})"><g class="hand-hour"><path d="M100 106 L94.2 97.5 L95.5 83.0 L100 63.2 L104.5 83.0 L105.8 97.5 Z" fill="url(#tx-metal-${id})" stroke="#59594f" stroke-width="0.56"/><path d="M100 98.2 L97.5 82.3 L100 70.6 L102.5 82.3 Z" fill="#eee3bd"/></g><g class="hand-min"><path d="M100 107 L96.9 98.8 L97.9 55.6 L100 39.2 L102.1 55.6 L103.1 98.8 Z" fill="url(#tx-metal-${id})" stroke="#59594f" stroke-width="0.56"/><path d="M100 98.1 L98.65 58.2 L100 46.7 L101.35 58.2 Z" fill="#eee3bd"/></g><path d="M100 112 L99.55 100 L99.55 39.5 L100 30.6 L100.45 39.5 L100.45 100 L100 112 Z" fill="#e7e8e3" stroke="#7c7e7b" stroke-width="0.22"/></g><circle cx="100" cy="100" r="3.3" fill="url(#tx-metal-${id})" stroke="#5a5c58" stroke-width="0.46"/><circle cx="100" cy="100" r="1.12" fill="#f6f1df"/><circle cx="100" cy="100" r="59.4" fill="none" stroke="#e6e6df" stroke-width="0.33" opacity="0.48"/>`;
+    }
+  };
+  LOGOS.typexx = () => "";
+  FIDELITY_OVERLAYS.typexx = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
