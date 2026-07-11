@@ -50,7 +50,7 @@ Total faces: 62.
 | `freak` | Ulysse Nardin Freak X Carb 2303-270/CARB | `sweep` |
 | `patek` | Patek Philippe Perpetual Calendar Chronograph 5270J-001 | `sweep` |
 | `explorer` | Rolex Explorer 36 124270 | `sweep` |
-| `santos` | Cartier Santos | `tick` |
+| `santos` | Cartier Santos de Cartier Large WSSA0018 | `sweep` |
 | `bigpilot` | IWC Big Pilot | `sweep` |
 | `fiftyfathoms` | Blancpain Fifty Fathoms | `sweep` |
 | `typexx` | Breguet Type XX | `sweep` |
