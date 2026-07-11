@@ -12608,6 +12608,88 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.milgauss = () => "";
   FIDELITY_OVERLAYS.milgauss = () => "";
 
+  // ─────────────────── Rolex Yacht-Master II 126680 ───────────────────
+  // Current Oystersteel regatta chronograph: the blue ceramic bezel is a
+  // 60-minute scale; the 10-to-0 countdown scale lives on the white flange.
+  FACES.yachtmaster2 = {
+    name: "Rolex Yacht-Master II 126680",
+    cadence: "sweep",
+    render() {
+      const id = "ym2126680";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      let scallops = "", bezelTicks = "", bezelNums = "", regatta = "", dialTicks = "", markers = "", bracelet = "";
+      for (let i = 0; i < 120; i++) {
+        const d = i * 3, [x1,y1] = at(d,80.8), [x2,y2] = at(d,77.2);
+        scallops += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 2 ? "#f5f7f7" : "#69747a"}" stroke-width="0.78" opacity="0.82"/>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const d = i * 6, [x1,y1] = at(d,74.4), [x2,y2] = at(d, i % 5 === 0 ? 69.0 : 71.9);
+        bezelTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#eef2f2" stroke-width="${i % 5 === 0 ? "1.12" : "0.44"}" opacity="${i % 5 === 0 ? "0.94" : "0.78"}"/>`;
+      }
+      [["60",0],["10",60],["20",120],["30",180],["40",240],["50",300]].forEach(([n,d]) => {
+        const [x,y] = at(d,70.9), rot = d > 90 && d < 270 ? d + 180 : d;
+        bezelNums += `<text x="${x.toFixed(1)}" y="${(y + .5).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${n === "60" || n === "30" ? "7.7" : "6.4"}" font-weight="700" fill="#eaf0f2" stroke="#49647e" stroke-width="0.30" paint-order="stroke" transform="rotate(${rot} ${x.toFixed(1)} ${y.toFixed(1)})">${n}</text>`;
+      });
+      for (let i = 0; i <= 10; i++) {
+        const d = i * 30, [x,y] = at(d,61.6);
+        regatta += `<text x="${x.toFixed(1)}" y="${(y + .3).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="${i === 10 || i === 0 ? "4.1" : "3.55"}" font-weight="700" fill="#111820" transform="rotate(${d > 90 && d < 270 ? d + 180 : d} ${x.toFixed(1)} ${y.toFixed(1)})">${i}</text>`;
+        if (i < 10) {
+          const [tx,ty] = at(d + 15, 61.4);
+          regatta += `<path d="M${tx.toFixed(1)} ${(ty - 2.4).toFixed(1)} L${(tx - 2.1).toFixed(1)} ${(ty + 1.7).toFixed(1)} L${(tx + 2.1).toFixed(1)} ${(ty + 1.7).toFixed(1)} Z" fill="#d3262e" transform="rotate(${d + 15} ${tx.toFixed(1)} ${ty.toFixed(1)})"/>`;
+        }
+      }
+      for (let i = 0; i < 60; i++) {
+        const d = i * 6, [x1,y1] = at(d,55.2), [x2,y2] = at(d, i % 5 === 0 ? 51.3 : 53.5);
+        dialTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#17212a" stroke-width="${i % 5 === 0 ? "0.75" : "0.34"}" opacity="0.90"/>`;
+      }
+      for (let h = 0; h < 12; h++) {
+        const d = h * 30, [x,y] = at(d,45.6);
+        if (h === 0) {
+          markers += `<path d="M100 45.0 L93.8 58.8 H106.2 Z" fill="url(#ym-lume-${id})" stroke="#6d777d" stroke-width="0.72"/><path d="M100 47.1 L95.5 57.0 H104.5 Z" fill="#f4f5e8"/>`;
+        } else if (h === 3 || h === 9) {
+          markers += `<g transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x - 8.1).toFixed(1)}" y="${(y - 3.35).toFixed(1)}" width="16.2" height="6.7" rx="0.75" fill="url(#ym-metal-${id})" stroke="#69747a" stroke-width="0.52"/><rect x="${(x - 6.4).toFixed(1)}" y="${(y - 1.7).toFixed(1)}" width="12.8" height="3.4" rx="0.40" fill="url(#ym-lume-${id})"/></g>`;
+        } else if (h === 6) {
+          markers += `<rect x="95.8" y="151.7" width="8.4" height="6.1" rx="0.72" fill="url(#ym-metal-${id})" stroke="#69747a" stroke-width="0.52"/><rect x="97.2" y="153.0" width="5.6" height="3.5" rx="0.36" fill="url(#ym-lume-${id})"/>`;
+        } else {
+          markers += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.55" fill="url(#ym-metal-${id})" stroke="#68737a" stroke-width="0.55"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.08" fill="url(#ym-lume-${id})"/>`;
+        }
+      }
+      const braceletLink = (y, w) => `<path d="M${(100-w).toFixed(1)} ${y} H${(100+w).toFixed(1)} L${(100+w-2.1).toFixed(1)} ${(y+11.3).toFixed(1)} H${(100-w+2.1).toFixed(1)} Z" fill="url(#ym-brush-${id})" stroke="#66737a" stroke-width="0.42"/><path d="M${(100-w*0.42).toFixed(1)} ${(y+.7).toFixed(1)} H${(100+w*0.42).toFixed(1)} L${(100+w*0.42-1.2).toFixed(1)} ${(y+10.6).toFixed(1)} H${(100-w*0.42+1.2).toFixed(1)} Z" fill="url(#ym-polish-${id})" stroke="#7c888e" stroke-width="0.28"/>`;
+      for (let i = 0; i < 4; i++) {
+        bracelet += braceletLink(i * 11.0, 32 + i * 1.85) + braceletLink(156 + i * 11.0, 37.55 - i * 1.85);
+      }
+      return `<defs>${caseDefs(id,"steel")}
+        <linearGradient id="ym-brush-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f6f8f8"/><stop offset="44%" stop-color="#afb9be"/><stop offset="100%" stop-color="#657178"/></linearGradient>
+        <linearGradient id="ym-polish-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="28%" stop-color="#bcc6ca"/><stop offset="52%" stop-color="#fafcfc"/><stop offset="100%" stop-color="#7c888f"/></linearGradient>
+        <linearGradient id="ym-metal-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="45%" stop-color="#c3cbd0"/><stop offset="72%" stop-color="#758188"/><stop offset="100%" stop-color="#f4f6f6"/></linearGradient>
+        <radialGradient id="ym-lume-${id}" cx="43%" cy="31%" r="82%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#dce6d9"/></radialGradient>
+        <radialGradient id="ym-blue-${id}" cx="42%" cy="28%" r="84%"><stop offset="0%" stop-color="#3775b5"/><stop offset="42%" stop-color="#15569a"/><stop offset="78%" stop-color="#0a326c"/><stop offset="100%" stop-color="#041a42"/></radialGradient>
+        <radialGradient id="ym-dial-${id}" cx="44%" cy="34%" r="82%"><stop offset="0%" stop-color="#ffffff"/><stop offset="61%" stop-color="#f7f7f5"/><stop offset="100%" stop-color="#dfe3e5"/></radialGradient>
+        <filter id="ym-hands-${id}" x="-35%" y="-35%" width="170%" height="170%"><feDropShadow dx="0.62" dy="0.86" stdDeviation="0.56" flood-color="#0c1115" flood-opacity="0.48"/></filter>
+        <clipPath id="ym-dialclip-${id}"><circle cx="100" cy="100" r="58.1"/></clipPath>
+        <path id="ym-regatta-arc-${id}" d="M43 56 A61 61 0 0 1 85 38" fill="none"/>
+      </defs>
+      <!-- Tapered three-link Oyster bracelet and direct upper/lower Yacht-Master lugs. -->
+      ${bracelet}<path d="M60 54 L63 36 Q65 30 73 30 H86 L85 50 Z M140 54 L137 36 Q135 30 127 30 H114 L115 50 Z M60 146 L63 164 Q65 170 73 170 H86 L85 150 Z M140 146 L137 164 Q135 170 127 170 H114 L115 150 Z" fill="url(#ym-polish-${id})" stroke="#627078" stroke-width="0.58"/>
+      <circle cx="100" cy="100" r="79.2" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="78.1" fill="none" stroke="#f7fafb" stroke-width="0.64" opacity="0.80"/>${scallops}<circle cx="100" cy="100" r="75.6" fill="url(#ym-blue-${id})" stroke="#123157" stroke-width="0.76"/>${bezelTicks}${bezelNums}<polygon points="100,22.2 93.6,33.3 106.4,33.3" fill="#edf1ef" stroke="#71818a" stroke-width="0.62"/>
+      <circle cx="100" cy="100" r="64.1" fill="#f4f5f3" stroke="#82909a" stroke-width="0.58"/><g>${regatta}<text font-family="Arial,Helvetica,sans-serif" font-size="2.15" font-weight="700" letter-spacing="0.22" fill="#123d73"><textPath href="#ym-regatta-arc-${id}" startOffset="50%" text-anchor="middle">YACHT-MASTER II</textPath></text></g><circle cx="100" cy="100" r="58.1" fill="url(#ym-dial-${id})" stroke="#d0d5d6" stroke-width="0.55"/>
+      <g clip-path="url(#ym-dialclip-${id})">${dialTicks}${markers}
+        <g transform="translate(100 72)"><path d="M-4.0 -1.0 L-2.7 -4.8 L-1.25 -1.3 L0 -5.2 L1.25 -1.3 L2.7 -4.8 L4.0 -1.0 L3.0 2.7 H-3.0 Z" fill="#11161b"/><circle cx="-3.8" cy="-3.4" r="0.86" fill="#11161b"/><circle cx="0" cy="-5.5" r="0.86" fill="#11161b"/><circle cx="3.8" cy="-3.4" r="0.86" fill="#11161b"/></g><text x="100" y="80.5" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="6.25" font-weight="700" letter-spacing="0.80" fill="#11161b">ROLEX</text><text x="100" y="86.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.9" font-weight="700" letter-spacing="0.24" fill="#11161b">OYSTER PERPETUAL</text><text x="100" y="90.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.25" font-weight="600" letter-spacing="0.20" fill="#11161b">SUPERLATIVE CHRONOMETER</text><text x="100" y="93.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.25" font-weight="600" letter-spacing="0.20" fill="#11161b">OFFICIALLY CERTIFIED</text>
+        <g><circle cx="100" cy="134" r="18.0" fill="url(#ym-metal-${id})" stroke="#728089" stroke-width="0.55"/><circle cx="100" cy="134" r="16.4" fill="url(#ym-blue-${id})" stroke="#193d74" stroke-width="0.52"/>${[["60",0],["10",60],["20",120],["30",180],["40",240],["50",300]].map(([n,d])=>{const [x,y]=at(d,12.8,100,134);return `<text x="${x.toFixed(1)}" y="${(y+.25).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.15" font-weight="700" fill="#eff4f7">${n}</text>`;}).join("")}<circle cx="100" cy="134" r="10.9" fill="#f9faf8" stroke="#c1c8cc" stroke-width="0.46"/><g class="hand-subsec" data-pivot="100 134"><path d="M100 138.2 L99.36 134 L100 121.0 L100.64 134 Z" fill="#98a4aa" stroke="#536169" stroke-width="0.30"/></g><circle cx="100" cy="134" r="1.55" fill="#6b7880"/></g>
+        <text x="87.4" y="156.1" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.82" font-weight="700" letter-spacing="0.30" fill="#151b20">SWISS</text><text x="112.6" y="156.1" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.82" font-weight="700" letter-spacing="0.30" fill="#151b20">MADE</text><path d="M45 60 C64 42 91 43 113 55 C84 50 62 61 45 87 Z" fill="#fff" opacity="0.22"/></g>
+      <!-- Winch-shaped pushers at 2 and 4 and the Triplock crown at three. -->
+      <g transform="rotate(-28 178 72)"><rect x="164" y="67" width="20" height="9.5" rx="2.4" fill="url(#ym-polish-${id})" stroke="#59666d" stroke-width="0.56"/><rect x="175" y="68.5" width="11" height="6.5" rx="1.7" fill="url(#ym-metal-${id})"/></g><g transform="rotate(28 178 128)"><rect x="164" y="123.5" width="20" height="9.5" rx="2.4" fill="url(#ym-polish-${id})" stroke="#59666d" stroke-width="0.56"/><rect x="175" y="125" width="11" height="6.5" rx="1.7" fill="url(#ym-metal-${id})"/></g><rect x="170" y="94.6" width="10.0" height="10.8" rx="1.45" fill="url(#ym-polish-${id})" stroke="#59666d" stroke-width="0.46"/><circle cx="187" cy="100" r="8.8" fill="url(#ym-metal-${id})" stroke="#56636a" stroke-width="0.68"/><path d="M181.5 94.6 V105.4 M183.3 92.9 V107.1 M185.1 92.0 V108.0 M186.9 91.8 V108.2 M188.7 92.0 V108.0 M190.5 92.9 V107.1 M192.3 94.6 V105.4" stroke="#536069" stroke-width="0.62"/>
+      <!-- Normal time moves; the two red countdown hands remain parked. -->
+      <g filter="url(#ym-hands-${id})"><g class="hand-hour"><path d="M100 106 L92.7 99.1 L94.9 84.0 L100 61.5 L105.1 84.0 L107.3 99.1 Z" fill="url(#ym-metal-${id})" stroke="#111a20" stroke-width="0.66"/><path d="M100 98.1 L96.7 93.5 L100 69.5 L103.3 93.5 Z" fill="url(#ym-lume-${id})"/><path d="M100 84.0 V72.7 M100 84.0 L105.0 87.1 M100 84.0 L95.0 87.1" stroke="#26333a" stroke-width="0.94"/></g><g class="hand-min"><path d="M100 107 L97.3 99.8 L98.0 51.5 L100 35.0 L102.0 51.5 L102.7 99.8 Z" fill="url(#ym-metal-${id})" stroke="#111a20" stroke-width="0.60"/><path d="M100 97.4 L98.85 55.2 L100 43.5 L101.15 55.2 Z" fill="url(#ym-lume-${id})"/></g></g><g transform="rotate(164 100 100)"><path d="M100 111 L99.45 100 L99.45 48 L100 30 L100.55 48 L100.55 100 L100 111 Z" fill="#d62830" stroke="#9e1c23" stroke-width="0.28"/></g><g transform="rotate(238 100 100)"><path d="M100 105 L100 56" stroke="#d62830" stroke-width="1.25"/><path d="M100 51 L93.7 62.0 H106.3 Z" fill="none" stroke="#d62830" stroke-width="1.45" stroke-linejoin="round"/></g><circle cx="100" cy="100" r="3.65" fill="url(#ym-metal-${id})" stroke="#26323a" stroke-width="0.55"/><circle cx="100" cy="100" r="1.24" fill="#f6f8f5"/>
+      <circle cx="100" cy="100" r="58.1" fill="none" stroke="#d7dcdd" stroke-width="0.35" opacity="0.68"/>`;
+    }
+  };
+  LOGOS.yachtmaster2 = () => "";
+  FIDELITY_OVERLAYS.yachtmaster2 = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
