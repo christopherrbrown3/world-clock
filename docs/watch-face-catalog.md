@@ -56,7 +56,7 @@ Total faces: 62.
 | `typexx` | Breguet Type XX Chronographe 2067 2067ST/92/3WU | `sweep` |
 | `radiomir` | Panerai Radiomir Black Seal Logo PAM00754 | `sweep` |
 | `carrera` | TAG Heuer Carrera Chronograph CBN2011.BA0642 | `sweep` |
-| `snoopy` | Omega Snoopy Speedmaster | `sweep` |
+| `snoopy` | Omega Speedmaster "Silver Snoopy Award" 50th Anniversary 310.32.42.50.02.001 | `sweep` |
 | `milgauss` | Rolex Milgauss | `sweep` |
 | `yachtmaster2` | Rolex Yacht-Master II | `sweep` |
 | `jorggray` | Jorg Gray JG6500 | `sweep` |
