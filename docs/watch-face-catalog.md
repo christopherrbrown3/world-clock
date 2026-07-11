@@ -45,7 +45,7 @@ Total faces: 62.
 | `br03` | Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB | `sweep` |
 | `twinbell` | Westclox Twin Bell Alarm Clock 70010A | `tick` |
 | `grandfather` | Comtoise Longcase Clock — Musée du Temps, c. 1850 | `tick` |
-| `orloj` | Prague Astronomical Clock | `tick` |
+| `orloj` | Prague Old Town Astronomical Clock (2018-restored astrolabe) | `tick` |
 | `marine` | Ulysse Nardin Marine Chronometer | `sweep` |
 | `freak` | Ulysse Nardin Freak X | `sweep` |
 | `patek` | Patek Philippe Perpetual Calendar | `sweep` |
