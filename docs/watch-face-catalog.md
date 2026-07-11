@@ -43,7 +43,7 @@ Total faces: 62.
 | `prx` | Tissot PRX 40mm Powermatic 80 T137.407.11.041.00 | `sweep` |
 | `khaki` | Hamilton Khaki Field Mechanical 38mm H69439931 | `sweep` |
 | `br03` | Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB | `sweep` |
-| `twinbell` | Westclox Twin-Bell Alarm | `tick` |
+| `twinbell` | Westclox Twin Bell Alarm Clock 70010A | `tick` |
 | `grandfather` | Comtoise Longcase Clock | `tick` |
 | `orloj` | Prague Astronomical Clock | `tick` |
 | `marine` | Ulysse Nardin Marine Chronometer | `sweep` |
