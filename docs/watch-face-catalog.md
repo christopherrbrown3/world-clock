@@ -54,7 +54,7 @@ Total faces: 62.
 | `bigpilot` | IWC Big Pilot's Watch 43 IW329301 | `sweep` |
 | `fiftyfathoms` | Blancpain Fifty Fathoms Automatique 5015 1130 71S | `sweep` |
 | `typexx` | Breguet Type XX Chronographe 2067 2067ST/92/3WU | `sweep` |
-| `radiomir` | Panerai Radiomir | `sweep` |
+| `radiomir` | Panerai Radiomir Black Seal Logo PAM00754 | `sweep` |
 | `carrera` | TAG Heuer Carrera | `sweep` |
 | `snoopy` | Omega Snoopy Speedmaster | `sweep` |
 | `milgauss` | Rolex Milgauss | `sweep` |
