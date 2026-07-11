@@ -11866,6 +11866,86 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.marine = () => "";
   FIDELITY_OVERLAYS.marine = () => "";
 
+  // ───────────────── Ulysse Nardin Freak X Carb 2303-270/CARB ─────────────────
+  // Reference object: the 43 mm black PVD titanium Freak X with Carbonium side
+  // pieces. Its hour wheel and one-hour flying carousel are the time display.
+  FACES.freak = {
+    name: "Ulysse Nardin Freak X Carb 2303-270/CARB",
+    cadence: "sweep",
+    render() {
+      const id = "frkxcarb";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const gear = (cx, cy, r, teeth, face, edge = "#15191d") => {
+        let s = "";
+        for (let i = 0; i < teeth; i++) {
+          const d = i * 360 / teeth, [x, y] = at(d, r + 1.15, cx, cy);
+          s += `<rect x="${(x - 0.78).toFixed(1)}" y="${(y - 1.48).toFixed(1)}" width="1.56" height="2.96" rx="0.25" fill="${edge}" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+        }
+        return `${s}<circle cx="${cx}" cy="${cy}" r="${r}" fill="${face}" stroke="#06080a" stroke-width="0.78"/><circle cx="${cx}" cy="${cy}" r="${(r - 2.1).toFixed(1)}" fill="none" stroke="#51575d" stroke-width="0.48" opacity="0.68"/>`;
+      };
+      let minuteTicks = "", hourBatons = "", cogTeeth = "", carbonFibre = "", strapStitch = "", brushed = "";
+      for (let i = 0; i < 60; i++) {
+        const d = i * 6, [x1, y1] = at(d, 68.2), [x2, y2] = at(d, i % 5 === 0 ? 65.3 : 66.7);
+        minuteTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 5 === 0 ? "#e0e4e4" : "#8e969b"}" stroke-width="${i % 5 === 0 ? "0.74" : "0.32"}" opacity="${i % 5 === 0 ? "0.92" : "0.62"}"/>`;
+      }
+      for (let i = 0; i < 12; i++) {
+        const d = i * 30, [x, y] = at(d, 58.5);
+        const w = i % 3 === 0 ? 3.2 : 2.25, h = i % 3 === 0 ? 10.0 : 8.0;
+        hourBatons += `<rect x="${(x - w / 2).toFixed(1)}" y="${(y - h / 2).toFixed(1)}" width="${w}" height="${h}" rx="0.55" fill="#e8ebea" stroke="#767d82" stroke-width="0.35" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+      }
+      for (let i = 0; i < 96; i++) {
+        const d = i * 3.75, [x, y] = at(d, 41.8);
+        cogTeeth += `<path d="M${(x - 0.82).toFixed(1)} ${(y - 1.65).toFixed(1)} h1.64 v3.3 h-1.64 Z" fill="${i % 2 ? "#101419" : "#24292e"}" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+      }
+      for (let i = 0; i < 54; i++) {
+        const x = 39 + ((i * 29) % 123), y = 25 + ((i * 47) % 151);
+        const len = 8 + (i % 5) * 4, d = (i * 31) % 180;
+        carbonFibre += `<path d="M${x} ${y} q${(len * 0.30).toFixed(1)} -${(2 + i % 4).toFixed(1)} ${len.toFixed(1)} ${(i % 2 ? 2.5 : -2.5).toFixed(1)}" fill="none" stroke="${i % 3 === 0 ? "#a0a6a6" : i % 3 === 1 ? "#5c6265" : "#25292c"}" stroke-width="${i % 4 === 0 ? "1.1" : "0.58"}" opacity="${i % 4 === 0 ? "0.74" : "0.58"}" transform="rotate(${d} ${x} ${y})"/>`;
+      }
+      for (const y of [8, 18, 182, 192]) strapStitch += `<path d="M75 ${y} H125" fill="none" stroke="#5c79a2" stroke-width="0.56" stroke-dasharray="2.3 1.55" opacity="0.93"/>`;
+      for (let i = 0; i < 46; i++) {
+        const d = i * 360 / 46, [x1, y1] = at(d, 53.5), [x2, y2] = at(d, 43.0);
+        brushed += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#596067" stroke-width="0.22" opacity="0.34"/>`;
+      }
+
+      return `<defs>
+        <linearGradient id="frk-strap-${id}" x1="0.12" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#243a59"/><stop offset="20%" stop-color="#0e1726"/><stop offset="57%" stop-color="#07101e"/><stop offset="100%" stop-color="#203753"/></linearGradient>
+        <radialGradient id="frk-carbon-${id}" cx="42%" cy="33%" r="82%"><stop offset="0%" stop-color="#737a7c"/><stop offset="28%" stop-color="#30363a"/><stop offset="68%" stop-color="#171b1e"/><stop offset="100%" stop-color="#080a0c"/></radialGradient>
+        <linearGradient id="frk-case-${id}" x1="0.10" y1="0" x2="0.90" y2="1"><stop offset="0%" stop-color="#5d6469"/><stop offset="18%" stop-color="#1c2227"/><stop offset="47%" stop-color="#090c0f"/><stop offset="72%" stop-color="#30383d"/><stop offset="100%" stop-color="#090b0e"/></linearGradient>
+        <radialGradient id="frk-dial-${id}" cx="45%" cy="31%" r="86%"><stop offset="0%" stop-color="#2a3035"/><stop offset="43%" stop-color="#171c20"/><stop offset="76%" stop-color="#0b0e11"/><stop offset="100%" stop-color="#050708"/></radialGradient>
+        <linearGradient id="frk-metal-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#e4e7e8"/><stop offset="23%" stop-color="#798187"/><stop offset="47%" stop-color="#30373c"/><stop offset="72%" stop-color="#d3d7d8"/><stop offset="100%" stop-color="#4e565c"/></linearGradient>
+        <radialGradient id="frk-blue-${id}" cx="36%" cy="28%" r="78%"><stop offset="0%" stop-color="#47637d"/><stop offset="60%" stop-color="#142234"/><stop offset="100%" stop-color="#080c11"/></radialGradient>
+        <filter id="frk-shadow-${id}" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.2" stdDeviation="1.55" flood-color="#020304" flood-opacity="0.58"/></filter>
+        <filter id="frk-handshadow-${id}" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="0.95" stdDeviation="0.66" flood-color="#000" flood-opacity="0.74"/></filter>
+        <clipPath id="frk-carbonclip-${id}"><path d="M52 45 L40 59 L37 92 L52 100 L66 75 L71 48 L62 38 Z M148 45 L160 59 L163 92 L148 100 L134 75 L129 48 L138 38 Z M52 155 L40 141 L37 108 L52 100 L66 125 L71 152 L62 162 Z M148 155 L160 141 L163 108 L148 100 L134 125 L129 152 L138 162 Z"/></clipPath>
+        <clipPath id="frk-dialclip-${id}"><circle cx="100" cy="100" r="67.8"/></clipPath>
+      </defs>
+      <!-- Dark navy alligator strap with its characteristic blue edge stitch. -->
+      <path d="M68 0 H132 L140 43 H60 Z M60 157 H140 L132 200 H68 Z" fill="url(#frk-strap-${id})" stroke="#05070b" stroke-width="0.82"/><path d="M72 0 H128 L135 43 H65 M65 157 H135 L128 200 H72" fill="none" stroke="#506b91" stroke-width="0.44" opacity="0.70"/>${strapStitch}<path d="M72 10 Q100 17 128 10 M69 27 Q100 35 131 27 M68 173 Q100 165 132 173 M71 190 Q100 183 129 190" fill="none" stroke="#304463" stroke-width="0.56" opacity="0.66"/>
+      <!-- Carbonium lives only in the angular outer side/lug pieces. -->
+      <path d="M52 45 L40 59 L37 92 L52 100 L66 75 L71 48 L62 38 Z M148 45 L160 59 L163 92 L148 100 L134 75 L129 48 L138 38 Z M52 155 L40 141 L37 108 L52 100 L66 125 L71 152 L62 162 Z M148 155 L160 141 L163 108 L148 100 L134 125 L129 152 L138 162 Z" fill="url(#frk-carbon-${id})" stroke="#080a0c" stroke-width="0.84"/><g clip-path="url(#frk-carbonclip-${id})">${carbonFibre}</g>
+      <!-- Stepped PVD-titanium case, polished sapphire lip and oversized crown. -->
+      <circle cx="100" cy="100" r="78.6" fill="url(#frk-case-${id})" filter="url(#frk-shadow-${id})"/><circle cx="100" cy="100" r="76.9" fill="#080b0d" stroke="#687177" stroke-width="0.52"/><circle cx="100" cy="100" r="74.6" fill="none" stroke="#a9b0b4" stroke-width="0.32" opacity="0.62"/><circle cx="100" cy="100" r="71.7" fill="#13181c" stroke="#272e33" stroke-width="1.2"/><rect x="174.0" y="95.3" width="8.9" height="9.4" rx="1.5" fill="url(#frk-case-${id})" stroke="#080a0c" stroke-width="0.52"/><circle cx="189.3" cy="100" r="8.7" fill="url(#frk-case-${id})" stroke="#07090b" stroke-width="0.76"/><path d="M184.3 94.6 V105.4 M186.2 92.8 V107.2 M188.3 91.6 V108.4 M190.4 91.5 V108.5 M192.5 92.0 V108 M194.4 93.6 V106.4" stroke="#778087" stroke-width="0.76"/><path d="M185.1 94.4 V105.6 M189.1 91.9 V108.1 M193.1 92.7 V107.3" stroke="#c1c6c7" stroke-width="0.27" opacity="0.74"/>
+      <circle cx="100" cy="100" r="69.4" fill="#050709"/><circle cx="100" cy="100" r="67.8" fill="url(#frk-dial-${id})" stroke="#2c353b" stroke-width="0.64"/>
+      <g clip-path="url(#frk-dialclip-${id})">${brushed}<circle cx="100" cy="100" r="57.2" fill="none" stroke="#525a60" stroke-width="0.38" opacity="0.50"/><circle cx="100" cy="100" r="54.6" fill="none" stroke="#090c0f" stroke-width="5.0" opacity="0.52"/></g>
+      <!-- Fixed rehaut, the twelve lume batons and the low horizontal maker plaque. -->
+      <circle cx="100" cy="100" r="68.2" fill="none" stroke="#bbc1c3" stroke-width="0.42" opacity="0.58"/>${minuteTicks}${hourBatons}<path d="M72 44 Q100 34.5 128 44 L126.4 52.2 Q100 47.4 73.6 52.2 Z" fill="#191e22" stroke="#535b60" stroke-width="0.60"/><text x="84.4" y="47.8" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.15" font-weight="700" letter-spacing="0.38" fill="#eef0ee">ULYSSE</text><g transform="translate(100 47.7)" fill="#e9ecea"><path d="M0 -5.1 V3.9 M-3.8 -1.0 H3.8 M-4.1 3.4 Q0 6.2 4.1 3.4 L3.25 2.15 Q0 4.1 -3.25 2.15 Z"/><circle cy="-5.1" r="1.15"/></g><text x="115.8" y="47.8" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.15" font-weight="700" letter-spacing="0.38" fill="#eef0ee">NARDIN</text>
+      <!-- This toothed circlet is fixed; the carousel and hour planet wheel move above it. -->
+      <circle cx="100" cy="100" r="43.4" fill="#10151a" stroke="#323a40" stroke-width="1.05"/>${cogTeeth}<circle cx="100" cy="100" r="38.8" fill="#151a1e" stroke="#090b0e" stroke-width="0.72"/>
+      <!-- Hour wheel: luminous fork and its dark planet gear are one hour-rate assembly. -->
+      <g class="hand-hour" filter="url(#frk-handshadow-${id})">${gear(100,132,16.4,38,"url(#frk-dial-"+id+")")}<circle cx="100" cy="132" r="10.7" fill="url(#frk-dial-${id})" stroke="#343b40" stroke-width="0.54"/><circle cx="100" cy="132" r="4.65" fill="#12171b" stroke="#8d969a" stroke-width="0.58"/><circle cx="100" cy="132" r="1.45" fill="url(#frk-metal-${id})"/><path d="M100 104 L92.5 95.5 L91.1 66.8 L96.9 54.6 L100 66.6 L103.1 54.6 L108.9 66.8 L107.5 95.5 Z" fill="#ecf0ef" stroke="#747c80" stroke-width="0.78" stroke-linejoin="round"/><path d="M100 99 L96.5 92.9 L96.1 69.4 L100 62.4 L103.9 69.4 L103.5 92.9 Z" fill="#4d565b"/><path d="M100 95.8 L98.5 72.2 L100 67.1 L101.5 72.2 Z" fill="#dce3df"/></g>
+      <!-- The full flying carousel is the minute hand: bridge, arrow, gear train and balance tail. -->
+      <g class="hand-min" filter="url(#frk-handshadow-${id})"><path d="M100 104 L92.5 98.3 L93.8 62.5 L100 35.6 L106.2 62.5 L107.5 98.3 L123.0 119.0 L121.4 132.5 L111.4 125.3 L100 108.1 L88.6 125.3 L78.6 132.5 L77.0 119.0 Z" fill="url(#frk-metal-${id})" stroke="#11161a" stroke-width="0.85" stroke-linejoin="round"/><path d="M100 98.6 L97.0 92.4 L97.7 63.7 L100 51.0 L102.3 63.7 L103.0 92.4 Z" fill="#10151a" stroke="#c2c8ca" stroke-width="0.52"/><path d="M100 32.4 L91.4 52.6 L97.0 49.0 L100 57.7 L103 49.0 L108.6 52.6 Z" fill="#eef1ef" stroke="#6e767b" stroke-width="0.65"/><path d="M103.9 104 L121.8 116.6 L117.5 121.9 L105.5 114.4 Z" fill="#141a1f" stroke="#b9c0c2" stroke-width="0.48"/><circle cx="100" cy="82" r="6.1" fill="#151b20" stroke="#c1c7c8" stroke-width="0.64"/><circle cx="100" cy="82" r="3.2" fill="url(#frk-metal-${id})"/><circle cx="100" cy="112" r="4.4" fill="#171c20" stroke="#b9c0c1" stroke-width="0.55"/><circle cx="100" cy="112" r="1.55" fill="#9ca6aa"/><circle cx="100" cy="60" r="1.52" fill="#e4e7e6" stroke="#333a3f" stroke-width="0.44"/><circle cx="117.2" cy="120.5" r="1.55" fill="#e4e7e6" stroke="#333a3f" stroke-width="0.44"/>${gear(100,130,15.1,34,"url(#frk-blue-"+id+")")}<circle cx="100" cy="130" r="12.2" fill="none" stroke="#d6dbd9" stroke-width="0.62"/>${(() => { let s = ""; for (let i = 0; i < 12; i++) { const d = i * 30, [x, y] = at(d, 10.8, 100, 130); s += `<line x1="100" y1="130" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#91a6b4" stroke-width="0.56"/>`; } return s; })()}<circle cx="100" cy="130" r="4.2" fill="#12171c" stroke="#bfc8ca" stroke-width="0.74"/><circle cx="100" cy="130" r="1.82" fill="url(#frk-metal-${id})"/></g>
+      <circle cx="100" cy="100" r="5.2" fill="#171d22" stroke="#bfc7c9" stroke-width="0.86"/><circle cx="100" cy="100" r="2.55" fill="url(#frk-metal-${id})" stroke="#30383d" stroke-width="0.42"/><circle cx="100" cy="100" r="0.92" fill="#141d28"/><path d="M43 57 C62 40 90 39 112 51 C82 45 61 57 43 84 Z" fill="#fff" opacity="0.075"/>
+      <circle cx="100" cy="100" r="68.3" fill="none" stroke="#d2d7d7" stroke-width="0.35" opacity="0.36"/>`;
+    }
+  };
+  LOGOS.freak = () => "";
+  FIDELITY_OVERLAYS.freak = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
