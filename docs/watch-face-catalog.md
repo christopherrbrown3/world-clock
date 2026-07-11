@@ -40,7 +40,7 @@ Total faces: 62.
 | `elprimero` | Zenith Chronomaster Sport 03.3100.3600/69.M3100 | `sweep` |
 | `overseas` | Vacheron Constantin Overseas Self-Winding 4520V/210A-B128 | `sweep` |
 | `bigbang` | Hublot Big Bang Unico Red Magic 42 | `sweep` |
-| `prx` | Tissot PRX | `sweep` |
+| `prx` | Tissot PRX 40mm Powermatic 80 T137.407.11.041.00 | `sweep` |
 | `khaki` | Hamilton Khaki Field | `sweep` |
 | `br03` | Bell & Ross BR 03 | `sweep` |
 | `twinbell` | Westclox Twin-Bell Alarm | `tick` |
