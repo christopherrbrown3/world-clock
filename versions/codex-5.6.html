@@ -12392,6 +12392,66 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.radiomir = () => "";
   FIDELITY_OVERLAYS.radiomir = () => "";
 
+  // ───────────── TAG Heuer Carrera Chronograph CBN2011.BA0642 ─────────────
+  // Reference object: 42 mm TH20-00 Carrera with blue sunray dial and steel bracelet.
+  FACES.carrera = {
+    name: "TAG Heuer Carrera Chronograph CBN2011.BA0642",
+    cadence: "sweep",
+    render() {
+      const id = "carreracbn2011";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const S9 = [68,100], S3 = [132,100], S6 = [100,132];
+      let bracelet = "", markers = "", outer = "", sunrays = "";
+      for (let i = 0; i < 72; i++) {
+        const d = i * 5, [x1,y1] = at(d,62.3), [x2,y2] = at(d,18.0);
+        sunrays += `<line x1="100" y1="100" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="#4d8ac8" stroke-width="0.48" opacity="${i % 2 ? "0.085" : "0.030"}"/>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const d = i * 6, [x1,y1] = at(d,64.1), [x2,y2] = at(d,i % 5 === 0 ? 60.1 : 62.0);
+        outer += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 5 === 0 ? "#d7e4f0" : "#8ca9c4"}" stroke-width="${i % 5 === 0 ? "0.62" : "0.27"}" opacity="${i % 5 === 0 ? "0.88" : "0.66"}"/>`;
+      }
+      for (let h = 0; h < 12; h++) {
+        if (h === 3 || h === 6 || h === 9) continue;
+        const d = h * 30, [x,y] = at(d,51.0);
+        const w = h === 0 ? 3.7 : 2.65, hh = h === 0 ? 11.4 : 10.2;
+        markers += `<rect x="${(x - w / 2).toFixed(1)}" y="${(y - hh / 2).toFixed(1)}" width="${w}" height="${hh}" rx="0.52" fill="url(#ca-metal-${id})" stroke="#4b6d8d" stroke-width="0.42" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/><rect x="${(x - (w - 1.15) / 2).toFixed(1)}" y="${(y - (hh - 2.1) / 2).toFixed(1)}" width="${(w - 1.15).toFixed(1)}" height="${(hh - 2.1).toFixed(1)}" rx="0.32" fill="#dff0e5" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+      }
+      for (let i = 0; i < 5; i++) {
+        const y = i * 10.4, by = 158.4 + i * 10.4, w = 40 - i * 1.2;
+        bracelet += `<path d="M${(100 - w).toFixed(1)} ${y} H${(100 + w).toFixed(1)} L${(100 + w - 1.9).toFixed(1)} ${(y + 11.1).toFixed(1)} H${(100 - w + 1.9).toFixed(1)} Z" fill="url(#ca-brush-${id})" stroke="#59656c" stroke-width="0.42"/><path d="M${(100 - w - 11.7).toFixed(1)} ${y + 1} H${(100 - w - 1.3).toFixed(1)} L${(100 - w + 1.6).toFixed(1)} ${(y + 10.1).toFixed(1)} H${(100 - w - 9.4).toFixed(1)} Z M${(100 + w + 1.3).toFixed(1)} ${y + 1} H${(100 + w + 11.7).toFixed(1)} L${(100 + w + 9.4).toFixed(1)} ${(y + 10.1).toFixed(1)} H${(100 + w - 1.6).toFixed(1)} Z" fill="url(#ca-side-${id})" stroke="#59656c" stroke-width="0.34"/><path d="M${(100 - w).toFixed(1)} ${by} H${(100 + w).toFixed(1)} L${(100 + w - 1.9).toFixed(1)} ${(by + 11.1).toFixed(1)} H${(100 - w + 1.9).toFixed(1)} Z" fill="url(#ca-brush-${id})" stroke="#59656c" stroke-width="0.42"/><path d="M${(100 - w - 11.7).toFixed(1)} ${by + 1} H${(100 - w - 1.3).toFixed(1)} L${(100 - w + 1.6).toFixed(1)} ${(by + 10.1).toFixed(1)} H${(100 - w - 9.4).toFixed(1)} Z M${(100 + w + 1.3).toFixed(1)} ${by + 1} H${(100 + w + 11.7).toFixed(1)} L${(100 + w + 9.4).toFixed(1)} ${(by + 10.1).toFixed(1)} H${(100 + w - 1.6).toFixed(1)} Z" fill="url(#ca-side-${id})" stroke="#59656c" stroke-width="0.34"/>`;
+      }
+      const sub = (cx,cy,r,labels) => {
+        let s = `<circle cx="${cx}" cy="${cy}" r="${r + 1.0}" fill="#0b376a" stroke="#1d639f" stroke-width="0.86"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#ca-sub-${id})" stroke="#0b2b55" stroke-width="0.60"/>`;
+        for (let i = 0; i < 60; i++) {
+          const d = i * 6, [x1,y1] = at(d,r - .55,cx,cy), [x2,y2] = at(d,r - (i % 5 === 0 ? 3.1 : 1.65),cx,cy);
+          s += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 5 === 0 ? "#c9e1ef" : "#769ec4"}" stroke-width="${i % 5 === 0 ? "0.46" : "0.22"}"/>`;
+        }
+        labels.forEach(([t,d]) => { const [x,y] = at(d,r - 5.3,cx,cy); s += `<text x="${x.toFixed(1)}" y="${(y + .26).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.25" font-weight="700" fill="#d6e7f3">${t}</text>`; });
+        return s;
+      };
+      return `<defs>${caseDefs(id,"steel")}
+        <linearGradient id="ca-brush-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f6f8f8"/><stop offset="45%" stop-color="#b4bec4"/><stop offset="100%" stop-color="#657078"/></linearGradient>
+        <linearGradient id="ca-side-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#67747c"/><stop offset="42%" stop-color="#eff4f5"/><stop offset="100%" stop-color="#59656b"/></linearGradient>
+        <radialGradient id="ca-dial-${id}" cx="43%" cy="31%" r="88%"><stop offset="0%" stop-color="#2f75b7"/><stop offset="45%" stop-color="#124f93"/><stop offset="83%" stop-color="#082a5d"/><stop offset="100%" stop-color="#041631"/></radialGradient>
+        <radialGradient id="ca-sub-${id}" cx="42%" cy="31%" r="82%"><stop offset="0%" stop-color="#1f5a9c"/><stop offset="100%" stop-color="#0a315f"/></radialGradient>
+        <linearGradient id="ca-metal-${id}" x1="0.10" y1="0" x2="0.90" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="40%" stop-color="#c2cbd0"/><stop offset="67%" stop-color="#657278"/><stop offset="85%" stop-color="#f5f8f9"/><stop offset="100%" stop-color="#7a858b"/></linearGradient>
+        <linearGradient id="ca-glass-${id}" x1="0" y1="0" x2="0.86" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.20"/><stop offset="38%" stop-color="#fff" stop-opacity="0.026"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="ca-handshadow-${id}" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB"><feDropShadow dx="0.68" dy="0.92" stdDeviation="0.55" flood-color="#001326" flood-opacity="0.68"/></filter>
+        <clipPath id="ca-dialclip-${id}"><circle cx="100" cy="100" r="63.3"/></clipPath>
+      </defs>
+      <!-- Triple-row bracelet, direct upper/lower lugs, 42 mm brushed/polished steel Carrera case. -->
+      ${bracelet}<path d="M61 53 L64 37 Q66 31 73 31 H86 L85 50 Z M139 53 L136 37 Q134 31 127 31 H114 L115 50 Z M61 147 L64 163 Q66 169 73 169 H86 L85 150 Z M139 147 L136 163 Q134 169 127 169 H114 L115 150 Z" fill="url(#ca-brush-${id})" stroke="#59656c" stroke-width="0.60"/><circle cx="100" cy="100" r="75.0" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="73.8" fill="none" stroke="#f4f7f8" stroke-width="0.48" opacity="0.74"/><circle cx="100" cy="100" r="69.2" fill="url(#bezel-${id})" stroke="#5d6970" stroke-width="0.56"/><circle cx="100" cy="100" r="64.5" fill="#0d3b71" stroke="#5e8fbf" stroke-width="0.76"/><circle cx="100" cy="100" r="63.3" fill="url(#ca-dial-${id})" stroke="#071d3d" stroke-width="0.72"/><g fill="url(#ca-brush-${id})" stroke="#56636b" stroke-width="0.55"><path d="M165 66 L181 58 L187 65 L172 75 Z"/><path d="M165 134 L181 142 L187 135 L172 125 Z"/></g><rect x="170.0" y="94.4" width="9.8" height="11.2" rx="1.45" fill="url(#case-${id})" stroke="#56636b" stroke-width="0.46"/><circle cx="187.0" cy="100" r="8.5" fill="url(#ca-brush-${id})" stroke="#56636b" stroke-width="0.66"/><path d="M181.8 94.7 V105.3 M183.5 93.0 V107.0 M185.2 92.0 V108.0 M186.9 91.7 V108.3 M188.6 92.0 V108.0 M190.3 93.0 V107.0 M192.0 94.7 V105.3" stroke="#536068" stroke-width="0.58"/>
+      <g clip-path="url(#ca-dialclip-${id})">${sunrays}${outer}${markers}${sub(S9[0],S9[1],14.6,[["12",0],["4",120],["8",240]])}${sub(S3[0],S3[1],14.6,[["30",0],["10",120],["20",240]])}${sub(S6[0],S6[1],14.2,[["60",0],["20",120],["40",240]])}<g transform="translate(100 74.0)"><path d="M-8 -5 H8 V2.5 Q5 7 0 8.5 Q-5 7 -8 2.5 Z" fill="#0d4e91" stroke="#d9e6ef" stroke-width="0.54"/><text x="0" y="-0.7" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="3.1" font-weight="800" fill="#fff">TAG</text><text x="0" y="3.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.35" font-weight="700" fill="#fff">HEUER</text></g><text x="100" y="65.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="4.45" font-weight="700" letter-spacing="1.40" fill="#e9f1f6">CARRERA</text><text x="100" y="119.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.35" font-weight="700" letter-spacing="0.56" fill="#d7e8f3">CALIBRE TH20-00</text><text x="100" y="123.0" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.00" font-weight="700" letter-spacing="0.68" fill="#d7e8f3">80 HOURS</text><g class="hand-subsec" data-pivot="100 132"><path d="M100 135.8 L99.34 132 L100 119.3 L100.66 132 Z" fill="#e7f0f2" stroke="#426b8d" stroke-width="0.25"/></g><circle cx="100" cy="132" r="1.45" fill="#e7f0f2"/><path d="M68 104 L67.35 100 L68 88.2 L68.65 100 Z" fill="#dce9ef"/><circle cx="68" cy="100" r="1.40" fill="#dce9ef"/><path d="M132 104 L131.35 100 L132 88.2 L132.65 100 Z" fill="#dce9ef"/><circle cx="132" cy="100" r="1.40" fill="#dce9ef"/><rect x="94.1" y="137.2" width="11.8" height="7.3" rx="0.64" fill="#0b2c57" stroke="#8ea9bf" stroke-width="0.48"/><text class="date-win" data-date="dom" x="100" y="140.9" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="4.1" font-weight="700" fill="#f1f5f3">25</text><text x="86.8" y="155.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.86" font-weight="700" letter-spacing="0.31" fill="#e8f0f5">SWISS</text><text x="113.2" y="155.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.86" font-weight="700" letter-spacing="0.31" fill="#e8f0f5">MADE</text><path d="M46 60 C66 43 92 43 114 55 C85 50 63 60 46 87 Z" fill="url(#ca-glass-${id})" opacity="0.24"/></g>
+      <!-- Rhodium time hands move; the central chronograph seconds is shown parked at twelve. -->
+      <g filter="url(#ca-handshadow-${id})"><g class="hand-hour"><path d="M100 106 L95.5 98.2 L96.7 81.5 L100 61.7 L103.3 81.5 L104.5 98.2 Z" fill="url(#ca-metal-${id})" stroke="#224361" stroke-width="0.56"/><path d="M100 97.0 L98.2 80.8 L100 69.0 L101.8 80.8 Z" fill="#dff0e5"/></g><g class="hand-min"><path d="M100 107 L97.3 99.2 L98.15 54.6 L100 38.3 L101.85 54.6 L102.7 99.2 Z" fill="url(#ca-metal-${id})" stroke="#224361" stroke-width="0.56"/><path d="M100 97.7 L98.95 57.2 L100 46.0 L101.05 57.2 Z" fill="#dff0e5"/></g><path d="M100 112 L99.55 100 L99.55 37.3 L100 29.6 L100.45 37.3 L100.45 100 L100 112 Z" fill="#e8eef0" stroke="#406681" stroke-width="0.22"/></g><circle cx="100" cy="100" r="3.35" fill="url(#ca-metal-${id})" stroke="#224361" stroke-width="0.48"/><circle cx="100" cy="100" r="1.18" fill="#f0f5f3"/><circle cx="100" cy="100" r="63.3" fill="none" stroke="#c5dce8" stroke-width="0.34" opacity="0.54"/>`;
+    }
+  };
+  LOGOS.carrera = () => "";
+  FIDELITY_OVERLAYS.carrera = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
