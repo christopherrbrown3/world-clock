@@ -9116,8 +9116,10 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       <linearGradient id="glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.22"/><stop offset="43%" stop-color="#fff" stop-opacity="0.04"/><stop offset="63%" stop-color="#fff" stop-opacity="0"/></linearGradient>
       <radialGradient id="vignette-${id}" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#000" stop-opacity="0"/><stop offset="80%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity="0.13"/></radialGradient></defs>
 
-      <path d="M54 14 C65 3 82 5 92 27 H108 C118 5 135 3 146 14 L136 39 C124 34 112 32 100 32 C88 32 76 34 64 39 Z" fill="url(#case-${id})"/>
-      <path d="M54 186 C65 197 82 195 92 173 H108 C118 195 135 197 146 186 L136 161 C124 166 112 168 100 168 C88 168 76 166 64 161 Z" fill="url(#case-${id})"/>
+      <!-- Oyster bracelet widens at the case, then tapers toward the clasp. -->
+      <path d="M66 0 H134 L141 43 H59 Z M59 157 H141 L134 200 H66 Z" fill="url(#case-${id})" stroke="#68747d" stroke-width="0.52"/>
+      <path d="M84 0 H116 L120 43 H80 Z M80 157 H120 L116 200 H84 Z" fill="#d8e0e5" opacity="0.64" stroke="#6d7880" stroke-width="0.34"/><path d="M84 13 H116 M82 28 H118 M82 172 H118 M84 187 H116" stroke="#68747d" stroke-width="0.56" opacity="0.72"/>
+      <path d="M60 55 L63 37 Q65 31 73 31 H86 L85 50 Z M140 55 L137 37 Q135 31 127 31 H114 L115 50 Z M60 145 L63 163 Q65 169 73 169 H86 L85 150 Z M140 145 L137 163 Q135 169 127 169 H114 L115 150 Z" fill="url(#case-${id})" stroke="#68747d" stroke-width="0.52"/>
       ${crown(id,"steel",100,true)}${pushers(id)}
       <circle cx="100" cy="100" r="96.5" fill="url(#case-${id})" filter="url(#shadow-${id})"/>
       ${scallop}
@@ -12069,9 +12071,12 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
           indices += `<rect x="${(x - 2.3).toFixed(1)}" y="${(y - 6.7).toFixed(1)}" width="4.6" height="13.4" rx="0.8" fill="url(#ex-metal-${id})" stroke="#777f83" stroke-width="0.42" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/><rect x="${(x - 1.35).toFixed(1)}" y="${(y - 5.35).toFixed(1)}" width="2.7" height="10.7" rx="0.45" fill="#eef3e8" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
         }
       }
+      const braceletLink = (y, inner, outer) => `<path d="M${inner.toFixed(1)} ${y} H${outer.toFixed(1)} L${(outer - 1.3).toFixed(1)} ${(y + 10.6).toFixed(1)} H${(inner + 1.3).toFixed(1)} Z" fill="url(#ex-brush-${id})" stroke="#596269" stroke-width="0.40"/><path d="M${(inner - 12.5).toFixed(1)} ${y + 1} H${(inner - 1.5).toFixed(1)} L${(inner + 1.7).toFixed(1)} ${(y + 10.0).toFixed(1)} H${(inner - 10.3).toFixed(1)} Z M${(outer + 1.5).toFixed(1)} ${y + 1} H${(outer + 12.5).toFixed(1)} L${(outer + 10.3).toFixed(1)} ${(y + 10.0).toFixed(1)} H${(outer - 1.7).toFixed(1)} Z" fill="url(#ex-side-${id})" stroke="#596269" stroke-width="0.38"/>`;
       for (let i = 0; i < 5; i++) {
-        const y = 2 + i * 10, by = 158 + i * 10, inner = 77 + i * 1.3, outer = 123 - i * 1.3;
-        bracelet += `<path d="M${inner.toFixed(1)} ${y} H${outer.toFixed(1)} L${(outer - 1.3).toFixed(1)} ${(y + 10.6).toFixed(1)} H${(inner + 1.3).toFixed(1)} Z" fill="url(#ex-brush-${id})" stroke="#596269" stroke-width="0.40"/><path d="M${(inner - 12.5).toFixed(1)} ${y + 1} H${(inner - 1.5).toFixed(1)} L${(inner + 1.7).toFixed(1)} ${(y + 10.0).toFixed(1)} H${(inner - 10.3).toFixed(1)} Z M${(outer + 1.5).toFixed(1)} ${y + 1} H${(outer + 12.5).toFixed(1)} L${(outer + 10.3).toFixed(1)} ${(y + 10.0).toFixed(1)} H${(outer - 1.7).toFixed(1)} Z" fill="url(#ex-side-${id})" stroke="#596269" stroke-width="0.38"/><path d="M${inner.toFixed(1)} ${by} H${outer.toFixed(1)} L${(outer - 1.3).toFixed(1)} ${(by + 10.6).toFixed(1)} H${(inner + 1.3).toFixed(1)} Z" fill="url(#ex-brush-${id})" stroke="#596269" stroke-width="0.40"/><path d="M${(inner - 12.5).toFixed(1)} ${by + 1} H${(inner - 1.5).toFixed(1)} L${(inner + 1.7).toFixed(1)} ${(by + 10.0).toFixed(1)} H${(inner - 10.3).toFixed(1)} Z M${(outer + 1.5).toFixed(1)} ${by + 1} H${(outer + 12.5).toFixed(1)} L${(outer + 10.3).toFixed(1)} ${(by + 10.0).toFixed(1)} H${(outer - 1.7).toFixed(1)} Z" fill="url(#ex-side-${id})" stroke="#596269" stroke-width="0.38"/>`;
+        const y = 2 + i * 10, by = 158 + i * 10;
+        const topInner = 77 + (4 - i) * 1.3, topOuter = 123 - (4 - i) * 1.3;
+        const bottomInner = 77 + i * 1.3, bottomOuter = 123 - i * 1.3;
+        bracelet += braceletLink(y, topInner, topOuter) + braceletLink(by, bottomInner, bottomOuter);
       }
       return `<defs>${caseDefs(id,"steel")}
         <linearGradient id="ex-brush-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f4f7f8"/><stop offset="45%" stop-color="#aab3b9"/><stop offset="100%" stop-color="#606970"/></linearGradient>
@@ -12124,9 +12129,11 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       rail += side(67.8, 66.2, 4.32, 0, 16) + side(133.8, 67.8, 0, 4.32, 16) + side(132.2, 133.8, -4.32, 0, 16) + side(66.2, 132.2, 0, -4.32, 16);
       const screw = (x, y, a) => `<g transform="rotate(${a} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="3.25" ry="3.25" fill="url(#sa-screw-${id})" stroke="#555e65" stroke-width="0.43"/><path d="M${(x - 2.05).toFixed(1)} ${y} H${(x + 2.05).toFixed(1)}" stroke="#374047" stroke-width="0.60" stroke-linecap="round"/></g>`;
       const bezelScrews = [[72,42,12],[128,42,-12],[43,70,78],[43,130,-78],[72,158,-12],[128,158,12],[157,70,-78],[157,130,78]].map(([x,y,a]) => screw(x,y,a)).join("");
+      const braceletLink = (y, w) => `<path d="M${(100 - w).toFixed(1)} ${y} H${(100 + w).toFixed(1)} L${(100 + w - 2.2).toFixed(1)} ${(y + 10.8).toFixed(1)} H${(100 - w + 2.2).toFixed(1)} Z" fill="url(#sa-brush-${id})" stroke="#626a70" stroke-width="0.44"/><path d="M${(100 - w + 3).toFixed(1)} ${y + 1.2} H${(100 + w - 3).toFixed(1)}" stroke="#f7fafb" stroke-width="0.42" opacity="0.54"/>${screw(100 - w + 9,y + 5.4,22)}${screw(100 + w - 9,y + 5.4,-22)}`;
       for (let i = 0; i < 4; i++) {
-        const y = 0 + i * 10.6, by = 157.6 + i * 10.6, w = 46 - i * 1.35;
-        bracelet += `<path d="M${(100 - w).toFixed(1)} ${y} H${(100 + w).toFixed(1)} L${(100 + w - 2.2).toFixed(1)} ${(y + 10.8).toFixed(1)} H${(100 - w + 2.2).toFixed(1)} Z" fill="url(#sa-brush-${id})" stroke="#626a70" stroke-width="0.44"/><path d="M${(100 - w + 3).toFixed(1)} ${y + 1.2} H${(100 + w - 3).toFixed(1)}" stroke="#f7fafb" stroke-width="0.42" opacity="0.54"/><path d="M${(100 - w).toFixed(1)} ${by} H${(100 + w).toFixed(1)} L${(100 + w - 2.2).toFixed(1)} ${(by + 10.8).toFixed(1)} H${(100 - w + 2.2).toFixed(1)} Z" fill="url(#sa-brush-${id})" stroke="#626a70" stroke-width="0.44"/><path d="M${(100 - w + 3).toFixed(1)} ${by + 1.2} H${(100 + w - 3).toFixed(1)}" stroke="#f7fafb" stroke-width="0.42" opacity="0.54"/>${screw(100 - w + 9,y + 5.4,22)}${screw(100 + w - 9,y + 5.4,-22)}${screw(100 - w + 9,by + 5.4,22)}${screw(100 + w - 9,by + 5.4,-22)}`;
+        const y = i * 10.6, by = 157.6 + i * 10.6;
+        const topW = 46 - (3 - i) * 1.35, bottomW = 46 - i * 1.35;
+        bracelet += braceletLink(y, topW) + braceletLink(by, bottomW);
       }
       return `<defs>
         <linearGradient id="sa-brush-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f5f7f7"/><stop offset="42%" stop-color="#bec5c9"/><stop offset="100%" stop-color="#687178"/></linearGradient>
@@ -12231,9 +12238,11 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
           markers += `<polygon points="${x.toFixed(1)},${(y - 7.2).toFixed(1)} ${(x + 4.1).toFixed(1)},${(y + 5.0).toFixed(1)} ${(x - 4.1).toFixed(1)},${(y + 5.0).toFixed(1)}" fill="#f3f0d7" stroke="#70756f" stroke-width="0.58" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
         }
       }
+      const braceletLink = (y, wide) => `<path d="M${(100 - wide).toFixed(1)} ${y} H${(100 + wide).toFixed(1)} L${(100 + wide - 2.4).toFixed(1)} ${(y + 12.0).toFixed(1)} H${(100 - wide + 2.4).toFixed(1)} Z" fill="url(#ff-brush-${id})" stroke="#59636a" stroke-width="0.46"/><path d="M${(100 - wide - 13).toFixed(1)} ${y + 1} H${(100 - wide - 1).toFixed(1)} L${(100 - wide + 1.6).toFixed(1)} ${(y + 11).toFixed(1)} H${(100 - wide - 10.5).toFixed(1)} Z M${(100 + wide + 1).toFixed(1)} ${y + 1} H${(100 + wide + 13).toFixed(1)} L${(100 + wide + 10.5).toFixed(1)} ${(y + 11).toFixed(1)} H${(100 + wide - 1.6).toFixed(1)} Z" fill="url(#ff-side-${id})" stroke="#59636a" stroke-width="0.38"/>`;
       for (let i = 0; i < 4; i++) {
-        const y = 0 + i * 11.5, by = 154 + i * 11.5, wide = 37 - i * 1.2;
-        bracelet += `<path d="M${(100 - wide).toFixed(1)} ${y} H${(100 + wide).toFixed(1)} L${(100 + wide - 2.4).toFixed(1)} ${(y + 12.0).toFixed(1)} H${(100 - wide + 2.4).toFixed(1)} Z" fill="url(#ff-brush-${id})" stroke="#59636a" stroke-width="0.46"/><path d="M${(100 - wide - 13).toFixed(1)} ${y + 1} H${(100 - wide - 1).toFixed(1)} L${(100 - wide + 1.6).toFixed(1)} ${(y + 11).toFixed(1)} H${(100 - wide - 10.5).toFixed(1)} Z M${(100 + wide + 1).toFixed(1)} ${y + 1} H${(100 + wide + 13).toFixed(1)} L${(100 + wide + 10.5).toFixed(1)} ${(y + 11).toFixed(1)} H${(100 + wide - 1.6).toFixed(1)} Z" fill="url(#ff-side-${id})" stroke="#59636a" stroke-width="0.38"/><path d="M${(100 - wide).toFixed(1)} ${by} H${(100 + wide).toFixed(1)} L${(100 + wide - 2.4).toFixed(1)} ${(by + 12.0).toFixed(1)} H${(100 - wide + 2.4).toFixed(1)} Z" fill="url(#ff-brush-${id})" stroke="#59636a" stroke-width="0.46"/><path d="M${(100 - wide - 13).toFixed(1)} ${by + 1} H${(100 - wide - 1).toFixed(1)} L${(100 - wide + 1.6).toFixed(1)} ${(by + 11).toFixed(1)} H${(100 - wide - 10.5).toFixed(1)} Z M${(100 + wide + 1).toFixed(1)} ${by + 1} H${(100 + wide + 13).toFixed(1)} L${(100 + wide + 10.5).toFixed(1)} ${(by + 11).toFixed(1)} H${(100 + wide - 1.6).toFixed(1)} Z" fill="url(#ff-side-${id})" stroke="#59636a" stroke-width="0.38"/>`;
+        const y = i * 11.5, by = 154 + i * 11.5;
+        const topWide = 37 - (3 - i) * 1.2, bottomWide = 37 - i * 1.2;
+        bracelet += braceletLink(y, topWide) + braceletLink(by, bottomWide);
       }
       const bezelNum = (s, deg) => {
         const [x,y] = at(deg, 69.0);
@@ -12419,9 +12428,11 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         const w = h === 0 ? 3.7 : 2.65, hh = h === 0 ? 11.4 : 10.2;
         markers += `<rect x="${(x - w / 2).toFixed(1)}" y="${(y - hh / 2).toFixed(1)}" width="${w}" height="${hh}" rx="0.52" fill="url(#ca-metal-${id})" stroke="#4b6d8d" stroke-width="0.42" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/><rect x="${(x - (w - 1.15) / 2).toFixed(1)}" y="${(y - (hh - 2.1) / 2).toFixed(1)}" width="${(w - 1.15).toFixed(1)}" height="${(hh - 2.1).toFixed(1)}" rx="0.32" fill="#dff0e5" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
       }
+      const braceletLink = (y, w) => `<path d="M${(100 - w).toFixed(1)} ${y} H${(100 + w).toFixed(1)} L${(100 + w - 1.9).toFixed(1)} ${(y + 11.1).toFixed(1)} H${(100 - w + 1.9).toFixed(1)} Z" fill="url(#ca-brush-${id})" stroke="#59656c" stroke-width="0.42"/><path d="M${(100 - w - 11.7).toFixed(1)} ${y + 1} H${(100 - w - 1.3).toFixed(1)} L${(100 - w + 1.6).toFixed(1)} ${(y + 10.1).toFixed(1)} H${(100 - w - 9.4).toFixed(1)} Z M${(100 + w + 1.3).toFixed(1)} ${y + 1} H${(100 + w + 11.7).toFixed(1)} L${(100 + w + 9.4).toFixed(1)} ${(y + 10.1).toFixed(1)} H${(100 + w - 1.6).toFixed(1)} Z" fill="url(#ca-side-${id})" stroke="#59656c" stroke-width="0.34"/>`;
       for (let i = 0; i < 5; i++) {
-        const y = i * 10.4, by = 158.4 + i * 10.4, w = 40 - i * 1.2;
-        bracelet += `<path d="M${(100 - w).toFixed(1)} ${y} H${(100 + w).toFixed(1)} L${(100 + w - 1.9).toFixed(1)} ${(y + 11.1).toFixed(1)} H${(100 - w + 1.9).toFixed(1)} Z" fill="url(#ca-brush-${id})" stroke="#59656c" stroke-width="0.42"/><path d="M${(100 - w - 11.7).toFixed(1)} ${y + 1} H${(100 - w - 1.3).toFixed(1)} L${(100 - w + 1.6).toFixed(1)} ${(y + 10.1).toFixed(1)} H${(100 - w - 9.4).toFixed(1)} Z M${(100 + w + 1.3).toFixed(1)} ${y + 1} H${(100 + w + 11.7).toFixed(1)} L${(100 + w + 9.4).toFixed(1)} ${(y + 10.1).toFixed(1)} H${(100 + w - 1.6).toFixed(1)} Z" fill="url(#ca-side-${id})" stroke="#59656c" stroke-width="0.34"/><path d="M${(100 - w).toFixed(1)} ${by} H${(100 + w).toFixed(1)} L${(100 + w - 1.9).toFixed(1)} ${(by + 11.1).toFixed(1)} H${(100 - w + 1.9).toFixed(1)} Z" fill="url(#ca-brush-${id})" stroke="#59656c" stroke-width="0.42"/><path d="M${(100 - w - 11.7).toFixed(1)} ${by + 1} H${(100 - w - 1.3).toFixed(1)} L${(100 - w + 1.6).toFixed(1)} ${(by + 10.1).toFixed(1)} H${(100 - w - 9.4).toFixed(1)} Z M${(100 + w + 1.3).toFixed(1)} ${by + 1} H${(100 + w + 11.7).toFixed(1)} L${(100 + w + 9.4).toFixed(1)} ${(by + 10.1).toFixed(1)} H${(100 + w - 1.6).toFixed(1)} Z" fill="url(#ca-side-${id})" stroke="#59656c" stroke-width="0.34"/>`;
+        const y = i * 10.4, by = 158.4 + i * 10.4;
+        const topW = 40 - (4 - i) * 1.2, bottomW = 40 - i * 1.2;
+        bracelet += braceletLink(y, topW) + braceletLink(by, bottomW);
       }
       const sub = (cx,cy,r,labels) => {
         let s = `<circle cx="${cx}" cy="${cy}" r="${r + 1.0}" fill="#0b376a" stroke="#1d639f" stroke-width="0.86"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#ca-sub-${id})" stroke="#0b2b55" stroke-width="0.60"/>`;
@@ -12577,10 +12588,10 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         <clipPath id="mg-clip-${id}"><circle cx="100" cy="100" r="63.1"/></clipPath>
       </defs>
       <!-- Vertical three-link Oyster bracelet: brushed outer links, polished centre. -->
-      <path d="M60 0 H140 L135 46 H65 Z M65 154 H135 L140 200 H60 Z" fill="url(#mg-brush-${id})" stroke="#718087" stroke-width="0.55"/>
-      <path d="M80 0 H120 L117 46 H83 Z M83 154 H117 L120 200 H80 Z" fill="url(#mg-polish-${id})" stroke="#7d8a91" stroke-width="0.38"/>
-      <path d="M60 0 H80 L83 46 H65 Z M120 0 H140 L135 46 H117 Z M65 154 H83 L80 200 H60 Z M117 154 H135 L140 200 H120 Z" fill="url(#mg-brush-${id})" stroke="#8a979d" stroke-width="0.34"/>
-      <path d="M62 16 H138 M64 32 H136 M64 168 H136 M62 184 H138" stroke="#738087" stroke-width="0.66" opacity="0.72"/><path d="M82 16 H118 M83 32 H117 M83 168 H117 M82 184 H118" stroke="#f8fbfc" stroke-width="0.43" opacity="0.74"/>
+      <path d="M65 0 H135 L140 46 H60 Z M60 154 H140 L135 200 H65 Z" fill="url(#mg-brush-${id})" stroke="#718087" stroke-width="0.55"/>
+      <path d="M83 0 H117 L120 46 H80 Z M80 154 H120 L117 200 H83 Z" fill="url(#mg-polish-${id})" stroke="#7d8a91" stroke-width="0.38"/>
+      <path d="M65 0 H83 L80 46 H60 Z M117 0 H135 L140 46 H120 Z M60 154 H80 L83 200 H65 Z M120 154 H140 L135 200 H117 Z" fill="url(#mg-brush-${id})" stroke="#8a979d" stroke-width="0.34"/>
+      <path d="M63 16 H137 M61 32 H139 M61 168 H139 M63 184 H137" stroke="#738087" stroke-width="0.66" opacity="0.72"/><path d="M84 16 H116 M81 32 H119 M81 168 H119 M84 184 H116" stroke="#f8fbfc" stroke-width="0.43" opacity="0.74"/>
       <!-- Four Oyster case shoulders attach along the bracelet axis, not diagonally. -->
       <path d="M62 57 L63 37 Q64 29 72 28 H86 L85 51 Z M138 57 L137 37 Q136 29 128 28 H114 L115 51 Z M62 143 L63 163 Q64 171 72 172 H86 L85 149 Z M138 143 L137 163 Q136 171 128 172 H114 L115 149 Z" fill="url(#mg-polish-${id})" stroke="#718087" stroke-width="0.56"/>
       <circle cx="100" cy="100" r="77.2" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="76.1" fill="none" stroke="#f7fafb" stroke-width="0.58" opacity="0.80"/>
