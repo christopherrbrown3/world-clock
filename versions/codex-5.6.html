@@ -11568,6 +11568,61 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.khaki = () => "";
   FIDELITY_OVERLAYS.khaki = () => "";
 
+  // ───────────────── Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB ─────────────────
+  // Reference object: current 41 mm microblasted-black ceramic BR-03 Black
+  // Matte on rubber strap, using the present BR 03-A dial designation.
+  FACES.br03 = {
+    name: "Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB",
+    cadence: "sweep",
+    render() {
+      const id = "br03ablcesrb";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      let ticks = "", markers = "", screws = "", crownGrooves = "";
+      for (let i = 0; i < 60; i++) {
+        const deg = i * 6, [x1,y1] = at(deg,54.0), [x2,y2] = at(deg,i % 5 === 0 ? 49.7 : 51.8);
+        ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#f0f1ed" stroke-width="${i % 5 === 0 ? "1.0" : "0.52"}" stroke-linecap="round" opacity="${i % 5 === 0 ? "1" : "0.92"}"/>`;
+      }
+      for (let h = 1; h < 12; h++) {
+        if ([3,6,9].includes(h)) continue;
+        const deg = h * 30, [x,y] = at(deg,43.4);
+        markers += `<g transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x - 2.0).toFixed(1)}" y="${(y - 6.1).toFixed(1)}" width="4.0" height="12.2" rx="1.2" fill="#f0f1ed"/></g>`;
+      }
+      for (const [x,y] of [[48,48],[152,48],[48,152],[152,152]]) {
+        screws += `<g transform="rotate(45 ${x} ${y})"><circle cx="${x}" cy="${y}" r="7.15" fill="#0b0d0e" stroke="#42494b" stroke-width="0.70"/><circle cx="${x}" cy="${y}" r="5.75" fill="#1c2022" stroke="#060809" stroke-width="0.45"/><path d="M${(x - 4.0).toFixed(1)} ${y} H${(x + 4.0).toFixed(1)}" stroke="#07090a" stroke-width="2.15"/><path d="M${(x - 3.4).toFixed(1)} ${(y - 0.45).toFixed(1)} H${(x + 3.4).toFixed(1)}" stroke="#697274" stroke-width="0.38" opacity="0.72"/></g>`;
+      }
+      for (let x = 176; x <= 189; x += 1.85) crownGrooves += `<path d="M${x.toFixed(1)} 92.2 V107.8" stroke="#4d5558" stroke-width="0.65"/><path d="M${(x + 0.5).toFixed(1)} 92.8 V107.2" stroke="#b1b8b7" stroke-width="0.22" opacity="0.58"/>`;
+
+      return `<defs>
+        <linearGradient id="br03-rubber-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#4b4f50"/><stop offset="30%" stop-color="#151819"/><stop offset="70%" stop-color="#070909"/><stop offset="100%" stop-color="#353a3b"/></linearGradient>
+        <radialGradient id="br03-case-${id}" cx="39%" cy="30%" r="82%"><stop offset="0%" stop-color="#414649"/><stop offset="41%" stop-color="#242829"/><stop offset="79%" stop-color="#101213"/><stop offset="100%" stop-color="#060708"/></radialGradient>
+        <radialGradient id="br03-dial-${id}" cx="43%" cy="32%" r="82%"><stop offset="0%" stop-color="#2c2f30"/><stop offset="56%" stop-color="#17191a"/><stop offset="100%" stop-color="#080909"/></radialGradient>
+        <linearGradient id="br03-glass-${id}" x1="0.1" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.12"/><stop offset="37%" stop-color="#fff" stop-opacity="0.018"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="br03-shadow-${id}" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.3" stdDeviation="1.7" flood-color="#080b0c" flood-opacity="0.42"/></filter>
+        <filter id="br03-handshadow-${id}" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="1.0" stdDeviation="0.65" flood-color="#020303" flood-opacity="0.60"/></filter>
+        <clipPath id="br03-dialclip-${id}"><circle cx="100" cy="100" r="55.5"/></clipPath>
+      </defs>
+      <!-- Broad black rubber strap and its squared ceramic attachment blocks. -->
+      <path d="M60 0 H140 L145 42 H55 Z M55 158 H145 L140 200 H60 Z" fill="url(#br03-rubber-${id})" stroke="#080a0b" stroke-width="0.72"/><path d="M64 1 H136 L140 39 H60 Z M60 161 H140 L136 199 H64 Z" fill="none" stroke="#626869" stroke-width="0.38" opacity="0.34"/><path d="M55 38 H145 L151 56 H49 Z M49 144 H151 L145 162 H55 Z" fill="#171b1c" stroke="#090b0c" stroke-width="0.62"/>
+      <!-- Four dark screws sit in the ceramic square, around a raised circular dial bezel. -->
+      <rect x="26" y="26" width="148" height="148" rx="20" fill="url(#br03-case-${id})" filter="url(#br03-shadow-${id})"/><rect x="28.3" y="28.3" width="143.4" height="143.4" rx="18" fill="none" stroke="#4b5254" stroke-width="0.56" opacity="0.70"/>${screws}<circle cx="100" cy="100" r="62.2" fill="#0d0f10" stroke="#343a3c" stroke-width="1.0"/><circle cx="100" cy="100" r="58.2" fill="#242829" stroke="#070909" stroke-width="0.78"/><circle cx="100" cy="100" r="55.5" fill="url(#br03-dial-${id})" stroke="#4d5354" stroke-width="0.45"/>
+      <!-- Knurled black crown projects at three, without metallic chronograph furniture. -->
+      <rect x="164.2" y="95.4" width="11.0" height="9.2" rx="1.6" fill="#181c1d" stroke="#060809" stroke-width="0.44"/><circle cx="181.8" cy="100" r="8.9" fill="url(#br03-rubber-${id})" stroke="#171c1e" stroke-width="0.72"/>${crownGrooves}<circle cx="181.8" cy="100" r="8.9" fill="none" stroke="#687173" stroke-width="0.28" opacity="0.50"/>
+      <g clip-path="url(#br03-dialclip-${id})">
+        ${ticks}${markers}<text x="100" y="65.7" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="5.15" font-weight="500" fill="#f3f3ee">Bell <tspan font-weight="700">&amp;</tspan> Ross</text><text x="100" y="120.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.75" font-weight="700" letter-spacing="0.62" fill="#f3f3ee">BR 03-A</text>
+        <text x="100" y="51.0" text-anchor="middle" dominant-baseline="central" font-family="Arial Rounded MT Bold,Arial,sans-serif" font-size="13.0" font-weight="500" fill="#f3f3ee">12</text><text x="147.0" y="102.2" text-anchor="middle" dominant-baseline="central" font-family="Arial Rounded MT Bold,Arial,sans-serif" font-size="13.0" font-weight="500" fill="#f3f3ee">3</text><text x="100" y="149.3" text-anchor="middle" dominant-baseline="central" font-family="Arial Rounded MT Bold,Arial,sans-serif" font-size="13.0" font-weight="500" fill="#f3f3ee">6</text><text x="53.0" y="102.2" text-anchor="middle" dominant-baseline="central" font-family="Arial Rounded MT Bold,Arial,sans-serif" font-size="13.0" font-weight="500" fill="#f3f3ee">9</text>
+        <!-- Small recessed circular date at 4:30. -->
+        <circle cx="131.0" cy="129.0" r="6.1" fill="#090b0c" stroke="#5a6264" stroke-width="0.55"/><circle cx="131.0" cy="129.0" r="4.8" fill="#161a1b"/><text class="date-win" data-date="dom" x="131.0" y="129.1" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="5.2" font-weight="700" fill="#f2f2ed">1</text><text x="88.6" y="156.2" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.9" font-weight="700" letter-spacing="0.36" fill="#f0f0eb">SWISS</text><text x="111.4" y="156.2" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.9" font-weight="700" letter-spacing="0.36" fill="#f0f0eb">MADE</text><path d="M45 51 C66 41 89 40 115 53 C84 47 62 58 45 86 Z" fill="url(#br03-glass-${id})" opacity="0.22"/>
+      </g>
+      <!-- Wide white arrow hour, long sword minute and delicate running seconds. -->
+      <g filter="url(#br03-handshadow-${id})"><g class="hand-hour"><path d="M100 106 L91.8 97.2 L93.4 83.0 L100 67.2 L106.6 83.0 L108.2 97.2 Z" fill="#f1f2ee" stroke="#161a1b" stroke-width="0.78"/><path d="M100 96.9 L96.2 84.1 L100 74.4 L103.8 84.1 L103.8 96.9 Z" fill="#121617"/></g><g class="hand-min"><path d="M100 107 L96.9 98.2 L97.9 54.0 L100 37.1 L102.1 54.0 L103.1 98.2 Z" fill="#f1f2ee" stroke="#161a1b" stroke-width="0.68"/><path d="M100 98.7 L99.0 55.7 L100 43.1 L101.0 55.7 L101.0 98.7 Z" fill="#171b1c"/></g><g class="hand-sec"><line x1="100" y1="118.2" x2="100" y2="39.8" stroke="#f5f5f0" stroke-width="0.78"/><path d="M100 111.3 L98.65 117.1 H101.35 Z" fill="#f5f5f0"/><circle cx="100" cy="55.0" r="1.05" fill="none" stroke="#f5f5f0" stroke-width="0.52"/></g></g><circle cx="100" cy="100" r="4.0" fill="#1c2122" stroke="#5d6769" stroke-width="0.60"/><circle cx="100" cy="100" r="1.78" fill="#343b3d" stroke="#e4e5e0" stroke-width="0.30"/><circle cx="100" cy="100" r="0.64" fill="#090b0c"/><circle cx="100" cy="100" r="55.5" fill="none" stroke="#f4f4ef" stroke-width="0.48" opacity="0.28"/>`;
+    }
+  };
+  LOGOS.br03 = () => "";
+  FIDELITY_OVERLAYS.br03 = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
