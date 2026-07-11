@@ -51,7 +51,7 @@ Total faces: 62.
 | `patek` | Patek Philippe Perpetual Calendar Chronograph 5270J-001 | `sweep` |
 | `explorer` | Rolex Explorer 36 124270 | `sweep` |
 | `santos` | Cartier Santos de Cartier Large WSSA0018 | `sweep` |
-| `bigpilot` | IWC Big Pilot | `sweep` |
+| `bigpilot` | IWC Big Pilot's Watch 43 IW329301 | `sweep` |
 | `fiftyfathoms` | Blancpain Fifty Fathoms | `sweep` |
 | `typexx` | Breguet Type XX | `sweep` |
 | `radiomir` | Panerai Radiomir | `sweep` |
