@@ -12756,6 +12756,64 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.jorggray = () => "";
   FIDELITY_OVERLAYS.jorggray = () => "";
 
+  // ───────── Rolex Cosmograph Daytona 116595RBOW-0001 ─────────
+  // Everose Rainbow Daytona: 36 graduated bezel sapphires, diamond lugs,
+  // black lacquer dial and Pink Gold Crystal counters. Chrono remains parked.
+  FACES.rainbow = {
+    name: "Rolex Cosmograph Daytona 116595RBOW-0001",
+    cadence: "sweep",
+    render() {
+      const id = "daytona-rbow";
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const S9 = [68,100], S3 = [132,100], S6 = [100,132];
+      let sapphires = "", markers = "", diamonds = "", bracelet = "", minuteTrack = "";
+      for (let i = 0; i < 36; i++) {
+        const d = i * 10, [x,y] = at(d,70.2), hue = (340 + d) % 360;
+        sapphires += `<g transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x-3.05).toFixed(1)}" y="${(y-5.25).toFixed(1)}" width="6.1" height="10.5" rx="0.62" fill="hsl(${hue} 78% 53%)" stroke="#7e4c45" stroke-width="0.46"/><path d="M${(x-2.15).toFixed(1)} ${(y-4.15).toFixed(1)} H${(x+1.05).toFixed(1)} V${(y+3.4).toFixed(1)} H${(x-2.15).toFixed(1)} Z" fill="hsl(${hue} 95% 76%)" opacity="0.62"/></g>`;
+      }
+      for (let h = 1; h < 12; h++) {
+        const d = h * 30, [x,y] = at(d,50.8), hue = (340 + d) % 360;
+        markers += `<g transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x-2.4).toFixed(1)}" y="${(y-6.6).toFixed(1)}" width="4.8" height="13.2" rx="0.42" fill="hsl(${hue} 82% 55%)" stroke="#9e654e" stroke-width="0.58"/><path d="M${(x-1.55).toFixed(1)} ${(y-5.2).toFixed(1)} H${(x+0.7).toFixed(1)} V${(y+4.3).toFixed(1)} H${(x-1.55).toFixed(1)} Z" fill="hsl(${hue} 90% 78%)" opacity="0.60"/></g>`;
+      }
+      for (let i = 0; i < 60; i++) {
+        const d=i*6,[x1,y1]=at(d,61.0),[x2,y2]=at(d,i%5===0?57.6:59.2);
+        minuteTrack += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#f0c7a6" stroke-width="${i%5===0?"0.65":"0.28"}" opacity="${i%5===0?"0.85":"0.62"}"/>`;
+      }
+      [[63,40],[68,35],[73,31],[127,31],[132,35],[137,40],[63,160],[68,165],[73,169],[127,169],[132,165],[137,160]].forEach(([x,y]) => {
+        diamonds += `<circle cx="${x}" cy="${y}" r="2.0" fill="#f9fbfb" stroke="#c0c7ca" stroke-width="0.42"/><path d="M${x} ${y-1.55} L${x+1.35} ${y} L${x} ${y+1.55} L${x-1.35} ${y} Z" fill="#ffffff" opacity="0.85"/>`;
+      });
+      const braceletLink = (y, w) => `<path d="M${(100-w).toFixed(1)} ${y} H${(100+w).toFixed(1)} L${(100+w-2.0).toFixed(1)} ${(y+11.1).toFixed(1)} H${(100-w+2.0).toFixed(1)} Z" fill="url(#rb-brush-${id})" stroke="#9d624d" stroke-width="0.42"/><path d="M${(100-w*.42).toFixed(1)} ${(y+.6).toFixed(1)} H${(100+w*.42).toFixed(1)} L${(100+w*.42-1.15).toFixed(1)} ${(y+10.5).toFixed(1)} H${(100-w*.42+1.15).toFixed(1)} Z" fill="url(#rb-polish-${id})" stroke="#ba7b61" stroke-width="0.30"/>`;
+      for (let i=0;i<4;i++) bracelet += braceletLink(i*11.1,30+i*1.85) + braceletLink(155.6+i*11.1,35.55-i*1.85);
+      const sub = (cx,cy,labels) => {
+        let s=`<circle cx="${cx}" cy="${cy}" r="16.9" fill="url(#rb-crystal-${id})" stroke="#b96e52" stroke-width="0.86"/><circle cx="${cx}" cy="${cy}" r="14.9" fill="none" stroke="#8e4f3e" stroke-width="0.70"/>`;
+        for(let r=3.5;r<13.8;r+=1.6)s+=`<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none" stroke="#f3d0b7" stroke-width="0.22" opacity="0.43"/>`;
+        for(let i=0;i<60;i++){const d=i*6,[x1,y1]=at(d,14.3,cx,cy),[x2,y2]=at(d,i%5===0?10.7:12.5,cx,cy);s+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#744235" stroke-width="${i%5===0?"0.50":"0.23"}" opacity="0.80"/>`;}
+        labels.forEach(([n,d])=>{const [x,y]=at(d,9.5,cx,cy);s+=`<text x="${x.toFixed(1)}" y="${(y+.2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.25" font-weight="700" fill="#6f3d31">${n}</text>`;}); return s;
+      };
+      return `<defs>${caseDefs(id,"rose")}
+        <linearGradient id="rb-brush-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffe5cf"/><stop offset="42%" stop-color="#ce8966"/><stop offset="100%" stop-color="#7b3e31"/></linearGradient>
+        <linearGradient id="rb-polish-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#fff2e4"/><stop offset="26%" stop-color="#dd9b77"/><stop offset="52%" stop-color="#ffe1cb"/><stop offset="100%" stop-color="#9b543f"/></linearGradient>
+        <linearGradient id="rb-metal-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#ffe9d6"/><stop offset="38%" stop-color="#d58c67"/><stop offset="65%" stop-color="#934c3a"/><stop offset="88%" stop-color="#ffd7bd"/><stop offset="100%" stop-color="#874534"/></linearGradient>
+        <radialGradient id="rb-dial-${id}" cx="43%" cy="31%" r="87%"><stop offset="0%" stop-color="#252122"/><stop offset="50%" stop-color="#0f0e0f"/><stop offset="100%" stop-color="#020202"/></radialGradient>
+        <radialGradient id="rb-crystal-${id}" cx="36%" cy="28%" r="85%"><stop offset="0%" stop-color="#f6d7c6"/><stop offset="35%" stop-color="#e8ad8d"/><stop offset="65%" stop-color="#bf7058"/><stop offset="100%" stop-color="#7c4034"/></radialGradient>
+        <filter id="rb-hands-${id}" x="-38%" y="-38%" width="176%" height="176%"><feDropShadow dx="0.65" dy="0.90" stdDeviation="0.55" flood-color="#000" flood-opacity="0.62"/></filter>
+        <clipPath id="rb-dialclip-${id}"><circle cx="100" cy="100" r="61.5"/></clipPath>
+      </defs>
+      <!-- Everose Oyster bracelet tapers away from the diamond-set lugs. -->
+      ${bracelet}<path d="M60 53 L63 36 Q65 30 73 30 H86 L85 50 Z M140 53 L137 36 Q135 30 127 30 H114 L115 50 Z M60 147 L63 164 Q65 170 73 170 H86 L85 150 Z M140 147 L137 164 Q135 170 127 170 H114 L115 150 Z" fill="url(#rb-polish-${id})" stroke="#8e4937" stroke-width="0.58"/>${diamonds}
+      <circle cx="100" cy="100" r="76.8" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="75.5" fill="none" stroke="#ffe6d2" stroke-width="0.60" opacity="0.84"/><circle cx="100" cy="100" r="73.0" fill="url(#rb-metal-${id})" stroke="#914b38" stroke-width="0.65"/><circle cx="100" cy="100" r="70.8" fill="#3b1e1d" stroke="#8b4736" stroke-width="0.64"/>${sapphires}<circle cx="100" cy="100" r="63.0" fill="url(#rb-polish-${id})" stroke="#9d553f" stroke-width="0.66"/><circle cx="100" cy="100" r="61.5" fill="url(#rb-dial-${id})" stroke="#040303" stroke-width="0.68"/>
+      <g clip-path="url(#rb-dialclip-${id})">${minuteTrack}${markers}${sub(S9[0],S9[1],[["12",0],["3",90],["6",180],["9",270]])}${sub(S3[0],S3[1],[["30",0],["10",120],["20",240]])}${sub(S6[0],S6[1],[["60",0],["20",120],["40",240]])}<g transform="translate(100 60.8)" fill="#efb993"><circle cx="-4.1" cy="-0.3" r="1.13"/><circle cx="-2.05" cy="-2.45" r="1.13"/><circle cy="-3.25" r="1.13"/><circle cx="2.05" cy="-2.45" r="1.13"/><circle cx="4.1" cy="-0.3" r="1.13"/><path d="M-4.9 1.25 L-3.9 4.45 H3.9 L4.9 1.25 L3.45 1.6 L2.0 -0.35 L0 1.0 L-2.0 -0.35 L-3.45 1.6 Z"/></g><text x="100" y="70.2" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="6.1" font-weight="700" letter-spacing="0.76" fill="#efb993">ROLEX</text><text x="100" y="76.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.72" font-weight="700" letter-spacing="0.25" fill="#f1c3a5">OYSTER PERPETUAL</text><text x="100" y="80.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.22" font-weight="600" letter-spacing="0.20" fill="#f1c3a5">SUPERLATIVE CHRONOMETER</text><text x="100" y="83.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.22" font-weight="600" letter-spacing="0.20" fill="#f1c3a5">OFFICIALLY CERTIFIED</text><text x="100" y="87.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.9" font-weight="700" letter-spacing="0.80" fill="#f1c3a5">COSMOGRAPH</text><text x="100" y="112.7" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="4.15" font-style="italic" font-weight="700" letter-spacing="0.22" fill="#d72e38">DAYTONA</text><g class="hand-subsec" data-pivot="100 132"><path d="M100 136.3 L99.34 132 L100 119.2 L100.66 132 Z" fill="#f0b28e" stroke="#8d4a38" stroke-width="0.28"/></g><circle cx="100" cy="132" r="1.44" fill="#f0b28e"/><path d="M68 104 L67.35 100 L68 87.6 L68.65 100 Z" fill="#f0b28e"/><circle cx="68" cy="100" r="1.40" fill="#f0b28e"/><path d="M132 104 L131.35 100 L132 87.6 L132.65 100 Z" fill="#f0b28e"/><circle cx="132" cy="100" r="1.40" fill="#f0b28e"/><text x="86.8" y="155.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.85" font-weight="700" letter-spacing="0.28" fill="#f1c3a5">SWISS</text><text x="113.2" y="155.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.85" font-weight="700" letter-spacing="0.28" fill="#f1c3a5">MADE</text><path d="M46 59 C65 42 91 42 114 54 C85 49 63 59 46 86 Z" fill="#fff" opacity="0.10"/></g>
+      <g fill="url(#rb-metal-${id})" stroke="#8a4937" stroke-width="0.54"><path d="M164 66 L180 58 L186 65 L171 75 Z"/><path d="M164 134 L180 142 L186 135 L171 125 Z"/></g><rect x="170" y="94.4" width="9.8" height="11.2" rx="1.42" fill="url(#case-${id})" stroke="#8a4937" stroke-width="0.46"/><circle cx="187" cy="100" r="8.5" fill="url(#rb-metal-${id})" stroke="#8a4937" stroke-width="0.66"/><path d="M181.8 94.7 V105.3 M183.5 93.0 V107.0 M185.2 92.0 V108.0 M186.9 91.7 V108.3 M188.6 92.0 V108.0 M190.3 93.0 V107.0 M192.0 94.7 V105.3" stroke="#79402f" stroke-width="0.58"/>
+      <!-- Timekeeping hands move; central chronograph seconds is held at twelve. -->
+      <g filter="url(#rb-hands-${id})"><g class="hand-hour"><path d="M100 106 L95.2 98.0 L96.5 81.0 L100 61.4 L103.5 81.0 L104.8 98.0 Z" fill="url(#rb-metal-${id})" stroke="#8a4937" stroke-width="0.58"/><path d="M100 97.0 L98.15 80.4 L100 68.7 L101.85 80.4 Z" fill="#f6d4bb"/></g><g class="hand-min"><path d="M100 107 L97.25 99.0 L98.1 54.0 L100 37.0 L101.9 54.0 L102.75 99.0 Z" fill="url(#rb-metal-${id})" stroke="#8a4937" stroke-width="0.58"/><path d="M100 97.3 L98.95 56.6 L100 45.2 L101.05 56.6 Z" fill="#f6d4bb"/></g><path d="M100 113 L99.55 100 L99.55 38 L100 28.2 L100.45 38 L100.45 100 L100 113 Z" fill="#efb993" stroke="#8a4937" stroke-width="0.24"/></g><circle cx="100" cy="100" r="3.35" fill="url(#rb-metal-${id})" stroke="#8a4937" stroke-width="0.48"/><circle cx="100" cy="100" r="1.18" fill="#fff0df"/><circle cx="100" cy="100" r="61.5" fill="none" stroke="#d59676" stroke-width="0.32" opacity="0.52"/>`;
+    }
+  };
+  LOGOS.rainbow = () => "";
+  FIDELITY_OVERLAYS.rainbow = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
