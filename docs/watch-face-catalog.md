@@ -53,7 +53,7 @@ Total faces: 62.
 | `santos` | Cartier Santos de Cartier Large WSSA0018 | `sweep` |
 | `bigpilot` | IWC Big Pilot's Watch 43 IW329301 | `sweep` |
 | `fiftyfathoms` | Blancpain Fifty Fathoms Automatique 5015 1130 71S | `sweep` |
-| `typexx` | Breguet Type XX | `sweep` |
+| `typexx` | Breguet Type XX Chronographe 2067 2067ST/92/3WU | `sweep` |
 | `radiomir` | Panerai Radiomir | `sweep` |
 | `carrera` | TAG Heuer Carrera | `sweep` |
 | `snoopy` | Omega Snoopy Speedmaster | `sweep` |
