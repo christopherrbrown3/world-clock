@@ -12879,6 +12879,71 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   LOGOS.railroad = () => "";
   FIDELITY_OVERLAYS.railroad = () => "";
 
+  // ───────── NOMOS Glashütte Metro date power reserve 1101 ─────────
+  // Mark Braun's original Metro: wire lugs, an off-centre mint/red reserve,
+  // perimeter minute numerals, a red small seconds hand, and the date at six.
+  FACES.nomosmetro = {
+    name: "NOMOS Glashütte Metro date power reserve 1101",
+    cadence: "sweep",
+    render() {
+      const id = "metro-1101", SS = [100, 130], SSR = 14.2;
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      let minutes = "", smallTicks = "", crownKnurl = "", strapStitch = "";
+      for (let i = 0; i < 60; i++) {
+        const deg = i * 6;
+        if (i % 5 !== 0) {
+          const [x, y] = at(deg, 61.7);
+          minutes += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="0.72" fill="#252528"/>`;
+        } else {
+          const [x, y] = at(deg, 55.7);
+          const label = i === 0 ? "60" : String(i).padStart(2, "0");
+          minutes += `<text x="${x.toFixed(1)}" y="${(y + 1.95).toFixed(1)}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="${i === 0 ? "5.8" : "5.15"}" font-weight="500" fill="#303033">${label}</text>`;
+          if (i !== 0) { const [dx, dy] = at(deg, 62.2); minutes += `<circle cx="${dx.toFixed(1)}" cy="${dy.toFixed(1)}" r="1.18" fill="#1c1c1f"/>`; }
+        }
+      }
+      [0, 90, 270].forEach(deg => { const [x, y] = at(deg, 51.5); minutes += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.0" fill="#9fd1c6"/>`; });
+      for (let i = 0; i < 12; i++) {
+        const [x1, y1] = at(i * 30, SSR - 1.35, SS[0], SS[1]);
+        const [x2, y2] = at(i * 30, SSR - 4.15, SS[0], SS[1]);
+        smallTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#242528" stroke-width="0.62"/>`;
+      }
+      for (let i = 0; i < 9; i++) {
+        const y = 92.8 + i * 1.8;
+        crownKnurl += `<path d="M176.8 ${y.toFixed(1)} L185.8 ${(y - 2.8).toFixed(1)}" stroke="#4d5357" stroke-width="0.55"/><path d="M177.4 ${(y + 0.35).toFixed(1)} L186.2 ${(y - 2.45).toFixed(1)}" stroke="#f8faf9" stroke-width="0.23" opacity="0.72"/>`;
+      }
+      for (let y = 5; y < 39; y += 4.2) strapStitch += `<path d="M75 ${y.toFixed(1)} h3 M125 ${y.toFixed(1)} h-3 M75 ${(200-y).toFixed(1)} h3 M125 ${(200-y).toFixed(1)} h-3" stroke="#6f706c" stroke-width="0.52" stroke-linecap="round" opacity="0.84"/>`;
+      return `<defs>
+        <linearGradient id="mt-strap-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4a4a47"/><stop offset="24%" stop-color="#161716"/><stop offset="66%" stop-color="#080908"/><stop offset="100%" stop-color="#343432"/></linearGradient>
+        <linearGradient id="mt-steel-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f9fbfb"/><stop offset="26%" stop-color="#b4bdc1"/><stop offset="52%" stop-color="#f4f6f5"/><stop offset="77%" stop-color="#7b858a"/><stop offset="100%" stop-color="#dce1e2"/></linearGradient>
+        <radialGradient id="mt-dial-${id}" cx="43%" cy="31%" r="88%"><stop offset="0%" stop-color="#fffefa"/><stop offset="66%" stop-color="#f4f3ec"/><stop offset="100%" stop-color="#e1e0d8"/></radialGradient>
+        <linearGradient id="mt-glass-${id}" x1="0" y1="0" x2="0.86" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.23"/><stop offset="39%" stop-color="#fff" stop-opacity="0.04"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="mt-shadow-${id}" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="2.4" stdDeviation="3.2" flood-color="#101317" flood-opacity="0.38"/></filter>
+        <filter id="mt-hand-shadow-${id}" x="-35%" y="-35%" width="170%" height="170%"><feDropShadow dx="0.45" dy="0.65" stdDeviation="0.42" flood-color="#000" flood-opacity="0.36"/></filter>
+        <clipPath id="mt-dial-clip-${id}"><circle cx="100" cy="100" r="65.5"/></clipPath><clipPath id="mt-crown-clip-${id}"><circle cx="181" cy="100" r="6.9"/></clipPath>
+      </defs>
+      <!-- Black Horween shell-cordovan, narrowest away from the wire-lug case. -->
+      <path d="M71 0 H129 L133 40 H67 Z M67 160 H133 L129 200 H71 Z" fill="url(#mt-strap-${id})" stroke="#101110" stroke-width="0.70"/>${strapStitch}
+      <!-- The Metro's distinctive upright wire lugs stay aligned with the strap. -->
+      <g fill="none" stroke="url(#mt-steel-${id})" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M68 51 V32 Q68 27 73 27 H78 V47"/><path d="M132 51 V32 Q132 27 127 27 H122 V47"/><path d="M68 149 V168 Q68 173 73 173 H78 V153"/><path d="M132 149 V168 Q132 173 127 173 H122 V153"/></g>
+      <circle cx="100" cy="100" r="73.4" fill="url(#mt-steel-${id})" filter="url(#mt-shadow-${id})"/><circle cx="100" cy="100" r="71.7" fill="none" stroke="#ffffff" stroke-width="0.70" opacity="0.82"/><circle cx="100" cy="100" r="68.2" fill="#adb6bb" stroke="#646e73" stroke-width="0.56"/><circle cx="100" cy="100" r="66.3" fill="url(#mt-steel-${id})"/><circle cx="100" cy="100" r="65.5" fill="url(#mt-dial-${id})" stroke="#c8c8c1" stroke-width="0.58"/>
+      <g clip-path="url(#mt-dial-clip-${id})">${minutes}
+        <!-- Raised mint/red power reserve at 1:30, as on ref. 1101. -->
+        <g transform="translate(119.2 85.0)"><circle r="6.35" fill="#b4bbb9"/><circle r="5.45" fill="#a4d1c8"/><path d="M0 0 V-5.45 A5.45 5.45 0 0 1 4.72 2.72 Z" fill="#dc332d"/><path d="M0 -5.45 A5.45 5.45 0 0 1 4.72 2.72" fill="none" stroke="#f8fbfa" stroke-width="0.78"/><circle r="6.35" fill="none" stroke="#8b9495" stroke-width="0.50"/></g>
+        <text x="79.0" y="98.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="5.25" font-weight="500" letter-spacing="2.10" fill="#262629">NOMOS</text><text x="79.0" y="104.0" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.50" font-weight="500" letter-spacing="1.25" fill="#252528">GLASHÜTTE</text>
+        <circle cx="${SS[0]}" cy="${SS[1]}" r="${SSR}" fill="#f8f7f1" stroke="#cbc9c0" stroke-width="0.66"/>${smallTicks}<g class="hand-subsec" data-pivot="${SS[0]} ${SS[1]}"><path d="M${SS[0]} ${SS[1]+4.0} L${SS[0]-0.78} ${SS[1]-10.9} L${SS[0]} ${SS[1]-13.15} L${SS[0]+0.78} ${SS[1]-10.9} Z" fill="#de342e"/><circle cx="${SS[0]}" cy="${SS[1]}" r="1.52" fill="#de342e" stroke="#a62522" stroke-width="0.36"/><circle cx="${SS[0]}" cy="${SS[1]}" r="0.55" fill="#f7e3db"/></g>
+        <rect x="91.8" y="146.0" width="16.4" height="11.7" rx="0.82" fill="#e0dfd8"/><rect x="92.8" y="147.0" width="14.4" height="9.7" rx="0.38" fill="#fffefa"/><text class="date-win" data-date="dom" x="100" y="152.4" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="8.2" font-weight="400" fill="#1a1a1d">24</text><text x="100" y="164.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.72" font-weight="500" letter-spacing="0.84" fill="#414144">MADE IN GERMANY</text><ellipse cx="74" cy="61" rx="48" ry="21" fill="url(#mt-glass-${id})" transform="rotate(-27 74 61)"/>
+      </g>
+      <!-- Diamond-knurled crown at three, not a generic oversized winding knob. -->
+      <rect x="169.0" y="96.5" width="7.4" height="7.0" rx="1.35" fill="url(#mt-steel-${id})" stroke="#687277" stroke-width="0.46"/><circle cx="181.0" cy="100" r="7.2" fill="url(#mt-steel-${id})" stroke="#59646a" stroke-width="0.62"/><g clip-path="url(#mt-crown-clip-${id})">${crownKnurl}</g><circle cx="181.0" cy="100" r="7.2" fill="none" stroke="#f7f9f8" stroke-width="0.28" opacity="0.68"/>
+      <g filter="url(#mt-hand-shadow-${id})"><g class="hand-hour"><path d="M100 104.8 L97.7 99.2 L98.15 75.2 L100 62.5 L101.85 75.2 L102.3 99.2 Z" fill="#29272b"/><path d="M100 62.5 L101.85 75.2 L100.65 96.5 L100 99.2 Z" fill="#151419" opacity="0.82"/></g><g class="hand-min"><path d="M100 105.5 L98.75 99.1 L99.05 47.0 L100 36.0 L100.95 47.0 L101.25 99.1 Z" fill="#29272b"/><path d="M100 36.0 L100.95 47.0 L100.45 96.7 L100 99.1 Z" fill="#151419" opacity="0.82"/></g></g><circle cx="100" cy="100" r="3.10" fill="#222126"/><circle cx="100" cy="100" r="1.20" fill="#f5f4ed"/>`;
+    }
+  };
+  LOGOS.nomosmetro = () => "";
+  FIDELITY_OVERLAYS.nomosmetro = () => "";
+
   // ───────────────── Patek Philippe Calatrava ─────────────────
   // Reference object: Calatrava 6119R-001, 39 mm rose gold with Clous de Paris
   // bezel and manually wound small seconds at six.
