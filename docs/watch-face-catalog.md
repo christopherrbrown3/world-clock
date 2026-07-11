@@ -59,7 +59,7 @@ Total faces: 62.
 | `snoopy` | Omega Speedmaster "Silver Snoopy Award" 50th Anniversary 310.32.42.50.02.001 | `sweep` |
 | `milgauss` | Rolex Milgauss 116400GV-0002 "Z-Blue" | `sweep` |
 | `yachtmaster2` | Rolex Yacht-Master II 126680 | `sweep` |
-| `jorggray` | Jorg Gray JG6500 | `sweep` |
+| `jorggray` | Jorg Gray JGC6500 Secret Service Edition | `tick` |
 | `rainbow` | Rolex Daytona Rainbow | `sweep` |
 | `railroad` | Norfolk Southern Railroad Pocket Watch | `tick` |
 | `nomosmetro` | Nomos Glashütte Metro | `sweep` |
