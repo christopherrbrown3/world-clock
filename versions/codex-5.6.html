@@ -6191,6 +6191,261 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,82,10
 
   };
 
+  // High-fidelity reconstruction: Rolex Submariner Date 126610LN (2020–current).
+  // Kept here as an explicit final override so the catalog remains source-compatible
+  // while the face itself has a model-specific Oyster case, bracelet, and dial.
+  FACES.submariner = {
+    name: "Rolex Submariner Date 126610LN",
+    cadence: "sweep",
+    render() {
+      const id = "sub126610";
+      const DATE_CX = 145.7, DATE_CY = 100;
+      const LUME = `url(#sub-lume-${id})`;
+      const STEEL = `url(#sub-steel-${id})`;
+      const POLISH = `url(#sub-polish-${id})`;
+      const MARKER_METAL = `url(#sub-marker-metal-${id})`;
+
+      // Three solid-link Oyster lanes.  Each row grows toward the case (top)
+      // and narrows away from it (bottom), matching the 21 mm-end-link taper.
+      const oysterRow = (y1, y2, w1, w2, row) => {
+        const lanes = [[0, 0.31], [0.31, 0.69], [0.69, 1]];
+        return lanes.map(([from, to], lane) => {
+          const x1a = 100 - w1 / 2 + w1 * from + 0.42;
+          const x1b = 100 - w1 / 2 + w1 * to - 0.42;
+          const x2a = 100 - w2 / 2 + w2 * from + 0.42;
+          const x2b = 100 - w2 / 2 + w2 * to - 0.42;
+          const fill = lane === 1 ? `url(#sub-oyster-centre-${id})` : `url(#sub-oyster-outer-${id})`;
+          const edge = lane === 1 ? "#7f8a90" : "#68747b";
+          const highlight = lane === 1 ? 0.16 : 0.1;
+          return `<path d="M${x1a.toFixed(2)} ${y1} L${x1b.toFixed(2)} ${y1} L${x2b.toFixed(2)} ${y2} L${x2a.toFixed(2)} ${y2}Z" fill="${fill}" stroke="${edge}" stroke-width="0.28" stroke-linejoin="round"/>
+            <path d="M${(x1a + 0.7).toFixed(2)} ${(y1 + 1.05)} L${(x1b - 0.7).toFixed(2)} ${(y1 + 1.05)}" stroke="#ffffff" stroke-width="0.34" opacity="${highlight}" stroke-linecap="round"/>
+            <path d="M${x2a.toFixed(2)} ${(y2 - 0.55)} L${x2b.toFixed(2)} ${(y2 - 0.55)}" stroke="#263036" stroke-width="0.36" opacity="0.22"/>`;
+        }).join("");
+      };
+      const topBracelet = [
+        [0, 11, 48, 51], [10.8, 22.4, 51, 55], [22.2, 34.3, 55, 59],
+        [34.1, 46.3, 59, 64], [46.1, 58.5, 64, 68]
+      ].map((row, n) => oysterRow(...row, n)).join("");
+      const bottomBracelet = [
+        [141.5, 153.9, 68, 64], [153.7, 165.9, 64, 59], [165.7, 177.8, 59, 55],
+        [177.6, 189.2, 55, 51], [189, 200, 51, 48]
+      ].map((row, n) => oysterRow(...row, n + 5)).join("");
+
+      // Fine, recessed serrations rather than the former radial halo.
+      let knurl = "";
+      for (let i = 0; i < 112; i++) {
+        const a = i / 112 * Math.PI * 2;
+        const [x1, y1] = P(a, 68.95);
+        const [x2, y2] = P(a, 65.8);
+        const tone = i % 3 === 0 ? "#b8c1c1" : "#68757a";
+        knurl += `<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" stroke="${tone}" stroke-width="${(i % 3 === 0 ? 0.46 : 0.34)}" stroke-linecap="round" opacity="0.5"/>`;
+      }
+
+      // Cerachrom minute scale: all minutes 0–15, then only five-minute hashes.
+      let bezelTicks = "";
+      for (let minute = 1; minute < 60; minute++) {
+        if (minute > 15 && minute % 5 !== 0) continue;
+        const a = minute / 60 * Math.PI * 2;
+        const [x1, y1] = P(a, 61.3);
+        const [x2, y2] = P(a, minute % 5 === 0 ? 55.2 : 58.0);
+        const width = minute % 5 === 0 ? 1.35 : 0.66;
+        bezelTicks += `<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" stroke="url(#sub-platinum-${id})" stroke-width="${width}" opacity="0.96"/>`;
+      }
+      const bezelNumbers = [[10, 10], [20, 20], [30, 30], [40, 40], [50, 50]]
+        .map(([value, minute]) => {
+          const a = minute / 60 * Math.PI * 2;
+          const [x, y] = P(a, 57.5);
+          // Keep the engraved numerals readable while still following the bezel.
+          const rotation = ((minute * 6 + 90) % 180) - 90;
+          return `<text x="${x.toFixed(2)}" y="${y.toFixed(2)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,sans-serif" font-size="6.75" font-weight="700" letter-spacing="-0.42" fill="url(#sub-platinum-${id})" stroke="#20282b" stroke-width="0.3" paint-order="stroke" transform="rotate(${rotation} ${x.toFixed(2)} ${y.toFixed(2)})">${value}</text>`;
+        }).join("");
+
+      let minuteTrack = "";
+      for (let minute = 0; minute < 60; minute++) {
+        const a = minute / 60 * Math.PI * 2;
+        const [x1, y1] = P(a, 48.35);
+        const [x2, y2] = P(a, minute % 5 === 0 ? 45.0 : 46.35);
+        minuteTrack += `<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" stroke="#e8ebe9" stroke-width="${(minute % 5 === 0 ? 0.58 : 0.27)}" opacity="${(minute % 5 === 0 ? 0.84 : 0.62)}"/>`;
+      }
+
+      let rehaut = "";
+      for (let i = 0; i < 12; i++) {
+        if (i === 0 || i === 3 || i === 6 || i === 9) continue;
+        const a = i / 12 * Math.PI * 2;
+        const [x, y] = P(a, 48.0);
+        rehaut += `<text x="${x.toFixed(2)}" y="${y.toFixed(2)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.08" font-weight="600" letter-spacing="0.12" fill="#c2c8c7" opacity="0.16" transform="rotate(${(i * 30)} ${x.toFixed(2)} ${y.toFixed(2)})">ROLEX</text>`;
+      }
+
+      let markers = "";
+      for (let hour = 0; hour < 12; hour++) {
+        if (hour === 3) continue; // Cyclops date replaces the 3 o'clock index.
+        const a = hour / 12 * Math.PI * 2;
+        const [x, y] = P(a, hour === 6 ? 39.6 : 40.9);
+        if (hour === 0) {
+          markers += `<g filter="url(#sub-marker-shadow-${id})">
+            <polygon points="94.85,55.0 105.15,55.0 100,64.9" fill="${MARKER_METAL}" stroke="#f6f7f4" stroke-width="0.4" stroke-linejoin="round"/>
+            <polygon points="96.0,56.35 104.0,56.35 100,63.2" fill="${LUME}"/>
+          </g>`;
+        } else if (hour === 6 || hour === 9) {
+          markers += `<g filter="url(#sub-marker-shadow-${id})">
+            <rect x="${(x - 3.35).toFixed(2)}" y="${(y - 6.15).toFixed(2)}" width="6.7" height="12.3" rx="0.64" fill="${MARKER_METAL}" stroke="#eef0ee" stroke-width="0.36" transform="rotate(${(hour * 30)} ${x.toFixed(2)} ${y.toFixed(2)})"/>
+            <rect x="${(x - 2.35).toFixed(2)}" y="${(y - 5.08).toFixed(2)}" width="4.7" height="10.16" rx="0.4" fill="${LUME}" transform="rotate(${(hour * 30)} ${x.toFixed(2)} ${y.toFixed(2)})"/>
+          </g>`;
+        } else {
+          markers += `<g filter="url(#sub-marker-shadow-${id})">
+            <circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="4.38" fill="${MARKER_METAL}" stroke="#f5f6f2" stroke-width="0.38"/>
+            <circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="3.16" fill="${LUME}"/>
+          </g>`;
+        }
+      }
+
+      // A fine line-art coronet reads closer to the small printed five-point mark.
+      const coronet = (cx, cy, s, color) => `<g fill="none" stroke="${color}" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="${(cx - 2.55 * s)}" cy="${(cy - 1.15 * s)}" r="${(0.34 * s)}" fill="${color}" stroke="none"/>
+        <circle cx="${(cx - 1.22 * s)}" cy="${(cy - 2.28 * s)}" r="${(0.34 * s)}" fill="${color}" stroke="none"/>
+        <circle cx="${cx}" cy="${(cy - 2.75 * s)}" r="${(0.34 * s)}" fill="${color}" stroke="none"/>
+        <circle cx="${(cx + 1.22 * s)}" cy="${(cy - 2.28 * s)}" r="${(0.34 * s)}" fill="${color}" stroke="none"/>
+        <circle cx="${(cx + 2.55 * s)}" cy="${(cy - 1.15 * s)}" r="${(0.34 * s)}" fill="${color}" stroke="none"/>
+        <path d="M${(cx - 3.0 * s)} ${(cy - 0.9 * s)} L${(cx - 2.4 * s)} ${(cy + 1.0 * s)} L${(cx - 1.1 * s)} ${(cy - 0.1 * s)} L${cx} ${(cy + 1.25 * s)} L${(cx + 1.1 * s)} ${(cy - 0.1 * s)} L${(cx + 2.4 * s)} ${(cy + 1.0 * s)} L${(cx + 3.0 * s)} ${(cy - 0.9 * s)}" stroke-width="${(0.42 * s)}"/>
+        <path d="M${(cx - 2.82 * s)} ${(cy + 1.27 * s)} H${(cx + 2.82 * s)}" stroke-width="${(0.45 * s)}"/>
+      </g>`;
+      const dialPrint = coronet(100, 70.7, 0.96, "#f0f1ec")
+        + `<text x="100" y="78.3" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman,Georgia,serif" font-size="4.7" font-weight="600" letter-spacing="0.42" fill="#f0f1eb">ROLEX</text>`
+        + `<text x="100" y="84.6" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.34" font-weight="600" letter-spacing="0.32" fill="#e8e9e4">OYSTER PERPETUAL DATE</text>`
+        + `<text x="100" y="117.2" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.1" font-weight="700" letter-spacing="0.47" fill="#f1f2ed">SUBMARINER</text>`
+        + `<text x="100" y="122.35" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.15" font-weight="600" letter-spacing="0.25" fill="#eef0eb">1000ft = 300m</text>`
+        + `<text x="100" y="126.28" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.7" font-weight="600" letter-spacing="0.13" fill="#e3e5e1">SUPERLATIVE CHRONOMETER</text>`
+        + `<text x="100" y="129.45" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.7" font-weight="600" letter-spacing="0.13" fill="#e3e5e1">OFFICIALLY CERTIFIED</text>`
+        + `<text x="89.5" y="148.2" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.52" font-weight="600" letter-spacing="0.28" fill="#dadcd8">SWISS</text>`
+        + coronet(100, 148.6, 0.28, "#dadcd8")
+        + `<text x="111.1" y="148.2" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.52" font-weight="600" letter-spacing="0.28" fill="#dadcd8">MADE</text>`;
+
+      return `<defs>
+        <linearGradient id="sub-steel-${id}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#f2f4f3"/><stop offset="18%" stop-color="#78838a"/><stop offset="39%" stop-color="#dfe4e4"/><stop offset="63%" stop-color="#5d6870"/><stop offset="83%" stop-color="#e9edec"/><stop offset="100%" stop-color="#77828a"/>
+        </linearGradient>
+        <linearGradient id="sub-polish-${id}" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#4f5c63"/><stop offset="26%" stop-color="#f9fbfa"/><stop offset="49%" stop-color="#89949a"/><stop offset="72%" stop-color="#f7f9f8"/><stop offset="100%" stop-color="#48545c"/>
+        </linearGradient>
+        <linearGradient id="sub-oyster-outer-${id}" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#6b767c"/><stop offset="17%" stop-color="#c3c9ca"/><stop offset="49%" stop-color="#f1f3f1"/><stop offset="82%" stop-color="#a8b1b4"/><stop offset="100%" stop-color="#5a666d"/>
+        </linearGradient>
+        <linearGradient id="sub-oyster-centre-${id}" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#7e898f"/><stop offset="17%" stop-color="#d7dcda"/><stop offset="48%" stop-color="#b9c1c1"/><stop offset="78%" stop-color="#e7eae8"/><stop offset="100%" stop-color="#79858b"/>
+        </linearGradient>
+        <linearGradient id="sub-marker-metal-${id}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f3f4f0"/><stop offset="32%" stop-color="#c4cccd"/><stop offset="62%" stop-color="#eff0eb"/><stop offset="100%" stop-color="#98a3a6"/>
+        </linearGradient>
+        <linearGradient id="sub-lume-${id}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f8f8ed"/><stop offset="56%" stop-color="#eef0e4"/><stop offset="100%" stop-color="#dfe4d9"/>
+        </linearGradient>
+        <linearGradient id="sub-platinum-${id}" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stop-color="#ffffff"/><stop offset="31%" stop-color="#aeb8bb"/><stop offset="58%" stop-color="#f4f6f4"/><stop offset="100%" stop-color="#8f999d"/>
+        </linearGradient>
+        <radialGradient id="sub-cerachrom-${id}" cx="35%" cy="26%" r="82%">
+          <stop offset="0%" stop-color="#343a3a"/><stop offset="23%" stop-color="#151a1b"/><stop offset="67%" stop-color="#050708"/><stop offset="100%" stop-color="#15191a"/>
+        </radialGradient>
+        <radialGradient id="sub-dial-${id}" cx="41%" cy="31%" r="78%">
+          <stop offset="0%" stop-color="#141817"/><stop offset="42%" stop-color="#050707"/><stop offset="100%" stop-color="#010202"/>
+        </radialGradient>
+        <radialGradient id="sub-cyclops-${id}" cx="35%" cy="23%" r="78%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="45%" stop-color="#e6f0f2" stop-opacity="0.08"/><stop offset="100%" stop-color="#6c7d86" stop-opacity="0.24"/>
+        </radialGradient>
+        <filter id="sub-watch-shadow-${id}" x="-28%" y="-28%" width="156%" height="164%">
+          <feDropShadow dx="0" dy="2.2" stdDeviation="2.1" flood-color="#101417" flood-opacity="0.34"/>
+        </filter>
+        <filter id="sub-marker-shadow-${id}" x="-35%" y="-35%" width="170%" height="170%">
+          <feDropShadow dx="0" dy="0.32" stdDeviation="0.32" flood-color="#000000" flood-opacity="0.42"/>
+        </filter>
+        <clipPath id="sub-dialclip-${id}"><circle cx="100" cy="100" r="49.35"/></clipPath>
+        <clipPath id="sub-cyclopsclip-${id}"><ellipse cx="${DATE_CX}" cy="${DATE_CY}" rx="8.2" ry="6.7"/></clipPath>
+      </defs>
+
+      <ellipse cx="100" cy="102.5" rx="72" ry="70.5" fill="#11171a" opacity="0.14" filter="url(#sub-watch-shadow-${id})"/>
+      <g aria-label="Tapered three-link Oyster bracelet">
+        ${topBracelet}
+        ${bottomBracelet}
+      </g>
+
+      <!-- Four naturally aligned, slim Oyster lugs: no diagonal/X lug construction. -->
+      <g fill="${STEEL}" stroke="#647078" stroke-width="0.7">
+        <path d="M67.0 75.5 C61.7 62.9 62.0 47.4 66.0 33.2 C67.35 28.8 71.95 27.25 77.2 29.7 L88.6 37.7 L91.0 42.6 L82.2 64.2Z"/>
+        <path d="M133.0 75.5 C138.3 62.9 138.0 47.4 134.0 33.2 C132.65 28.8 128.05 27.25 122.8 29.7 L111.4 37.7 L109.0 42.6 L117.8 64.2Z"/>
+        <path d="M67.0 124.5 C61.7 137.1 62.0 152.6 66.0 166.8 C67.35 171.2 71.95 172.75 77.2 170.3 L88.6 162.3 L91.0 157.4 L82.2 135.8Z"/>
+        <path d="M133.0 124.5 C138.3 137.1 138.0 152.6 134.0 166.8 C132.65 171.2 128.05 172.75 122.8 170.3 L111.4 162.3 L109.0 157.4 L117.8 135.8Z"/>
+      </g>
+      <g fill="none" stroke="#f6f8f6" stroke-width="0.68" opacity="0.56">
+        <path d="M67 35 C65 48 65 61 70 70"/><path d="M133 35 C135 48 135 61 130 70"/>
+        <path d="M67 165 C65 152 65 139 70 130"/><path d="M133 165 C135 152 135 139 130 130"/>
+      </g>
+
+      <circle cx="100" cy="100" r="70" fill="${STEEL}" stroke="#536068" stroke-width="0.82"/>
+      <circle cx="100" cy="100" r="68.55" fill="none" stroke="${POLISH}" stroke-width="1.05" opacity="0.9"/>
+      <circle cx="100" cy="100" r="66.05" fill="#151a1c" stroke="#334047" stroke-width="0.5"/>
+      ${knurl}
+      <circle cx="100" cy="100" r="65.2" fill="url(#sub-cerachrom-${id})" stroke="#020304" stroke-width="0.72"/>
+      ${bezelTicks}
+      ${bezelNumbers}
+      <!-- Small lume pearl seated inside the Cerachrom 12-o'clock triangle. -->
+      <polygon points="94.95,42.35 105.05,42.35 100,35.65" fill="#0a0d0e" stroke="url(#sub-platinum-${id})" stroke-width="0.66" stroke-linejoin="round"/>
+      <circle cx="100" cy="40.1" r="2.56" fill="url(#sub-platinum-${id})" stroke="#374249" stroke-width="0.4"/>
+      <circle cx="100" cy="40.1" r="1.52" fill="${LUME}"/>
+
+      <circle cx="100" cy="100" r="52.2" fill="#151b1d" stroke="${POLISH}" stroke-width="0.72"/>
+      <circle cx="100" cy="100" r="49.65" fill="url(#sub-dial-${id})" stroke="#030405" stroke-width="0.62"/>
+      <g clip-path="url(#sub-dialclip-${id})">
+        ${rehaut}
+        ${minuteTrack}
+        ${markers}
+        ${dialPrint}
+        <rect x="140.5" y="94.9" width="10.4" height="10.2" rx="0.6" fill="#f7f7f1" stroke="#788288" stroke-width="0.46"/>
+        <text class="date-win" data-date="dom" x="${DATE_CX}" y="100.12" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="8.45" font-weight="600" fill="#101415">1</text>
+        <path d="M69 61 C78 53 91 50 102 50" fill="none" stroke="#ffffff" stroke-width="0.72" opacity="0.09" stroke-linecap="round"/>
+      </g>
+
+      <!-- Compact Triplock crown and its two soft protective shoulders. -->
+      <g stroke-linejoin="round">
+        <path d="M164.25 91.15 C167.55 88.55 170.9 88.9 173.8 92.0 Q174.9 93.1 174.85 95.65 L169.45 97.7 L169.45 102.3 L174.85 104.35 Q174.9 106.9 173.8 108.0 C170.9 111.1 167.55 111.45 164.25 108.85Z" fill="${STEEL}" stroke="#5b6870" stroke-width="0.62"/>
+        <rect x="173.05" y="92.2" width="11.25" height="15.6" rx="3.45" fill="${POLISH}" stroke="#536068" stroke-width="0.74"/>
+        <path d="M175.45 93.75V106.25 M177.25 92.95V107.05 M179.05 92.7V107.3 M180.85 92.95V107.05 M182.65 93.75V106.25" stroke="#49565d" stroke-width="0.66" opacity="0.9"/>
+        <path d="M174.8 94.45V105.55 M176.6 93.3V106.7 M178.4 93.0V107.0 M180.2 93.3V106.7 M182.0 94.45V105.55" stroke="#eef2f1" stroke-width="0.36" opacity="0.88"/>
+        <ellipse cx="184.7" cy="100" rx="1.18" ry="4.05" fill="#414e55" stroke="#e2e7e6" stroke-width="0.4"/>
+      </g>
+
+      <!-- Classic Mercedes hour, slim arrow minute, and restrained lollipop seconds. -->
+      <g filter="url(#sub-marker-shadow-${id})">
+        <g class="hand-hour">
+          <path d="M98.18 105.2 L98.18 79.75 L96.0 75.0 L100 66.55 L104.0 75.0 L101.82 79.75 L101.82 105.2Z" fill="${MARKER_METAL}" stroke="#e8eceb" stroke-width="0.28"/>
+          <path d="M99.08 101.0 L99.08 80.5 L97.7 75.1 L100 70.25 L102.3 75.1 L100.92 80.5 L100.92 101.0Z" fill="${LUME}"/>
+          <circle cx="100" cy="75.25" r="3.38" fill="${LUME}" stroke="#eef1ec" stroke-width="0.34"/>
+          <path d="M100 75.25 L100 72.0 M100 75.25 L102.78 76.85 M100 75.25 L97.22 76.85" stroke="#435047" stroke-width="0.64" stroke-linecap="round"/>
+          <circle cx="100" cy="75.25" r="0.58" fill="#435047"/>
+        </g>
+        <g class="hand-min">
+          <path d="M98.78 105.2 L98.78 43.65 L100 38.6 L101.22 43.65 L101.22 105.2Z" fill="${MARKER_METAL}" stroke="#eff2f0" stroke-width="0.28"/>
+          <path d="M99.42 100.65 L99.42 45.45 L100 42.95 L100.58 45.45 L100.58 100.65Z" fill="${LUME}"/>
+        </g>
+        <g class="hand-sec">
+          <line x1="100" y1="113.0" x2="100" y2="43.0" stroke="#e9edeb" stroke-width="0.74"/>
+          <circle cx="100" cy="51.6" r="2.52" fill="${MARKER_METAL}"/>
+          <circle cx="100" cy="51.6" r="1.48" fill="${LUME}"/>
+          <path d="M100 113 L100 122.4" stroke="#e9edeb" stroke-width="1.03" stroke-linecap="round"/>
+        </g>
+      </g>
+      <circle cx="100" cy="100" r="2.68" fill="${POLISH}" stroke="#4d5a61" stroke-width="0.48"/>
+      <circle cx="100" cy="100" r="1.34" fill="#eef1ee" stroke="#7d898d" stroke-width="0.3"/>
+      <circle cx="100" cy="100" r="0.56" fill="#48545a"/>
+
+      <!-- One compact convex sapphire Cyclops rather than the former double-ring decal. -->
+      <ellipse cx="${DATE_CX}" cy="${DATE_CY}" rx="8.2" ry="6.7" fill="url(#sub-cyclops-${id})" stroke="#dce3e1" stroke-width="0.42" opacity="0.91"/>
+      <g clip-path="url(#sub-cyclopsclip-${id})">
+        <ellipse cx="${(DATE_CX - 3.0)}" cy="${(DATE_CY - 3.05)}" rx="3.85" ry="1.45" fill="#ffffff" opacity="0.26" transform="rotate(-18 ${(DATE_CX - 3.0)} ${(DATE_CY - 3.05)})"/>
+        <path d="M${(DATE_CX - 6.1)} ${(DATE_CY + 3.85)} Q${DATE_CX} ${(DATE_CY + 5.8)} ${(DATE_CX + 6.0)} ${(DATE_CY + 3.0)}" fill="none" stroke="#50606a" stroke-width="0.42" opacity="0.24"/>
+      </g>
+      `;
+    }
+  };
+
   // ============================================================
   //  BRAND MARKS LAYER
   //  Owner-authorized faithful maker logos / wordmarks / dial text,

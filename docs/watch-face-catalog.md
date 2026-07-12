@@ -8,7 +8,7 @@ Total faces: 62.
 
 | Key | Face | Cadence |
 | --- | --- | --- |
-| `submariner` | Rolex Submariner | `sweep` |
+| `submariner` | Rolex Submariner Date 126610LN | `sweep` |
 | `speedmaster` | Omega Speedmaster Professional | `sweep` |
 | `nautilus` | Patek Philippe Nautilus | `sweep` |
 | `royaloak` | Audemars Piguet Royal Oak | `sweep` |
