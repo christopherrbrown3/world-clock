@@ -12,7 +12,7 @@ Total faces: 62.
 | `speedmaster` | Omega Speedmaster Moonwatch Professional 310.30.42.50.01.001 | `sweep` |
 | `nautilus` | Patek Philippe Nautilus 5811/1G-001 | `sweep` |
 | `royaloak` | Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06 | `sweep` |
-| `calatrava` | Patek Philippe Calatrava | `sweep` |
+| `calatrava` | Patek Philippe Calatrava 5227G-015 | `sweep` |
 | `tank` | Cartier Tank | `tick` |
 | `reverso` | Jaeger-LeCoultre Reverso | `sweep` |
 | `seamaster` | Omega Seamaster Diver 300M | `sweep` |
