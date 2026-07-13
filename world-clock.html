@@ -13733,6 +13733,152 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   };
   LOGOS.royaloak = () => "";
 
+  // High-fidelity reconstruction: Audemars Piguet Royal Oak Selfwinding
+  // 15510ST.OO.1320ST.06 (41 mm stainless steel / Bleu Nuit Nuage 50).
+  // The 2022 15510 design uses eight off-axis white-gold hex screws, a circular
+  // Grande Tapisserie dial, a centre seconds hand, and an integrated tapered
+  // steel bracelet.  It deliberately has neither an AP monogram nor AUTOMATIC
+  // text on this reference's dial.
+  FACES.royaloak = {
+    name: "Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06",
+    cadence: "sweep",
+    render() {
+      const id = "ro15510hf";
+      const CASE_R = 75, CHAMFER_R = 71.0, BEZEL_R = 67.8, GASKET_R = 56.25, DIAL_R = 53.9, TAP_R = 48.7;
+      const oct = (radius) => Array.from({ length: 8 }, (_, i) => {
+        const a = i * Math.PI / 4 + Math.PI / 8;
+        return P(a, radius);
+      });
+      const points = (pts) => pts.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
+      const point = ([x, y]) => `${x.toFixed(2)} ${y.toFixed(2)}`;
+      const hex = (cx, cy, radius, rot) => Array.from({ length: 6 }, (_, i) => {
+        const a = rot + i * Math.PI / 3;
+        return `${(cx + Math.cos(a) * radius).toFixed(2)},${(cy + Math.sin(a) * radius).toFixed(2)}`;
+      }).join(" ");
+      const outer = oct(CASE_R), chamfer = oct(CHAMFER_R), bezel = oct(BEZEL_R);
+      const diagonalFacets = [[0, 1], [2, 3], [4, 5], [6, 7]].map(([a, b]) =>
+        `<path d="M${point(outer[a])} L${point(outer[b])} L${point(chamfer[b])} L${point(chamfer[a])} Z" fill="url(#ro-dark-facet-${id})" opacity="0.46"/>`
+      ).join("");
+      const sideCasebands = [[1, 2], [5, 6]].map(([a, b]) =>
+        `<path d="M${point(outer[a])} L${point(outer[b])} L${point(chamfer[b])} L${point(chamfer[a])} Z" fill="url(#ro-caseband-${id})" opacity="0.62"/>`
+      ).join("");
+
+      // The bracelet is built from broad, longitudinally brushed links with
+      // twin polished connector blocks.  Widths grow toward the case on both
+      // sides, so the bracelet never reverses its real-world taper.
+      const topLink = (y0, y1, farW, nearW, blockW, innerSeam = true) => {
+        const farL = 100 - farW / 2, farR = 100 + farW / 2;
+        const nearL = 100 - nearW / 2, nearR = 100 + nearW / 2;
+        const block = (cx) => `<path d="M${(cx - blockW / 2).toFixed(2)} ${(y0 + 1.0).toFixed(2)} H${(cx + blockW / 2).toFixed(2)} L${(cx + blockW / 2 + 0.35).toFixed(2)} ${(y1 - 0.85).toFixed(2)} H${(cx - blockW / 2 - 0.35).toFixed(2)} Z" fill="url(#ro-polish-${id})" stroke="#586268" stroke-width="0.18" opacity="0.9"/>`;
+        const body = innerSeam ? `<path d="M${farL.toFixed(2)} ${y0} H${farR.toFixed(2)} L${nearR.toFixed(2)} ${y1} H${nearL.toFixed(2)} Z" fill="url(#ro-brush-${id})" stroke="#4c575d" stroke-width="0.28"/>` : `<path d="M${farL.toFixed(2)} ${y0} H${farR.toFixed(2)} L${nearR.toFixed(2)} ${y1} H${nearL.toFixed(2)} Z" fill="url(#ro-brush-${id})"/><path d="M${farL.toFixed(2)} ${y0} H${farR.toFixed(2)} L${nearR.toFixed(2)} ${y1} M${nearL.toFixed(2)} ${y1} L${farL.toFixed(2)} ${y0}" fill="none" stroke="#4c575d" stroke-width="0.28"/>`;
+        let shoulderBrush = "";
+        if (!innerSeam) for (let x = farL + 1.15, n = 0; x <= farR - 1.15; x += 0.85, n++) shoulderBrush += `<line x1="${x.toFixed(2)}" y1="${(y0 + 0.85).toFixed(2)}" x2="${x.toFixed(2)}" y2="${(y1 - 0.75).toFixed(2)}" stroke="${n % 3 === 0 ? "#314047" : "#f7f8f4"}" stroke-width="0.1" opacity="${n % 3 === 0 ? "0.065" : "0.095"}"/>`;
+        return `${body}${shoulderBrush}<path d="M${(farL + 1.2).toFixed(2)} ${(y0 + 0.72).toFixed(2)} H${(farR - 1.2).toFixed(2)}" stroke="#f3f5f3" stroke-width="0.22" opacity="0.2"/>${block(91.7)}${block(108.3)}${innerSeam ? `<path d="M${nearL.toFixed(2)} ${(y1 - 0.22).toFixed(2)} H${nearR.toFixed(2)}" stroke="#0c1318" stroke-width="0.38" opacity="0.48"/>` : ""}`;
+      };
+      const bottomLink = (y0, y1, nearW, farW, blockW, innerSeam = true) => {
+        const nearL = 100 - nearW / 2, nearR = 100 + nearW / 2;
+        const farL = 100 - farW / 2, farR = 100 + farW / 2;
+        const block = (cx) => `<path d="M${(cx - blockW / 2 - 0.35).toFixed(2)} ${(y0 + 0.85).toFixed(2)} H${(cx + blockW / 2 + 0.35).toFixed(2)} L${(cx + blockW / 2).toFixed(2)} ${(y1 - 1.0).toFixed(2)} H${(cx - blockW / 2).toFixed(2)} Z" fill="url(#ro-polish-${id})" stroke="#586268" stroke-width="0.18" opacity="0.9"/>`;
+        const body = innerSeam ? `<path d="M${nearL.toFixed(2)} ${y0} H${nearR.toFixed(2)} L${farR.toFixed(2)} ${y1} H${farL.toFixed(2)} Z" fill="url(#ro-brush-${id})" stroke="#4c575d" stroke-width="0.28"/>` : `<path d="M${nearL.toFixed(2)} ${y0} H${nearR.toFixed(2)} L${farR.toFixed(2)} ${y1} H${farL.toFixed(2)} Z" fill="url(#ro-brush-${id})"/><path d="M${nearL.toFixed(2)} ${y0} H${nearR.toFixed(2)} L${farR.toFixed(2)} ${y1} M${farL.toFixed(2)} ${y1} L${nearL.toFixed(2)} ${y0}" fill="none" stroke="#4c575d" stroke-width="0.28"/>`;
+        let shoulderBrush = "";
+        if (!innerSeam) for (let x = farL + 1.15, n = 0; x <= farR - 1.15; x += 0.85, n++) shoulderBrush += `<line x1="${x.toFixed(2)}" y1="${(y0 + 0.75).toFixed(2)}" x2="${x.toFixed(2)}" y2="${(y1 - 0.85).toFixed(2)}" stroke="${n % 3 === 0 ? "#314047" : "#f7f8f4"}" stroke-width="0.1" opacity="${n % 3 === 0 ? "0.065" : "0.095"}"/>`;
+        return `${body}${shoulderBrush}<path d="M${(farL + 1.2).toFixed(2)} ${(y1 - 0.72).toFixed(2)} H${(farR - 1.2).toFixed(2)}" stroke="#f3f5f3" stroke-width="0.22" opacity="0.2"/>${block(91.7)}${block(108.3)}${innerSeam ? `<path d="M${farL.toFixed(2)} ${(y1 - 0.22).toFixed(2)} H${farR.toFixed(2)}" stroke="#0c1318" stroke-width="0.38" opacity="0.48"/>` : ""}`;
+      };
+      const bracelet = [
+        topLink(-14, -4.2, 48, 53, 4.0), topLink(-3.2, 11.4, 58, 86, 6.0), topLink(12.3, 33.5, 86, 100, 7.2, false),
+        bottomLink(166.5, 187.7, 100, 86, 7.2, false), bottomLink(188.6, 203.2, 86, 58, 6.0)
+      ].join("");
+
+      let bezelBrush = "";
+      for (let x = 30; x <= 170; x += 0.65) {
+        const grain = Math.round(x * 10) % 7;
+        const dark = grain < 3;
+        const y0 = 29.5 + (grain % 3) * 0.9, y1 = 170.5 - ((grain + 1) % 3) * 0.9;
+        bezelBrush += `<line x1="${x.toFixed(2)}" y1="${y0.toFixed(2)}" x2="${x.toFixed(2)}" y2="${y1.toFixed(2)}" stroke="${dark ? "#253138" : "#ffffff"}" stroke-width="0.1" opacity="${dark ? "0.045" : "0.068"}"/>`;
+      }
+
+      // Approximately 21 shallow Grande Tapisserie pitches span the dial.
+      // The dark channels are recessed rather than an illustrated black grid.
+      let tapisseries = "";
+      const pitch = 5.5;
+      for (let x = 42.25; x <= 157.75; x += pitch) {
+        for (let y = 42.25; y <= 157.75; y += pitch) {
+          const ix = Math.round((x - 42.25) / pitch), iy = Math.round((y - 42.25) / pitch);
+          const relief = (0.88 + ((ix * 7 + iy * 11) % 5) * 0.014).toFixed(3);
+          tapisseries += `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="5.12" height="5.12" fill="#071523" opacity="0.4"/><rect x="${(x + 0.43).toFixed(2)}" y="${(y + 0.43).toFixed(2)}" width="4.26" height="4.26" fill="url(#ro-tapisserie-${id})" opacity="${relief}"/><path d="M${(x + 0.76).toFixed(2)} ${(y + 1.18).toFixed(2)} h3.0 M${(x + 0.76).toFixed(2)} ${(y + 2.08).toFixed(2)} h3.0 M${(x + 0.76).toFixed(2)} ${(y + 2.98).toFixed(2)} h3.0" fill="none" stroke="#b8cbd4" stroke-width="0.055" opacity="0.04"/>`;
+        }
+      }
+
+      let minuteTrack = "";
+      for (let minute = 0; minute < 60; minute++) {
+        const a = minute / 60 * Math.PI * 2;
+        const [x1, y1] = P(a, 52.4);
+        const [x2, y2] = P(a, minute % 5 === 0 ? 48.6 : 50.8);
+        minuteTrack += `<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" stroke="#dce3e2" stroke-width="${minute % 5 === 0 ? "0.48" : "0.20"}" opacity="${minute % 5 === 0 ? "0.76" : "0.64"}"/>`;
+      }
+
+      const marker = (x, y, deg) => `<g transform="rotate(${deg} ${x.toFixed(2)} ${y.toFixed(2)})" filter="url(#ro-metal-shadow-${id})"><path d="M${(x - 1.86).toFixed(2)} ${(y - 8.5).toFixed(2)} H${(x + 1.86).toFixed(2)} L${(x + 1.5).toFixed(2)} ${(y + 8.5).toFixed(2)} H${(x - 1.5).toFixed(2)} Z" fill="url(#ro-marker-${id})" stroke="#515c61" stroke-width="0.3"/><path d="M${(x - 0.6).toFixed(2)} ${(y - 6.75).toFixed(2)} H${(x + 0.6).toFixed(2)} L${(x + 0.42).toFixed(2)} ${(y + 6.75).toFixed(2)} H${(x - 0.42).toFixed(2)} Z" fill="url(#ro-lume-${id})" opacity="0.9"/></g>`;
+      let markers = "";
+      for (let hour = 1; hour < 12; hour++) {
+        if (hour === 3) continue;
+        const a = hour / 12 * Math.PI * 2;
+        const [x, y] = P(a, 41.2);
+        markers += marker(x, y, hour * 30);
+      }
+      markers += `<g filter="url(#ro-metal-shadow-${id})"><path d="M94.90 47.85 H99.10 L98.71 64.7 H95.29 Z" fill="url(#ro-marker-${id})" stroke="#515c61" stroke-width="0.32"/><path d="M100.90 47.85 H105.10 L104.71 64.7 H101.29 Z" fill="url(#ro-marker-${id})" stroke="#515c61" stroke-width="0.32"/><path d="M96.18 49.55 H97.78 L97.56 62.95 H96.40 Z" fill="url(#ro-lume-${id})"/><path d="M102.22 49.55 H103.82 L103.60 62.95 H102.44 Z" fill="url(#ro-lume-${id})"/></g>`;
+
+      let screws = "";
+      for (let i = 0; i < 8; i++) {
+        const a = i * Math.PI / 4 + Math.PI / 8;
+        const [x, y] = P(a, 63.3);
+        const slot = a + Math.PI / 2;
+        const dx = Math.cos(slot) * 1.66, dy = Math.sin(slot) * 1.66;
+        screws += `<polygon points="${hex(x, y, 3.42, a + Math.PI / 6)}" fill="#2b353a" opacity="0.16"/><polygon points="${hex(x, y, 3.05, a + Math.PI / 6)}" fill="url(#ro-screw-${id})" stroke="#7d888b" stroke-width="0.12"/><line x1="${(x - dx * 1.07).toFixed(2)}" y1="${(y - dy * 1.07).toFixed(2)}" x2="${(x + dx * 1.07).toFixed(2)}" y2="${(y + dy * 1.07).toFixed(2)}" stroke="#3b464b" stroke-width="0.28"/><line x1="${(x - dx * 1.07 + 0.1).toFixed(2)}" y1="${(y - dy * 1.07 + 0.08).toFixed(2)}" x2="${(x + dx * 1.07 + 0.1).toFixed(2)}" y2="${(y + dy * 1.07 + 0.08).toFixed(2)}" stroke="#fbfcf9" stroke-width="0.1" opacity="0.5"/>`;
+      }
+
+      let crownGrooves = "";
+      for (let x = 174.85; x <= 181.05; x += 0.82) {
+        crownGrooves += `<line x1="${x.toFixed(2)}" y1="93.45" x2="${x.toFixed(2)}" y2="106.55" stroke="#3d484d" stroke-width="0.34" opacity="0.52"/><line x1="${(x + 0.2).toFixed(2)}" y1="93.5" x2="${(x + 0.2).toFixed(2)}" y2="106.5" stroke="#f5f6f2" stroke-width="0.1" opacity="0.3"/>`;
+      }
+
+      const print = `<g class="royaloak-print"><text x="100" y="78.7" text-anchor="middle" dominant-baseline="central" font-family="'Bodoni 72','Bodoni MT',Didot,Georgia,'Times New Roman',serif" font-size="4.24" font-weight="600" letter-spacing="0.04" textLength="43.5" lengthAdjust="spacingAndGlyphs" fill="#e9eeec" stroke="#26353d" stroke-width="0.14" paint-order="stroke">AUDEMARS PIGUET</text><text x="92.5" y="145.5" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.92" font-weight="600" letter-spacing="0.34" fill="#e2e8e6">SWISS</text><text x="107.5" y="145.5" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.92" font-weight="600" letter-spacing="0.34" fill="#e2e8e6">MADE</text></g>`;
+
+      return `<defs>
+        <filter id="ro-case-shadow-${id}" x="-22%" y="-22%" width="154%" height="154%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="1.15" stdDeviation="1.15" flood-color="#02070c" flood-opacity="0.52"/></filter>
+        <filter id="ro-metal-shadow-${id}" x="-55%" y="-55%" width="210%" height="210%" color-interpolation-filters="sRGB"><feDropShadow dx="0.42" dy="0.6" stdDeviation="0.24" flood-color="#020811" flood-opacity="0.5"/></filter>
+        <linearGradient id="ro-brush-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#707d82"/><stop offset="16%" stop-color="#bdc5c4"/><stop offset="42%" stop-color="#e5e9e6"/><stop offset="64%" stop-color="#909a9b"/><stop offset="84%" stop-color="#e8ece9"/><stop offset="100%" stop-color="#6f7c81"/></linearGradient>
+        <linearGradient id="ro-polish-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#3d484d"/><stop offset="15%" stop-color="#cfd6d4"/><stop offset="37%" stop-color="#f3f5f2"/><stop offset="61%" stop-color="#9aa5a5"/><stop offset="84%" stop-color="#e8ece9"/><stop offset="100%" stop-color="#414d52"/></linearGradient>
+        <linearGradient id="ro-crown-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#334046"/><stop offset="18%" stop-color="#8f9a9c"/><stop offset="42%" stop-color="#dce2de"/><stop offset="64%" stop-color="#899496"/><stop offset="86%" stop-color="#566268"/><stop offset="100%" stop-color="#303d43"/></linearGradient>
+        <linearGradient id="ro-caseband-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#263238"/><stop offset="38%" stop-color="#718084"/><stop offset="68%" stop-color="#3d4a4f"/><stop offset="100%" stop-color="#1a252a"/></linearGradient>
+        <linearGradient id="ro-dark-facet-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#182328"/><stop offset="35%" stop-color="#596468"/><stop offset="58%" stop-color="#10191e"/><stop offset="100%" stop-color="#3e494d"/></linearGradient>
+        <linearGradient id="ro-marker-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="43%" stop-color="#d9e0de"/><stop offset="100%" stop-color="#697478"/></linearGradient>
+        <linearGradient id="ro-lume-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f2f4ef"/><stop offset="100%" stop-color="#d3ddd2"/></linearGradient>
+        <linearGradient id="ro-screw-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fbfcf9"/><stop offset="49%" stop-color="#d3dcda"/><stop offset="100%" stop-color="#a1acab"/></linearGradient>
+        <radialGradient id="ro-dial-${id}" cx="45%" cy="36%" r="82%"><stop offset="0%" stop-color="#274b66"/><stop offset="41%" stop-color="#163750"/><stop offset="74%" stop-color="#0a2034"/><stop offset="100%" stop-color="#03101c"/></radialGradient>
+        <linearGradient id="ro-tapisserie-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2d4a5d"/><stop offset="38%" stop-color="#173348"/><stop offset="76%" stop-color="#0c2437"/><stop offset="100%" stop-color="#061522"/></linearGradient>
+        <linearGradient id="ro-glass-${id}" x1="0.06" y1="0" x2="0.86" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/><stop offset="34%" stop-color="#ffffff" stop-opacity="0.035"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <clipPath id="ro-case-clip-${id}"><polygon points="${points(outer)}"/></clipPath><clipPath id="ro-bezel-clip-${id}"><polygon points="${points(bezel)}"/></clipPath><clipPath id="ro-dial-clip-${id}"><circle cx="100" cy="100" r="${DIAL_R}"/></clipPath><clipPath id="ro-tapisserie-clip-${id}"><circle cx="100" cy="100" r="${TAP_R}"/></clipPath>
+      </defs>
+        <!-- Tapered integrated bracelet, intentionally widest at the case. -->
+        <g filter="url(#ro-case-shadow-${id})">${bracelet}</g>
+        <!-- One continuous steel case body; no separate conventional lugs. -->
+        <polygon points="${points(outer)}" fill="url(#ro-brush-${id})" filter="url(#ro-case-shadow-${id})"/><polygon points="${points(outer)}" fill="none" stroke="#445158" stroke-width="0.16" opacity="0.15"/>${sideCasebands}
+        <polygon points="${points(chamfer)}" fill="url(#ro-polish-${id})" opacity="0.92" stroke="#d6dcd9" stroke-width="0.14" stroke-opacity="0.45"/>${diagonalFacets}
+        <polygon points="${points(bezel)}" fill="url(#ro-brush-${id})"/><g clip-path="url(#ro-bezel-clip-${id})">${bezelBrush}</g><polygon points="${points(bezel)}" fill="none" stroke="#eef1ee" stroke-width="0.16" opacity="0.28"/>
+        <!-- Eight off-axis low-profile hex screws sit in the brushed bezel. -->
+        ${screws}<circle cx="100" cy="100" r="${GASKET_R}" fill="#111b23" stroke="#59676d" stroke-width="0.34"/><circle cx="100" cy="100" r="55.05" fill="#59676d" opacity="0.72"/><circle cx="100" cy="100" r="${DIAL_R}" fill="url(#ro-dial-${id})"/>
+        <g clip-path="url(#ro-tapisserie-clip-${id})">${tapisseries}</g><g clip-path="url(#ro-dial-clip-${id})">${minuteTrack}${markers}
+          <rect x="136.7" y="92.8" width="14.2" height="14.4" rx="0.48" fill="url(#ro-marker-${id})" stroke="#56636a" stroke-width="0.24"/><rect x="138.4" y="94.5" width="10.8" height="11.0" rx="0.16" fill="#16364e" stroke="#0b2131" stroke-width="0.18"/><text class="date-win" data-date="dom" x="143.8" y="100.0" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow','Roboto Condensed',Helvetica,Arial,sans-serif" font-size="7.8" font-weight="500" font-stretch="condensed" letter-spacing="-0.14" fill="#f0f3ee">1</text>${print}<ellipse cx="73.5" cy="59" rx="37" ry="16" fill="url(#ro-glass-${id})" transform="rotate(-26 73.5 59)"/></g>
+        <!-- Small side-on screw-lock crown with a short recessed tube. -->
+        <path d="M169.2 98.35 H173.55 V101.65 H169.2 Q168.35 100 169.2 98.35 Z" fill="#344147" stroke="#445158" stroke-width="0.22"/><rect x="172.35" y="94.9" width="1.35" height="10.2" rx="0.42" fill="#263238" opacity="0.7"/><path d="M174.1 91.7 H180.7 Q182.5 93.25 182.5 95.3 V104.7 Q182.5 106.75 180.7 108.3 H174.1 L172.9 103.4 V96.6 Z" fill="url(#ro-crown-${id})" stroke="#465158" stroke-width="0.34"/>${crownGrooves}<path d="M180.7 91.7 Q182.5 93.25 182.5 95.3 V104.7 Q182.5 106.75 180.7 108.3" fill="none" stroke="#2b363b" stroke-width="0.5" opacity="0.78"/><path d="M174.1 91.7 H180.7 Q182.5 93.25 182.5 95.3" fill="none" stroke="#f4f6f2" stroke-width="0.12" opacity="0.34"/>
+        <!-- Faceted Royal Oak batons and an unobtrusive centre-seconds wire. -->
+        <g class="hand-hour" filter="url(#ro-metal-shadow-${id})"><path d="M100 105.0 L97.25 100.1 L97.55 76.8 L98.25 64.0 H101.75 L102.45 76.8 L102.75 100.1 Z" fill="url(#ro-marker-${id})" stroke="#4d595e" stroke-width="0.34"/><path d="M98.25 64.0 H99.15 L98.75 77.7 L100 99.3 L97.25 100.1 L97.55 76.8 Z" fill="#f5f7f4" opacity="0.22"/><path d="M101.75 64.0 H100.85 L101.25 77.7 L100 99.3 L102.75 100.1 L102.45 76.8 Z" fill="#344249" opacity="0.26"/><path d="M100 99.3 L98.75 77.7 L99.15 67.3 H100.85 L101.25 77.7 L100 99.3 Z" fill="url(#ro-lume-${id})"/></g>
+        <g class="hand-min" filter="url(#ro-metal-shadow-${id})"><path d="M100 106.0 L97.75 100.0 L98.05 58.5 L98.65 49.7 H101.35 L101.95 58.5 L102.25 100.0 Z" fill="url(#ro-marker-${id})" stroke="#4d595e" stroke-width="0.32"/><path d="M98.65 49.7 H99.4 L99.05 59.8 L100 99.3 L97.75 100.0 L98.05 58.5 Z" fill="#f5f7f4" opacity="0.22"/><path d="M101.35 49.7 H100.6 L100.95 59.8 L100 99.3 L102.25 100.0 L101.95 58.5 Z" fill="#344249" opacity="0.26"/><path d="M100 99.3 L99.05 59.8 L99.4 52.8 H100.6 L100.95 59.8 L100 99.3 Z" fill="url(#ro-lume-${id})"/></g>
+        <g class="hand-sec"><line x1="100" y1="108.3" x2="100" y2="47.2" stroke="#34434a" stroke-width="0.78"/><line x1="100" y1="108.3" x2="100" y2="47.2" stroke="#edf1ed" stroke-width="0.28"/></g>
+        <circle cx="100" cy="100" r="3.35" fill="url(#ro-polish-${id})" stroke="#4a565b" stroke-width="0.4"/><circle cx="100" cy="100" r="1.72" fill="#bdc8c7" stroke="#f6f8f5" stroke-width="0.3"/><circle cx="100" cy="100" r="0.62" fill="#59656a"/>`;
+    }
+  };
+
   // ───────────────── Patek Philippe Nautilus ─────────────────
   // Reference object: current Nautilus 5811/1G-001, 41 mm white gold.
   // Its date + central sweep seconds match this app's live-time contract.
