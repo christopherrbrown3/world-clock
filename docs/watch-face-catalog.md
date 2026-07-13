@@ -11,7 +11,7 @@ Total faces: 62.
 | `submariner` | Rolex Submariner Date 126610LN | `sweep` |
 | `speedmaster` | Omega Speedmaster Moonwatch Professional 310.30.42.50.01.001 | `sweep` |
 | `nautilus` | Patek Philippe Nautilus 5811/1G-001 | `sweep` |
-| `royaloak` | Audemars Piguet Royal Oak | `sweep` |
+| `royaloak` | Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06 | `sweep` |
 | `calatrava` | Patek Philippe Calatrava | `sweep` |
 | `tank` | Cartier Tank | `tick` |
 | `reverso` | Jaeger-LeCoultre Reverso | `sweep` |
