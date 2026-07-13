@@ -13946,6 +13946,233 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   // not append the generic .002-style applied emblem above the hands.
   LOGOS.speedmaster = () => "";
 
+  // High-fidelity reconstruction: Omega Speedmaster Moonwatch Professional
+  // 310.30.42.50.01.001 (current 42 mm steel / Hesalite / Calibre 3861).
+  FACES.speedmaster = {
+    name: "Omega Speedmaster Moonwatch Professional 310.30.42.50.01.001",
+    cadence: "sweep",
+    render() {
+      const id = "speed001hf";
+      const DIAL_R = 49.4, SUB_R = 10.45;
+      // The 3861 registers sit well inboard, leaving three actual lume batons at 3/6/9.
+      const S9 = [77.5, 100], S3 = [122.5, 100], S6 = [100, 122.5];
+      const at = (deg, r, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+      };
+      const CREAM = "#f1f0df";
+      const STEEL = `url(#speed-steel-${id})`;
+      const BRUSH = `url(#speed-brush-${id})`;
+      const POLISH = `url(#speed-polish-${id})`;
+      const HAND_METAL = `url(#speed-hand-metal-${id})`;
+
+      // Five articulated arched links per row, with a 20 mm end-link tapering to the 15 mm clasp.
+      const fiveLinkRow = (y1, y2, w1, w2, rowIndex, terminal = false) => {
+        // The 3861 five-link layout has broad outer and centre links separated by
+        // two narrow intermediate rails.  This is independent of the 20→15 mm taper.
+        const bounds = [0, 0.235, 0.33, 0.67, 0.765, 1];
+        // Alternate the joints enough to read as articulated links, while keeping
+        // their broad brushed planes flat rather than pillowy.
+        const stagger = terminal
+          ? [-0.20, 0.08, 0, 0.08, -0.20]
+          : rowIndex % 2 ? [-1.08, 0.78, 0, 0.78, -1.08] : [1.08, -0.78, 0, -0.78, 1.08];
+        let out = "";
+        for (let lane = 0; lane < 5; lane++) {
+          const ly1 = y1 + stagger[lane];
+          const ly2 = y2 + stagger[lane];
+          const x1a = 100 - w1 / 2 + w1 * bounds[lane] + 0.38;
+          const x1b = 100 - w1 / 2 + w1 * bounds[lane + 1] - 0.38;
+          const x2a = 100 - w2 / 2 + w2 * bounds[lane] + 0.38;
+          const x2b = 100 - w2 / 2 + w2 * bounds[lane + 1] - 0.38;
+          const corner = terminal
+            ? Math.min(0.40, (x1b - x1a) * 0.08, (ly2 - ly1) * 0.05)
+            : Math.min(0.78, (x1b - x1a) * 0.15, (ly2 - ly1) * 0.11);
+          const fill = lane === 2 ? `url(#speed-brush-centre-${id})` : BRUSH;
+          const lowerSeamWidth = terminal ? 0.20 : 0.37;
+          const lowerSeamOpacity = terminal ? 0.30 : 0.54;
+          const midTop = (x1a + x1b) / 2;
+          const midBottom = (x2a + x2b) / 2;
+          out += `<path d="M${(x1a + corner).toFixed(2)} ${ly1.toFixed(2)} Q${midTop.toFixed(2)} ${(ly1 - 0.34).toFixed(2)} ${(x1b - corner).toFixed(2)} ${ly1.toFixed(2)} Q${x1b.toFixed(2)} ${ly1.toFixed(2)} ${x1b.toFixed(2)} ${(ly1 + corner).toFixed(2)} L${x2b.toFixed(2)} ${(ly2 - corner).toFixed(2)} Q${x2b.toFixed(2)} ${ly2.toFixed(2)} ${(x2b - corner).toFixed(2)} ${ly2.toFixed(2)} Q${midBottom.toFixed(2)} ${(ly2 + 0.34).toFixed(2)} ${(x2a + corner).toFixed(2)} ${ly2.toFixed(2)} Q${x2a.toFixed(2)} ${ly2.toFixed(2)} ${x2a.toFixed(2)} ${(ly2 - corner).toFixed(2)} L${x1a.toFixed(2)} ${(ly1 + corner).toFixed(2)} Q${x1a.toFixed(2)} ${ly1.toFixed(2)} ${(x1a + corner).toFixed(2)} ${ly1.toFixed(2)}Z" fill="${fill}" stroke="#68716f" stroke-width="0.15" stroke-linejoin="round"/>
+            <path d="M${(x1a + corner + 0.3).toFixed(2)} ${(ly1 + 0.64).toFixed(2)} L${(x1b - corner - 0.3).toFixed(2)} ${(ly1 + 0.64).toFixed(2)}" stroke="#ffffff" stroke-width="0.22" opacity="0.13" stroke-linecap="round"/>
+            <path d="M${(x2a + corner + 0.34).toFixed(2)} ${(ly2 - 0.34).toFixed(2)} L${(x2b - corner - 0.34).toFixed(2)} ${(ly2 - 0.34).toFixed(2)}" stroke="#34403d" stroke-width="${lowerSeamWidth}" opacity="${lowerSeamOpacity}" stroke-linecap="round"/>
+            <path d="M${midTop.toFixed(2)} ${(ly1 + corner + 0.26).toFixed(2)} L${midBottom.toFixed(2)} ${(ly2 - corner - 0.26).toFixed(2)}" stroke="#f4f6f2" stroke-width="0.18" opacity="0.12" stroke-linecap="round"/>`;
+        }
+        return out;
+      };
+      const topBracelet = [
+        [0, 7.6, 48, 49], [8.3, 15.8, 49, 51], [16.5, 20.6, 51, 55],
+        // A shallow fitted terminal link expands to 20 mm only at the case.
+        [21.4, 31.6, 55, 64, true]
+      ].map((row, index) => fiveLinkRow(row[0], row[1], row[2], row[3], index, row[4])).join("");
+      const bottomBracelet = [
+        [168.4, 178.2, 64, 55, true], [178.95, 187.7, 55, 52], [188.45, 195.15, 52, 49],
+        [195.9, 200, 49, 48]
+      ].map((row, index) => fiveLinkRow(row[0], row[1], row[2], row[3], index + 4, row[4])).join("");
+      const braceletBed = `<path d="M76 0 L124 0 L132 58.0 L68 58.0Z" fill="#35403d" opacity="0.58" stroke="#59615f" stroke-width="0.12"/>
+        <path d="M68 142.0 L132 142.0 L124 200 L76 200Z" fill="#35403d" opacity="0.58" stroke="#59615f" stroke-width="0.12"/>`;
+
+      // Fourth-generation twisted lyre lugs.  Their broad brushed planes flow
+      // longitudinally with the bracelet; the only polish is a thin outer bevel.
+      const lugShapes = `<path d="M40.75 65.70 C42.00 60.70 44.25 54.65 47.05 49.30 C49.55 44.35 51.55 39.95 53.45 35.85 C54.90 32.65 56.00 29.85 57.55 27.95 L68.15 22.35 Q69.15 22.05 70.45 23.55 L84.20 38.10 C78.05 44.00 74.20 51.25 72.20 59.20 C69.65 62.75 66.75 64.90 63.60 66.70Z"/>
+        <path d="M159.25 65.70 C158.00 60.70 155.75 54.65 152.95 49.30 C150.45 44.35 148.45 39.95 146.55 35.85 C145.10 32.65 144.00 29.85 142.45 27.95 L131.85 22.35 Q130.85 22.05 129.55 23.55 L115.80 38.10 C121.95 44.00 125.80 51.25 127.80 59.20 C130.35 62.75 133.25 64.90 136.40 66.70Z"/>
+        <path d="M40.75 134.30 C42.00 139.30 44.25 145.35 47.05 150.70 C49.55 155.65 51.55 160.05 53.45 164.15 C54.90 167.35 56.00 170.15 57.55 172.05 L68.15 177.65 Q69.15 177.95 70.45 176.45 L84.20 161.90 C78.05 156.00 74.20 148.75 72.20 140.80 C69.65 137.25 66.75 135.10 63.60 133.30Z"/>
+        <path d="M159.25 134.30 C158.00 139.30 155.75 145.35 152.95 150.70 C150.45 155.65 148.45 160.05 146.55 164.15 C145.10 167.35 144.00 170.15 142.45 172.05 L131.85 177.65 Q130.85 177.95 129.55 176.45 L115.80 161.90 C121.95 156.00 125.80 148.75 127.80 140.80 C130.35 137.25 133.25 135.10 136.40 133.30Z"/>`;
+      const lugs = `<g fill="url(#speed-lug-plane-${id})" stroke="#68716f" stroke-width="0.18" stroke-linejoin="round">${lugShapes}</g>
+      <g fill="url(#speed-lug-brush-detail-${id})" opacity="0.08" pointer-events="none">${lugShapes}</g>
+      <g fill="none" stroke="${POLISH}" stroke-width="0.66" opacity="0.50" stroke-linecap="round">
+        <path d="M41.4 64.4 C43.1 58.4 45.2 53.3 47.8 48.2 C50.3 43.2 52.3 38.9 54.0 35.2 C55.6 31.7 56.7 29.5 58.3 28.0 L68.45 22.65"/><path d="M158.6 64.4 C156.9 58.4 154.8 53.3 152.2 48.2 C149.7 43.2 147.7 38.9 146.0 35.2 C144.4 31.7 143.3 29.5 141.7 28.0 L131.55 22.65"/>
+        <path d="M41.4 135.6 C43.1 141.6 45.2 146.7 47.8 151.8 C50.3 156.8 52.3 161.1 54.0 164.8 C55.6 168.3 56.7 170.5 58.3 172.0 L68.45 177.35"/><path d="M158.6 135.6 C156.9 141.6 154.8 146.7 152.2 151.8 C149.7 156.8 147.7 161.1 146.0 164.8 C144.4 168.3 143.3 170.5 141.7 172.0 L131.55 177.35"/>
+      </g>
+      <g fill="none" stroke="#4a5551" stroke-width="0.28" opacity="0.48" stroke-linecap="round"><path d="M70.45 23.55 L84.20 38.10"/><path d="M129.55 23.55 L115.80 38.10"/><path d="M70.45 176.45 L84.20 161.90"/><path d="M129.55 176.45 L115.80 161.90"/></g>`;
+
+      const register = (cx, cy, type) => {
+        const cfg = type === "seconds"
+          ? { count: 60, major: 5, labels: [["60", 0], ["20", 120], ["40", 240]], fs: 3.30 }
+          : type === "minutes"
+            ? { count: 30, major: 5, labels: [["30", 0], ["10", 120], ["20", 240]], fs: 3.34 }
+            : { count: 12, major: 1, labels: [["12", 0], ["3", 90], ["6", 180], ["9", 270]], fs: 3.16 };
+        let rings = "", ticks = "", labels = "";
+        for (let r = SUB_R - 1.35; r > 4.3; r -= 0.42) {
+          rings += `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(2)}" fill="none" stroke="#b8b8ae" stroke-width="0.075" opacity="0.12"/>`;
+        }
+        for (let i = 0; i < cfg.count; i++) {
+          const deg = i / cfg.count * 360;
+          const [x1, y1] = at(deg, SUB_R - 0.9, cx, cy);
+          const major = i % cfg.major === 0;
+          const [x2, y2] = at(deg, SUB_R - (major ? 3.05 : 1.65), cx, cy);
+          ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e4e4dc" stroke-width="${(major ? 0.44 : 0.2)}" opacity="${(major ? 0.82 : 0.48)}"/>`;
+        }
+        for (const [label, deg] of cfg.labels) {
+          const [x, y] = at(deg, SUB_R - 4.65, cx, cy);
+          labels += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Eurostile,Microgramma,Arial Narrow,Arial,Helvetica,sans-serif" font-size="${cfg.fs}" font-weight="500" fill="#dfdfd7">${label}</text>`;
+        }
+        return `<g data-complication="${type}"><circle cx="${cx}" cy="${(cy + 0.26)}" r="${(SUB_R + 0.70).toFixed(2)}" fill="#010202" opacity="0.42"/><circle cx="${cx}" cy="${cy}" r="${(SUB_R + 0.30).toFixed(2)}" fill="none" stroke="#59615c" stroke-width="0.26" opacity="0.56"/><circle cx="${cx}" cy="${cy}" r="${SUB_R}" fill="url(#speed-sub-${id})" stroke="#202320" stroke-width="0.40"/><circle cx="${cx}" cy="${cy}" r="${(SUB_R - 0.42).toFixed(1)}" fill="none" stroke="#050605" stroke-width="0.34" opacity="0.78"/>${rings}${ticks}${labels}</g>`;
+      };
+
+      const TACHY_VALUES = [500, 400, 350, 300, 275, 250, 225, 200, 190, 180, 170, 160, 150, 140, 130, 120, 110, 100, 90, 85, 80, 75, 70, 65, 60];
+      let tachy = "";
+      for (let second = 7; second <= 60; second++) {
+        const deg = (second % 60) * 6;
+        const [x1, y1] = at(deg, 61.15);
+        const [x2, y2] = at(deg, second % 5 === 0 || second === 7 ? 58.3 : 59.5);
+        tachy += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#deded6" stroke-width="${(second % 5 === 0 || second === 7 ? 0.46 : 0.22)}" opacity="${(second % 5 === 0 || second === 7 ? 0.76 : 0.5)}"/>`;
+      }
+      for (const value of TACHY_VALUES) {
+        const deg = (21600 / value) % 360;
+        const [x, y] = at(deg, 57.2);
+        const [dotX, dotY] = at(deg, 53.45);
+        const flip = deg > 90 && deg < 270 ? 180 : 0;
+        const fs = value >= 300 ? 3.55 : value >= 150 ? 3.82 : 3.63;
+        tachy += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${fs}" font-weight="500" letter-spacing="-0.1" fill="#e2e2da" transform="rotate(${(deg + flip).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${value}</text><circle cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="0.27" fill="#e2e2da" opacity="0.7"/>`;
+      }
+      const [dot90x, dot90y] = at((21600 / 90) % 360, 59.15);
+      const [dot70x, dot70y] = at((21600 / 70) % 360 - 3.2, 58.2);
+      tachy += `<circle cx="${dot90x.toFixed(1)}" cy="${dot90y.toFixed(1)}" r="0.62" fill="#f0f0e9"/><circle cx="${dot70x.toFixed(1)}" cy="${dot70y.toFixed(1)}" r="0.52" fill="#f0f0e9"/>`;
+
+      let chapter = "";
+      for (let t = 0; t < 180; t++) {
+        const deg = t * 2;
+        const [x1, y1] = at(deg, 48.1);
+        const [x2, y2] = at(deg, t % 15 === 0 ? 41.35 : t % 3 === 0 ? 43.95 : 46.3);
+        chapter += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#ecece4" stroke-width="${(t % 15 === 0 ? 0.6 : t % 3 === 0 ? 0.31 : 0.13)}" opacity="${(t % 15 === 0 ? 0.95 : t % 3 === 0 ? 0.79 : 0.4)}"/>`;
+      }
+
+      let markers = "";
+      for (let hour = 1; hour < 12; hour++) {
+        if (hour === 3 || hour === 6 || hour === 9) continue;
+        const deg = hour * 30;
+        const [x, y] = at(deg, 39.1);
+        markers += `<g transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x - 1.60).toFixed(1)}" y="${(y - 4.45).toFixed(1)}" width="3.20" height="8.90" rx="0.22" fill="url(#speed-index-metal-${id})" stroke="#eceee7" stroke-width="0.08"/><rect x="${(x - 1.14).toFixed(1)}" y="${(y - 3.60).toFixed(1)}" width="2.28" height="7.20" rx="0.14" fill="${CREAM}"/></g>`;
+      }
+      for (const hour of [3, 6, 9]) {
+        const deg = hour * 30;
+        const [x, y] = at(deg, 39.1);
+        markers += `<g transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x - 1.60).toFixed(1)}" y="${(y - 3.65).toFixed(1)}" width="3.20" height="7.30" rx="0.22" fill="url(#speed-index-metal-${id})" stroke="#eceee7" stroke-width="0.08"/><rect x="${(x - 1.14).toFixed(1)}" y="${(y - 2.82).toFixed(1)}" width="2.28" height="5.64" rx="0.14" fill="${CREAM}"/></g>`;
+      }
+      markers += `<g><rect x="92.0" y="54.0" width="3.0" height="9.0" rx="0.18" fill="url(#speed-index-metal-${id})" stroke="#eceee7" stroke-width="0.08"/><rect x="105.0" y="54.0" width="3.0" height="9.0" rx="0.18" fill="url(#speed-index-metal-${id})" stroke="#eceee7" stroke-width="0.08"/><rect x="92.42" y="54.82" width="2.16" height="7.35" rx="0.12" fill="${CREAM}"/><rect x="105.42" y="54.82" width="2.16" height="7.35" rx="0.12" fill="${CREAM}"/><circle cx="94.5" cy="67.7" r="0.96" fill="${CREAM}"/><circle cx="105.5" cy="67.7" r="0.96" fill="${CREAM}"/></g>`;
+
+      const dialPrint = `<g class="speedmaster-print">
+        <g transform="translate(40 28) scale(0.6)"><path d="M97.15 71.45 C97.15 69.0 98.37 67.45 100 67.45 C101.63 67.45 102.85 69.0 102.85 71.45 C102.85 72.65 102.32 73.62 101.38 74.18 L102.92 74.18 L102.92 75.08 L100.72 75.08 L100.72 73.82 C101.43 73.48 101.88 72.72 101.88 71.52 C101.88 69.82 101.16 68.72 100 68.72 C98.84 68.72 98.12 69.82 98.12 71.52 C98.12 72.72 98.57 73.48 99.28 73.82 L99.28 75.08 L97.08 75.08 L97.08 74.18 L98.62 74.18 C97.68 73.62 97.15 72.65 97.15 71.45Z" fill="#e7e7df"/></g>
+        <!-- Each line is widened about its true center; this keeps the printed .001 signature compact, not applied. -->
+        <g transform="translate(-17 0) scale(1.17 1)">
+          <text x="100" y="76.9" text-anchor="middle" dominant-baseline="central" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="4.22" font-weight="400" letter-spacing="-0.05" fill="#e5e5dd">OMEGA</text>
+          <text x="100" y="81.8" text-anchor="middle" dominant-baseline="central" font-family="Snell Roundhand,Apple Chancery,URW Chancery L,cursive" font-size="4.25" font-weight="400" fill="#e4e4dc">Speedmaster</text>
+          <text x="100" y="86.35" text-anchor="middle" dominant-baseline="central" font-family="Eurostile,Microgramma,Arial Narrow,Arial,Helvetica,sans-serif" font-size="2.02" font-weight="500" letter-spacing="0.27" fill="#ddddD5">PROFESSIONAL</text>
+        </g>
+        <g transform="translate(-15 0) scale(1.15 1)"><text x="100" y="145.5" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="1.64" font-weight="500" letter-spacing="0.18" fill="#dcdcd4">SWISS MADE</text></g>
+      </g>`;
+
+      let crownFlutes = "";
+      // On the horizontal crown cylinder the front-on fluting resolves as a
+      // stack of alternating light and dark facets, not a barcode of vertical strokes.
+      for (let i = 0; i < 7; i++) {
+        const y = 94.9 + i * 1.70;
+        crownFlutes += `<path d="M173.35 ${y.toFixed(2)} H183.25" fill="none" stroke="#f5f7f3" stroke-width="0.42" opacity="0.72"/><path d="M173.35 ${(y + 0.62).toFixed(2)} H183.25" fill="none" stroke="#3d4945" stroke-width="0.31" opacity="0.76"/>`;
+      }
+      return `<defs>
+        <linearGradient id="speed-steel-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f1f2ef"/><stop offset="18%" stop-color="#858b89"/><stop offset="42%" stop-color="#dde0dc"/><stop offset="65%" stop-color="#6f7674"/><stop offset="86%" stop-color="#f0f1ee"/><stop offset="100%" stop-color="#878e8c"/></linearGradient>
+        <linearGradient id="speed-brush-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7b8381"/><stop offset="18%" stop-color="#c7cdca"/><stop offset="48%" stop-color="#dce0dc"/><stop offset="79%" stop-color="#b3bab6"/><stop offset="100%" stop-color="#7a817f"/></linearGradient>
+        <linearGradient id="speed-brush-centre-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#808785"/><stop offset="18%" stop-color="#ccd1ce"/><stop offset="48%" stop-color="#b8bebb"/><stop offset="80%" stop-color="#d7dbd7"/><stop offset="100%" stop-color="#7f8684"/></linearGradient>
+        <linearGradient id="speed-lug-plane-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6f7976"/><stop offset="24%" stop-color="#adb6b3"/><stop offset="54%" stop-color="#8f9995"/><stop offset="79%" stop-color="#c3cac6"/><stop offset="100%" stop-color="#69736f"/></linearGradient>
+        <pattern id="speed-lug-brush-detail-${id}" width="1.45" height="5.1" patternUnits="userSpaceOnUse"><path d="M0.28 0 V5.1" stroke="#f6f8f4" stroke-width="0.12" opacity="0.28"/><path d="M0.92 0 V5.1" stroke="#34403c" stroke-width="0.11" opacity="0.18"/></pattern>
+        <linearGradient id="speed-polish-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#65706d"/><stop offset="27%" stop-color="#f9faf7"/><stop offset="49%" stop-color="#a7adaa"/><stop offset="72%" stop-color="#f7f8f5"/><stop offset="100%" stop-color="#65706d"/></linearGradient>
+        <linearGradient id="speed-index-metal-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fbfcf9"/><stop offset="42%" stop-color="#b7c0c0"/><stop offset="100%" stop-color="#899397"/></linearGradient>
+        <linearGradient id="speed-hand-metal-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="37%" stop-color="#acb5b6"/><stop offset="63%" stop-color="#f5f6f2"/><stop offset="100%" stop-color="#778185"/></linearGradient>
+        <radialGradient id="speed-dial-${id}" cx="43%" cy="34%" r="82%"><stop offset="0%" stop-color="#111210"/><stop offset="54%" stop-color="#070807"/><stop offset="100%" stop-color="#020202"/></radialGradient>
+        <radialGradient id="speed-sub-${id}" cx="43%" cy="35%" r="78%"><stop offset="0%" stop-color="#151715"/><stop offset="55%" stop-color="#090a09"/><stop offset="100%" stop-color="#030403"/></radialGradient>
+        <linearGradient id="speed-hesalite-${id}" x1="0" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.2"/><stop offset="39%" stop-color="#ffffff" stop-opacity="0.035"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <pattern id="speed-dial-grain-${id}" width="11.8" height="10.6" patternUnits="userSpaceOnUse"><circle cx="0.62" cy="1.18" r="0.10" fill="#f3f3e9" opacity="0.24"/><circle cx="2.43" cy="4.76" r="0.13" fill="#000000" opacity="0.32"/><circle cx="3.86" cy="0.84" r="0.08" fill="#f3f3e9" opacity="0.18"/><circle cx="5.72" cy="2.55" r="0.12" fill="#000000" opacity="0.28"/><circle cx="7.38" cy="0.74" r="0.09" fill="#f3f3e9" opacity="0.20"/><circle cx="9.92" cy="3.16" r="0.11" fill="#000000" opacity="0.30"/><circle cx="11.05" cy="1.42" r="0.07" fill="#f3f3e9" opacity="0.17"/><circle cx="0.94" cy="7.84" r="0.12" fill="#000000" opacity="0.30"/><circle cx="3.18" cy="8.64" r="0.08" fill="#f3f3e9" opacity="0.21"/><circle cx="4.94" cy="6.74" r="0.11" fill="#000000" opacity="0.26"/><circle cx="6.51" cy="9.12" r="0.09" fill="#f3f3e9" opacity="0.19"/><circle cx="8.48" cy="7.35" r="0.13" fill="#000000" opacity="0.28"/><circle cx="10.61" cy="9.46" r="0.08" fill="#f3f3e9" opacity="0.18"/></pattern>
+        <filter id="speed-shadow-${id}" x="-28%" y="-28%" width="156%" height="164%"><feDropShadow dx="0" dy="2" stdDeviation="1.9" flood-color="#101417" flood-opacity="0.3"/></filter>
+        <clipPath id="speed-dialclip-${id}"><circle cx="100" cy="100" r="${DIAL_R}"/></clipPath>
+        <clipPath id="speed-crownclip-${id}"><ellipse cx="178.3" cy="100" rx="4.60" ry="6.25"/></clipPath>
+      </defs>
+
+      <ellipse cx="100" cy="102.2" rx="70" ry="69" fill="#0f1518" opacity="0.13" filter="url(#speed-shadow-${id})"/>
+      <g aria-label="Five-link tapered Speedmaster bracelet">${braceletBed}${topBracelet}${bottomBracelet}</g>
+      ${lugs}
+      <circle cx="100" cy="100" r="68" fill="${STEEL}" filter="url(#speed-shadow-${id})" stroke="#737a78" stroke-width="0.32"/>
+      <circle cx="100" cy="100" r="67.56" fill="none" stroke="${POLISH}" stroke-width="0.34" opacity="0.72"/>
+      <circle cx="100" cy="100" r="67.12" fill="none" stroke="#56615e" stroke-width="0.42" opacity="0.68"/>
+      <circle cx="100" cy="100" r="66.72" fill="#060707" stroke="#303735" stroke-width="0.22"/>
+      <circle cx="100" cy="100" r="66.23" fill="none" stroke="#d5d8d4" stroke-width="0.15" opacity="0.23"/>
+
+      <!-- Compact 105.012-derived case shoulder, pump pushers, and fluted crown. -->
+      <g stroke-linejoin="round">
+        <g transform="rotate(-15 173.0 79.5)"><rect x="163.45" y="76.85" width="4.95" height="5.3" rx="1.10" fill="#29322f" opacity="0.96"/><rect x="165.7" y="77.55" width="7.15" height="3.9" rx="0.82" fill="${STEEL}" stroke="#727a78" stroke-width="0.16"/><rect x="170.9" y="76.0" width="9.65" height="7.0" rx="1.52" fill="${POLISH}" stroke="#737b79" stroke-width="0.2"/><ellipse cx="180.38" cy="79.5" rx="0.82" ry="2.48" fill="${POLISH}" stroke="#66706d" stroke-width="0.16"/><path d="M171.88 76.76 H179.15 Q179.84 76.76 180.13 77.4" fill="none" stroke="#fafbf7" stroke-width="0.29" opacity="0.62" stroke-linecap="round"/><path d="M171.88 82.24 H179.15 Q179.84 82.24 180.13 81.6" fill="none" stroke="#4a5652" stroke-width="0.27" opacity="0.66" stroke-linecap="round"/></g>
+        <g transform="rotate(15 173.0 120.5)"><rect x="163.45" y="117.85" width="4.95" height="5.3" rx="1.10" fill="#29322f" opacity="0.96"/><rect x="165.7" y="118.55" width="7.15" height="3.9" rx="0.82" fill="${STEEL}" stroke="#727a78" stroke-width="0.16"/><rect x="170.9" y="117.0" width="9.65" height="7.0" rx="1.52" fill="${POLISH}" stroke="#737b79" stroke-width="0.2"/><ellipse cx="180.38" cy="120.5" rx="0.82" ry="2.48" fill="${POLISH}" stroke="#66706d" stroke-width="0.16"/><path d="M171.88 117.76 H179.15 Q179.84 117.76 180.13 118.4" fill="none" stroke="#fafbf7" stroke-width="0.29" opacity="0.62" stroke-linecap="round"/><path d="M171.88 123.24 H179.15 Q179.84 123.24 180.13 122.6" fill="none" stroke="#4a5652" stroke-width="0.27" opacity="0.66" stroke-linecap="round"/></g>
+        <rect x="165.0" y="96.3" width="9.25" height="7.4" rx="2.05" fill="#252c2a" opacity="0.92"/><rect x="166.55" y="97.2" width="7.7" height="5.6" rx="1.55" fill="${STEEL}" stroke="#7b827f" stroke-width="0.13"/>
+        <ellipse cx="178.3" cy="100" rx="4.60" ry="6.25" fill="${POLISH}" stroke="#59635f" stroke-width="0.34"/><g clip-path="url(#speed-crownclip-${id})">${crownFlutes}</g><ellipse cx="178.3" cy="100" rx="4.60" ry="6.25" fill="none" stroke="#44504b" stroke-width="0.22"/>
+      </g>
+
+      ${tachy}<text x="128.5" y="50.6" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.04" font-weight="500" letter-spacing="0.22" fill="#e2e2da" transform="rotate(30 128.5 50.6)">TACHYMÈTRE</text>
+      <circle cx="100" cy="100" r="52.1" fill="#121313" stroke="${POLISH}" stroke-width="0.34" opacity="0.9"/>
+      <circle cx="100" cy="100" r="51.35" fill="none" stroke="#68716d" stroke-width="0.24" opacity="0.24"/>
+      <circle cx="100" cy="100" r="50.30" fill="none" stroke="#050605" stroke-width="0.42" opacity="0.70"/>
+      <circle cx="100" cy="100" r="${DIAL_R}" fill="url(#speed-dial-${id})" stroke="#030303" stroke-width="0.38"/>
+      <g clip-path="url(#speed-dialclip-${id})">
+        <circle cx="100" cy="100" r="${DIAL_R}" fill="url(#speed-dial-grain-${id})" opacity="0.20"/>
+        <circle cx="100" cy="100" r="47.55" fill="none" stroke="#424441" stroke-width="0.28" opacity="0.42"/>
+        ${chapter}${markers}${register(S9[0], S9[1], "seconds")}${register(S3[0], S3[1], "minutes")}${register(S6[0], S6[1], "hours")}${dialPrint}
+        <g class="hand-subsec" data-pivot="${S9[0]} ${S9[1]}"><line x1="${S9[0]}" y1="${(S9[1] + 3.8)}" x2="${S9[0]}" y2="${(S9[1] - 7.2)}" stroke="#e5e5dd" stroke-width="0.56"/><path d="M${S9[0]} ${(S9[1] - 8.65)} L${(S9[0] - 0.64)} ${(S9[1] - 6.75)} L${S9[0]} ${(S9[1] - 5.85)} L${(S9[0] + 0.64)} ${(S9[1] - 6.75)}Z" fill="#e0e5c8" stroke="#717976" stroke-width="0.09"/><circle cx="${S9[0]}" cy="${S9[1]}" r="1.15" fill="${POLISH}" stroke="#69716f" stroke-width="0.10"/><circle cx="${S9[0]}" cy="${S9[1]}" r="0.44" fill="#626a68"/></g>
+        <g><line x1="${S3[0]}" y1="${(S3[1] + 3.4)}" x2="${S3[0]}" y2="${(S3[1] - 6.9)}" stroke="#e5e5dd" stroke-width="0.56"/><path d="M${S3[0]} ${(S3[1] - 8.2)} L${(S3[0] - 0.62)} ${(S3[1] - 6.35)} L${S3[0]} ${(S3[1] - 5.55)} L${(S3[0] + 0.62)} ${(S3[1] - 6.35)}Z" fill="#e0e5c8"/><circle cx="${S3[0]}" cy="${S3[1]}" r="1.14" fill="${POLISH}" stroke="#69716f" stroke-width="0.10"/><circle cx="${S3[0]}" cy="${S3[1]}" r="0.43" fill="#626a68"/></g>
+        <g><line x1="${S6[0]}" y1="${(S6[1] + 3.3)}" x2="${S6[0]}" y2="${(S6[1] - 6.7)}" stroke="#e5e5dd" stroke-width="0.55"/><path d="M${S6[0]} ${(S6[1] - 8.0)} L${(S6[0] - 0.60)} ${(S6[1] - 6.2)} L${S6[0]} ${(S6[1] - 5.4)} L${(S6[0] + 0.60)} ${(S6[1] - 6.2)}Z" fill="#e0e5c8"/><circle cx="${S6[0]}" cy="${S6[1]}" r="1.12" fill="${POLISH}" stroke="#69716f" stroke-width="0.10"/><circle cx="${S6[0]}" cy="${S6[1]}" r="0.43" fill="#626a68"/></g>
+        <ellipse cx="76" cy="57" rx="38" ry="16" fill="url(#speed-hesalite-${id})" transform="rotate(-27 76 57)" opacity="0.14"/>
+        <path d="M67.5 54.5 C79.5 47.1 104.0 45.2 124.6 50.0" fill="none" stroke="#f8f8f2" stroke-width="0.36" opacity="0.1" stroke-linecap="round"/>
+      </g>
+
+      <g class="hand-hour"><path d="M100 102.6 L97.85 102.6 L97.85 74.0 L100 66.45 L102.15 74.0 L102.15 102.6Z" fill="${HAND_METAL}" stroke="#68706e" stroke-width="0.16"/><path d="M100 99.15 L99.08 99.15 L99.08 75.0 L100 69.65 L100.92 75.0 L100.92 99.15Z" fill="#e8e7d3"/></g>
+      <g class="hand-min"><path d="M100 102.6 L98.45 102.6 L98.45 59.0 L100 52.45 L101.55 59.0 L101.55 102.6Z" fill="${HAND_METAL}" stroke="#68706e" stroke-width="0.16"/><path d="M100 99.15 L99.28 99.15 L99.28 60.25 L100 55.95 L100.72 60.25 L100.72 99.15Z" fill="#e8e7d3"/></g>
+      <!-- Reset central chronograph seconds: static, fine, and kept inside the chapter. -->
+      <g class="hand-chrono-rest"><line x1="100" y1="110.2" x2="100" y2="58.9" stroke="#909996" stroke-width="0.64"/><line x1="100" y1="109.85" x2="100" y2="59.15" stroke="#f5f5ed" stroke-width="0.44"/><path d="M100 50.75 L97.9 55.4 L100 59.7 L102.1 55.4Z" fill="${HAND_METAL}" stroke="#59615f" stroke-width="0.16"/><path d="M100 52.45 L99.0 55.45 L100 57.95 L101.0 55.45Z" fill="#e8e7d3"/><path d="M100 106.6 L100.82 110.05 L100 113.15 L99.18 110.05Z" fill="${HAND_METAL}" stroke="#68706e" stroke-width="0.14"/><path d="M100 108.1 L100.28 110.08 L100 111.35 L99.72 110.08Z" fill="#e8e7d3"/></g>
+      <g aria-label="Subtle domed Hesalite reflection" pointer-events="none" fill="none" stroke-linecap="round">
+        <path d="M60.8 76.2 C65.2 59.8 79.8 50.9 96.4 49.0" stroke="#fbfbf7" stroke-width="0.38" opacity="0.11"/>
+        <path d="M66.3 58.8 C78.0 51.4 94.7 48.5 109.3 50.2" stroke="#fbfbf7" stroke-width="0.22" opacity="0.07"/>
+      </g>
+      <circle cx="100" cy="100" r="3.02" fill="${POLISH}" stroke="#67706d" stroke-width="0.28"/><circle cx="100" cy="100" r="1.66" fill="#cbd0cb" stroke="#f8f8f1" stroke-width="0.2"/><circle cx="100" cy="100" r="0.52" fill="#6e7773"/>`;
+    }
+  };
+  LOGOS.speedmaster = () => "";
+
   Object.keys(FIDELITY_OVERLAYS).forEach((key) => {
     const face = FACES[key];
     if (!face || face.__fidelityOverlay) return;
