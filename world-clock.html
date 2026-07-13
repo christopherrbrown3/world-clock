@@ -13824,6 +13824,127 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   // Patek lettering belongs inside the dial, below hands and the crystal highlight.
   LOGOS.nautilus = () => "";
 
+  // ───────────────── Patek Philippe Nautilus 5811/1G-001 ─────────────────
+  // Final reference pass: the 41 mm white-gold, date-and-sweep-seconds 5811.
+  // The construction below follows Patek's front, side, dial, crown and bracelet
+  // product views: a two-part porthole case with asymmetric side modules, not
+  // conventional strap lugs, plus an integrated bracelet that widens at the case.
+  FACES.nautilus = {
+    name: "Patek Philippe Nautilus 5811/1G-001",
+    cadence: "sweep",
+    render() {
+      const id = "naut5811hf";
+      const at = (deg, rx, ry = rx, cx = 100, cy = 100) => {
+        const a = deg * Math.PI / 180;
+        return [cx + Math.sin(a) * rx, cy - Math.cos(a) * ry];
+      };
+
+      // The broad bezel and the inner dial have related, but deliberately not
+      // identical, rounded-octagon contours.  This preserves the Nautilus's
+      // porthole architecture instead of reading as a square watch with lugs.
+      const bodyPath = "M59 31 H141 C153 31 163 38 170 49 C174.6 59 176 71 176 84 V116 C176 129 174.6 141 170 151 C163 162 153 169 141 169 H59 C47 169 37 162 30 151 C25.4 141 24 129 24 116 V84 C24 71 25.4 59 30 49 C37 38 47 31 59 31 Z";
+      const outerBezel = "M62 35 H138 Q150 35 158 43 L166 52 Q172 59 172 70 V130 Q172 141 166 148 L158 157 Q150 165 138 165 H62 Q50 165 42 157 L34 148 Q28 141 28 130 V70 Q28 59 34 52 L42 43 Q50 35 62 35 Z";
+      const bezelPlane = "M64 38 H136 Q147.2 38 154.6 45.4 L161.2 53.1 Q166 59.6 166 70.2 V129.8 Q166 140.4 161.2 146.9 L154.6 154.6 Q147.2 162 136 162 H64 Q52.8 162 45.4 154.6 L38.8 146.9 Q34 140.4 34 129.8 V70.2 Q34 59.6 38.8 53.1 L45.4 45.4 Q52.8 38 64 38 Z";
+      const dialRail = "M66.4 47.45 H133.6 C144.3 47.45 152.2 52.25 157.5 60.55 C161.3 66.55 162.9 73.15 162.9 81.2 V118.8 C162.9 126.85 161.3 133.45 157.5 139.45 C152.2 147.75 144.3 152.55 133.6 152.55 H66.4 C55.7 152.55 47.8 147.75 42.5 139.45 C38.7 133.45 37.1 126.85 37.1 118.8 V81.2 C37.1 73.15 38.7 66.55 42.5 60.55 C47.8 52.25 55.7 47.45 66.4 47.45 Z";
+      const dialPath = "M67.4 48.7 H132.6 C142.7 48.7 150.2 53.15 155.15 61.05 C158.55 66.45 159.95 72.35 159.95 80.3 V119.7 C159.95 127.65 158.55 133.55 155.15 138.95 C150.2 146.85 142.7 151.3 132.6 151.3 H67.4 C57.3 151.3 49.8 146.85 44.85 138.95 C41.45 133.55 40.05 127.65 40.05 119.7 V80.3 C40.05 72.35 41.45 66.45 44.85 61.05 C49.8 53.15 57.3 48.7 67.4 48.7 Z";
+
+      const topLink = (y0, y1, farL, farR, nearL, nearR, cx, width) =>
+        `<path d="M${farL} ${y0} H${farR} L${nearR} ${y1} H${nearL} Z" fill="url(#wg-brush-${id})" stroke="#4c5254" stroke-width="0.34"/>
+         <path d="M${(nearL + 2.1).toFixed(1)} ${(y1 - 1.2).toFixed(1)} H${(nearR - 2.1).toFixed(1)} L${(farR - 2.1).toFixed(1)} ${(y0 + 1.2).toFixed(1)} H${(farL + 2.1).toFixed(1)} Z" fill="none" stroke="#f7f8f5" stroke-width="0.22" opacity="0.16"/>
+         <rect x="${(cx - width / 2).toFixed(1)}" y="${(y0 + 2.1).toFixed(1)}" width="${width}" height="${(y1 - y0 - 4.2).toFixed(1)}" rx="2.05" fill="url(#wg-polish-${id})" stroke="#3d4345" stroke-width="0.26"/>`;
+      const bottomLink = (y0, y1, nearL, nearR, farL, farR, cx, width) =>
+        `<path d="M${nearL} ${y0} H${nearR} L${farR} ${y1} H${farL} Z" fill="url(#wg-brush-${id})" stroke="#4c5254" stroke-width="0.34"/>
+         <path d="M${(nearL + 2.1).toFixed(1)} ${(y0 + 1.2).toFixed(1)} H${(nearR - 2.1).toFixed(1)} L${(farR - 2.1).toFixed(1)} ${(y1 - 1.2).toFixed(1)} H${(farL + 2.1).toFixed(1)} Z" fill="none" stroke="#f7f8f5" stroke-width="0.22" opacity="0.16"/>
+         <rect x="${(cx - width / 2).toFixed(1)}" y="${(y0 + 2.1).toFixed(1)}" width="${width}" height="${(y1 - y0 - 4.2).toFixed(1)}" rx="2.05" fill="url(#wg-polish-${id})" stroke="#3d4345" stroke-width="0.26"/>`;
+      const bracelet = [
+        topLink(-9, 8, 67, 133, 64, 136, 100, 34),
+        topLink(8, 24, 64, 136, 59, 141, 100, 42),
+        topLink(24, 43, 59, 141, 53, 147, 100, 51),
+        bottomLink(157, 176, 53, 147, 59, 141, 100, 51),
+        bottomLink(176, 192, 59, 141, 64, 136, 100, 42),
+        bottomLink(192, 209, 64, 136, 67, 133, 100, 34)
+      ].join("");
+
+      let bodyGrain = "", bezelGrain = "";
+      for (let x = 24; x <= 176; x += 2.55) {
+        const n = Math.round(x * 10);
+        const dark = n % 4 === 0;
+        bodyGrain += `<line x1="${x.toFixed(1)}" y1="29" x2="${x.toFixed(1)}" y2="171" stroke="${dark ? "#243038" : "#ffffff"}" stroke-width="0.28" opacity="${dark ? "0.028" : "0.045"}"/>`;
+      }
+      for (let x = 30; x <= 170; x += 1.9) {
+        const dark = Math.round(x * 10) % 3 === 0;
+        bezelGrain += `<line x1="${x.toFixed(1)}" y1="35" x2="${x.toFixed(1)}" y2="166" stroke="${dark ? "#1a2228" : "#ffffff"}" stroke-width="0.25" opacity="${dark ? "0.045" : "0.055"}"/>`;
+      }
+
+      let sunburst = "";
+      for (let deg = 0; deg < 360; deg += 5) {
+        const [x, y] = at(deg, 83, 71);
+        sunburst += `<line x1="100" y1="100" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${deg % 10 === 0 ? "#77a2bf" : "#020913"}" stroke-width="0.42" opacity="${deg % 10 === 0 ? "0.022" : "0.008"}"/>`;
+      }
+
+      let embosses = "";
+      for (let y = 54.6; y <= 146.2; y += 4.82) {
+        embosses += `<line x1="41" y1="${y.toFixed(1)}" x2="159" y2="${y.toFixed(1)}" stroke="#020914" stroke-width="0.78" opacity="0.58"/><line x1="41" y1="${(y + 0.45).toFixed(1)}" x2="159" y2="${(y + 0.45).toFixed(1)}" stroke="#6885a0" stroke-width="0.22" opacity="0.28"/><line x1="41" y1="${(y + 0.86).toFixed(1)}" x2="159" y2="${(y + 0.86).toFixed(1)}" stroke="#d4e3e8" stroke-width="0.1" opacity="0.07"/>`;
+      }
+
+      let minuteDots = "";
+      for (let minute = 0; minute < 60; minute++) {
+        if (minute % 5 === 0) continue;
+        const [x, y] = at(minute * 6, 50.8, 42.25);
+        minuteDots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="0.55" fill="#d5dcda" opacity="0.82"/>`;
+      }
+
+      const baton = (x, y, deg) => `<g transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})" filter="url(#hand-shadow-${id})"><rect x="${(x - 2.75).toFixed(1)}" y="${(y - 6.55).toFixed(1)}" width="5.5" height="13.1" rx="0.75" fill="url(#mark-metal-${id})" stroke="#4f5556" stroke-width="0.47"/><rect x="${(x - 1.30).toFixed(1)}" y="${(y - 5.1).toFixed(1)}" width="2.6" height="10.2" rx="0.5" fill="url(#lume-${id})" stroke="#eef2eb" stroke-width="0.14"/></g>`;
+      let markers = "";
+      for (let hour = 1; hour < 12; hour++) {
+        if (hour === 3) continue;
+        const deg = hour * 30;
+        const [x, y] = at(deg, 42.4, 36.9);
+        markers += baton(x, y, deg);
+      }
+      markers += `<g filter="url(#hand-shadow-${id})"><rect x="91.3" y="54.9" width="5.25" height="13.15" rx="0.75" fill="url(#mark-metal-${id})" stroke="#4f5556" stroke-width="0.47"/><rect x="103.45" y="54.9" width="5.25" height="13.15" rx="0.75" fill="url(#mark-metal-${id})" stroke="#4f5556" stroke-width="0.47"/><rect x="92.58" y="56.25" width="2.7" height="10.45" rx="0.5" fill="url(#lume-${id})"/><rect x="104.73" y="56.25" width="2.7" height="10.45" rx="0.5" fill="url(#lume-${id})"/></g>`;
+
+      let crownGrooves = "";
+      for (let x = 183.1; x <= 194.9; x += 1.68) {
+        crownGrooves += `<line x1="${x.toFixed(1)}" y1="94.55" x2="${x.toFixed(1)}" y2="105.45" stroke="#3f4649" stroke-width="0.55" opacity="0.78"/><line x1="${(x + 0.37).toFixed(1)}" y1="94.7" x2="${(x + 0.37).toFixed(1)}" y2="105.3" stroke="#ffffff" stroke-width="0.18" opacity="0.68"/>`;
+      }
+
+      const print = `<g class="nautilus-print"><text x="100" y="79.8" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.18" font-weight="550" letter-spacing="0.19" fill="#edf0ed">PATEK PHILIPPE</text><text x="100" y="85.25" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.82" font-weight="500" letter-spacing="0.48" fill="#e4e8e5">GENEVE</text><text x="100" y="146.8" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.28" font-weight="600" letter-spacing="0.45" fill="#e8ece8">SWISS</text></g>`;
+
+      return `<defs>
+        <filter id="case-shadow-${id}" x="-24%" y="-24%" width="148%" height="158%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="1.45" stdDeviation="1.4" flood-color="#000814" flood-opacity="0.52"/></filter>
+        <filter id="hand-shadow-${id}" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feDropShadow dx="0.45" dy="0.62" stdDeviation="0.26" flood-color="#020811" flood-opacity="0.5"/></filter>
+        <linearGradient id="wg-brush-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#565c5e"/><stop offset="12%" stop-color="#c3c6c3"/><stop offset="34%" stop-color="#f6f6f2"/><stop offset="58%" stop-color="#a9adac"/><stop offset="83%" stop-color="#f7f8f5"/><stop offset="100%" stop-color="#62686a"/></linearGradient>
+        <linearGradient id="wg-polish-${id}" x1="0" y1="0" x2="0.82" y2="1"><stop offset="0%" stop-color="#3e4547"/><stop offset="14%" stop-color="#d3d8d6"/><stop offset="37%" stop-color="#e9ebe8"/><stop offset="62%" stop-color="#a5acab"/><stop offset="84%" stop-color="#e1e5e2"/><stop offset="100%" stop-color="#4e5658"/></linearGradient>
+        <linearGradient id="wg-case-${id}" x1="0" y1="0.1" x2="1" y2="0.9"><stop offset="0%" stop-color="#f9faf7"/><stop offset="24%" stop-color="#aeb4b3"/><stop offset="49%" stop-color="#e3e5e2"/><stop offset="76%" stop-color="#7b8385"/><stop offset="100%" stop-color="#eef0ed"/></linearGradient>
+        <linearGradient id="mark-metal-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="35%" stop-color="#e8e9e5"/><stop offset="70%" stop-color="#8b9291"/><stop offset="100%" stop-color="#454c4e"/></linearGradient>
+        <linearGradient id="lume-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f3f5ee"/><stop offset="100%" stop-color="#d3dbcf"/></linearGradient>
+        <radialGradient id="dial-${id}" cx="47%" cy="37%" r="82%"><stop offset="0%" stop-color="#315c83"/><stop offset="31%" stop-color="#1d4668"/><stop offset="65%" stop-color="#0f2a47"/><stop offset="86%" stop-color="#051222"/><stop offset="100%" stop-color="#010611"/></radialGradient>
+        <radialGradient id="dial-vignette-${id}" cx="50%" cy="49%" r="61%"><stop offset="0%" stop-color="#000511" stop-opacity="0"/><stop offset="72%" stop-color="#000511" stop-opacity="0"/><stop offset="100%" stop-color="#00030b" stop-opacity="0.86"/></radialGradient>
+        <linearGradient id="glass-${id}" x1="0.1" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.14"/><stop offset="27%" stop-color="#ffffff" stop-opacity="0.035"/><stop offset="55%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <clipPath id="body-clip-${id}"><path d="${bodyPath}"/></clipPath><clipPath id="bezel-clip-${id}"><path d="${bezelPlane}"/></clipPath><clipPath id="dial-clip-${id}"><path d="${dialPath}"/></clipPath>
+      </defs>
+        <!-- Articulated white-gold bracelet: broad at the case, tapering away. -->
+        <g filter="url(#case-shadow-${id})">${bracelet}</g>
+        <!-- The porthole's 3/9 architecture is carried by the continuous case;
+             there are no separate strap lugs or diamond-shaped appendages. -->
+        <path d="${bodyPath}" fill="url(#wg-case-${id})" filter="url(#case-shadow-${id})"/><g clip-path="url(#body-clip-${id})">${bodyGrain}</g><path d="${bodyPath}" fill="none" stroke="#e9ece8" stroke-width="0.68" opacity="0.78"/>
+        <!-- Two-part case: polished outer chamfer, vertically satin-brushed bezel plane, dark inner rail. -->
+        <path d="${outerBezel}" fill="url(#wg-polish-${id})" stroke="#70797c" stroke-width="0.32"/>
+        <path d="${bezelPlane}" fill="url(#wg-brush-${id})"/><g clip-path="url(#bezel-clip-${id})">${bezelGrain}</g><path d="${bezelPlane}" fill="none" stroke="#fbfcf8" stroke-width="0.4" opacity="0.62"/>
+        <path d="${dialRail}" fill="#202b31" stroke="#536066" stroke-width="0.4"/><path d="${dialPath}" fill="url(#dial-${id})"/>
+        <g clip-path="url(#dial-clip-${id})">${sunburst}${embosses}<path d="${dialPath}" fill="url(#dial-vignette-${id})"/>${minuteDots}${markers}
+          <rect x="135.15" y="92.95" width="14" height="14.2" rx="1.02" fill="url(#wg-polish-${id})" stroke="#687176" stroke-width="0.34"/><rect x="136.95" y="94.7" width="10.4" height="10.7" rx="0.5" fill="#e7eae7" stroke="#48535a" stroke-width="0.28"/><text class="date-win" data-date="dom" x="142.15" y="100.1" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Roboto Condensed,Helvetica,Arial,sans-serif" font-size="8.52" font-weight="500" font-stretch="condensed" letter-spacing="-0.15" fill="#151a1e">1</text>${print}<ellipse cx="70.5" cy="58.6" rx="34" ry="11.5" fill="url(#glass-${id})" transform="rotate(-24 70.5 58.6)"/></g>
+        <!-- Compact fluted crown emerging from the recessed 3 o'clock case shoulder. -->
+        <path d="M178 98.1 H183.1 V101.9 H178 Q176.9 100 178 98.1 Z" fill="#596367" stroke="#414c50" stroke-width="0.3"/><path d="M178.35 98.6 H182.85 M178.35 101.4 H182.85" stroke="#e1e5df" stroke-width="0.16" opacity="0.2"/><circle cx="189" cy="100" r="6.25" fill="url(#wg-polish-${id})" stroke="#3b4346" stroke-width="0.48"/>${crownGrooves}<circle cx="189" cy="100" r="6.25" fill="none" stroke="#f9faf7" stroke-width="0.2" opacity="0.52"/><path d="M189 97.8 V102.2 M186.8 100 H191.2" stroke="#42494b" stroke-width="0.32" stroke-linecap="round" opacity="0.62"/>
+        <!-- Rounded white-gold baton hands and a continuous sweep-seconds needle. -->
+        <g class="hand-hour" filter="url(#hand-shadow-${id})"><path d="M96.8 104.3 V75.15 C96.8 72.85 98.23 71.15 100 71.15 C101.77 71.15 103.2 72.85 103.2 75.15 V104.3 Z" fill="url(#wg-polish-${id})" stroke="#464e50" stroke-width="0.42"/><path d="M98.98 99.1 V76.55 C98.98 75.08 99.43 74.05 100 74.05 C100.57 74.05 101.02 75.08 101.02 76.55 V99.1 Z" fill="url(#lume-${id})"/></g>
+        <g class="hand-min" filter="url(#hand-shadow-${id})"><path d="M97 105.1 V57.35 C97 54.75 98.34 53.0 100 53.0 C101.66 53.0 103 54.75 103 57.35 V105.1 Z" fill="url(#wg-polish-${id})" stroke="#464e50" stroke-width="0.42"/><path d="M99.25 99.15 V58.5 C99.25 56.85 99.52 56.0 100 56.0 C100.48 56.0 100.75 56.85 100.75 58.5 V99.15 Z" fill="url(#lume-${id})"/></g>
+        <g class="hand-sec" filter="url(#hand-shadow-${id})"><line x1="100" y1="112.8" x2="100" y2="49.6" stroke="#303b40" stroke-width="1.1"/><line x1="100" y1="112.8" x2="100" y2="49.6" stroke="#eff2ee" stroke-width="0.38"/></g>
+        <circle cx="100" cy="100" r="4.32" fill="url(#wg-polish-${id})" stroke="#475052" stroke-width="0.55"/><circle cx="100" cy="100" r="2.28" fill="#a4aaa8" stroke="#f5f6f2" stroke-width="0.42"/><circle cx="100" cy="100" r="0.82" fill="#4d585c"/>`;
+    }
+  };
+
   // ───────────────── Omega Speedmaster Moonwatch Professional ─────────────────
   // Reference object: current steel/Hesalite Moonwatch ref. 310.30.42.50.01.001.
   // This is intentionally a replacement rather than a cosmetic overlay: the
