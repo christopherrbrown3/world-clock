@@ -13879,6 +13879,112 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
     }
   };
 
+  // High-fidelity reconstruction: Patek Philippe Calatrava 5227G-015
+  // (39 mm polished white gold / rose-gilt opaline dial). This current Calatrava
+  // uses Calibre 26-330 S C with a central sweep seconds hand and a date aperture
+  // at three, so it fits the app's live-time contract without inventing a subdial.
+  FACES.calatrava = {
+    name: "Patek Philippe Calatrava 5227G-015",
+    cadence: "sweep",
+    render() {
+      const id = "cala5227g015";
+      const at = (deg, r) => {
+        const a = deg * Math.PI / 180;
+        return [100 + Math.sin(a) * r, 100 - Math.cos(a) * r];
+      };
+      // The reference's narrow alligator strap widens only at the case throat;
+      // its curved ends disappear beneath the two pairs of horn lugs.
+      const topStrap = "M76 -8 H124 C126.7 8.5 131.0 27 133 46.5 Q100 43.2 67 46.5 C69.0 27 73.3 8.5 76 -8 Z";
+      const bottomStrap = "M67 153.5 Q100 156.8 133 153.5 C131.0 173 126.7 191.5 124 208 H76 C73.3 191.5 69.0 173 67 153.5 Z";
+      // One continuous officer-case silhouette: the outer boundary moves from
+      // the circular body into four swept horn lugs and back again. This avoids
+      // painting detached pads on top of a perfect disc.
+      const caseSilhouette = "M51.58 58 C49.2 50.8 49.2 42.3 52.4 34 C54.8 28 56.4 22.5 58.7 20.2 C60.5 18.9 64.8 18.8 68.2 20.2 C67.3 28 65.2 36.8 66 45.6 C75.7 39.3 87.5 35.9 100 35.9 C112.5 35.9 124.3 39.3 134 45.6 C134.8 36.8 132.7 28 131.8 20.2 C135.2 18.8 139.5 18.9 141.3 20.2 C143.6 22.5 145.2 28 147.6 34 C150.8 42.3 150.8 50.8 148.42 58 C158.3 67 164.1 82.6 164.1 100 C164.1 117.4 158.3 133 148.42 142 C150.8 149.2 150.8 157.7 147.6 166 C145.2 172 143.6 177.5 141.3 179.8 C139.5 181.1 135.2 181.2 131.8 179.8 C132.7 172 134.8 163.2 134 154.4 C124.3 160.7 112.5 164.1 100 164.1 C87.5 164.1 75.7 160.7 66 154.4 C65.2 163.2 67.3 172 68.2 179.8 C64.8 181.2 60.5 181.1 58.7 179.8 C56.4 177.5 54.8 172 52.4 166 C49.2 157.7 49.2 149.2 51.58 142 C41.7 133 35.9 117.4 35.9 100 C35.9 82.6 41.7 67 51.58 58 Z";
+
+      // The rail is a sequence of short, square cells and dark hour pearls,
+      // rather than a generic radial tick ring.
+      let railway = "", hourPearls = "";
+      for (let minute = 0; minute < 60; minute++) {
+        const deg = minute * 6;
+        const [x1, y1] = at(deg, 48.45);
+        const [x2, y2] = at(deg, 51.05);
+        railway += `<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" stroke="#353235" stroke-width="0.58"/>`;
+        if (minute % 5 === 0) {
+          const [x, y] = at(deg, 51.70);
+          hourPearls += `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="1.48" fill="#1d2021" stroke="#6d6e6a" stroke-width="0.28"/><circle cx="${(x - 0.30).toFixed(2)}" cy="${(y - 0.36).toFixed(2)}" r="0.38" fill="#e0dad1" opacity="0.66"/>`;
+        }
+      }
+
+      // Charcoal-gray, faceted white-gold "obus" batons.  Each is aligned
+      // independently with its radial position, preserving the real lug/dial axis.
+      const obus = (x, y, deg) => `<g transform="rotate(${deg} ${x.toFixed(2)} ${y.toFixed(2)})" filter="url(#cala-marker-shadow-${id})"><path d="M${(x - 1.58).toFixed(2)} ${(y + 5.10).toFixed(2)} H${(x + 1.58).toFixed(2)} V${(y - 3.35).toFixed(2)} L${x.toFixed(2)} ${(y - 6.05).toFixed(2)} L${(x - 1.58).toFixed(2)} ${(y - 3.35).toFixed(2)} Z" fill="url(#cala-charcoal-${id})" stroke="#16191a" stroke-width="0.18"/><path d="M${(x - 1.58).toFixed(2)} ${(y + 5.10).toFixed(2)} V${(y - 3.35).toFixed(2)} L${x.toFixed(2)} ${(y - 6.05).toFixed(2)} V${(y + 3.45).toFixed(2)} Z" fill="#a2a8a6" opacity="0.50"/><path d="M${x.toFixed(2)} ${(y - 6.05).toFixed(2)} L${(x + 1.58).toFixed(2)} ${(y - 3.35).toFixed(2)} V${(y + 5.10).toFixed(2)} L${x.toFixed(2)} ${(y + 3.45).toFixed(2)} Z" fill="#1c2324" opacity="0.76"/></g>`;
+      let markers = "";
+      for (let hour = 1; hour < 12; hour++) {
+        if (hour === 3) continue;
+        const [x, y] = at(hour * 30, 38.7);
+        markers += obus(x, y, hour * 30);
+      }
+      markers += `<g filter="url(#cala-marker-shadow-${id})"><path d="M94.70 64.65 H97.65 V53.25 L96.18 50.35 L94.70 53.25 Z" fill="url(#cala-charcoal-${id})" stroke="#16191a" stroke-width="0.18"/><path d="M94.70 64.65 V53.25 L96.18 50.35 V63.00 Z" fill="#a2a8a6" opacity="0.50"/><path d="M96.18 50.35 L97.65 53.25 V64.65 H96.18 Z" fill="#1c2324" opacity="0.76"/><path d="M102.35 64.65 H105.30 V53.25 L103.82 50.35 L102.35 53.25 Z" fill="url(#cala-charcoal-${id})" stroke="#16191a" stroke-width="0.18"/><path d="M102.35 64.65 V53.25 L103.82 50.35 V63.00 Z" fill="#a2a8a6" opacity="0.50"/><path d="M103.82 50.35 L105.30 53.25 V64.65 H103.82 Z" fill="#1c2324" opacity="0.76"/></g>`;
+
+      // Large, irregular square-scale seams: warm edge highlights ride just
+      // above darker recesses so the alligator remains glossy rather than flat.
+      let scales = "";
+      const topScaleRows = [[-2, 75.7, 124.3, 101.0], [12.4, 74.1, 125.9, 89.5], [27.6, 72.4, 127.6, 109.3], [41.2, 70.8, 129.2, 96.2]];
+      for (const [y, left, right, split] of topScaleRows) {
+        scales += `<path d="M${left} ${y} C${(left + 10.8).toFixed(1)} ${(y + 1.6).toFixed(1)} ${(split - 4.1).toFixed(1)} ${(y - 0.7).toFixed(1)} ${split} ${(y + 0.7).toFixed(1)} C${(split + 7.9).toFixed(1)} ${(y + 2.0).toFixed(1)} ${(right - 12.8).toFixed(1)} ${(y - 1.5).toFixed(1)} ${right} ${y}" fill="none" stroke="#170906" stroke-width="0.70" opacity="0.33"/><path d="M${left} ${(y - 0.45).toFixed(1)} C${(left + 10.8).toFixed(1)} ${(y + 1.15).toFixed(1)} ${(split - 4.1).toFixed(1)} ${(y - 1.15).toFixed(1)} ${split} ${(y + 0.25).toFixed(1)} C${(split + 7.9).toFixed(1)} ${(y + 1.55).toFixed(1)} ${(right - 12.8).toFixed(1)} ${(y - 1.95).toFixed(1)} ${right} ${(y - 0.45).toFixed(1)}" fill="none" stroke="#a65d39" stroke-width="0.34" opacity="0.42"/><path d="M${split} ${(y + 0.7).toFixed(1)} C${(split - 0.8).toFixed(1)} ${(y + 4.4).toFixed(1)} ${(split + 0.7).toFixed(1)} ${(y + 8.8).toFixed(1)} ${(split - 0.3).toFixed(1)} ${(y + 12.6).toFixed(1)}" fill="none" stroke="#1a0a06" stroke-width="0.46" opacity="0.30"/>`;
+      }
+      const bottomScaleRows = [[155.2, 70.8, 129.2, 104.0], [169.0, 72.4, 127.6, 91.0], [184.5, 74.2, 125.8, 110.0], [199.0, 75.8, 124.2, 98.0]];
+      for (const [y, left, right, split] of bottomScaleRows) {
+        scales += `<path d="M${left} ${y} C${(left + 12.8).toFixed(1)} ${(y - 1.5).toFixed(1)} ${(split - 7.9).toFixed(1)} ${(y + 2.0).toFixed(1)} ${split} ${(y + 0.7).toFixed(1)} C${(split + 4.1).toFixed(1)} ${(y - 0.7).toFixed(1)} ${(right - 10.8).toFixed(1)} ${(y + 1.6).toFixed(1)} ${right} ${y}" fill="none" stroke="#170906" stroke-width="0.70" opacity="0.33"/><path d="M${left} ${(y + 0.45).toFixed(1)} C${(left + 12.8).toFixed(1)} ${(y - 1.95).toFixed(1)} ${(split - 7.9).toFixed(1)} ${(y + 1.55).toFixed(1)} ${split} ${(y + 0.25).toFixed(1)} C${(split + 4.1).toFixed(1)} ${(y - 1.15).toFixed(1)} ${(right - 10.8).toFixed(1)} ${(y + 1.15).toFixed(1)} ${right} ${(y + 0.45).toFixed(1)}" fill="none" stroke="#a65d39" stroke-width="0.34" opacity="0.42"/><path d="M${split} ${(y + 0.7).toFixed(1)} C${(split + 0.8).toFixed(1)} ${(y + 4.4).toFixed(1)} ${(split - 0.7).toFixed(1)} ${(y + 8.8).toFixed(1)} ${(split + 0.3).toFixed(1)} ${(y + 12.6).toFixed(1)}" fill="none" stroke="#1a0a06" stroke-width="0.46" opacity="0.30"/>`;
+      }
+
+      let opalineGrain = "";
+      for (let i = 0; i < 90; i++) {
+        const a = (i * 137.508) * Math.PI / 180;
+        const r = 4 + ((i * 29) % 980) / 980 * 47.2;
+        const x = 100 + Math.cos(a) * r, y = 100 + Math.sin(a) * r;
+        opalineGrain += `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${(0.10 + (i % 3) * 0.03).toFixed(3)}" fill="${i % 2 ? "#fff5ed" : "#9f6757"}" opacity="${i % 2 ? "0.07" : "0.025"}"/>`;
+      }
+
+      let crownGrooves = "";
+      for (let x = 164.7; x <= 172.3; x += 0.94) {
+        crownGrooves += `<line x1="${x.toFixed(2)}" y1="94.6" x2="${x.toFixed(2)}" y2="105.4" stroke="#283034" stroke-width="0.38" opacity="0.62"/><line x1="${(x + 0.22).toFixed(2)}" y1="94.6" x2="${(x + 0.22).toFixed(2)}" y2="105.4" stroke="#ffffff" stroke-width="0.12" opacity="0.60"/>`;
+      }
+
+      const print = `<g class="calatrava-print"><text x="100" y="76.0" text-anchor="middle" dominant-baseline="central" font-family="'Helvetica Neue',Arial,Helvetica,sans-serif" font-size="4.30" font-weight="500" letter-spacing="0.02" textLength="34.3" lengthAdjust="spacingAndGlyphs" fill="#191a1a">PATEK PHILIPPE</text><text x="100" y="81.35" text-anchor="middle" dominant-baseline="central" font-family="'Helvetica Neue',Arial,Helvetica,sans-serif" font-size="2.82" font-weight="500" letter-spacing="0.12" textLength="13.3" lengthAdjust="spacingAndGlyphs" fill="#191a1a">GENEVE</text><text x="100" y="151.45" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.00" font-weight="600" letter-spacing="0.30" fill="#292725">SWISS</text></g>`;
+
+      return `<defs>
+        <filter id="cala-case-shadow-${id}" x="-22%" y="-22%" width="154%" height="154%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="1.30" stdDeviation="1.20" flood-color="#05090b" flood-opacity="0.48"/></filter>
+        <filter id="cala-marker-shadow-${id}" x="-55%" y="-55%" width="210%" height="210%" color-interpolation-filters="sRGB"><feDropShadow dx="0.34" dy="0.54" stdDeviation="0.22" flood-color="#070808" flood-opacity="0.36"/></filter>
+        <linearGradient id="cala-strap-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#170805"/><stop offset="12%" stop-color="#3b1b11"/><stop offset="30%" stop-color="#70402a"/><stop offset="49%" stop-color="#2b120c"/><stop offset="68%" stop-color="#61341f"/><stop offset="87%" stop-color="#34160d"/><stop offset="100%" stop-color="#120604"/></linearGradient>
+        <linearGradient id="cala-case-${id}" gradientUnits="userSpaceOnUse" x1="44" y1="30" x2="158" y2="170"><stop offset="0%" stop-color="#fdfdf9"/><stop offset="17%" stop-color="#b8c2c1"/><stop offset="34%" stop-color="#f7f8f4"/><stop offset="53%" stop-color="#718084"/><stop offset="71%" stop-color="#e9ede9"/><stop offset="100%" stop-color="#647276"/></linearGradient>
+        <radialGradient id="cala-lip-${id}" gradientUnits="userSpaceOnUse" cx="76" cy="55" r="88"><stop offset="0%" stop-color="#ffffff"/><stop offset="33%" stop-color="#e7ebe7"/><stop offset="58%" stop-color="#aeb8b8"/><stop offset="76%" stop-color="#f8f9f5"/><stop offset="100%" stop-color="#718083"/></radialGradient>
+        <linearGradient id="cala-bezel-${id}" gradientUnits="userSpaceOnUse" x1="50" y1="43" x2="153" y2="158"><stop offset="0%" stop-color="#f5f7f3"/><stop offset="30%" stop-color="#aab4b4"/><stop offset="51%" stop-color="#e9ece8"/><stop offset="71%" stop-color="#687579"/><stop offset="100%" stop-color="#f2f4f0"/></linearGradient>
+        <linearGradient id="cala-crown-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#526064"/><stop offset="17%" stop-color="#e8ece8"/><stop offset="37%" stop-color="#8c9798"/><stop offset="55%" stop-color="#fbfcf8"/><stop offset="78%" stop-color="#6b777a"/><stop offset="100%" stop-color="#dde2de"/></linearGradient>
+        <linearGradient id="cala-charcoal-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a3a6a3"/><stop offset="34%" stop-color="#5d6565"/><stop offset="62%" stop-color="#2c3334"/><stop offset="100%" stop-color="#747b7a"/></linearGradient>
+        <linearGradient id="cala-dial-${id}" x1="0" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#f8d2c1"/><stop offset="38%" stop-color="#efc3af"/><stop offset="72%" stop-color="#dfa68e"/><stop offset="100%" stop-color="#cf927d"/></linearGradient>
+        <linearGradient id="cala-glass-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.20"/><stop offset="34%" stop-color="#ffffff" stop-opacity="0.025"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <clipPath id="cala-strap-clip-${id}"><path d="${topStrap}"/><path d="${bottomStrap}"/></clipPath><clipPath id="cala-case-clip-${id}"><path d="${caseSilhouette}"/></clipPath><clipPath id="cala-dial-clip-${id}"><circle cx="100" cy="100" r="52.55"/></clipPath><clipPath id="cala-crown-clip-${id}"><path d="M164.1 95 H170.7 L173.25 96.75 V103.25 L170.7 105 H164.1 Z"/></clipPath>
+      </defs>
+        <!-- Glossy chocolate square-scale alligator, broad at the lug throat and
+             only gently tapered away from the case. -->
+        <path d="${topStrap}" fill="url(#cala-strap-${id})" stroke="#1d0b07" stroke-width="0.64"/><path d="${bottomStrap}" fill="url(#cala-strap-${id})" stroke="#1d0b07" stroke-width="0.64"/><g clip-path="url(#cala-strap-clip-${id})">${scales}</g><path d="M77.8 -5.5 C76.2 10.8 71.0 29.6 69.0 44.3 M122.2 -5.5 C123.8 10.8 129.0 29.6 131.0 44.3 M69.0 155.7 C71.0 170.4 76.2 189.2 77.8 205.5 M131.0 155.7 C129.0 170.4 123.8 189.2 122.2 205.5" fill="none" stroke="#9d5a38" stroke-width="0.52" stroke-linecap="round" stroke-dasharray="0.48 1.45" opacity="0.60"/>
+        <!-- A single, sculpted white-gold case-and-lug shell. -->
+        <path d="${caseSilhouette}" fill="url(#cala-case-${id})" filter="url(#cala-case-shadow-${id})"/><g clip-path="url(#cala-case-clip-${id})" fill="none" stroke-linecap="round"><path d="M53.4 56.5 C50.3 46.0 53.7 30.0 62.3 21.6 M146.6 56.5 C149.7 46.0 146.3 30.0 137.7 21.6 M53.4 143.5 C50.3 154.0 53.7 170.0 62.3 178.4 M146.6 143.5 C149.7 154.0 146.3 170.0 137.7 178.4" stroke="#66777b" stroke-width="9.6" opacity="0.17"/><path d="M52.7 55.4 C50.7 45.2 54.2 29.4 62.5 21.3 M147.3 55.4 C149.3 45.2 145.8 29.4 137.5 21.3 M52.7 144.6 C50.7 154.8 54.2 170.6 62.5 178.7 M147.3 144.6 C149.3 154.8 145.8 170.6 137.5 178.7" stroke="#ffffff" stroke-width="3.8" opacity="0.16"/></g>
+        <path d="M48.6 59.0 C47.2 49.0 49.8 36.2 59.8 23.3 M151.4 59.0 C152.8 49.0 150.2 36.2 140.2 23.3 M48.6 141.0 C47.2 151.0 49.8 163.8 59.8 176.7 M151.4 141.0 C152.8 151.0 150.2 163.8 140.2 176.7" fill="none" stroke="#ffffff" stroke-width="0.30" stroke-linecap="round" opacity="0.24"/><path d="M67.0 21.2 C66.7 28.3 65.6 36.5 66.0 45.6 M133.0 21.2 C133.3 28.3 134.4 36.5 134.0 45.6 M67.0 178.8 C66.7 171.7 65.6 163.5 66.0 154.4 M133.0 178.8 C133.3 171.7 134.4 163.5 134.0 154.4" fill="none" stroke="#45585d" stroke-width="0.64" stroke-linecap="round" opacity="0.58"/><path d="M66.8 44.2 C68.9 42.1 70.8 41.0 73.0 40.8 M133.2 44.2 C131.1 42.1 129.2 41.0 127.0 40.8 M66.8 155.8 C68.9 157.9 70.8 159.0 73.0 159.2 M133.2 155.8 C131.1 157.9 129.2 159.0 127.0 159.2" fill="none" stroke="#20292b" stroke-width="0.25" opacity="0.30"/>
+        <!-- A continuous concave bezel: restrained reflection rails over one
+             polished plane, rather than a stack of opaque grey rings. -->
+        <circle cx="100" cy="100" r="61.45" fill="none" stroke="#fbfcf8" stroke-width="0.48" opacity="0.62"/><circle cx="100" cy="100" r="55.05" fill="none" stroke="#4e5c60" stroke-width="0.62" opacity="0.56"/><circle cx="100" cy="100" r="52.55" fill="url(#cala-dial-${id})"/>
+        <g clip-path="url(#cala-dial-clip-${id})">${opalineGrain}<circle cx="100" cy="100" r="51.10" fill="none" stroke="#302d2c" stroke-width="0.38"/><circle cx="100" cy="100" r="48.25" fill="none" stroke="#302d2c" stroke-width="0.28"/>${railway}${hourPearls}${markers}
+          <rect x="132.88" y="94.70" width="12.80" height="10.60" rx="0.23" fill="url(#cala-charcoal-${id})" stroke="#687276" stroke-width="0.36"/><rect x="134.43" y="95.80" width="9.70" height="8.45" rx="0.06" fill="#f4f0e7" stroke="#c6c0b5" stroke-width="0.14"/><text class="date-win" data-date="dom" x="139.28" y="100.02" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow','Roboto Condensed',Helvetica,Arial,sans-serif" font-size="6.85" font-weight="500" font-stretch="condensed" letter-spacing="-0.12" fill="#17191a">1</text>${print}<ellipse cx="73" cy="58.5" rx="38" ry="13.6" fill="url(#cala-glass-${id})" transform="rotate(-25 73 58.5)"/></g>
+        <!-- Recessed side-on fluted crown: serrations and cylinder shading read
+             before any tiny Calatrava-cross detail, as in the frontal product view. -->
+        <path d="M159.7 98.45 H164.8 V101.55 H159.7 Q158.8 100 159.7 98.45 Z" fill="#475257" stroke="#354045" stroke-width="0.24"/><path d="M162.4 97.15 H165.2 V102.85 H162.4 Q161.6 100 162.4 97.15 Z" fill="#2d383c" stroke="#536065" stroke-width="0.22"/><path d="M164.1 95 H170.7 L171.8 95.55 L171.45 96.1 L172.65 96.65 L172.3 97.22 L173.3 97.75 V102.25 L172.3 102.78 L172.65 103.35 L171.45 103.9 L171.8 104.45 L170.7 105 H164.1 Z" fill="url(#cala-crown-${id})" stroke="#465258" stroke-width="0.30"/><g clip-path="url(#cala-crown-clip-${id})">${crownGrooves}</g><path d="M170.7 95 L171.8 95.55 L171.45 96.1 L172.65 96.65 L172.3 97.22 L173.3 97.75 V102.25 L172.3 102.78 L172.65 103.35 L171.45 103.9 L171.8 104.45 L170.7 105" fill="none" stroke="#f9faf6" stroke-width="0.14" opacity="0.60"/>
+        <!-- Faceted dark Dauphine hands, plus the unadorned central sweep seconds. -->
+        <g class="hand-hour" filter="url(#cala-marker-shadow-${id})"><path d="M100 105.2 L97.55 100.0 L97.68 78.10 L100 70.55 L102.32 78.10 L102.45 100.0 Z" fill="url(#cala-charcoal-${id})" stroke="#272d2d" stroke-width="0.18"/><path d="M100 70.55 L102.32 78.10 L100 99.0 L100 105.2 Z" fill="#293031" opacity="0.56"/></g><g class="hand-min" filter="url(#cala-marker-shadow-${id})"><path d="M100 105.8 L98.00 100.0 L98.15 60.10 L100 49.55 L101.85 60.10 L102.00 100.0 Z" fill="url(#cala-charcoal-${id})" stroke="#272d2d" stroke-width="0.18"/><path d="M100 49.55 L101.85 60.10 L100 99.0 L100 105.8 Z" fill="#293031" opacity="0.56"/></g><g class="hand-sec"><line x1="100" y1="114.2" x2="100" y2="46.6" stroke="#242a2b" stroke-width="0.72"/><line x1="99.80" y1="113.7" x2="99.80" y2="47.1" stroke="#8b908d" stroke-width="0.13" opacity="0.74"/><path d="M100 57.0 L99.65 58.15 L100 59.30 L100.35 58.15 Z" fill="#242a2b"/></g><circle cx="100" cy="100" r="3.10" fill="url(#cala-charcoal-${id})" stroke="#272d2d" stroke-width="0.24"/><circle cx="100" cy="100" r="1.30" fill="#aeb3b1" stroke="#eef0eb" stroke-width="0.20"/><circle cx="100" cy="100" r="0.50" fill="#303738"/>`;
+    }
+  };
+
   // ───────────────── Patek Philippe Nautilus ─────────────────
   // Reference object: current Nautilus 5811/1G-001, 41 mm white gold.
   // Its date + central sweep seconds match this app's live-time contract.
