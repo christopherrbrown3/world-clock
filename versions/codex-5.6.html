@@ -11295,13 +11295,16 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       // On the original 79030N bezel the first fifteen minutes are individually
       // graduated; the rest uses the large 20/30/40/50 numeral cadence.
       for (let minute = 1; minute <= 15; minute++) {
+        if (minute === 10) continue; // the “10” numeral occupies this position
         const [x1, y1] = at(minute * 6, 70.6), [x2, y2] = at(minute * 6, minute % 5 === 0 ? 65.2 : 67.9);
         bezelTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${gilt}" stroke-width="${minute % 5 === 0 ? "1.75" : "0.85"}" stroke-linecap="round"/>`;
       }
-      for (const minute of [20, 30, 40, 50]) {
+      // The black/gilt M79030N insert carries a proper pink-gilt “10” as
+      // well as 20/30/40/50; omitting it makes the 1–15 sector read generic.
+      for (const minute of [10, 20, 30, 40, 50]) {
         const [x, y] = at(minute * 6, 67.7);
         const rotation = minute * 6 > 90 && minute * 6 < 270 ? minute * 6 - 180 : minute * 6;
-        bezelLabels += `<text x="${x.toFixed(1)}" y="${(y + 0.2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="7.75" font-weight="500" fill="${gilt}" transform="rotate(${rotation} ${x.toFixed(1)} ${y.toFixed(1)})">${minute}</text>`;
+        bezelLabels += `<text x="${x.toFixed(1)}" y="${(y + 0.2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="8.0" font-weight="650" fill="${gilt}" transform="rotate(${rotation} ${x.toFixed(1)} ${y.toFixed(1)})">${minute}</text>`;
       }
       for (const minute of [20, 30, 40, 50]) {
         const [x1, y1] = at(minute * 6, 70.5), [x2, y2] = at(minute * 6, 65.2);
@@ -11323,14 +11326,28 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
           markers += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.55" fill="${lume}" stroke="${gilt}" stroke-width="1.15"/><circle cx="${(x - 0.7).toFixed(1)}" cy="${(y - 0.8).toFixed(1)}" r="2.85" fill="#f7f0d2" opacity="0.56"/>`;
         }
       }
-      const links = [[0,11,64],[11,23,67],[23,36,70],[36,51,73],[149,164,73],[164,177,70],[177,189,67],[189,200,64]];
-      for (const [y1, y2, width] of links) {
-        const x = 100 - width / 2, inner = width * 0.48;
-        bracelet += `<path d="M${x.toFixed(1)} ${y1} H${(x + width).toFixed(1)} L${(x + width - 2.4).toFixed(1)} ${y2} H${(x + 2.4).toFixed(1)} Z" fill="url(#bb-steel-${id})" stroke="#626a6e" stroke-width="0.42"/><path d="M${(100 - inner / 2).toFixed(1)} ${(y1 + 0.7).toFixed(1)} H${(100 + inner / 2).toFixed(1)} L${(100 + inner / 2 - 1.4).toFixed(1)} ${(y2 - 0.7).toFixed(1)} H${(100 - inner / 2 + 1.4).toFixed(1)} Z" fill="url(#bb-polish-${id})" stroke="#828a8e" stroke-width="0.3"/><circle cx="${(x + 2.1).toFixed(1)}" cy="${((y1 + y2) / 2).toFixed(1)}" r="1.35" fill="#798187" stroke="#e9eceb" stroke-width="0.22"/><circle cx="${(x + width - 2.1).toFixed(1)}" cy="${((y1 + y2) / 2).toFixed(1)}" r="1.35" fill="#798187" stroke="#e9eceb" stroke-width="0.22"/>`;
+      // Each end of the actual bracelet narrows from the 20 mm lug opening
+      // toward the clasp.  Keep the geometry explicit: the upper rows widen
+      // as they approach the head, while the lower rows narrow away from it.
+      // Three separately surfaced links (not one striped slab) preserve the
+      // stepped, riveted construction seen on the M79030N-0001.
+      const links = [
+        [0, 11, 64, 67], [11, 23, 67, 71], [23, 36, 71, 76], [36, 52, 76, 82],
+        [148, 164, 82, 76], [164, 177, 76, 71], [177, 189, 71, 67], [189, 200, 67, 64]
+      ];
+      for (const [y1, y2, width1, width2] of links) {
+        const left1 = 100 - width1 / 2, right1 = 100 + width1 / 2;
+        const left2 = 100 - width2 / 2, right2 = 100 + width2 / 2;
+        const center1 = width1 * 0.42 / 2, center2 = width2 * 0.42 / 2;
+        const cL1 = 100 - center1, cR1 = 100 + center1;
+        const cL2 = 100 - center2, cR2 = 100 + center2;
+        const mid = (y1 + y2) / 2;
+        bracelet += `<path d="M${left1.toFixed(1)} ${y1} H${(cL1 - 0.68).toFixed(1)} L${(cL2 - 0.68).toFixed(1)} ${y2} H${left2.toFixed(1)} Z" fill="url(#bb-steel-${id})" stroke="#586268" stroke-width="0.42"/><path d="M${(cR1 + 0.68).toFixed(1)} ${y1} H${right1.toFixed(1)} L${right2.toFixed(1)} ${y2} H${(cR2 + 0.68).toFixed(1)} Z" fill="url(#bb-steel-${id})" stroke="#586268" stroke-width="0.42"/><path d="M${cL1.toFixed(1)} ${(y1 + 0.58).toFixed(1)} H${cR1.toFixed(1)} L${cR2.toFixed(1)} ${(y2 - 0.58).toFixed(1)} H${cL2.toFixed(1)} Z" fill="url(#bb-polish-${id})" stroke="#8f989b" stroke-width="0.32"/><path d="M${(cL1 + 1.1).toFixed(1)} ${(y1 + 1.35).toFixed(1)} H${(cR1 - 1.1).toFixed(1)}" fill="none" stroke="#ffffff" stroke-width="0.36" opacity="0.56"/><circle cx="${(left1 + 1.85).toFixed(1)}" cy="${mid.toFixed(1)}" r="1.32" fill="#778086" stroke="#eef0ee" stroke-width="0.22"/><circle cx="${(right1 - 1.85).toFixed(1)}" cy="${mid.toFixed(1)}" r="1.32" fill="#778086" stroke="#eef0ee" stroke-width="0.22"/>`;
       }
       return `<defs>
         <linearGradient id="bb-steel-${id}" x1="0.06" y1="0" x2="0.94" y2="1"><stop offset="0%" stop-color="#687278"/><stop offset="15%" stop-color="#f7f8f6"/><stop offset="38%" stop-color="#aeb7ba"/><stop offset="61%" stop-color="#f5f7f6"/><stop offset="84%" stop-color="#7a858a"/><stop offset="100%" stop-color="#566168"/></linearGradient>
         <linearGradient id="bb-polish-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#f9faf7"/><stop offset="35%" stop-color="#a8b1b4"/><stop offset="56%" stop-color="#ffffff"/><stop offset="100%" stop-color="#6a7479"/></linearGradient>
+        <linearGradient id="bb-lug-satin-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#697277"/><stop offset="20%" stop-color="#c6cdcc"/><stop offset="47%" stop-color="#889296"/><stop offset="73%" stop-color="#d7dcda"/><stop offset="100%" stop-color="#657076"/></linearGradient>
         <radialGradient id="bb-case-${id}" cx="39%" cy="31%" r="79%"><stop offset="0%" stop-color="#f8f9f7"/><stop offset="37%" stop-color="#c0c8ca"/><stop offset="69%" stop-color="#7c878c"/><stop offset="100%" stop-color="#555f65"/></radialGradient>
         <radialGradient id="bb-bezel-${id}" cx="42%" cy="34%" r="78%"><stop offset="0%" stop-color="#3b3d3e"/><stop offset="45%" stop-color="#17191a"/><stop offset="100%" stop-color="#060708"/></radialGradient>
         <radialGradient id="bb-dial-${id}" cx="43%" cy="34%" r="82%"><stop offset="0%" stop-color="#292a29"/><stop offset="56%" stop-color="#111212"/><stop offset="100%" stop-color="#050506"/></radialGradient>
@@ -11341,22 +11358,42 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       </defs>
       <!-- M79030N-0001's stepped, riveted polished/satin bracelet. -->
       ${bracelet}
-      <path d="M54 59 L46 39 Q49 34 64 45 L77 53 Z M146 59 L154 39 Q151 34 136 45 L123 53 Z M54 141 L46 161 Q49 166 64 155 L77 147 Z M146 141 L154 161 Q151 166 136 155 L123 147 Z" fill="url(#bb-steel-${id})" stroke="#646e73" stroke-width="0.45"/>
       <circle cx="100" cy="100" r="79.7" fill="url(#bb-case-${id})" filter="url(#bb-shadow-${id})"/><circle cx="100" cy="100" r="78.8" fill="none" stroke="#f6f8f6" stroke-width="0.64" opacity="0.82"/><circle cx="100" cy="100" r="77.0" fill="#7b858a"/>${coinEdge}
+      <!-- Short, faceted axial lug shoulders and their three-piece end links.
+           They sit around the band at 12/6, never cross it; a restrained
+           satin treatment avoids the detached white-wing effect. -->
+      <g fill="url(#bb-lug-satin-${id})" stroke="#5b656a" stroke-width="0.46" stroke-linejoin="round">
+        <path d="M60.6 58.8 L53.8 46.0 L54.2 26.0 L58.9 16.8 L69.5 17.2 L74.1 26.4 L75.8 52.8 L71.1 59.2 Z"/>
+        <path d="M139.4 58.8 L146.2 46.0 L145.8 26.0 L141.1 16.8 L130.5 17.2 L125.9 26.4 L124.2 52.8 L128.9 59.2 Z"/>
+        <path d="M60.6 141.2 L53.8 154.0 L54.2 174.0 L58.9 183.2 L69.5 182.8 L74.1 173.6 L75.8 147.2 L71.1 140.8 Z"/>
+        <path d="M139.4 141.2 L146.2 154.0 L145.8 174.0 L141.1 183.2 L130.5 182.8 L125.9 173.6 L124.2 147.2 L128.9 140.8 Z"/>
+      </g>
+      <g fill="none" stroke="#eef1ed" stroke-width="0.32" opacity="0.46" stroke-linecap="round">
+        <path d="M58.8 25.7 L61.8 19.2 L68.0 19.5"/><path d="M141.2 25.7 L138.2 19.2 L132.0 19.5"/>
+        <path d="M58.8 174.3 L61.8 180.8 L68.0 180.5"/><path d="M141.2 174.3 L138.2 180.8 L132.0 180.5"/>
+      </g>
+      <g stroke="#5c666a" stroke-width="0.40" stroke-linejoin="round">
+        <path d="M59.4 16.7 H79.8 L80.5 25.3 H60.1 Z" fill="url(#bb-steel-${id})"/><path d="M81.2 15.3 H118.8 L119.5 25.3 H80.5 Z" fill="url(#bb-polish-${id})"/><path d="M120.2 16.7 H140.6 L139.9 25.3 H119.5 Z" fill="url(#bb-steel-${id})"/>
+        <path d="M60.1 174.7 H80.5 L79.8 183.3 H59.4 Z" fill="url(#bb-steel-${id})"/><path d="M80.5 174.7 H119.5 L118.8 184.7 H81.2 Z" fill="url(#bb-polish-${id})"/><path d="M119.5 174.7 H139.9 L140.6 183.3 H120.2 Z" fill="url(#bb-steel-${id})"/>
+      </g>
+      <g fill="#778187" stroke="#edf0ee" stroke-width="0.20"><circle cx="61.5" cy="21.7" r="1.12"/><circle cx="138.5" cy="21.7" r="1.12"/><circle cx="61.5" cy="178.3" r="1.12"/><circle cx="138.5" cy="178.3" r="1.12"/></g>
       <circle cx="100" cy="100" r="73.6" fill="url(#bb-bezel-${id})" stroke="#07090a" stroke-width="0.82"/>${bezelTicks}${bezelLabels}
       <!-- Red aluminium bezel triangle and pearl at twelve. -->
-      <path d="M100 25.0 L94.1 36.1 H105.9 Z" fill="#a91f21" stroke="#571111" stroke-width="0.58"/><circle cx="100" cy="31.0" r="2.25" fill="${lume}" stroke="${gilt}" stroke-width="0.72"/>
+      <path d="M100 25.0 L94.1 36.1 H105.9 Z" fill="#a91f21" stroke="#571111" stroke-width="0.58"/><circle cx="100" cy="31.0" r="2.35" fill="${lume}" stroke="${gilt}" stroke-width="0.72"/>
       <circle cx="100" cy="100" r="62.8" fill="#41484b" stroke="#9ca6a7" stroke-width="0.48"/><circle cx="100" cy="100" r="61.2" fill="#181a1a"/><circle cx="100" cy="100" r="60.0" fill="url(#bb-dial-${id})" stroke="#0a0b0b" stroke-width="0.72"/>
-      <!-- Oversized screw-down crown: circular brushed tube and raised Tudor Rose. -->
-      <rect x="173.5" y="95.0" width="9.8" height="10.0" rx="1.5" fill="url(#bb-steel-${id})" stroke="#606b70" stroke-width="0.45"/><circle cx="190.1" cy="100" r="8.8" fill="url(#bb-polish-${id})" stroke="#5f696e" stroke-width="0.58"/><path d="M184.2 94.0 V106.0 M186.2 92.4 V107.6 M188.2 91.5 V108.5 M190.2 91.2 V108.8 M192.2 91.5 V108.5 M194.2 92.4 V107.6 M196.1 94.0 V106.0" stroke="#667176" stroke-width="0.62"/><path d="M185.0 94.1 V105.9 M189.0 91.8 V108.2 M193.0 92.3 V107.7 M195.4 94.1 V105.9" stroke="#ffffff" stroke-width="0.24" opacity="0.68"/><g transform="translate(190.1 100)" fill="none" stroke="#687277" stroke-width="0.33"><circle r="2.25"/><path d="M0 -2.6 V2.6 M-2.35 0 H2.35 M-1.8 -1.8 L1.8 1.8 M1.8 -1.8 L-1.8 1.8"/></g>
+      <!-- Screw-down big crown: circular-satin tube, knurling, and a small
+           raised Tudor rose rather than a generic crossed emblem. -->
+      <rect x="173.5" y="95.0" width="9.8" height="10.0" rx="1.5" fill="url(#bb-steel-${id})" stroke="#606b70" stroke-width="0.45"/><circle cx="190.1" cy="100" r="8.8" fill="url(#bb-polish-${id})" stroke="#5f696e" stroke-width="0.58"/><path d="M184.2 94.0 V106.0 M186.2 92.4 V107.6 M188.2 91.5 V108.5 M190.2 91.2 V108.8 M192.2 91.5 V108.5 M194.2 92.4 V107.6 M196.1 94.0 V106.0" stroke="#667176" stroke-width="0.62"/><path d="M185.0 94.1 V105.9 M189.0 91.8 V108.2 M193.0 92.3 V107.7 M195.4 94.1 V105.9" stroke="#ffffff" stroke-width="0.24" opacity="0.68"/><g transform="translate(190.1 100)" fill="none" stroke="#687277" stroke-width="0.33" stroke-linejoin="round"><circle r="2.35"/><path d="M0 -2.20 C0.92 -2.20 1.43 -1.48 1.12 -0.82 C2.02 -0.77 2.36 0.12 1.66 0.76 C1.91 1.61 0.96 2.25 0 1.64 C-0.96 2.25 -1.91 1.61 -1.66 0.76 C-2.36 0.12 -2.02 -0.77 -1.12 -0.82 C-1.43 -1.48 -0.92 -2.20 0 -2.20 Z"/><circle r="0.52"/></g>
       <g clip-path="url(#bb-dialclip-${id})">
         ${minuteTrack}${markers}
         <g transform="translate(100 70.8)" fill="none" stroke="${gilt}" stroke-width="0.72" stroke-linejoin="round"><path d="M-3.65 -4.2 H3.65 V-1.05 C3.65 2.6 1.35 4.45 0 5.35 C-1.35 4.45 -3.65 2.6 -3.65 -1.05 Z"/><path d="M0 -3.7 V4.2 M-2.75 -1.65 H2.75"/></g><text x="100" y="80.4" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="6.05" font-weight="700" letter-spacing="1.02" fill="${gilt}">TUDOR</text><text x="100" y="86.6" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.0" font-weight="600" letter-spacing="0.72" fill="${gilt}">GENEVE</text>
         <text x="100" y="124.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.45" font-weight="600" letter-spacing="0.08" fill="${gilt}">200m:660ft</text><text x="100" y="130.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.13" font-weight="600" letter-spacing="0.29" fill="${gilt}">CHRONOMETER</text><text x="100" y="135.8" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.9" font-weight="600" letter-spacing="0.28" fill="${gilt}">OFFICIALLY CERTIFIED</text><text x="88.9" y="157.7" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.4" font-weight="600" letter-spacing="0.36" fill="#dfd6bd">SWISS</text><text x="111.1" y="157.7" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.4" font-weight="600" letter-spacing="0.36" fill="#dfd6bd">MADE</text>
         <path d="M48 54 H88 L48 93 Z" fill="url(#bb-glass-${id})" opacity="0.34"/>
       </g>
-      <!-- Snowflake hour, gilt-edged sword minute and lollipop seconds. -->
-      <g class="hand-hour"><path d="M100 106 L97.45 97.6 L97.45 78.2 L92.45 72.3 L94.2 64.4 L97.35 64.4 L100 57.0 L102.65 64.4 L105.8 64.4 L107.55 72.3 L102.55 78.2 L102.55 97.6 Z" fill="url(#bb-hand-${id})" stroke="#775b25" stroke-width="0.56" stroke-linejoin="round"/><path d="M100 98.8 L99.0 77.6 L95.35 70.9 L97.9 68.5 L99.25 68.5 L100 62.6 L100.75 68.5 L102.1 68.5 L104.65 70.9 L101.0 77.6 L100 93.6 Z" fill="${lume}"/></g><g class="hand-min"><path d="M100 107.5 L97.8 97.0 L98.35 55.6 L100 42.2 L101.65 55.6 L102.2 97.0 Z" fill="url(#bb-hand-${id})" stroke="#775b25" stroke-width="0.5"/><path d="M100 99.5 L99.22 57.9 L100 48.1 L100.78 57.9 L100.78 99.5 Z" fill="${lume}"/></g><g class="hand-sec"><line x1="100" y1="116.2" x2="100" y2="46.4" stroke="${gilt}" stroke-width="1.05"/><circle cx="100" cy="56.0" r="3.05" fill="${lume}" stroke="${gilt}" stroke-width="0.72"/><line x1="100" y1="113.8" x2="100" y2="122.2" stroke="${gilt}" stroke-width="1.15"/></g><circle cx="100" cy="100" r="3.7" fill="url(#bb-hand-${id})" stroke="#735620" stroke-width="0.56"/><circle cx="100" cy="100" r="1.5" fill="#f5eccd"/>
+      <!-- Snowflake hour, a deliberately shorter gilt-edged sword minute,
+           and the longer, slimmer lollipop seconds hand.  The minute tip
+           stops before the outer minute track at every rotation. -->
+      <g class="hand-hour"><path d="M100 106 L97.45 97.6 L97.45 78.2 L92.45 72.3 L94.2 64.4 L97.35 64.4 L100 57.0 L102.65 64.4 L105.8 64.4 L107.55 72.3 L102.55 78.2 L102.55 97.6 Z" fill="url(#bb-hand-${id})" stroke="#775b25" stroke-width="0.56" stroke-linejoin="round"/><path d="M100 98.8 L99.0 77.6 L95.35 70.9 L97.9 68.5 L99.25 68.5 L100 62.6 L100.75 68.5 L102.1 68.5 L104.65 70.9 L101.0 77.6 L100 93.6 Z" fill="${lume}"/></g><g class="hand-min"><path d="M100 107.5 L97.8 97.0 L98.35 58.2 L100 46.0 L101.65 58.2 L102.2 97.0 Z" fill="url(#bb-hand-${id})" stroke="#775b25" stroke-width="0.5"/><path d="M100 99.5 L99.22 60.0 L100 50.2 L100.78 60.0 L100.78 99.5 Z" fill="${lume}"/></g><g class="hand-sec"><line x1="100" y1="116.2" x2="100" y2="44.8" stroke="${gilt}" stroke-width="1.05"/><circle cx="100" cy="55.7" r="3.05" fill="${lume}" stroke="${gilt}" stroke-width="0.72"/><line x1="100" y1="113.8" x2="100" y2="122.2" stroke="${gilt}" stroke-width="1.15"/></g><circle cx="100" cy="100" r="3.7" fill="url(#bb-hand-${id})" stroke="#735620" stroke-width="0.56"/><circle cx="100" cy="100" r="1.5" fill="#f5eccd"/>
       <circle cx="100" cy="100" r="60.0" fill="none" stroke="#f7f7ef" stroke-width="0.6" opacity="0.52"/>`;
     }
   };
