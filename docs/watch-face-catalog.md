@@ -13,7 +13,7 @@ Total faces: 62.
 | `nautilus` | Patek Philippe Nautilus 5811/1G-001 | `sweep` |
 | `royaloak` | Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06 | `sweep` |
 | `calatrava` | Patek Philippe Calatrava 5227G-015 | `sweep` |
-| `tank` | Cartier Tank | `tick` |
+| `tank` | Cartier Tank Louis Cartier WGTA0342 | `tick` |
 | `reverso` | Jaeger-LeCoultre Reverso | `sweep` |
 | `seamaster` | Omega Seamaster Diver 300M | `sweep` |
 | `lange1` | A. Lange & Söhne Lange 1 | `sweep` |
