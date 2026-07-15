@@ -11491,6 +11491,10 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       return `<defs>
         <linearGradient id="navi-steel-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#5c656a"/><stop offset="14%" stop-color="#f8f9f6"/><stop offset="36%" stop-color="#aeb7ba"/><stop offset="54%" stop-color="#ffffff"/><stop offset="78%" stop-color="#8c969a"/><stop offset="100%" stop-color="#505b60"/></linearGradient>
         <linearGradient id="navi-metal-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#737c80"/><stop offset="24%" stop-color="#fcfcf7"/><stop offset="53%" stop-color="#a7afb1"/><stop offset="74%" stop-color="#f8f8f2"/><stop offset="100%" stop-color="#60696e"/></linearGradient>
+        <!-- A transverse highlight gives the B01's short cylindrical pumps a
+             rounded steel barrel rather than a flat, shared capsule. -->
+        <linearGradient id="navi-pump-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#596368"/><stop offset="17%" stop-color="#c4cdce"/><stop offset="43%" stop-color="#fdfdf9"/><stop offset="68%" stop-color="#a4afb2"/><stop offset="100%" stop-color="#4f5a60"/></linearGradient>
+        <linearGradient id="navi-pumpcap-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#69747a"/><stop offset="26%" stop-color="#f8f9f5"/><stop offset="61%" stop-color="#aeb8ba"/><stop offset="100%" stop-color="#5a656a"/></linearGradient>
         <radialGradient id="navi-dial-${id}" cx="42%" cy="32%" r="81%"><stop offset="0%" stop-color="#ffffff"/><stop offset="48%" stop-color="#f1f1ed"/><stop offset="78%" stop-color="#d3d6d4"/><stop offset="100%" stop-color="#acb1b2"/></radialGradient>
         <radialGradient id="navi-sub-${id}" cx="40%" cy="32%" r="78%"><stop offset="0%" stop-color="#35393a"/><stop offset="56%" stop-color="#171a1b"/><stop offset="100%" stop-color="#060708"/></radialGradient>
         <pattern id="navi-azur-${id}" width="1.5" height="1.5" patternUnits="userSpaceOnUse" patternTransform="rotate(26)"><rect width="1.5" height="1.5" fill="#111416"/><path d="M0 0 V1.5" stroke="#707779" stroke-width="0.32"/></pattern>
@@ -11505,8 +11509,54 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       <!-- Separate, compact longitudinal lugs: their small flare follows the strap axis and never crosses the case silhouette. -->
       <path d="M62.0 46.0 L58.2 24.8 L59.2 18.0 L62.1 13.5 L69.4 14.8 L74.8 42.8 Z M138.0 46.0 L141.8 24.8 L140.8 18.0 L137.9 13.5 L130.6 14.8 L125.2 42.8 Z M62.0 154.0 L58.2 175.2 L59.2 182.0 L62.1 186.5 L69.4 185.2 L74.8 157.2 Z M138.0 154.0 L141.8 175.2 L140.8 182.0 L137.9 186.5 L130.6 185.2 L125.2 157.2 Z" fill="url(#navi-steel-${id})" stroke="#657076" stroke-width="0.48"/>
       <path d="M59.8 25.2 L62.8 16.6 L67.5 17.4 L70.9 39.6 L66.6 41.8 Z M140.2 25.2 L137.2 16.6 L132.5 17.4 L129.1 39.6 L133.4 41.8 Z M59.8 174.8 L62.8 183.4 L67.5 182.6 L70.9 160.4 L66.6 158.2 Z M140.2 174.8 L137.2 183.4 L132.5 182.6 L129.1 160.4 L133.4 158.2 Z" fill="#f9faf6" opacity="0.22"/>
+      <!-- The B01's narrow control tubes sit behind the front rim.  The case
+           masks their roots, leaving a clean unguarded Navitimer case flank. -->
+      <g fill="url(#navi-steel-${id})" stroke="#566167" stroke-width="0.46" stroke-linejoin="round">
+        <g transform="rotate(-35 176.5 60)"><path d="M161.8 57.6 H178.5 V62.4 H162.4 Z"/></g>
+        <g transform="rotate(35 176.5 140)"><path d="M161.8 137.6 H178.5 V142.4 H162.4 Z"/></g>
+        <path d="M167.8 97.5 C173.0 97.1 177.5 97.4 181.1 98.3 V101.7 C177.5 102.6 173.0 102.9 167.8 102.5 Z"/>
+      </g>
       <circle cx="100" cy="100" r="80.0" fill="url(#navi-steel-${id})" filter="url(#navi-shadow-${id})"/><circle cx="100" cy="100" r="79.0" fill="none" stroke="#f7f8f5" stroke-width="0.66" opacity="0.72"/><circle cx="100" cy="100" r="76.0" fill="#707a7f"/>${teeth}<circle cx="100" cy="100" r="74.6" fill="#0c0e0f" stroke="#3e464a" stroke-width="0.8"/>${cScale}<circle cx="100" cy="100" r="65.2" fill="#e7e8e3" stroke="#0d0f10" stroke-width="0.68"/>${dScale}<circle cx="100" cy="100" r="56.4" fill="#b8bdbe" stroke="#818a8e" stroke-width="0.58"/><circle cx="100" cy="100" r="55.7" fill="url(#navi-dial-${id})" stroke="#f8f8f2" stroke-width="0.46"/>
-      <g transform="rotate(-25 181 77)"><rect x="174.1" y="73.8" width="17.2" height="6.5" rx="2.05" fill="url(#navi-steel-${id})" stroke="#5f686d" stroke-width="0.5"/><rect x="183.2" y="74.65" width="7.1" height="4.8" rx="1.45" fill="#e4e7e4" opacity="0.72"/></g><g transform="rotate(25 181 123)"><rect x="174.1" y="119.7" width="17.2" height="6.5" rx="2.05" fill="url(#navi-steel-${id})" stroke="#5f686d" stroke-width="0.5"/><rect x="183.2" y="120.55" width="7.1" height="4.8" rx="1.45" fill="#e4e7e4" opacity="0.72"/></g><rect x="176.0" y="96.2" width="8.2" height="7.6" rx="1.25" fill="url(#navi-steel-${id})" stroke="#667177" stroke-width="0.4"/><circle cx="189.1" cy="100" r="7.55" fill="url(#navi-steel-${id})" stroke="#59646a" stroke-width="0.62"/><path d="M184.2 95.1 V104.9 M185.9 93.5 V106.5 M187.6 92.7 V107.3 M189.3 92.45 V107.55 M191.0 92.7 V107.3 M192.7 93.5 V106.5 M194.4 95.1 V104.9" stroke="#5e686d" stroke-width="0.58"/><path d="M185.0 95.2 V104.8 M188.4 92.9 V107.1 M191.8 93.2 V106.8 M193.3 95.1 V104.9" stroke="#fbfcf8" stroke-width="0.24" opacity="0.72"/>
+      <!-- Model-specific B01 chronograph controls: compact radial pumps at two
+           and four, each with a narrow collar, rounded barrel and flat cap. -->
+      <g stroke="#536067" stroke-width="0.46" stroke-linejoin="round">
+        <g transform="rotate(-35 176.5 60)">
+          <rect x="173.0" y="57.35" width="4.55" height="5.30" rx="0.58" fill="url(#navi-metal-${id})"/>
+          <rect x="177.15" y="56.95" width="5.55" height="6.10" rx="0.98" fill="url(#navi-pump-${id})"/>
+          <rect x="182.05" y="57.15" width="4.95" height="5.70" rx="0.52" fill="url(#navi-pumpcap-${id})"/>
+          <path d="M177.15 57.25 V62.75" fill="none" stroke="#344149" stroke-width="0.48"/>
+          <path d="M182.16 57.36 V62.64" fill="none" stroke="#6a767c" stroke-width="0.42"/>
+          <path d="M185.45 57.48 H186.18 V62.52 H185.45" fill="none" stroke="#405058" stroke-width="0.38" opacity="0.82"/>
+          <!-- Flat circular end-face, seen as a narrow ellipse at this angle. -->
+          <ellipse cx="187.05" cy="60.0" rx="0.64" ry="2.74" fill="url(#navi-metal-${id})" stroke="#405058" stroke-width="0.34"/>
+          <path d="M187.10 57.72 V62.28" fill="none" stroke="#ffffff" stroke-width="0.20" opacity="0.62"/>
+          <path d="M178.05 57.78 H181.40" fill="none" stroke="#ffffff" stroke-width="0.36" opacity="0.72"/>
+        </g>
+        <g transform="rotate(35 176.5 140)">
+          <rect x="173.0" y="137.35" width="4.55" height="5.30" rx="0.58" fill="url(#navi-metal-${id})"/>
+          <rect x="177.15" y="136.95" width="5.55" height="6.10" rx="0.98" fill="url(#navi-pump-${id})"/>
+          <rect x="182.05" y="137.15" width="4.95" height="5.70" rx="0.52" fill="url(#navi-pumpcap-${id})"/>
+          <path d="M177.15 137.25 V142.75" fill="none" stroke="#344149" stroke-width="0.48"/>
+          <path d="M182.16 137.36 V142.64" fill="none" stroke="#6a767c" stroke-width="0.42"/>
+          <path d="M185.45 137.48 H186.18 V142.52 H185.45" fill="none" stroke="#405058" stroke-width="0.38" opacity="0.82"/>
+          <!-- Matching terminal face on the lower chronograph pump. -->
+          <ellipse cx="187.05" cy="140.0" rx="0.64" ry="2.74" fill="url(#navi-metal-${id})" stroke="#405058" stroke-width="0.34"/>
+          <path d="M187.10 137.72 V142.28" fill="none" stroke="#ffffff" stroke-width="0.20" opacity="0.62"/>
+          <path d="M178.05 137.78 H181.40" fill="none" stroke="#ffffff" stroke-width="0.36" opacity="0.72"/>
+        </g>
+      </g>
+      <!-- The B01's crown is its dominant control: a taller coin-edge wheel
+           that projects past the pumps, with deliberately shallow fluting. -->
+      <path d="M176.8 97.1 C179.2 96.7 181.0 96.9 182.8 98.0 V102.0 C181.0 103.1 179.2 103.3 176.8 102.9 Z" fill="url(#navi-metal-${id})" stroke="#566167" stroke-width="0.42"/>
+      <g stroke="#566167" stroke-width="0.50" stroke-linejoin="round">
+        <path d="M178.0 95.3 Q178.8 92.1 180.2 92.8 Q181.35 90.3 182.65 91.6 Q183.95 90.2 185.25 91.5 Q186.55 90.5 187.85 91.9 Q189.10 91.4 190.05 93.8 L191.65 95.5 V104.5 L190.05 106.2 Q189.10 108.6 187.85 108.1 Q186.55 109.5 185.25 108.5 Q183.95 109.8 182.65 108.4 Q181.35 109.7 180.2 107.2 Q178.8 107.9 178.0 104.7 Z" fill="url(#navi-steel-${id})"/>
+        <path d="M180.00 94.0 V106.0 M182.00 92.3 V107.7 M184.00 92.3 V107.7 M186.00 92.3 V107.7 M188.00 93.0 V107.0" fill="none" stroke="#4a575e" stroke-width="0.34"/>
+        <path d="M181.00 93.2 V106.8 M185.00 92.2 V107.8 M187.50 93.0 V107.0" fill="none" stroke="#f9faf7" stroke-width="0.20" opacity="0.66"/>
+        <path d="M189.40 94.1 C190.40 95.3 190.72 97.05 190.72 100.0 C190.72 102.95 190.40 104.7 189.40 105.9" fill="none" stroke="#657278" stroke-width="0.36"/>
+        <!-- Restrained polished end-cap at the crown's outboard edge. -->
+        <ellipse cx="191.18" cy="100" rx="0.60" ry="5.05" fill="url(#navi-metal-${id})" stroke="#46545c" stroke-width="0.30"/>
+        <path d="M191.25 95.75 V104.25" fill="none" stroke="#ffffff" stroke-width="0.18" opacity="0.60"/>
+      </g>
       <g clip-path="url(#navi-dialclip-${id})">
         ${sunburst}${chapter}${markers}
         <g transform="translate(100 58.2) scale(0.84)" fill="url(#navi-metal-${id})" stroke="#5c6468" stroke-width="0.3"><path d="M-1.4 0 C-5.4 -3.6 -11.1 -3.3 -17 -1.4 C-12.8 -0.2 -9.5 1.25 -5.4 2.2 C-9.1 2.4 -12.4 3.65 -15.5 5.2 C-9.1 5.05 -4.75 3.95 -1.4 1.8 Z"/><path d="M1.4 0 C5.4 -3.6 11.1 -3.3 17 -1.4 C12.8 -0.2 9.5 1.25 5.4 2.2 C9.1 2.4 12.4 3.65 15.5 5.2 C9.1 5.05 4.75 3.95 1.4 1.8 Z"/><circle cx="0" cy="-3.05" r="1.28"/><rect x="-0.58" y="-2.7" width="1.16" height="5" rx="0.35"/></g>
