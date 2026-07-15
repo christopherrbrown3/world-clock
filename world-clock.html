@@ -11631,18 +11631,63 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         <linearGradient id="zen-brush-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#5e696e"/><stop offset="16%" stop-color="#e6e9e7"/><stop offset="37%" stop-color="#9ea8ab"/><stop offset="63%" stop-color="#eef0ed"/><stop offset="100%" stop-color="#566168"/></linearGradient>
         <linearGradient id="zen-polish-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#e5e8e7"/><stop offset="28%" stop-color="#ffffff"/><stop offset="54%" stop-color="#9ca6a9"/><stop offset="72%" stop-color="#fbfcf8"/><stop offset="100%" stop-color="#6b767a"/></linearGradient>
         <linearGradient id="zen-metal-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#677176"/><stop offset="23%" stop-color="#fbfcf8"/><stop offset="48%" stop-color="#a5afb2"/><stop offset="73%" stop-color="#f8f8f2"/><stop offset="100%" stop-color="#5c666b"/></linearGradient>
+        <!-- Distinct transverse steel shading for the Chronomaster's broader
+             piston heads, rather than reusing a generic rounded control. -->
+        <linearGradient id="zen-pump-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#556167"/><stop offset="16%" stop-color="#bdc7c8"/><stop offset="43%" stop-color="#fcfcf8"/><stop offset="68%" stop-color="#9da8ab"/><stop offset="100%" stop-color="#4e5a60"/></linearGradient>
+        <linearGradient id="zen-pumpface-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#667278"/><stop offset="30%" stop-color="#f8f9f5"/><stop offset="67%" stop-color="#aab4b6"/><stop offset="100%" stop-color="#566168"/></linearGradient>
         <radialGradient id="zen-dial-${id}" cx="43%" cy="32%" r="82%"><stop offset="0%" stop-color="#ffffff"/><stop offset="53%" stop-color="#f4f4f0"/><stop offset="82%" stop-color="#d8dbd9"/><stop offset="100%" stop-color="#b8bdbd"/></radialGradient>
         <linearGradient id="zen-glass-${id}" x1="0.1" y1="0" x2="0.89" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.25"/><stop offset="39%" stop-color="#fff" stop-opacity="0.04"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
         <filter id="zen-shadow-${id}" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.2" stdDeviation="1.7" flood-color="#11181d" flood-opacity="0.34"/></filter>
         <filter id="zen-handshadow-${id}" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="1.0" stdDeviation="0.7" flood-color="#121516" flood-opacity="0.48"/></filter>
         <clipPath id="zen-dialclip-${id}"><circle cx="100" cy="100" r="61.0"/></clipPath>
+        <!-- Keeps the tiny signed crown relief within its polished end face. -->
+        <clipPath id="zen-crowncap-${id}"><ellipse cx="192.0" cy="100" rx="1.05" ry="4.05"/></clipPath>
       </defs>
       <!-- The three-link bracelet is widest at the case. Its four faceted lugs flare only locally from the 12/6 bracelet axis. -->
       ${bracelet}<path d="M61.5 42.5 L53.2 28.3 L47.2 27.1 L31.0 45.4 L34.0 54.8 L47.0 59.7 L67.0 52.6 Z M138.5 42.5 L146.8 28.3 L152.8 27.1 L169.0 45.4 L166.0 54.8 L153.0 59.7 L133.0 52.6 Z M61.5 157.5 L53.2 171.7 L47.2 172.9 L31.0 154.6 L34.0 145.2 L47.0 140.3 L67.0 147.4 Z M138.5 157.5 L146.8 171.7 L152.8 172.9 L169.0 154.6 L166.0 145.2 L153.0 140.3 L133.0 147.4 Z" fill="url(#zen-brush-${id})" stroke="#5f696d" stroke-width="0.52"/>
       <path d="M53.2 30.0 L47.5 29.1 L34.4 45.8 L37.0 52.2 L47.5 56.6 L63.5 51.2 Z M146.8 30.0 L152.5 29.1 L165.6 45.8 L163.0 52.2 L152.5 56.6 L136.5 51.2 Z M53.2 170.0 L47.5 170.9 L34.4 154.2 L37.0 147.8 L47.5 143.4 L63.5 148.8 Z M146.8 170.0 L152.5 170.9 L165.6 154.2 L163.0 147.8 L152.5 143.4 L136.5 148.8 Z" fill="#f6f8f5" opacity="0.24"/>
+      <!-- Hidden tubes establish the real 2/4 Chronomaster attachment. The
+           following case layers mask their roots so no hardware sits on the
+           black ceramic bezel. -->
+      <g fill="url(#zen-brush-${id})" stroke="#536067" stroke-width="0.48" stroke-linejoin="round">
+        <g transform="rotate(-30 176 64)"><path d="M159.4 61.6 H181.1 V66.4 H160.0 Z"/></g>
+        <g transform="rotate(30 176 136)"><path d="M159.4 133.6 H181.1 V138.4 H160.0 Z"/></g>
+        <path d="M166.8 97.4 C172.5 97.0 178.1 97.3 183.2 98.3 V101.7 C178.1 102.7 172.5 103.0 166.8 102.6 Z"/>
+      </g>
       <circle cx="100" cy="100" r="80.3" fill="url(#zen-brush-${id})" filter="url(#zen-shadow-${id})"/><circle cx="100" cy="100" r="79.15" fill="none" stroke="#f6f7f4" stroke-width="0.65" opacity="0.74"/><circle cx="100" cy="100" r="77.4" fill="#080a0b" stroke="#343b3e" stroke-width="0.72"/>${bezelTicks}${bezelLabels}<text x="136" y="43.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.7" font-weight="600" letter-spacing="0.35" fill="#eeeeea" transform="rotate(37 136 43)">1/10TH OF A SECOND</text><circle cx="100" cy="100" r="64.8" fill="url(#zen-brush-${id})" stroke="#8f999c" stroke-width="0.68"/><circle cx="100" cy="100" r="62.25" fill="#eeeeea" stroke="#e3e4df" stroke-width="0.6"/><circle cx="100" cy="100" r="61.0" fill="url(#zen-dial-${id})" stroke="#c1c5c4" stroke-width="0.52"/>
-      <!-- Compact pump pushers and fluted crown retain the Chronomaster's profile without overpowering the case. -->
-      <g transform="rotate(-24 182 77)"><rect x="175.0" y="73.8" width="16.6" height="6.6" rx="2.05" fill="url(#zen-polish-${id})" stroke="#58636a" stroke-width="0.5"/><rect x="183.8" y="74.7" width="6.8" height="4.8" rx="1.45" fill="#eef0ed" opacity="0.74"/></g><g transform="rotate(24 182 123)"><rect x="175.0" y="119.6" width="16.6" height="6.6" rx="2.05" fill="url(#zen-polish-${id})" stroke="#58636a" stroke-width="0.5"/><rect x="183.8" y="120.5" width="6.8" height="4.8" rx="1.45" fill="#eef0ed" opacity="0.74"/></g><rect x="176.2" y="96.3" width="7.9" height="7.4" rx="1.3" fill="url(#zen-brush-${id})"/><circle cx="188.9" cy="100" r="7.85" fill="url(#zen-metal-${id})" stroke="#515c62" stroke-width="0.64"/><path d="M183.8 95.2 V104.8 M185.5 93.6 V106.4 M187.2 92.8 V107.2 M188.9 92.5 V107.5 M190.6 92.8 V107.2 M192.3 93.6 V106.4 M194.0 95.2 V104.8" stroke="#556168" stroke-width="0.6"/><path d="M184.6 95.3 V104.7 M188.0 93.0 V107.0 M191.4 93.2 V106.8 M193.0 95.1 V104.9" stroke="#fbfcf8" stroke-width="0.24" opacity="0.75"/>
+      <!-- Exact 03.3100.3600/69.M3100 controls: broad radial pumps with
+           stepped collars and a deep-fluted, Zenith-star-signed crown. -->
+      <g stroke="#536067" stroke-width="0.48" stroke-linejoin="round">
+        <g transform="rotate(-30 176 64)">
+          <rect x="173.0" y="60.4" width="4.8" height="7.2" rx="0.78" fill="url(#zen-metal-${id})"/>
+          <rect x="177.25" y="61.5" width="6.8" height="5.0" rx="1.05" fill="url(#zen-pump-${id})"/>
+          <path d="M183.25 60.15 L184.55 59.25 H190.10 L192.55 60.28 L193.65 61.62 V66.38 L192.55 67.72 L190.10 68.75 H184.55 L183.25 67.85 Z" fill="url(#zen-pump-${id})"/>
+          <path d="M177.60 61.85 V66.15 M183.62 60.85 V67.15" fill="none" stroke="#3e4b52" stroke-width="0.34" opacity="0.86"/>
+          <path d="M178.25 62.0 H181.95 M184.70 60.45 H189.85" fill="none" stroke="#ffffff" stroke-width="0.30" opacity="0.68"/>
+          <ellipse cx="193.10" cy="64" rx="1.02" ry="3.05" fill="url(#zen-pumpface-${id})" stroke="#405059" stroke-width="0.40"/>
+          <path d="M193.17 61.55 V66.45" fill="none" stroke="#ffffff" stroke-width="0.20" opacity="0.54"/>
+        </g>
+        <g transform="rotate(30 176 136)">
+          <rect x="173.0" y="132.4" width="4.8" height="7.2" rx="0.78" fill="url(#zen-metal-${id})"/>
+          <rect x="177.25" y="133.5" width="6.8" height="5.0" rx="1.05" fill="url(#zen-pump-${id})"/>
+          <path d="M183.25 132.15 L184.55 131.25 H190.10 L192.55 132.28 L193.65 133.62 V138.38 L192.55 139.72 L190.10 140.75 H184.55 L183.25 139.85 Z" fill="url(#zen-pump-${id})"/>
+          <path d="M177.60 133.85 V138.15 M183.62 132.85 V139.15" fill="none" stroke="#3e4b52" stroke-width="0.34" opacity="0.86"/>
+          <path d="M178.25 134.0 H181.95 M184.70 132.45 H189.85" fill="none" stroke="#ffffff" stroke-width="0.30" opacity="0.68"/>
+          <ellipse cx="193.10" cy="136" rx="1.02" ry="3.05" fill="url(#zen-pumpface-${id})" stroke="#405059" stroke-width="0.40"/>
+          <path d="M193.17 133.55 V138.45" fill="none" stroke="#ffffff" stroke-width="0.20" opacity="0.54"/>
+        </g>
+      </g>
+      <!-- Fine stem and dense, shallow coin-edge crown: the small Zenith star
+           is engraved inside its domed outer end face, not floating beyond it. -->
+      <path d="M178.4 97.0 C180.8 96.7 182.9 97.0 185.0 98.1 V101.9 C182.9 103.0 180.8 103.3 178.4 103.0 Z" fill="url(#zen-metal-${id})" stroke="#536067" stroke-width="0.44"/>
+      <g stroke="#536067" stroke-width="0.52" stroke-linejoin="round">
+        <path d="M180.0 95.0 Q180.55 92.55 181.38 92.85 Q182.10 90.75 183.00 91.35 Q183.78 89.75 184.70 90.45 Q185.55 89.45 186.45 90.45 Q187.35 89.45 188.20 90.45 Q189.12 89.75 189.90 91.35 Q190.80 90.75 191.52 92.85 Q192.35 92.55 192.90 95.0 V105.0 Q192.35 107.45 191.52 107.15 Q190.80 109.25 189.90 108.65 Q189.12 110.25 188.20 109.55 Q187.35 110.55 186.45 109.55 Q185.55 110.55 184.70 109.55 Q183.78 110.25 183.00 108.65 Q182.10 109.25 181.38 107.15 Q180.55 107.45 180.0 105.0 Z" fill="url(#zen-metal-${id})"/>
+        <path d="M181.25 93.7 V106.3 M182.75 91.6 V108.4 M184.25 90.6 V109.4 M185.75 90.2 V109.8 M187.25 90.2 V109.8 M188.75 90.6 V109.4 M190.25 91.6 V108.4 M191.75 93.7 V106.3" fill="none" stroke="#49565d" stroke-width="0.31"/>
+        <path d="M182.0 92.9 V107.1 M185.0 90.5 V109.5 M188.0 90.5 V109.5 M191.0 92.9 V107.1" fill="none" stroke="#fbfcf8" stroke-width="0.18" opacity="0.64"/>
+        <path d="M191.72 94.1 C192.38 95.6 192.58 97.45 192.58 100 C192.58 102.55 192.38 104.4 191.72 105.9" fill="none" stroke="#66747a" stroke-width="0.34"/>
+        <ellipse cx="192.0" cy="100" rx="1.05" ry="4.05" fill="url(#zen-metal-${id})" stroke="#435159" stroke-width="0.34"/>
+        <g clip-path="url(#zen-crowncap-${id})" transform="translate(192.0 100) scale(0.34)" fill="#536168" stroke="#d3dcda" stroke-width="0.30"><path d="M0 -3.1 L0.91 -1.0 L3.18 -0.82 L1.42 0.60 L2.04 2.83 L0 1.55 L-2.04 2.83 L-1.42 0.60 L-3.18 -0.82 L-0.91 -1.0 Z"/></g>
+      </g>
       <g clip-path="url(#zen-dialclip-${id})">
         ${chapter}${markers}
         <!-- Zenith star and three-line dial signature. -->
