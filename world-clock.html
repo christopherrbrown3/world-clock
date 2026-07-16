@@ -13046,7 +13046,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
       };
       const S9 = [68,100], S3 = [132,100], S6 = [100,132];
-      let tach = "", dialTrack = "", markers = "", stitch = "";
+      let tach = "", dialTrack = "", markers = "", stitch = "", crownRibs = "";
       // Ceramic insert: a fine white enamel scale sits above the printed dial
       // rail, with the Speedmaster's characteristic dot-over-ninety layout.
       for (let i = 0; i < 60; i++) {
@@ -13121,6 +13121,11 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
           <path d="M65.3 106.5 L62.6 109.7 L66.5 111.0 L68.2 108.0 M72.6 106.6 L74.9 109.4 L71.4 111.5 L69.9 108.1" fill="url(#sn-relief-${id})"/>
           <path d="M63.0 110.0 Q68.9 112.8 75.1 110.4" fill="none" stroke="#f4f4ef" stroke-width="0.82"/>
         </g>`;
+      // The fluting runs around the crown's horizontal axis, so a front view
+      // shows broad transverse grooves—not the vertical comb of a generic knob.
+      [[88.45,175.20,181.62],[92.00,174.04,182.56],[95.55,173.62,183.02],[99.10,173.50,183.14],[102.65,173.50,183.14],[106.20,173.62,183.02],[109.75,174.04,182.56],[113.30,175.20,181.62]].forEach(([y,x1,x2]) => {
+        crownRibs += `<path d="M${x1.toFixed(2)} ${y.toFixed(2)} H${x2.toFixed(2)}" stroke="#41515a" stroke-width="0.70" stroke-linecap="round" opacity="0.90"/><path d="M${(x1 + 0.14).toFixed(2)} ${(y - 0.29).toFixed(2)} H${(x2 - 0.14).toFixed(2)}" stroke="#fbfcf9" stroke-width="0.21" stroke-linecap="round" opacity="0.80"/>`;
+      });
       // The visible lugs are rendered below the round case so their long sides stay parallel to the strap axis.
       const lyreOuter = "";
       return `<defs>${caseDefs(id,"steel")}
@@ -13135,6 +13140,8 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         <linearGradient id="sn-lug-top-${id}" x1="0.06" y1="0.04" x2="0.86" y2="0.96"><stop offset="0%" stop-color="#5f6b72"/><stop offset="22%" stop-color="#dce1e1"/><stop offset="51%" stop-color="#8b969b"/><stop offset="76%" stop-color="#f2f4f3"/><stop offset="100%" stop-color="#68737a"/></linearGradient>
         <linearGradient id="sn-lug-low-${id}" x1="0.10" y1="0.08" x2="0.88" y2="0.94"><stop offset="0%" stop-color="#515e66"/><stop offset="31%" stop-color="#c9d0d1"/><stop offset="63%" stop-color="#7d888e"/><stop offset="88%" stop-color="#e9eceb"/><stop offset="100%" stop-color="#566169"/></linearGradient>
         <linearGradient id="sn-pump-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fcfdfb"/><stop offset="22%" stop-color="#aeb7bc"/><stop offset="49%" stop-color="#59656d"/><stop offset="73%" stop-color="#ecf0f0"/><stop offset="100%" stop-color="#8d989e"/></linearGradient>
+        <linearGradient id="sn-crown-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#55666e"/><stop offset="15%" stop-color="#dae1e1"/><stop offset="40%" stop-color="#8e9ba0"/><stop offset="68%" stop-color="#f7f8f3"/><stop offset="100%" stop-color="#596970"/></linearGradient>
+        <radialGradient id="sn-crowncap-${id}" cx="30%" cy="30%" r="82%"><stop offset="0%" stop-color="#f8faf7"/><stop offset="36%" stop-color="#c5d0d0"/><stop offset="75%" stop-color="#728189"/><stop offset="100%" stop-color="#43525b"/></radialGradient>
         <pattern id="sn-countergrain-${id}" width="2.6" height="2.6" patternUnits="userSpaceOnUse"><circle cx="0.38" cy="0.42" r="0.15" fill="#9eb9d8" opacity="0.34"/><circle cx="1.72" cy="0.74" r="0.10" fill="#d8e6f0" opacity="0.23"/><circle cx="2.28" cy="1.87" r="0.14" fill="#071f51" opacity="0.54"/><circle cx="0.82" cy="2.04" r="0.12" fill="#79a0ca" opacity="0.24"/></pattern>
         <linearGradient id="sn-glass-${id}" x1="0" y1="0" x2="0.86" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.22"/><stop offset="39%" stop-color="#fff" stop-opacity="0.03"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
         <filter id="sn-handshadow-${id}" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB"><feDropShadow dx="0.68" dy="0.92" stdDeviation="0.55" flood-color="#061638" flood-opacity="0.58"/></filter>
@@ -13165,29 +13172,28 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
            of floating across the ceramic bezel. -->
       <g stroke="#4b5960" stroke-width="0.46" stroke-linejoin="round">
         <g transform="rotate(-18 172 70)">
-          <path d="M163.8 67.1 H171.3 V72.9 H164.4 Z" fill="url(#case-${id})"/>
-          <rect x="168.5" y="66.4" width="6.5" height="7.2" rx="1.34" fill="#9aa5aa"/>
-          <path d="M172.2 65.7 H179.1 C181.4 65.7 182.8 67.0 182.8 69.1 V70.9 C182.8 73.0 181.4 74.3 179.1 74.3 H172.2 Z" fill="url(#sn-pump-${id})"/>
-          <path d="M173.1 66.9 H179.0 C180.3 66.9 181.1 67.5 181.4 68.4" fill="none" stroke="#ffffff" stroke-width="0.46" opacity="0.86"/>
-          <path d="M179.4 66.2 C181.3 66.4 182.2 67.6 182.2 70.0 C182.2 72.4 181.3 73.6 179.4 73.8" fill="none" stroke="#657179" stroke-width="0.48"/>
+          <path d="M163.0 66.25 H171.70 V73.75 H164.0 Z" fill="url(#case-${id})"/>
+          <rect x="168.0" y="65.30" width="7.6" height="9.4" rx="1.64" fill="#9aa5aa"/>
+          <path d="M171.8 62.50 H179.4 C181.92 62.50 183.28 64.25 183.28 66.38 V73.62 C183.28 75.75 181.92 77.50 179.4 77.50 H171.8 Z" fill="url(#sn-pump-${id})"/>
+          <path d="M172.8 64.05 H179.18 C180.62 64.05 181.46 64.82 181.80 65.98" fill="none" stroke="#ffffff" stroke-width="0.46" opacity="0.86"/>
+          <path d="M179.8 63.12 C181.84 63.34 182.70 65.10 182.70 70.0 C182.70 74.90 181.84 76.66 179.8 76.88" fill="none" stroke="#657179" stroke-width="0.48"/>
         </g>
         <g transform="rotate(18 172 130)">
-          <path d="M163.8 127.1 H171.3 V132.9 H164.4 Z" fill="url(#case-${id})"/>
-          <rect x="168.5" y="126.4" width="6.5" height="7.2" rx="1.34" fill="#9aa5aa"/>
-          <path d="M172.2 125.7 H179.1 C181.4 125.7 182.8 127.0 182.8 129.1 V130.9 C182.8 133.0 181.4 134.3 179.1 134.3 H172.2 Z" fill="url(#sn-pump-${id})"/>
-          <path d="M173.1 126.9 H179.0 C180.3 126.9 181.1 127.5 181.4 128.4" fill="none" stroke="#ffffff" stroke-width="0.46" opacity="0.86"/>
-          <path d="M179.4 126.2 C181.3 126.4 182.2 127.6 182.2 130.0 C182.2 132.4 181.3 133.6 179.4 133.8" fill="none" stroke="#657179" stroke-width="0.48"/>
+          <path d="M163.0 126.25 H171.70 V133.75 H164.0 Z" fill="url(#case-${id})"/>
+          <rect x="168.0" y="125.30" width="7.6" height="9.4" rx="1.64" fill="#9aa5aa"/>
+          <path d="M171.8 122.50 H179.4 C181.92 122.50 183.28 124.25 183.28 126.38 V133.62 C183.28 135.75 181.92 137.50 179.4 137.50 H171.8 Z" fill="url(#sn-pump-${id})"/>
+          <path d="M172.8 124.05 H179.18 C180.62 124.05 181.46 124.82 181.80 125.98" fill="none" stroke="#ffffff" stroke-width="0.46" opacity="0.86"/>
+          <path d="M179.8 123.12 C181.84 123.34 182.70 125.10 182.70 130.0 C182.70 134.90 181.84 136.66 179.8 136.88" fill="none" stroke="#657179" stroke-width="0.48"/>
         </g>
       </g>
-      <path d="M166.0 95.2 C170.0 95.0 173.2 95.7 175.7 97.7 V102.3 C173.2 104.3 170.0 105.0 166.0 104.8 Z" fill="url(#case-${id})" stroke="#4b5960" stroke-width="0.44"/>
-      <g stroke="#4b5960" stroke-width="0.48">
-        <path d="M173.1 93.3 C174.1 92.7 175.8 92.4 178.1 92.4 H180.0 C181.8 92.4 182.9 93.6 182.9 95.2 V104.8 C182.9 106.4 181.8 107.6 180.0 107.6 H178.1 C175.8 107.6 174.1 107.3 173.1 106.7 Z" fill="url(#sn-pump-${id})"/>
-        <path d="M174.9 94.3 V105.7 M176.4 93.4 V106.6 M177.9 93.1 V106.9 M179.4 93.1 V106.9 M180.9 93.4 V106.6 M182.0 94.3 V105.7" fill="none" stroke="#536069" stroke-width="0.39"/>
-        <path d="M175.7 94.0 V106.0 M178.7 92.9 V107.1 M181.4 94.0 V106.0" fill="none" stroke="#fbfcfa" stroke-width="0.21" opacity="0.82"/>
-        <path d="M180.8 94.0 C182.0 94.6 182.3 95.8 182.3 100.0 C182.3 104.2 182.0 105.4 180.8 106.0" fill="none" stroke="#6b777e" stroke-width="0.36"/>
-      </g>
-      <!-- Steel Speedmaster case, blue ceramic tachymeter, compact crown and
-           short pump pushers rather than the former over-long diagonal blocks. -->
+      <!-- 310.32.42.50.02.001: a tall manual crown, recessed by the Professional
+           caseband, with transverse fluting; the signed face is edge-on here. -->
+      <path d="M166.0 90.85 C170.10 90.52 173.38 91.26 176.02 93.30 V106.70 C173.38 108.74 170.10 109.48 166.0 109.15 Z" fill="url(#case-${id})" stroke="#4b5960" stroke-width="0.38"/>
+      <path d="M172.82 88.12 C172.82 86.25 174.18 85.15 176.06 85.15 H180.28 C182.38 85.15 183.55 86.56 183.55 88.37 V111.63 C183.55 113.44 182.38 114.85 180.28 114.85 H176.06 C174.18 114.85 172.82 113.75 172.82 111.88 Z" fill="url(#sn-crown-${id})" stroke="#4d5e66" stroke-width="0.50"/>
+      ${crownRibs}
+      <ellipse cx="184.32" cy="100" rx="1.34" ry="12.54" fill="url(#sn-crowncap-${id})" stroke="#4d5e66" stroke-width="0.38"/><ellipse cx="184.32" cy="100" rx="0.78" ry="11.28" fill="#829095" opacity="0.48"/>
+      <!-- Steel Speedmaster case, blue ceramic tachymeter, tall transverse-fluted
+           crown and compact angled pump pushers. -->
       <circle cx="100" cy="100" r="75.0" fill="url(#case-${id})" filter="url(#shadow-${id})"/>
       <circle cx="100" cy="100" r="73.8" fill="none" stroke="#f3f6f7" stroke-width="0.52" opacity="0.72"/>
       <circle cx="100" cy="100" r="71.2" fill="url(#sn-blue-${id})" stroke="#102a5e" stroke-width="0.74"/>
