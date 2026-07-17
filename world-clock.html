@@ -11562,7 +11562,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       }
       for (let i = 0; i < 60; i++) {
         const deg = i * 6, [x1, y1] = at(deg, 56.6), [x2, y2] = at(deg, i % 5 === 0 ? 53.55 : 55.0);
-        chapter += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#1a1c1d" stroke-width="${i % 5 === 0 ? "0.70" : "0.31"}" opacity="0.85"/>`;
+        chapter += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e8eae7" stroke-width="${i % 5 === 0 ? "0.70" : "0.31"}" opacity="0.85"/>`;
       }
       for (let h = 1; h < 12; h++) {
         if ([3,6,9].includes(h)) continue;
@@ -11591,9 +11591,9 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         }
         for (const [word, deg] of numerals) {
           const [x, y] = at(deg, 9.2, cx, cy);
-          words += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="2.62" font-weight="700" fill="#e7e8e4">${word}</text>`;
+          words += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="2.62" font-weight="700" fill="#26292a">${word}</text>`;
         }
-        return `<circle cx="${cx}" cy="${cy}" r="15.0" fill="#e2e4e2" stroke="#a7adaf" stroke-width="0.85"/><circle cx="${cx}" cy="${cy}" r="14.15" fill="url(#navi-sub-${id})" stroke="#07090a" stroke-width="0.62"/><circle cx="${cx}" cy="${cy}" r="13.25" fill="url(#navi-azur-${id})" opacity="0.42"/>${ticks}${words}`;
+        return `<circle cx="${cx}" cy="${cy}" r="15.0" fill="#1b1e1f" stroke="#3a4043" stroke-width="0.85"/><circle cx="${cx}" cy="${cy}" r="14.15" fill="url(#navi-sub-${id})" stroke="#9ba1a2" stroke-width="0.62"/><circle cx="${cx}" cy="${cy}" r="13.25" fill="url(#navi-azur-${id})" opacity="0.42"/>${ticks}${words}`;
       };
 
       return `<defs>
@@ -11603,9 +11603,9 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
              rounded steel barrel rather than a flat, shared capsule. -->
         <linearGradient id="navi-pump-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#596368"/><stop offset="17%" stop-color="#c4cdce"/><stop offset="43%" stop-color="#fdfdf9"/><stop offset="68%" stop-color="#a4afb2"/><stop offset="100%" stop-color="#4f5a60"/></linearGradient>
         <linearGradient id="navi-pumpcap-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#69747a"/><stop offset="26%" stop-color="#f8f9f5"/><stop offset="61%" stop-color="#aeb8ba"/><stop offset="100%" stop-color="#5a656a"/></linearGradient>
-        <radialGradient id="navi-dial-${id}" cx="42%" cy="32%" r="81%"><stop offset="0%" stop-color="#ffffff"/><stop offset="48%" stop-color="#f1f1ed"/><stop offset="78%" stop-color="#d3d6d4"/><stop offset="100%" stop-color="#acb1b2"/></radialGradient>
-        <radialGradient id="navi-sub-${id}" cx="40%" cy="32%" r="78%"><stop offset="0%" stop-color="#35393a"/><stop offset="56%" stop-color="#171a1b"/><stop offset="100%" stop-color="#060708"/></radialGradient>
-        <pattern id="navi-azur-${id}" width="1.5" height="1.5" patternUnits="userSpaceOnUse" patternTransform="rotate(26)"><rect width="1.5" height="1.5" fill="#111416"/><path d="M0 0 V1.5" stroke="#707779" stroke-width="0.32"/></pattern>
+        <radialGradient id="navi-dial-${id}" cx="42%" cy="32%" r="81%"><stop offset="0%" stop-color="#2f3335"/><stop offset="48%" stop-color="#17191a"/><stop offset="78%" stop-color="#0c0e0f"/><stop offset="100%" stop-color="#050607"/></radialGradient>
+        <radialGradient id="navi-sub-${id}" cx="40%" cy="32%" r="78%"><stop offset="0%" stop-color="#ffffff"/><stop offset="56%" stop-color="#e8eae7"/><stop offset="100%" stop-color="#c6cac9"/></radialGradient>
+        <pattern id="navi-azur-${id}" width="1.5" height="1.5" patternUnits="userSpaceOnUse" patternTransform="rotate(26)"><rect width="1.5" height="1.5" fill="#e9ebe8"/><path d="M0 0 V1.5" stroke="#b3b8b6" stroke-width="0.32"/></pattern>
         <linearGradient id="navi-strap-${id}" x1="0.1" y1="0" x2="0.8" y2="1"><stop offset="0%" stop-color="#454548"/><stop offset="22%" stop-color="#111214"/><stop offset="62%" stop-color="#050506"/><stop offset="100%" stop-color="#303034"/></linearGradient>
         <linearGradient id="navi-glass-${id}" x1="0.1" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.28"/><stop offset="37%" stop-color="#fff" stop-opacity="0.052"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
         <filter id="navi-shadow-${id}" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.35" stdDeviation="1.72" flood-color="#172025" flood-opacity="0.36"/></filter>
@@ -11668,11 +11668,11 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       <g clip-path="url(#navi-dialclip-${id})">
         ${sunburst}${chapter}${markers}
         <g transform="translate(100 58.2) scale(0.84)" fill="url(#navi-metal-${id})" stroke="#5c6468" stroke-width="0.3"><path d="M-1.4 0 C-5.4 -3.6 -11.1 -3.3 -17 -1.4 C-12.8 -0.2 -9.5 1.25 -5.4 2.2 C-9.1 2.4 -12.4 3.65 -15.5 5.2 C-9.1 5.05 -4.75 3.95 -1.4 1.8 Z"/><path d="M1.4 0 C5.4 -3.6 11.1 -3.3 17 -1.4 C12.8 -0.2 9.5 1.25 5.4 2.2 C9.1 2.4 12.4 3.65 15.5 5.2 C9.1 5.05 4.75 3.95 1.4 1.8 Z"/><circle cx="0" cy="-3.05" r="1.28"/><rect x="-0.58" y="-2.7" width="1.16" height="5" rx="0.35"/></g>
-        <text x="100" y="66.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.35" font-weight="700" letter-spacing="0.56" fill="#1a1d1e">BREITLING</text><text x="100" y="70.2" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.92" font-weight="700" letter-spacing="0.78" fill="#2b2e30">1884</text>
+        <text x="100" y="66.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.35" font-weight="700" letter-spacing="0.56" fill="#eef0ed">BREITLING</text><text x="100" y="70.2" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.92" font-weight="700" letter-spacing="0.78" fill="#d9dcd9">1884</text>
         ${counter(63.5,100,[["60",0],["20",120],["40",240]])}${counter(136.5,100,[["10",120],["20",240],["30",0]])}${counter(100,136.5,[["3",90],["6",180],["9",270],["12",0]])}
         <!-- Only the nine o'clock B01 running seconds is live. Chronograph counters remain stopped. -->
-        <g class="hand-subsec" data-pivot="63.5 100"><line x1="63.5" y1="105.0" x2="63.5" y2="88.2" stroke="#f6f6f0" stroke-width="0.92"/><circle cx="63.5" cy="90.1" r="1.15" fill="#f6f6f0"/><circle cx="63.5" cy="100" r="1.44" fill="#d5d8d4" stroke="#08090a" stroke-width="0.34"/></g><line x1="136.5" y1="105.1" x2="136.5" y2="88.45" stroke="#e7e8e3" stroke-width="0.9"/><circle cx="136.5" cy="100" r="1.43" fill="#d5d8d4" stroke="#08090a" stroke-width="0.34"/><line x1="100" y1="141.7" x2="100" y2="124.9" stroke="#e7e8e3" stroke-width="0.9"/><circle cx="100" cy="136.5" r="1.43" fill="#d5d8d4" stroke="#08090a" stroke-width="0.34"/>
-        <text x="100" y="113.7" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.72" font-weight="700" letter-spacing="0.60" fill="#1b1e20">NAVITIMER</text>
+        <g class="hand-subsec" data-pivot="63.5 100"><line x1="63.5" y1="105.0" x2="63.5" y2="88.2" stroke="#17191a" stroke-width="0.92"/><circle cx="63.5" cy="90.1" r="1.15" fill="#17191a"/><circle cx="63.5" cy="100" r="1.44" fill="#d5d8d4" stroke="#08090a" stroke-width="0.34"/></g><line x1="136.5" y1="105.1" x2="136.5" y2="88.45" stroke="#17191a" stroke-width="0.9"/><circle cx="136.5" cy="100" r="1.43" fill="#d5d8d4" stroke="#08090a" stroke-width="0.34"/><line x1="100" y1="141.7" x2="100" y2="124.9" stroke="#17191a" stroke-width="0.9"/><circle cx="100" cy="136.5" r="1.43" fill="#d5d8d4" stroke="#08090a" stroke-width="0.34"/>
+        <text x="100" y="113.7" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.72" font-weight="700" letter-spacing="0.60" fill="#e6e8e5">NAVITIMER</text>
         <rect x="95.0" y="142.05" width="10.0" height="5.75" rx="0.42" fill="#f3f3ee" stroke="#777e80" stroke-width="0.45"/><text class="date-win" data-date="dom" x="100" y="144.93" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="4.42" font-weight="700" fill="#131617">1</text><text x="88.2" y="153.3" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.95" font-weight="700" letter-spacing="0.36" fill="#272a2b">SWISS</text><text x="111.8" y="153.3" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.95" font-weight="700" letter-spacing="0.36" fill="#272a2b">MADE</text><path d="M47 53 C69 40 90 41 111 52 C82 47 64 58 47 83 Z" fill="url(#navi-glass-${id})" opacity="0.23"/>
       </g>
       <!-- Central red chronograph seconds is intentionally parked at 12, not driven by the normal seconds engine. -->
