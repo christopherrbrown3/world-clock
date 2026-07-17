@@ -11326,6 +11326,24 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
           : `<g><line x1="${cx}" y1="${(cy + 3.2).toFixed(1)}" x2="${cx}" y2="${(cy - r + 4.2).toFixed(1)}" stroke="${kind === "minutes" ? "#d8292f" : "#e4e7e2"}" stroke-width="1.0"/><rect x="${(cx - 1.55).toFixed(1)}" y="${(cy - r + 5.0).toFixed(1)}" width="3.1" height="5.1" rx="0.7" fill="${kind === "minutes" ? "#df2a31" : "#d9ded9"}"/><circle cx="${cx}" cy="${cy}" r="1.72" fill="#272b2d" stroke="#d6d8d3" stroke-width="0.4"/></g>`;
         return `<g><circle cx="${cx}" cy="${cy}" r="${(r + 1.25).toFixed(1)}" fill="#0a0d0f" stroke="#60696d" stroke-width="0.75"/><circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="url(#rm-sub-${id})" stroke="#171b1e" stroke-width="1.15"/><circle cx="${cx}" cy="${cy}" r="${(r - 1.3).toFixed(1)}" fill="none" stroke="#596166" stroke-width="0.44"/>${ticks}${labels}${liveHand}</g>`;
       };
+      const hourNums = [[330,"11",0],[0,"12",0],[30,"1",0],[60,"2",90],[120,"4",90],[150,"5",0],[210,"7",0],[240,"8",-90],[300,"10",0]];
+      let numerals = "";
+      for (const [deg, label, rot] of hourNums) {
+        const [nx, ny] = ovalAt(deg, 40.5, 45.5);
+        numerals += `<text x="${nx.toFixed(1)}" y="${ny.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="10.4" font-weight="700" fill="none" stroke="#e6e9e2" stroke-width="1.15" paint-order="stroke"${rot ? ` transform="rotate(${rot} ${nx.toFixed(1)} ${ny.toFixed(1)})"` : ""}>${label}</text>`;
+      }
+      let lumeDots = "";
+      for (let h = 0; h < 12; h++) {
+        const [dx, dy] = ovalAt(h * 30, 48.2, h === 0 ? 51.6 : 53.4);
+        lumeDots += `<circle cx="${dx.toFixed(1)}" cy="${dy.toFixed(1)}" r="1.05" fill="#f2f4ec" stroke="#7e8587" stroke-width="0.3"/>`;
+      }
+      const tachy = [[347,"65"],[13,"700"],[329,"70"],[311,"75"],[293,"80"],[275,"85"],[257,"90"],[239,"95"],[221,"100"],[203,"105"],[157,"140"],[143,"150"],[130,"165"],[117,"180"],[104,"200"],[88,"240"],[72,"300"]];
+      let tachyTxt = "";
+      for (const [deg, label] of tachy) {
+        const [tx, ty] = ovalAt(deg, 52.2, 57.4);
+        const rot = (deg > 95 && deg < 265) ? deg - 180 : deg;
+        tachyTxt += `<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,sans-serif" font-size="2.55" font-weight="600" fill="#dfe2dc" transform="rotate(${rot.toFixed(0)} ${tx.toFixed(1)} ${ty.toFixed(1)})">${label}</text>`;
+      }
       let rehautTicks = "";
       for (let i = 0; i < 120; i++) {
         const deg = i * 3;
@@ -11342,7 +11360,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         <linearGradient id="rm-plate-${id}" x1="0.1" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#c4c9c8"/><stop offset="18%" stop-color="#555e62"/><stop offset="55%" stop-color="#151a1d"/><stop offset="78%" stop-color="#7d8588"/><stop offset="100%" stop-color="#1a1e21"/></linearGradient>
         <radialGradient id="rm-sub-${id}" cx="42%" cy="34%" r="78%"><stop offset="0%" stop-color="#31383b"/><stop offset="58%" stop-color="#111619"/><stop offset="100%" stop-color="#050708"/></radialGradient>
         <linearGradient id="rm-hand-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#5e6669"/><stop offset="20%" stop-color="#f5f4ed"/><stop offset="50%" stop-color="#a7afb1"/><stop offset="74%" stop-color="#fbfbf4"/><stop offset="100%" stop-color="#4a5358"/></linearGradient>
-        <pattern id="rm-date-${id}" width="2.4" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2.4" height="2.4" fill="#e9ebe6"/><rect width="1.1" height="2.4" fill="#565e62"/></pattern>
+        <pattern id="rm-date-${id}" width="2.7" height="2.7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2.7" height="2.7" fill="#c01330"/><rect width="1.1" height="2.7" fill="#f4f4ee"/></pattern>
         <linearGradient id="rm-glass-${id}" x1="0.1" y1="0" x2="0.86" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.2"/><stop offset="38%" stop-color="#fff" stop-opacity="0.028"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
         <filter id="rm-shadow-${id}" x="-24%" y="-24%" width="148%" height="148%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="2.25" stdDeviation="1.85" flood-color="#0b0e10" flood-opacity="0.36"/></filter>
         <clipPath id="rm-dialclip-${id}"><path d="${dialP}"/></clipPath>
@@ -11362,12 +11380,12 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         ${gear(75,68,8.4,18,"#aeb5b7")}${gear(119,67,7.5,16,"#8e989a")}${gear(91,90,5.3,14,"#bcc2c1")}${gear(116,94,6.2,16,"#697377")}${gear(79,133,5.5,14,"#9ca6a8")}${gear(125,136,5.8,15,"#b4baba")}
         <g fill="url(#rm-screw-${id})" stroke="#20262a" stroke-width="0.42"><circle cx="57" cy="74" r="1.75"/><circle cx="84" cy="82" r="1.75"/><circle cx="132" cy="76" r="1.75"/><circle cx="145" cy="121" r="1.75"/><circle cx="110" cy="147" r="1.75"/><circle cx="65" cy="143" r="1.75"/></g><g fill="#c94042"><circle cx="102" cy="65" r="1.35"/><circle cx="96" cy="128" r="1.35"/><circle cx="135" cy="101" r="1.35"/></g>
         <!-- Large skeleton numerals are printed on the inner flange, above the movement plates. -->
-        <g font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="10.4" font-weight="700" fill="none" stroke="#e6e9e2" stroke-width="1.15" paint-order="stroke"><text x="100" y="55.4" text-anchor="middle">12</text><text x="149" y="102.1" text-anchor="middle">3</text><text x="100" y="154.0" text-anchor="middle">6</text><text x="51" y="102.1" text-anchor="middle">9</text></g>
-        <text x="100" y="44.6" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.65" font-weight="800" letter-spacing="0.24" fill="#f1f1eb">RICHARD MILLE</text><text x="153.0" y="83" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,sans-serif" font-size="3.15" font-weight="700" letter-spacing="0.32" fill="#d9ddd9" transform="rotate(90 153 83)">TACHYMÈTRE</text>
+        
+        <text x="100" y="42.4" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.65" font-weight="800" letter-spacing="0.24" fill="#f1f1eb">RICHARD MILLE</text><text x="153.0" y="83" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,sans-serif" font-size="3.15" font-weight="700" letter-spacing="0.32" fill="#d9ddd9" transform="rotate(90 153 83)">TACHYMETER</text>
         <!-- Annual-calendar twin date: red diagonal frame below twelve, with its local day wheel. -->
-        <rect x="82.1" y="70.2" width="35.8" height="20.0" rx="1.6" fill="#14181b" stroke="#eceee9" stroke-width="1.35"/><rect x="84.2" y="72.2" width="31.6" height="16.0" rx="0.8" fill="#0b0f12" stroke="#3c4448" stroke-width="0.5"/><line x1="100" y1="72.2" x2="100" y2="88.2" stroke="#3c4448" stroke-width="0.55"/><text class="date-win" data-date="bigdate-t" x="92.1" y="80.4" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Arial,sans-serif" font-size="12.6" font-weight="900" fill="url(#rm-date-${id})" stroke="#f1f2ee" stroke-width="0.5">0</text><text class="date-win" data-date="bigdate-u" x="107.9" y="80.4" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Arial,sans-serif" font-size="12.6" font-weight="900" fill="url(#rm-date-${id})" stroke="#f1f2ee" stroke-width="0.5">1</text><rect x="131.5" y="131.4" width="13.2" height="7.2" rx="0.85" fill="#121719" stroke="#737b7d" stroke-width="0.48"/><text class="date-win" data-date="month" x="138.1" y="135.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.45" font-weight="700" fill="#e9ebe6">MAR</text>
+        <rect x="82.1" y="70.2" width="35.8" height="20.0" rx="1.6" fill="url(#rm-date-${id})" stroke="#f2f3ed" stroke-width="0.8"/><text class="date-win" data-date="bigdate-t" x="92.1" y="80.4" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Arial,sans-serif" font-size="12.6" font-weight="900" fill="#8e0d22" stroke="#f6f6f0" stroke-width="0.85">0</text><text class="date-win" data-date="bigdate-u" x="107.9" y="80.4" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Arial,sans-serif" font-size="12.6" font-weight="900" fill="#8e0d22" stroke="#f6f6f0" stroke-width="0.85">1</text><rect x="131.5" y="131.4" width="13.2" height="7.2" rx="0.85" fill="#121719" stroke="#737b7d" stroke-width="0.48"/><text class="date-win" data-date="month" x="138.1" y="135.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.45" font-weight="700" fill="#e9ebe6">MAR</text>
         <!-- Countdown at nine, live running seconds at three (yellow arrow), and 12-hour totalizer at six. -->
-        ${counter(63,110,15.5,"minutes")}${counter(137,110,15.5,"seconds")}${counter(100,141.5,16.2,"hours")}
+        ${counter(63,110,15.5,"minutes")}${counter(137,110,15.5,"seconds")}${counter(100,141.5,16.2,"hours")}${numerals}${lumeDots}${tachyTxt}
         <rect x="49.6" y="136.5" width="20.8" height="6.5" rx="0.9" fill="#161b1e" stroke="#d0353b" stroke-width="0.72"/><text x="60.0" y="139.8" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,sans-serif" font-size="3.35" font-weight="700" fill="#f0f0ea">RM011-FM</text>
         <text x="100" y="160.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.4" font-weight="600" letter-spacing="0.55" fill="#e5e7e2">SWISS 120 MADE</text><path d="M42 52 H77 L42 87 Z" fill="url(#rm-glass-${id})" opacity="0.34"/>
       </g>
