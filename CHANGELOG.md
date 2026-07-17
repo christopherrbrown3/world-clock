@@ -10,6 +10,7 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added the Claude Fable 5 standalone checkpoint and froze the Codex 5.6 Terra page as a benchmark snapshot.
 - Added the Codex 5.6 Terra standalone checkpoint and froze the Codex 5.5 page as a benchmark snapshot.
 - Built the Codex 5.6 Terra active version with per-city date and time-difference context, phase accents, accessible city search, safer versioned state, and DST-aware ordering.
 - Refined the Rolex Submariner face against the current 126610LN reference, including its bezel zero marker, platinum-toned scale, Maxi dial, daylight lume, rehaut, and Cyclops date geometry.

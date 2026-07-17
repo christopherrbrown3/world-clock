@@ -8,11 +8,18 @@
   },
   "snapshots": [
     {
+      "id": "fable-5",
+      "label": "Claude Fable 5",
+      "file": "versions/fable-5.html",
+      "snapshotDate": "2026-07-17",
+      "notes": "Current Claude Fable 5 checkpoint. Refresh this page while Claude Fable 5 is the active model under review."
+    },
+    {
       "id": "codex-5.6",
       "label": "Codex 5.6 Terra",
       "file": "versions/codex-5.6.html",
       "snapshotDate": "2026-07-09",
-      "notes": "Current Codex 5.6 Terra checkpoint. Refresh this page while Codex 5.6 Terra is the active model under review."
+      "notes": "Frozen Codex 5.6 Terra checkpoint, preserved for benchmark viewing."
     },
     {
       "id": "codex-5.5",
