@@ -9,11 +9,11 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23101314' stroke='%2372d2c8' stroke-width='6'/%3E%3Cpath d='M50 50 L50 24 M50 50 L68 60' stroke='%23e8ece9' stroke-width='7' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%2372d2c8'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Orbitron:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
   :root {
-    --wall: #101314;
-    --wall-2: #191e20;
+    --wall: #0d1018;
+    --wall-2: #161b28;
     --panel: rgba(255,255,255,0.055);
     --panel-strong: rgba(255,255,255,0.085);
     --line: rgba(255,255,255,0.12);
@@ -23,13 +23,13 @@
     --dial-edge: #eef0f6;
     --numerals: #1c1f2e;
     --hands: #1c1f2e;
-    --sweep: #62c9bf;
+    --sweep: #e3b661;
     --brass: #d2b66b;
     --danger: #ff8b80;
-    --terra: #77d7c4;
+    --terra: #e3b661;
     --terra-warm: #e8c578;
-    --terra-violet: #9898ed;
-    --focus: #dffcf4;
+    --terra-violet: #8f9fe8;
+    --focus: #ffe9bd;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,10 +38,10 @@
     min-height: 100vh;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background:
-      radial-gradient(74% 48% at 8% -8%, rgba(110, 202, 187, 0.18), transparent 72%),
-      radial-gradient(62% 42% at 97% 2%, rgba(151, 137, 230, 0.12), transparent 74%),
-      linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0) 260px),
-      radial-gradient(120% 90% at 50% -10%, #253032 0%, var(--wall-2) 42%, var(--wall) 100%);
+      radial-gradient(74% 48% at 8% -8%, rgba(227, 182, 97, 0.13), transparent 72%),
+      radial-gradient(62% 42% at 97% 2%, rgba(120, 138, 220, 0.10), transparent 74%),
+      linear-gradient(180deg, rgba(255,246,224,0.035), rgba(255,255,255,0) 260px),
+      radial-gradient(120% 90% at 50% -10%, #232a3e 0%, var(--wall-2) 42%, var(--wall) 100%);
     color: var(--ink);
     padding: 0 16px;
   }
@@ -76,12 +76,17 @@
   }
 
   h1 {
-    font-size: 2.35rem;
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
+    font-size: 2.75rem;
     line-height: 0.95;
-    font-weight: 700;
-    letter-spacing: 0;
+    font-weight: 650;
+    letter-spacing: 0.01em;
     color: var(--ink);
     margin-bottom: 12px;
+  }
+  h1 .amp {
+    font-style: italic;
+    color: var(--terra);
   }
 
   .app-status {
@@ -120,6 +125,8 @@
     align-items: stretch;
   }
 
+  .city { font-family: "Fraunces", Georgia, serif; letter-spacing: 0.01em; }
+
   .clock-unit {
     display: grid;
     justify-items: center;
@@ -132,10 +139,10 @@
     min-height: 346px;
     padding: 18px 14px 16px;
     background:
-      linear-gradient(152deg, rgba(255,255,255,0.10), rgba(255,255,255,0.018) 48%),
+      linear-gradient(152deg, rgba(255,244,214,0.085), rgba(255,255,255,0.015) 48%),
       var(--panel);
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: 18px;
     box-shadow: 0 18px 42px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
     overflow: hidden;
     isolation: isolate;
@@ -291,7 +298,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: linear-gradient(135deg, #72d2c8, #6f87e8);
+    background: linear-gradient(135deg, #ecc678, #c99446);
     color: #071112;
     border: none;
     border-radius: 8px;
@@ -489,7 +496,9 @@
     .app-shell { padding: 24px 0 48px; }
     .app-header { margin-bottom: 20px; padding-bottom: 20px; }
     .grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-    .clock-unit { width: 100%; }
+    .city { font-family: "Fraunces", Georgia, serif; letter-spacing: 0.01em; }
+
+  .clock-unit { width: 100%; }
     footer { margin-top: 44px; text-align: center; padding: 0 12px; }
   }
 
@@ -532,7 +541,7 @@
     <header class="app-header">
       <div class="title-block">
         <p class="eyebrow">Claude Fable 5 · World time instrument</p>
-        <h1>World Clock</h1>
+        <h1>World <span class="amp">Clock</span></h1>
         <div class="app-status" aria-label="Clock status">
           <span id="city-count">0 cities</span>
           <span id="local-now">Local time</span>
