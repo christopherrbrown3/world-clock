@@ -31,7 +31,8 @@ Use `index.html` to choose between the active build and model-version pages. Ope
 The project keeps AI-model versions as separate standalone HTML pages under `versions/`. The current model checkpoint can be refreshed while that model is active; finalized model versions should be treated as immutable.
 
 - Active build: [world-clock.html](world-clock.html)
-- Codex 5.6 Terra checkpoint: [versions/codex-5.6.html](versions/codex-5.6.html)
+- Claude Fable 5 checkpoint: [versions/fable-5.html](versions/fable-5.html)
+- Codex 5.6 Terra snapshot: [versions/codex-5.6.html](versions/codex-5.6.html)
 - Codex 5.5 snapshot: [versions/codex-5.5.html](versions/codex-5.5.html)
 - Claude Opus 4.8 snapshot: [versions/claude-opus-4.8.html](versions/claude-opus-4.8.html)
 
