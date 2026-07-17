@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Clock — Codex 5.6 Terra</title>
+<title>World Clock — Claude Fable 5</title>
+<meta name="description" content="A world clock rendering 62 realistic watch and clock faces as live inline SVG. No build, no server — just a browser.">
+<meta name="theme-color" content="#101314">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23101314' stroke='%2372d2c8' stroke-width='6'/%3E%3Cpath d='M50 50 L50 24 M50 50 L68 60' stroke='%23e8ece9' stroke-width='7' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%2372d2c8'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -528,7 +531,7 @@
   <main class="app-shell">
     <header class="app-header">
       <div class="title-block">
-        <p class="eyebrow">Codex 5.6 Terra · World time instrument</p>
+        <p class="eyebrow">Claude Fable 5 · World time instrument</p>
         <h1>World Clock</h1>
         <div class="app-status" aria-label="Clock status">
           <span id="city-count">0 cities</span>
@@ -15601,7 +15604,12 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
   saveCities();
   buildUnits();
   tick();
-  if (typeof requestAnimationFrame === "function") {
+  // Users who ask for reduced motion get whole-second ticks instead of the
+  // continuous sweep repaint; everyone else gets the smooth rAF loop.
+  const reducedMotion = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reducedMotion) {
+    setInterval(tick, 1000);
+  } else if (typeof requestAnimationFrame === "function") {
     requestAnimationFrame(animate);
   } else {
     setInterval(tick, 50);
