@@ -9,11 +9,11 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23101314' stroke='%2372d2c8' stroke-width='6'/%3E%3Cpath d='M50 50 L50 24 M50 50 L68 60' stroke='%23e8ece9' stroke-width='7' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%2372d2c8'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Orbitron:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
   :root {
-    --wall: #101314;
-    --wall-2: #191e20;
+    --wall: #0d1018;
+    --wall-2: #161b28;
     --panel: rgba(255,255,255,0.055);
     --panel-strong: rgba(255,255,255,0.085);
     --line: rgba(255,255,255,0.12);
@@ -23,13 +23,13 @@
     --dial-edge: #eef0f6;
     --numerals: #1c1f2e;
     --hands: #1c1f2e;
-    --sweep: #62c9bf;
+    --sweep: #e3b661;
     --brass: #d2b66b;
     --danger: #ff8b80;
-    --terra: #77d7c4;
+    --terra: #e3b661;
     --terra-warm: #e8c578;
-    --terra-violet: #9898ed;
-    --focus: #dffcf4;
+    --terra-violet: #8f9fe8;
+    --focus: #ffe9bd;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,10 +38,10 @@
     min-height: 100vh;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background:
-      radial-gradient(74% 48% at 8% -8%, rgba(110, 202, 187, 0.18), transparent 72%),
-      radial-gradient(62% 42% at 97% 2%, rgba(151, 137, 230, 0.12), transparent 74%),
-      linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0) 260px),
-      radial-gradient(120% 90% at 50% -10%, #253032 0%, var(--wall-2) 42%, var(--wall) 100%);
+      radial-gradient(74% 48% at 8% -8%, rgba(227, 182, 97, 0.13), transparent 72%),
+      radial-gradient(62% 42% at 97% 2%, rgba(120, 138, 220, 0.10), transparent 74%),
+      linear-gradient(180deg, rgba(255,246,224,0.035), rgba(255,255,255,0) 260px),
+      radial-gradient(120% 90% at 50% -10%, #232a3e 0%, var(--wall-2) 42%, var(--wall) 100%);
     color: var(--ink);
     padding: 0 16px;
   }
@@ -76,12 +76,17 @@
   }
 
   h1 {
-    font-size: 2.35rem;
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
+    font-size: 2.75rem;
     line-height: 0.95;
-    font-weight: 700;
-    letter-spacing: 0;
+    font-weight: 650;
+    letter-spacing: 0.01em;
     color: var(--ink);
     margin-bottom: 12px;
+  }
+  h1 .amp {
+    font-style: italic;
+    color: var(--terra);
   }
 
   .app-status {
@@ -112,6 +117,69 @@
     gap: 12px;
   }
 
+  /* Follow-the-sun horizon: every city plotted on a 24-hour arc. */
+  .horizon {
+    position: relative;
+    margin: 0 0 26px;
+    padding: 14px 16px 30px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+  .horizon-title {
+    margin-bottom: 12px;
+    color: var(--muted);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .horizon-track {
+    position: relative;
+    height: 10px;
+    border-radius: 999px;
+    background: linear-gradient(90deg,
+      #11142c 0%, #262047 14%, #b06a52 24%, #7fa9d4 34%,
+      #9dc3e0 50%, #7fa9d4 66%, #b06a52 76%, #262047 86%, #11142c 100%);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+  }
+  .horizon-dot {
+    position: absolute;
+    top: 50%;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--ink);
+    border: 2px solid #0d1018;
+    box-shadow: 0 0 0 1.5px rgba(244,241,234,0.55), 0 2px 6px rgba(0,0,0,0.5);
+    transition: left 0.4s;
+  }
+  .horizon-dot.is-local {
+    background: var(--terra);
+    box-shadow: 0 0 0 1.5px rgba(227,182,97,0.75), 0 0 14px rgba(227,182,97,0.6);
+  }
+  .horizon-label {
+    position: absolute;
+    top: calc(100% + 4px);
+    transform: translateX(-50%);
+    color: var(--muted);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    transition: left 0.4s;
+  }
+  .horizon-ends {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    color: color-mix(in srgb, var(--muted) 65%, transparent);
+    font-size: 0.56rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -119,6 +187,8 @@
     width: 100%;
     align-items: stretch;
   }
+
+  .city { font-family: "Fraunces", Georgia, serif; letter-spacing: 0.01em; }
 
   .clock-unit {
     display: grid;
@@ -132,10 +202,10 @@
     min-height: 346px;
     padding: 18px 14px 16px;
     background:
-      linear-gradient(152deg, rgba(255,255,255,0.10), rgba(255,255,255,0.018) 48%),
+      linear-gradient(152deg, rgba(255,244,214,0.085), rgba(255,255,255,0.015) 48%),
       var(--panel);
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: 18px;
     box-shadow: 0 18px 42px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
     overflow: hidden;
     isolation: isolate;
@@ -145,9 +215,35 @@
     position: absolute;
     inset: 0 0 auto;
     height: 3px;
+    z-index: 1;
     background: var(--period-accent, var(--terra));
     box-shadow: 0 0 20px color-mix(in srgb, var(--period-accent, var(--terra)) 52%, transparent);
   }
+  /* Sky wash: the top of each card is that city's local sky, so scanning the
+     grid reads like following daylight around the planet. */
+  .clock-unit::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 46%;
+    z-index: -1;
+    background: var(--sky, none);
+    opacity: 0.34;
+    -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent);
+    mask-image: linear-gradient(180deg, #000 30%, transparent);
+    pointer-events: none;
+  }
+  .clock-unit[data-period="dawn"]      { --sky: linear-gradient(180deg, #4a3f63, #c96f4a 78%, #e8a55f); }
+  .clock-unit[data-period="morning"]   { --sky: linear-gradient(180deg, #6a93c8, #b7d0e2 85%, #e7d9a8); }
+  .clock-unit[data-period="afternoon"] { --sky: linear-gradient(180deg, #4f86c2, #93bcdd); }
+  .clock-unit[data-period="dusk"]      { --sky: linear-gradient(180deg, #3a3158, #a45061 72%, #d8895c); }
+  .clock-unit[data-period="evening"]   { --sky: linear-gradient(180deg, #232144, #4c3a66); }
+  .clock-unit[data-period="night"]     { --sky:
+      radial-gradient(1px 1px at 18% 30%, rgba(255,255,255,0.9), transparent 55%),
+      radial-gradient(1px 1px at 42% 14%, rgba(255,255,255,0.7), transparent 55%),
+      radial-gradient(1.5px 1.5px at 68% 38%, rgba(255,255,255,0.8), transparent 55%),
+      radial-gradient(1px 1px at 85% 18%, rgba(255,255,255,0.6), transparent 55%),
+      radial-gradient(1px 1px at 30% 55%, rgba(255,255,255,0.5), transparent 55%),
+      linear-gradient(180deg, #101228, #232750); }
   .clock-unit[data-period="morning"] { --period-accent: var(--terra-warm); }
   .clock-unit[data-period="afternoon"] { --period-accent: var(--terra); }
   .clock-unit[data-period="evening"] { --period-accent: #c383d9; }
@@ -291,7 +387,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: linear-gradient(135deg, #72d2c8, #6f87e8);
+    background: linear-gradient(135deg, #ecc678, #c99446);
     color: #071112;
     border: none;
     border-radius: 8px;
@@ -489,7 +585,9 @@
     .app-shell { padding: 24px 0 48px; }
     .app-header { margin-bottom: 20px; padding-bottom: 20px; }
     .grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-    .clock-unit { width: 100%; }
+    .city { font-family: "Fraunces", Georgia, serif; letter-spacing: 0.01em; }
+
+  .clock-unit { width: 100%; }
     footer { margin-top: 44px; text-align: center; padding: 0 12px; }
   }
 
@@ -532,7 +630,7 @@
     <header class="app-header">
       <div class="title-block">
         <p class="eyebrow">Claude Fable 5 · World time instrument</p>
-        <h1>World Clock</h1>
+        <h1>World <span class="amp">Clock</span></h1>
         <div class="app-status" aria-label="Clock status">
           <span id="city-count">0 cities</span>
           <span id="local-now">Local time</span>
@@ -560,6 +658,13 @@
     </header>
 
     <p class="sr-only" id="action-status" role="status" aria-live="polite"></p>
+
+    <section class="horizon" aria-label="Cities on the 24-hour day">
+      <p class="horizon-title">Follow the sun</p>
+      <div class="horizon-track" id="horizon-track"></div>
+      <div class="horizon-ends" aria-hidden="true"><span>MIDNIGHT</span><span>NOON</span><span>MIDNIGHT</span></div>
+    </section>
+
     <section class="grid" id="grid" aria-label="World clock cities"></section>
 
     <footer>UPDATES LIVE · TIMES FROM YOUR DEVICE CLOCK</footer>
@@ -12665,7 +12770,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       ${bracelet}<path d="M68 50 L70 38 Q71 34 77 34 H88 L87 49 Z M132 50 L130 38 Q129 34 123 34 H112 L113 49 Z M68 150 L70 162 Q71 166 77 166 H88 L87 151 Z M132 150 L130 162 Q129 166 123 166 H112 L113 151 Z" fill="url(#ex-brush-${id})" stroke="#545e64" stroke-width="0.62"/><circle cx="100" cy="100" r="68.7" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="67.5" fill="none" stroke="#f7fafb" stroke-width="0.60" opacity="0.76"/><circle cx="100" cy="100" r="63.8" fill="url(#bezel-${id})" stroke="#707a80" stroke-width="0.54"/><circle cx="100" cy="100" r="59.2" fill="#0a0c0d" stroke="#e5e9e9" stroke-width="0.48"/><circle cx="100" cy="100" r="58.3" fill="url(#ex-dial-${id})" stroke="#020303" stroke-width="0.62"/><rect x="164.8" y="95.0" width="7.4" height="10" rx="1.3" fill="url(#case-${id})" stroke="#59636a" stroke-width="0.44"/><circle cx="177.8" cy="100" r="6.4" fill="url(#case-${id})" stroke="#4a5359" stroke-width="0.62"/><path d="M174.1 95.8 V104.2 M175.7 94.3 V105.7 M177.3 93.6 V106.4 M178.9 93.7 V106.3 M180.5 94.5 V105.5 M181.7 95.8 V104.2" stroke="#4d565b" stroke-width="0.52"/><path d="M174.6 95.9 V104.1 M178 93.9 V106.1 M181 95.0 V105.0" stroke="#f7fafb" stroke-width="0.22" opacity="0.82"/>
       <g clip-path="url(#ex-dialclip-${id})">${minuteTrack}${indices}<g transform="translate(100 60.0)" fill="#f1f3f0"><circle cx="-4.0" cy="-0.2" r="1.12"/><circle cx="-2.0" cy="-2.35" r="1.12"/><circle cx="0" cy="-3.15" r="1.12"/><circle cx="2.0" cy="-2.35" r="1.12"/><circle cx="4.0" cy="-0.2" r="1.12"/><path d="M-4.8 1.2 L-3.8 4.3 H3.8 L4.8 1.2 L3.5 1.5 L2.0 -0.3 L0 1.0 L-2.0 -0.3 L-3.5 1.5 Z"/><path d="M-4.1 5.2 Q0 6.8 4.1 5.2" fill="none" stroke="#f1f3f0" stroke-width="0.72"/></g><text x="100" y="68.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="5.1" font-weight="700" letter-spacing="1.05" fill="#f1f3f1">ROLEX</text><text x="100" y="72.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.25" font-weight="700" letter-spacing="0.40" fill="#e9eeeb">OYSTER PERPETUAL</text><text x="100" y="76.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.55" font-weight="700" letter-spacing="0.85" fill="#f2f4f2">EXPLORER</text><text x="100" y="123.0" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.14" font-weight="700" letter-spacing="0.22" fill="#e7ebe8">SUPERLATIVE CHRONOMETER</text><text x="100" y="126.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.08" font-weight="700" letter-spacing="0.22" fill="#e7ebe8">OFFICIALLY CERTIFIED</text><text x="87.9" y="153.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.82" font-weight="700" letter-spacing="0.32" fill="#eef1ee">SWISS</text><g transform="translate(100 152.9) scale(0.34)" fill="#eef1ee"><circle cx="-4" cy="0" r="1.0"/><circle cx="-2" cy="-2" r="1.0"/><circle cy="-2.7" r="1.0"/><circle cx="2" cy="-2" r="1.0"/><circle cx="4" cy="0" r="1.0"/><path d="M-4.2 1 L-3.3 3.4 H3.3 L4.2 1 L0 1.8 Z"/></g><text x="112.1" y="153.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.82" font-weight="700" letter-spacing="0.32" fill="#eef1ee">MADE</text><path d="M47 66 C66 48 88 47 106 57 C80 52 61 61 47 85 Z" fill="url(#ex-glass-${id})" opacity="0.31"/></g>
       <!-- Central 3230 hands: black-edged Mercedes hour, baton minute, thin lollipop seconds. -->
-      <g filter="url(#ex-handshadow-${id})"><g class="hand-hour"><path d="M100 106 L96.8 101.4 L96.8 76.8 L92.0 70.7 L100 56.2 L108.0 70.7 L103.2 76.8 L103.2 101.4 Z" fill="url(#ex-metal-${id})" stroke="#171b1d" stroke-width="0.72"/><path d="M100 98.5 L99.0 75.5 L95.6 70.0 L100 61.6 L104.4 70.0 L101.0 75.5 Z" fill="#eef3e8"/><path d="M100 70.7 V63.7 M100 70.7 L105.2 73.7 M100 70.7 L94.8 73.7" stroke="#1a1d1e" stroke-width="1.02" stroke-linecap="round"/></g><g class="hand-min"><path d="M100 106 L97.45 101.0 L97.9 49.0 L100 34.6 L102.1 49.0 L102.55 101.0 Z" fill="url(#ex-metal-${id})" stroke="#171b1d" stroke-width="0.60"/><path d="M100 96.9 L99.35 51.8 L100 42.7 L100.65 51.8 Z" fill="#eef3e8"/></g><g class="hand-sec"><line x1="100" y1="114.2" x2="100" y2="31.4" stroke="#f1f4f1" stroke-width="0.82"/><circle cx="100" cy="51.6" r="3.05" fill="none" stroke="#f1f4f1" stroke-width="0.88"/><circle cx="100" cy="51.6" r="1.34" fill="#121517"/></g></g><circle cx="100" cy="100" r="3.15" fill="url(#ex-metal-${id})" stroke="#15191b" stroke-width="0.42"/><circle cx="100" cy="100" r="1.10" fill="#f1f3f1"/><circle cx="100" cy="100" r="58.3" fill="none" stroke="#d9dfe0" stroke-width="0.32" opacity="0.56"/>`;
+      <g filter="url(#ex-handshadow-${id})"><g class="hand-hour"><path d="M100 106 L96.8 101.4 L96.8 76.8 L92.0 70.7 L100 56.2 L108.0 70.7 L103.2 76.8 L103.2 101.4 Z" fill="url(#ex-metal-${id})" stroke="#171b1d" stroke-width="0.72"/><path d="M100 98.5 L99.0 75.5 L95.6 70.0 L100 61.6 L104.4 70.0 L101.0 75.5 Z" fill="#eef3e8"/><path d="M100 70.7 V63.7 M100 70.7 L105.2 73.7 M100 70.7 L94.8 73.7" stroke="#1a1d1e" stroke-width="1.02" stroke-linecap="round"/></g><g class="hand-min"><path d="M100 106 L97.45 101.0 L97.9 49.0 L100 34.6 L102.1 49.0 L102.55 101.0 Z" fill="url(#ex-metal-${id})" stroke="#171b1d" stroke-width="0.60"/><path d="M100 96.9 L99.35 51.8 L100 42.7 L100.65 51.8 Z" fill="#eef3e8"/></g><g class="hand-sec"><line x1="100" y1="114.2" x2="100" y2="31.4" stroke="#f1f4f1" stroke-width="0.82"/><circle cx="100" cy="51.6" r="3.05" fill="#e8f2e0" stroke="#c3cbc6" stroke-width="0.5"/></g></g><circle cx="100" cy="100" r="3.15" fill="url(#ex-metal-${id})" stroke="#15191b" stroke-width="0.42"/><circle cx="100" cy="100" r="1.10" fill="#f1f3f1"/><circle cx="100" cy="100" r="58.3" fill="none" stroke="#d9dfe0" stroke-width="0.32" opacity="0.56"/>`;
     }
   };
   LOGOS.explorer = () => "";
@@ -12745,8 +12850,15 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       };
       let rail = "", numerals = "", stitch = "", rivets = "";
       for (let i = 0; i < 60; i++) {
-        const d = i * 6, [x1, y1] = at(d, 65.0), [x2, y2] = at(d, i % 5 === 0 ? 60.3 : 62.7);
-        rail += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 5 === 0 ? "#f1f1ec" : "#c0c3bf"}" stroke-width="${i % 5 === 0 ? "1.18" : "0.47"}" opacity="${i % 5 === 0 ? "0.96" : "0.84"}"/>`;
+        const d = i * 6;
+        if (i % 5 === 0) {
+          // Bold rectangular five-minute blocks, the Big Pilot chapter signature.
+          const [x, y] = at(d, 62.6);
+          rail += `<rect x="${(x - 1.5).toFixed(1)}" y="${(y - 2.7).toFixed(1)}" width="3.0" height="5.4" fill="#f1f1ec" opacity="0.97" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+        } else {
+          const [x1, y1] = at(d, 65.0), [x2, y2] = at(d, 62.7);
+          rail += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#c0c3bf" stroke-width="0.47" opacity="0.84"/>`;
+        }
       }
       for (let h = 1; h <= 11; h++) {
         const d = h * 30, [x, y] = at(d, 48.2);
@@ -13042,7 +13154,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       <g stroke="#536168" stroke-linejoin="round"><g transform="translate(164 68.5) rotate(-32)"><rect x="-0.90" y="-3.30" width="6.45" height="6.60" rx="2.18" fill="url(#ca-control-${id})" stroke-width="0.48"/><path d="M4.55 -3.32 H10.70 Q12.35 -3.32 12.35 -1.55 V1.55 Q12.35 3.32 10.70 3.32 H4.55 Z" fill="url(#ca-control-${id})" stroke-width="0.52"/><path d="M7.25 -2.72 V2.72 M10.02 -2.76 V2.76" fill="none" stroke="#ffffff" stroke-width="0.34" opacity="0.68"/><rect x="10.80" y="-3.76" width="6.35" height="7.52" rx="2.36" fill="url(#ca-control-${id})" stroke-width="0.54"/><path d="M16.72 -2.32 Q17.56 0 16.72 2.32" fill="none" stroke="#eff3f3" stroke-width="0.40" opacity="0.62"/></g><g transform="translate(164 131.5) rotate(32)"><rect x="-0.90" y="-3.30" width="6.45" height="6.60" rx="2.18" fill="url(#ca-control-${id})" stroke-width="0.48"/><path d="M4.55 -3.32 H10.70 Q12.35 -3.32 12.35 -1.55 V1.55 Q12.35 3.32 10.70 3.32 H4.55 Z" fill="url(#ca-control-${id})" stroke-width="0.52"/><path d="M7.25 -2.72 V2.72 M10.02 -2.76 V2.76" fill="none" stroke="#ffffff" stroke-width="0.34" opacity="0.68"/><rect x="10.80" y="-3.76" width="6.35" height="7.52" rx="2.36" fill="url(#ca-control-${id})" stroke-width="0.54"/><path d="M16.72 -2.32 Q17.56 0 16.72 2.32" fill="none" stroke="#eff3f3" stroke-width="0.40" opacity="0.62"/></g></g>
       <!-- The exposed pull crown has a slim case stem and deep vertical fluting, with no crown guard. -->
       <rect x="166.75" y="95.85" width="6.40" height="8.30" rx="2.12" fill="url(#ca-control-${id})" stroke="#536168" stroke-width="0.48"/><rect x="169.45" y="94.35" width="4.35" height="11.30" rx="1.50" fill="#69757b" stroke="#3e4c54" stroke-width="0.40"/><path d="M174.75 91.15 H183.25 Q187.65 91.15 187.65 95.55 V104.45 Q187.65 108.85 183.25 108.85 H174.75 Q171.55 108.85 171.55 105.65 V94.35 Q171.55 91.15 174.75 91.15 Z" fill="url(#ca-crown-${id})" stroke="#4c5960" stroke-width="0.60"/><rect x="173.50" y="92.05" width="13.05" height="15.90" rx="3.20" fill="url(#ca-crown-${id})" stroke="#829097" stroke-width="0.28"/>${crownRibs}<path d="M186.82 94.80 V105.20" fill="none" stroke="#f8fbfa" stroke-width="0.48" opacity="0.68"/>
-      <g clip-path="url(#ca-dialclip-${id})">${sunrays}${outer}${markers}${sub(S9[0],S9[1],14.6,[["12",0],["4",120],["8",240]])}${sub(S3[0],S3[1],14.6,[["30",0],["10",120],["20",240]])}<g transform="translate(100 74.0)"><path d="M-8 -5 H8 V2.5 Q5 7 0 8.5 Q-5 7 -8 2.5 Z" fill="#0d4e91" stroke="#d9e6ef" stroke-width="0.54"/><text x="0" y="-0.7" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="3.1" font-weight="800" fill="#fff">TAG</text><text x="0" y="3.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.35" font-weight="700" fill="#fff">HEUER</text></g><text x="100" y="65.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="4.45" font-weight="700" letter-spacing="0.92" fill="#e9f1f6">CARRERA</text><path d="M80.7 132 H92.4 M107.6 132 H119.3" fill="none" stroke="#d7e6eb" stroke-width="1.04" stroke-linecap="square" opacity="0.90"/><g class="hand-subsec" data-pivot="100 132"><path d="M100 135.8 L99.34 132 L100 119.3 L100.66 132 Z" fill="#e7f0f2" stroke="#426b8d" stroke-width="0.25"/></g><circle cx="100" cy="132" r="1.45" fill="#e7f0f2"/><path d="M68 104 L67.35 100 L68 88.2 L68.65 100 Z" fill="#dce9ef"/><circle cx="68" cy="100" r="1.40" fill="#dce9ef"/><path d="M132 104 L131.35 100 L132 88.2 L132.65 100 Z" fill="#dce9ef"/><circle cx="132" cy="100" r="1.40" fill="#dce9ef"/><text x="83.0" y="149.15" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.50" font-weight="700" letter-spacing="0.16" fill="#e1e9ec">HEUER 02</text><text x="117.0" y="149.15" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.36" font-weight="700" letter-spacing="0.14" fill="#e1e9ec">80 HOURS</text><rect x="93.55" y="145.10" width="12.90" height="8.45" rx="0.54" fill="#062850" stroke="#8fa8b9" stroke-width="0.54"/><rect x="95.00" y="146.05" width="10.00" height="6.55" rx="0.20" fill="#edf0ea" stroke="#213b54" stroke-width="0.44"/><text class="date-win" data-date="dom" x="100" y="149.35" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="4.15" font-weight="700" fill="#1d2d37">25</text><text x="86.8" y="155.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.86" font-weight="700" letter-spacing="0.31" fill="#e8f0f5">SWISS</text><text x="113.2" y="155.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.86" font-weight="700" letter-spacing="0.31" fill="#e8f0f5">MADE</text><path d="M46 60 C66 43 92 43 114 55 C85 50 63 60 46 87 Z" fill="url(#ca-glass-${id})" opacity="0.24"/></g>
+      <g clip-path="url(#ca-dialclip-${id})">${sunrays}${outer}${markers}${sub(S9[0],S9[1],14.6,[["12",0],["4",120],["8",240]])}${sub(S3[0],S3[1],14.6,[["30",0],["10",120],["20",240]])}<g transform="translate(100 74.0)"><path d="M-8 -5 H8 V2.5 Q5 7 0 8.5 Q-5 7 -8 2.5 Z" fill="#eceff0" stroke="#aab6bd" stroke-width="0.5"/><path d="M-8 -5 H8 V-0.4 H-8 Z" fill="#1d5346"/><text x="0" y="-1.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="3.3" font-weight="800" fill="#fff">TAG</text><text x="0" y="4.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="3.0" font-weight="800" fill="#20262b">HEUER</text></g><text x="100" y="65.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="4.45" font-weight="700" letter-spacing="0.92" fill="#e9f1f6">CARRERA</text><path d="M80.7 132 H92.4 M107.6 132 H119.3" fill="none" stroke="#d7e6eb" stroke-width="1.04" stroke-linecap="square" opacity="0.90"/><g class="hand-subsec" data-pivot="100 132"><path d="M100 135.8 L99.34 132 L100 119.3 L100.66 132 Z" fill="#e7f0f2" stroke="#426b8d" stroke-width="0.25"/></g><circle cx="100" cy="132" r="1.45" fill="#e7f0f2"/><path d="M68 104 L67.35 100 L68 88.2 L68.65 100 Z" fill="#dce9ef"/><circle cx="68" cy="100" r="1.40" fill="#dce9ef"/><path d="M132 104 L131.35 100 L132 88.2 L132.65 100 Z" fill="#dce9ef"/><circle cx="132" cy="100" r="1.40" fill="#dce9ef"/><text x="83.0" y="149.15" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.50" font-weight="700" letter-spacing="0.16" fill="#e1e9ec">HEUER 02</text><text x="117.0" y="149.15" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.36" font-weight="700" letter-spacing="0.14" fill="#e1e9ec">80 HOURS</text><rect x="93.55" y="145.10" width="12.90" height="8.45" rx="0.54" fill="#062850" stroke="#8fa8b9" stroke-width="0.54"/><rect x="95.00" y="146.05" width="10.00" height="6.55" rx="0.20" fill="#edf0ea" stroke="#213b54" stroke-width="0.44"/><text class="date-win" data-date="dom" x="100" y="149.35" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="4.15" font-weight="700" fill="#1d2d37">25</text><text x="86.8" y="155.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.86" font-weight="700" letter-spacing="0.31" fill="#e8f0f5">SWISS</text><text x="113.2" y="155.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.86" font-weight="700" letter-spacing="0.31" fill="#e8f0f5">MADE</text><path d="M46 60 C66 43 92 43 114 55 C85 50 63 60 46 87 Z" fill="url(#ca-glass-${id})" opacity="0.24"/></g>
       <!-- Rhodium time hands move; the central chronograph seconds is shown parked at twelve. -->
       <g filter="url(#ca-handshadow-${id})"><g class="hand-hour"><path d="M100 106 L95.5 98.2 L96.7 81.5 L100 61.7 L103.3 81.5 L104.5 98.2 Z" fill="url(#ca-metal-${id})" stroke="#224361" stroke-width="0.56"/><path d="M100 97.0 L98.2 80.8 L100 69.0 L101.8 80.8 Z" fill="#dff0e5"/></g><g class="hand-min"><path d="M100 107 L97.35 99.2 L98.45 60.0 L100 44.6 L101.55 60.0 L102.65 99.2 Z" fill="url(#ca-metal-${id})" stroke="#224361" stroke-width="0.56"/><path d="M100 97.7 L98.95 62.5 L100 52.1 L101.05 62.5 Z" fill="#dff0e5"/></g><path d="M100 111 L99.62 100 L99.62 44.2 L100 39.0 L100.38 44.2 L100.38 100 L100 111 Z" fill="#e8eef0" stroke="#406681" stroke-width="0.22"/></g><circle cx="100" cy="100" r="3.35" fill="url(#ca-metal-${id})" stroke="#224361" stroke-width="0.48"/><circle cx="100" cy="100" r="1.18" fill="#f0f5f3"/><circle cx="100" cy="100" r="63.3" fill="none" stroke="#c5dce8" stroke-width="0.34" opacity="0.54"/>`;
     }
@@ -13113,29 +13225,29 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         <text font-family="Arial,Helvetica,sans-serif" font-size="2.27" font-weight="700" letter-spacing="0.035" fill="#f3f4f0"><textPath href="#sn-arc-${id}" startOffset="50%" text-anchor="middle">50<tspan baseline-shift="super" font-size="1.42">TH</tspan> ANNIVERSARY</textPath></text>
         <!-- The applied Snoopy is a metal relief: a blue recessed shadow below
              the raised silver contours gives the helmet and suit real depth. -->
-        <g fill="#092b63" opacity="0.70" stroke="none" transform="translate(0.52 0.64)">
-          <path d="M60.9 94.4 C60.2 91.0 61.8 87.3 65.1 85.9 C68.8 84.3 73.5 85.8 76.0 89.0 C78.4 92.1 77.8 95.6 74.7 97.6 C72.2 99.2 68.5 99.0 66.0 97.8 C63.3 97.8 61.4 96.7 60.9 94.4 Z"/>
-          <path d="M66.0 98.3 C67.5 97.8 70.9 97.9 72.6 99.1 L74.0 106.7 C72.2 108.8 67.2 109.1 64.8 106.7 Z"/>
-          <path d="M64.9 99.9 L62.1 101.7 L60.5 105.7 L63.0 106.5 L65.7 102.7 M72.7 100.0 L75.2 102.1 L77.6 104.4 L76.2 106.3 L72.9 103.7" stroke="#092b63" stroke-width="1.25" fill="none"/>
-          <path d="M65.3 106.5 L62.6 109.7 L66.5 111.0 L68.2 108.0 M72.6 106.6 L74.9 109.4 L71.4 111.5 L69.9 108.1" stroke="#092b63" stroke-width="1.35" fill="none"/>
+        <g fill="#092b63" opacity="0.55" stroke="none" transform="translate(0.42 0.52)">
+          <ellipse cx="68.6" cy="91.6" rx="5.0" ry="4.2"/>
+          <path d="M72.4 92.2 Q77.6 91.4 78.2 93.6 Q78.4 95.4 74.6 95.2 Z"/>
+          <path d="M64.6 96.2 Q69.8 94.8 72.4 97.0 L73.6 105.4 Q69.2 108.0 64.6 105.6 Z"/>
         </g>
         <g fill="url(#sn-relief-${id})" stroke="#1b3f79" stroke-width="0.37" stroke-linejoin="round" stroke-linecap="round">
           <!-- individually placed stars follow the dark-blue 9 o'clock counter -->
           <path d="M57.3 96.4 l0.38 0.88 l0.90 0.20 l-0.72 0.57 l0.10 0.94 l-0.66 -0.54 l-0.78 0.50 l0.24 -0.90 l-0.59 -0.72 l0.95 -0.02 Z M59.1 103.0 l0.34 0.76 l0.80 0.16 l-0.62 0.52 l0.10 0.82 l-0.66 -0.43 l-0.70 0.41 l0.20 -0.78 l-0.53 -0.58 l0.83 -0.06 Z M60.5 108.5 l0.29 0.68 l0.72 0.12 l-0.56 0.47 l0.08 0.73 l-0.59 -0.38 l-0.62 0.36 l0.18 -0.70 l-0.47 -0.52 l0.72 -0.04 Z M76.7 100.6 l0.34 0.76 l0.80 0.16 l-0.62 0.52 l0.10 0.82 l-0.66 -0.43 l-0.70 0.41 l0.20 -0.78 l-0.53 -0.58 l0.83 -0.06 Z M78.0 106.7 l0.29 0.68 l0.72 0.12 l-0.56 0.47 l0.08 0.73 l-0.59 -0.38 l-0.62 0.36 l0.18 -0.70 l-0.47 -0.52 l0.72 -0.04 Z M73.9 111.0 l0.26 0.59 l0.64 0.12 l-0.50 0.41 l0.09 0.65 l-0.53 -0.34 l-0.56 0.32 l0.16 -0.62 l-0.43 -0.45 l0.66 -0.04 Z"/>
-          <!-- raised helmet shell, Snoopy's dark ear and his profile facing right -->
-          <path d="M60.9 94.4 C60.2 91.0 61.8 87.3 65.1 85.9 C68.8 84.3 73.5 85.8 76.0 89.0 C78.4 92.1 77.8 95.6 74.7 97.6 C72.2 99.2 68.5 99.0 66.0 97.8 C63.3 97.8 61.4 96.7 60.9 94.4 Z"/>
-          <path d="M63.0 94.7 C61.5 92.2 61.7 89.6 64.4 88.0 C65.0 90.4 65.2 92.7 66.5 95.4 C65.3 96.6 64.0 96.4 63.0 94.7 Z" fill="#244784"/>
-          <path d="M62.0 93.9 C62.0 89.7 64.7 86.8 68.0 86.8 C71.7 86.8 74.9 88.9 75.7 91.7" fill="none" stroke="#244784" stroke-width="0.70"/>
-          <path d="M64.2 90.3 C66.9 87.5 71.7 88.0 74.4 90.7 M65.3 93.1 C67.9 90.4 71.9 90.8 74.8 93.2" fill="none" stroke="#244784" stroke-width="0.37"/>
-          <path d="M63.2 90.8 C64.7 87.8 68.3 86.5 71.2 87.4" fill="none" stroke="#ffffff" stroke-width="0.48" opacity="0.85"/>
-          <path d="M71.4 91.2 C74.3 90.6 77.4 91.7 78.1 93.6 C78.8 95.7 77.0 97.1 74.3 96.8 L71.2 96.1"/>
-          <circle cx="73.3" cy="91.9" r="0.43" fill="#244784" stroke="none"/><circle cx="77.7" cy="93.9" r="0.53" fill="#244784" stroke="none"/>
-          <path d="M66.0 98.3 C67.5 97.8 70.9 97.9 72.6 99.1 L74.0 106.7 C72.2 108.8 67.2 109.1 64.8 106.7 Z"/>
-          <!-- backpack, glove, segmented suit and floating boots -->
-          <path d="M64.9 99.9 L62.1 101.7 L60.5 105.7 L63.0 106.5 L65.7 102.7 M72.7 100.0 L75.2 102.1 L77.6 104.4 L76.2 106.3 L72.9 103.7" fill="url(#sn-relief-${id})"/>
-          <path d="M64.4 101.5 H73.1 M65.1 103.7 H73.0 M66.7 99.0 V107.6 M69.3 98.6 V108.0 M71.7 99.3 V107.4" fill="none"/>
-          <path d="M65.3 106.5 L62.6 109.7 L66.5 111.0 L68.2 108.0 M72.6 106.6 L74.9 109.4 L71.4 111.5 L69.9 108.1" fill="url(#sn-relief-${id})"/>
-          <path d="M63.0 110.0 Q68.9 112.8 75.1 110.4" fill="none" stroke="#f4f4ef" stroke-width="0.82"/>
+          <!-- Line-drawn Snoopy in profile facing right: round head, long snout,
+               black ear, eye dot, nose ball; suited body mid-stride with backpack. -->
+          <ellipse cx="68.6" cy="91.6" rx="5.0" ry="4.2"/>
+          <path d="M72.2 92.0 Q76.4 90.6 78.0 92.6 Q78.8 94.2 76.4 94.8 Q74.0 95.4 72.2 94.6 Z"/>
+          <circle cx="78.1" cy="93.1" r="0.85" fill="#0d2f66" stroke="none"/>
+          <ellipse cx="66.2" cy="88.5" rx="2.4" ry="1.35" fill="#0d2f66" stroke="none" transform="rotate(-24 66.2 88.5)"/>
+          <circle cx="71.9" cy="90.4" r="0.5" fill="#0d2f66" stroke="none"/>
+          <path d="M73.4 96.0 Q74.6 96.8 74.2 97.8" fill="none" stroke="#244784" stroke-width="0.5"/>
+          <path d="M64.6 96.2 Q69.8 94.8 72.4 97.0 L73.6 105.4 Q69.2 108.0 64.6 105.6 Z"/>
+          <path d="M66.2 97.4 L74.4 99.6 M65.6 100.2 L74.0 102.2" fill="none" stroke="#244784" stroke-width="0.45"/>
+          <rect x="60.6" y="97.4" width="3.6" height="6.2" rx="1.0"/>
+          <path d="M64.2 98.4 L60.9 98.7 M64.2 101.9 L60.9 101.6" fill="none" stroke="#244784" stroke-width="0.4"/>
+          <path d="M72.6 99.4 L76.4 101.8 L75.4 103.4 L72.2 101.6 Z"/>
+          <circle cx="76.4" cy="102.4" r="1.15"/>
+          <path d="M66.0 105.8 L65.2 109.0 Q64.8 110.4 66.4 110.6 L68.4 110.6 L68.6 107.2 Z M71.4 105.9 L72.4 109.0 Q72.9 110.4 71.3 110.6 L69.6 110.6 L69.5 107.2 Z"/>
         </g>`;
       // The fluting runs around the crown's horizontal axis, so a front view
       // shows broad transverse grooves—not the vertical comb of a generic knob.
@@ -13289,7 +13401,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       <circle cx="100" cy="100" r="65.3" fill="none" stroke="#9dff86" stroke-width="0.46" opacity="0.82"/>
       <!-- Screw-down crown with a short neck at three. -->
       <rect x="171" y="95.2" width="10.2" height="9.6" rx="1.5" fill="url(#mg-brush-${id})" stroke="#6e7b82" stroke-width="0.48"/><circle cx="187" cy="100" r="8.1" fill="url(#mg-polish-${id})" stroke="#66737b" stroke-width="0.68"/><path d="M181.6 94.6 V105.4 M183.3 93.0 V107.0 M185.0 92.1 V107.9 M186.7 91.8 V108.2 M188.4 92.1 V107.9 M190.1 93.0 V107.0 M191.8 94.6 V105.4" stroke="#66737b" stroke-width="0.62"/>
-      <g filter="url(#mg-hands-${id})"><g class="hand-hour"><path d="M100 106 L95.9 100.8 L96.8 71.6 L100 58.5 L103.2 71.6 L104.1 100.8 Z" fill="url(#mg-metal-${id})" stroke="#263b42" stroke-width="0.54"/><path d="M100 97.2 L98.2 92.6 L98.7 73.6 L100 66.8 L101.3 73.6 L101.8 92.6 Z" fill="url(#mg-lume-${id})"/></g><g class="hand-min"><path d="M100 107 L97.7 100.8 L98.3 45.8 L100 32.8 L101.7 45.8 L102.3 100.8 Z" fill="url(#mg-metal-${id})" stroke="#263b42" stroke-width="0.54"/><path d="M100 96.8 L99.0 93.6 L99.3 48.8 L100 40.5 L100.7 48.8 L101.0 93.6 Z" fill="url(#mg-lume-${id})"/></g><g class="hand-sec"><line x1="100" y1="116" x2="100" y2="103" stroke="#f0802a" stroke-width="1.34"/><polyline points="100,103 96.3,93.1 104.1,82.0 97.7,70.4 102.4,58.5 100,34.1" fill="none" stroke="#f0802a" stroke-width="1.96" stroke-linejoin="miter" stroke-linecap="square"/><path d="M100 27.4 L96.4 36.6 H103.6 Z" fill="#f0802a" stroke="#be561d" stroke-width="0.30"/></g></g><circle cx="100" cy="100" r="4.0" fill="url(#mg-metal-${id})" stroke="#263b42" stroke-width="0.52"/><circle cx="100" cy="100" r="1.35" fill="#e8f3d4"/>
+      <g filter="url(#mg-hands-${id})"><g class="hand-hour"><path d="M100 106 L95.9 100.8 L96.8 71.6 L100 58.5 L103.2 71.6 L104.1 100.8 Z" fill="url(#mg-metal-${id})" stroke="#263b42" stroke-width="0.54"/><path d="M100 97.2 L98.2 92.6 L98.7 73.6 L100 66.8 L101.3 73.6 L101.8 92.6 Z" fill="url(#mg-lume-${id})"/></g><g class="hand-min"><path d="M100 107 L97.7 100.8 L98.3 45.8 L100 32.8 L101.7 45.8 L102.3 100.8 Z" fill="url(#mg-metal-${id})" stroke="#263b42" stroke-width="0.54"/><path d="M100 96.8 L99.0 93.6 L99.3 48.8 L100 40.5 L100.7 48.8 L101.0 93.6 Z" fill="url(#mg-lume-${id})"/></g><g class="hand-sec"><line x1="100" y1="116" x2="100" y2="103" stroke="#f0802a" stroke-width="1.34"/><polyline points="100,103 96.5,93.5 104.0,83.0 98.0,72.5 102.3,61.5 100,47.5" fill="none" stroke="#f0802a" stroke-width="1.96" stroke-linejoin="miter" stroke-linecap="square"/><path d="M100 40.8 L96.5 49.6 H103.5 Z" fill="#f0802a" stroke="#be561d" stroke-width="0.30"/></g></g><circle cx="100" cy="100" r="4.0" fill="url(#mg-metal-${id})" stroke="#263b42" stroke-width="0.52"/><circle cx="100" cy="100" r="1.35" fill="#e8f3d4"/>
       <circle cx="100" cy="100" r="63.1" fill="none" stroke="#0a3440" stroke-width="0.42"/>`;
     }
   };
@@ -13638,7 +13750,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       <circle cx="100" cy="100" r="73.4" fill="url(#mt-steel-${id})" filter="url(#mt-shadow-${id})"/><circle cx="100" cy="100" r="71.7" fill="none" stroke="#ffffff" stroke-width="0.70" opacity="0.82"/><circle cx="100" cy="100" r="68.2" fill="#adb6bb" stroke="#646e73" stroke-width="0.56"/><circle cx="100" cy="100" r="66.3" fill="url(#mt-steel-${id})"/><circle cx="100" cy="100" r="65.5" fill="url(#mt-dial-${id})" stroke="#c8c8c1" stroke-width="0.58"/>
       <g clip-path="url(#mt-dial-clip-${id})">${minutes}
         <!-- Raised mint/red power reserve at 1:30, as on ref. 1101. -->
-        <g transform="translate(119.2 85.0)"><circle r="6.35" fill="#b4bbb9"/><circle r="5.45" fill="#a4d1c8"/><path d="M0 0 V-5.45 A5.45 5.45 0 0 1 4.72 2.72 Z" fill="#dc332d"/><path d="M0 -5.45 A5.45 5.45 0 0 1 4.72 2.72" fill="none" stroke="#f8fbfa" stroke-width="0.78"/><circle r="6.35" fill="none" stroke="#8b9495" stroke-width="0.50"/></g>
+        <g transform="translate(112.5 77.5)"><circle r="6.6" fill="#dbd9d0"/><circle r="5.9" fill="#b7bdb9" opacity="0.8"/><circle r="5.35" fill="#a4d1c8"/><path d="M0 0 L3.2 -4.28 A5.35 5.35 0 0 1 5.05 -1.77 Z" fill="#dc332d"/><path d="M3.2 -4.28 A5.35 5.35 0 0 1 5.05 -1.77" fill="none" stroke="#f6f4ec" stroke-width="0.55"/><path d="M0 0 L4.65 -2.65" stroke="#f6f4ec" stroke-width="0.4"/><circle r="5.35" fill="none" stroke="#87908e" stroke-width="0.4"/><circle r="6.6" fill="none" stroke="#9aa09b" stroke-width="0.45"/></g>
         <text x="79.0" y="98.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="5.25" font-weight="500" letter-spacing="2.10" fill="#262629">NOMOS</text><text x="79.0" y="104.0" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.50" font-weight="500" letter-spacing="1.25" fill="#252528">GLASHÜTTE</text>
         <circle cx="${SS[0]}" cy="${SS[1]}" r="${SSR}" fill="#f8f7f1" stroke="#cbc9c0" stroke-width="0.66"/>${smallTicks}<g class="hand-subsec" data-pivot="${SS[0]} ${SS[1]}"><path d="M${SS[0]} ${SS[1]+4.0} L${SS[0]-0.78} ${SS[1]-10.9} L${SS[0]} ${SS[1]-13.15} L${SS[0]+0.78} ${SS[1]-10.9} Z" fill="#de342e"/><circle cx="${SS[0]}" cy="${SS[1]}" r="1.52" fill="#de342e" stroke="#a62522" stroke-width="0.36"/><circle cx="${SS[0]}" cy="${SS[1]}" r="0.55" fill="#f7e3db"/></g>
         <rect x="91.8" y="146.0" width="16.4" height="11.7" rx="0.82" fill="#e0dfd8"/><rect x="92.8" y="147.0" width="14.4" height="9.7" rx="0.38" fill="#fffefa"/><text class="date-win" data-date="dom" x="100" y="152.4" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="8.2" font-weight="400" fill="#1a1a1d">24</text><text x="100" y="164.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.72" font-weight="500" letter-spacing="0.84" fill="#414144">MADE IN GERMANY</text><ellipse cx="74" cy="61" rx="48" ry="21" fill="url(#mt-glass-${id})" transform="rotate(-27 74 61)"/>
@@ -13808,7 +13920,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       <rect x="177.5" y="94" width="7" height="12" rx="1.2" fill="url(#im-steel-${id})" stroke="#5d656a" stroke-width="0.42"/><circle cx="188.5" cy="100" r="7.4" fill="url(#im-steel-${id})" stroke="#515a61" stroke-width="0.65"/>${Array.from({length:8},(_,i)=>`<line x1="${184.1+i*1.25}" y1="94.2" x2="${184.1+i*1.25}" y2="105.8" stroke="#697177" stroke-width="0.48"/>`).join("")}
       <g clip-path="url(#im-clip-${id})">${track}${numerals}<text x="132" y="91.6" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="4.6" font-weight="900" fill="#292622">MICKEY</text><text x="132" y="97.1" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="4.6" font-weight="900" fill="#292622">MOUSE</text><text x="132" y="103.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="3.65" font-weight="700" letter-spacing="0.25" fill="#413a31">INGERSOLL</text><text x="70" y="116.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.55" font-weight="700" fill="#50483e">MADE IN</text><text x="70" y="120.2" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.55" font-weight="700" fill="#50483e">U.S.A.</text>
         <!-- Full 1930s Mickey: pie-cut eyes, side-facing muzzle, red shorts and broad yellow shoes. -->
-        <path d="M89 155 C83 150 68 151 60 157 C54 161 58 166 73 165 C84 164 93 160 89 155Z M111 155 C117 150 132 151 140 157 C146 161 142 166 127 165 C116 164 107 160 111 155Z" fill="url(#im-glove-${id})" stroke="#876913" stroke-width="0.9"/><path d="M93 132 C91 142 88 151 84 157 M107 132 C109 142 112 151 116 157" fill="none" stroke="#151513" stroke-width="4.1" stroke-linecap="round"/><path d="M100 82 C91 84 87 93 89 104 C90 112 94 119 100 124 C106 119 110 112 111 104 C113 93 109 84 100 82Z" fill="url(#im-black-${id})" stroke="#000" stroke-width="0.5"/><path d="M86 116 C91 112 109 112 114 116 C117 124 114 134 106 136 C103 136.5 101.2 132 100 128 C98.8 132 97 136.5 94 136 C86 134 83 124 86 116Z" fill="url(#im-red-${id})" stroke="#81110d" stroke-width="0.82"/><circle cx="90" cy="122" r="2.3" fill="#fff5da" stroke="#b9ac92" stroke-width="0.48"/><circle cx="110" cy="122" r="2.3" fill="#fff5da" stroke="#b9ac92" stroke-width="0.48"/><circle cx="79" cy="52" r="13.1" fill="url(#im-black-${id})"/><circle cx="98" cy="40" r="12.7" fill="url(#im-black-${id})"/><ellipse cx="96" cy="66" rx="24.4" ry="23.8" fill="url(#im-black-${id})"/><path d="M81 68 C82 57 90 51 99 55 C108 55 118 61 122 70 C120 81 108 90 94 88 C85 86 80 77 81 68Z" fill="url(#im-face-${id})" stroke="#cdbd9e" stroke-width="0.48"/><path d="M88 57 C93 50 101 51 104 60 C99 55 94 55 88 57Z" fill="#181714"/><ellipse cx="97.2" cy="65.7" rx="2.7" ry="6.25" fill="#111" transform="rotate(-8 97.2 65.7)"/><ellipse cx="106.3" cy="65.6" rx="2.65" ry="6" fill="#111" transform="rotate(5 106.3 65.6)"/><ellipse cx="119.2" cy="70.6" rx="5.0" ry="3.2" fill="#111" transform="rotate(7 119.2 70.6)"/><path d="M94 80 C101 88 113 84 118 76" fill="none" stroke="#151515" stroke-width="1.25" stroke-linecap="round"/><path d="M98.2 81.2 Q107 87.7 115.5 78.5" fill="none" stroke="#d83228" stroke-width="2" stroke-linecap="round"/>
+        <path d="M89 155 C83 150 68 151 60 157 C54 161 58 166 73 165 C84 164 93 160 89 155Z M111 155 C117 150 132 151 140 157 C146 161 142 166 127 165 C116 164 107 160 111 155Z" fill="url(#im-glove-${id})" stroke="#876913" stroke-width="0.9"/><path d="M93 132 C91 142 88 151 84 157 M107 132 C109 142 112 151 116 157" fill="none" stroke="#151513" stroke-width="4.1" stroke-linecap="round"/><path d="M100 82 C91 84 87 93 89 104 C90 112 94 119 100 124 C106 119 110 112 111 104 C113 93 109 84 100 82Z" fill="url(#im-black-${id})" stroke="#000" stroke-width="0.5"/><path d="M86 116 C91 112 109 112 114 116 C117 124 114 134 106 136 C103 136.5 101.2 132 100 128 C98.8 132 97 136.5 94 136 C86 134 83 124 86 116Z" fill="url(#im-red-${id})" stroke="#81110d" stroke-width="0.82"/><circle cx="90" cy="122" r="2.3" fill="#fff5da" stroke="#b9ac92" stroke-width="0.48"/><circle cx="110" cy="122" r="2.3" fill="#fff5da" stroke="#b9ac92" stroke-width="0.48"/><circle cx="75" cy="53" r="11.8" fill="url(#im-black-${id})"/><circle cx="105" cy="44" r="11.4" fill="url(#im-black-${id})"/><ellipse cx="94" cy="68" rx="22.6" ry="21.6" fill="url(#im-black-${id})"/><path d="M81 68 C82 57 90 51 99 55 C108 55 118 61 122 70 C120 81 108 90 94 88 C85 86 80 77 81 68Z" fill="url(#im-face-${id})" stroke="#cdbd9e" stroke-width="0.48"/><path d="M88 57 C93 50 101 51 104 60 C99 55 94 55 88 57Z" fill="#181714"/><ellipse cx="97.2" cy="65.7" rx="2.7" ry="6.25" fill="#111" transform="rotate(-8 97.2 65.7)"/><ellipse cx="106.3" cy="65.6" rx="2.65" ry="6" fill="#111" transform="rotate(5 106.3 65.6)"/><ellipse cx="119.2" cy="70.6" rx="5.0" ry="3.2" fill="#111" transform="rotate(7 119.2 70.6)"/><path d="M94 80 C101 88 113 84 118 76" fill="none" stroke="#151515" stroke-width="1.25" stroke-linecap="round"/><path d="M98.2 81.2 Q107 87.7 115.5 78.5" fill="none" stroke="#d83228" stroke-width="2" stroke-linecap="round"/>
         <!-- The original has a turning seconds disc, animated here by the same live sub-seconds transform. -->
         <circle cx="${SX}" cy="${SY}" r="15.2" fill="#f8f0da" stroke="#6f6656" stroke-width="0.88"/>${secondTrack}<g class="hand-subsec" data-pivot="${SX} ${SY}">${smallMickey(100,136.5,0.82,0)}${smallMickey(107.4,148.8,0.82,120)}${smallMickey(92.6,148.8,0.82,-120)}</g><circle cx="${SX}" cy="${SY}" r="1.05" fill="#6a231b"/><path d="M66 53 Q92 35 124 42" fill="none" stroke="url(#im-glass-${id})" stroke-width="7" opacity="0.55"/>
       </g>
@@ -15155,6 +15267,28 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
     const distance = [hours && `${hours}h`, minutes && `${minutes}m`].filter(Boolean).join(" ");
     return `${distance} ${delta > 0 ? "ahead" : "behind"}`;
   }
+  // ---- Follow-the-sun horizon ----
+  const horizonTrack = document.getElementById("horizon-track");
+  let lastHorizonMinute = -1;
+  function updateHorizon(now) {
+    if (!horizonTrack) return;
+    const minute = Math.floor(now.getTime() / 60000);
+    const cityKey = cities.map(c => c.city + c.tz).join("|");
+    if (minute === lastHorizonMinute && horizonTrack.dataset.cities === cityKey) return;
+    lastHorizonMinute = minute;
+    horizonTrack.dataset.cities = cityKey;
+    const homeOffset = offsetMinutes(HOME_TIME_ZONE, now);
+    let html = "";
+    cities.forEach(city => {
+      const { H, mm } = tzParts(city.tz, now);
+      const pct = ((H * 60 + mm) / 1440) * 100;
+      const isLocal = offsetMinutes(city.tz, now) === homeOffset;
+      html += `<span class="horizon-dot${isLocal ? " is-local" : ""}" style="left:${pct.toFixed(2)}%" title="${city.city}"></span>` +
+              `<span class="horizon-label" style="left:${pct.toFixed(2)}%">${city.city.toUpperCase()}</span>`;
+    });
+    horizonTrack.innerHTML = html;
+  }
+
   function updateCityChrome(now) {
     cities.forEach((city, index) => {
       const subEl = document.getElementById(`sub-${index}`);
@@ -15186,6 +15320,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
     if (cityCountEl) cityCountEl.textContent = `${cities.length} ${cities.length === 1 ? "city" : "cities"}`;
     if (localNowEl) localNowEl.textContent = `Your local · ${localNowFormatter.format(now)}`;
     updateCityChrome(now);
+    updateHorizon(now);
   }
 
   function refreshCurrentCityOrder(now) {
