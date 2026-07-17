@@ -12754,8 +12754,15 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       };
       let rail = "", numerals = "", stitch = "", rivets = "";
       for (let i = 0; i < 60; i++) {
-        const d = i * 6, [x1, y1] = at(d, 65.0), [x2, y2] = at(d, i % 5 === 0 ? 60.3 : 62.7);
-        rail += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 5 === 0 ? "#f1f1ec" : "#c0c3bf"}" stroke-width="${i % 5 === 0 ? "1.18" : "0.47"}" opacity="${i % 5 === 0 ? "0.96" : "0.84"}"/>`;
+        const d = i * 6;
+        if (i % 5 === 0) {
+          // Bold rectangular five-minute blocks, the Big Pilot chapter signature.
+          const [x, y] = at(d, 62.6);
+          rail += `<rect x="${(x - 1.5).toFixed(1)}" y="${(y - 2.7).toFixed(1)}" width="3.0" height="5.4" fill="#f1f1ec" opacity="0.97" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+        } else {
+          const [x1, y1] = at(d, 65.0), [x2, y2] = at(d, 62.7);
+          rail += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#c0c3bf" stroke-width="0.47" opacity="0.84"/>`;
+        }
       }
       for (let h = 1; h <= 11; h++) {
         const d = h * 30, [x, y] = at(d, 48.2);
