@@ -13454,14 +13454,25 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
       };
       const S9 = [68,100], S3 = [132,100], S6 = [100,132];
+      // Sapphire spectrum from the 116595RBOW: red at 12, yellow at 3, teal at 6,
+      // violet at 8, fuchsia through 9-11 back to red. Piecewise, not linear in hue.
+      const hueAt = d => {
+        const stops = [[0,357],[30,22],[60,38],[90,52],[120,95],[150,140],[180,178],[210,215],[240,250],[270,283],[300,312],[330,333],[360,357]];
+        const t = ((d % 360) + 360) % 360;
+        for (let i = 1; i < stops.length; i++) if (t <= stops[i][0]) {
+          const [d0,h0] = stops[i-1], [d1,h1] = stops[i];
+          return Math.round(h0 + (h1 - h0) * (t - d0) / (d1 - d0)) % 360;
+        }
+        return 357;
+      };
       let sapphires = "", markers = "", diamonds = "", bracelet = "", minuteTrack = "";
       for (let i = 0; i < 36; i++) {
-        const d = i * 10, [x,y] = at(d,70.2), hue = (340 + d) % 360;
-        sapphires += `<g transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x-3.05).toFixed(1)}" y="${(y-5.25).toFixed(1)}" width="6.1" height="10.5" rx="0.62" fill="hsl(${hue} 78% 53%)" stroke="#7e4c45" stroke-width="0.46"/><path d="M${(x-2.15).toFixed(1)} ${(y-4.15).toFixed(1)} H${(x+1.05).toFixed(1)} V${(y+3.4).toFixed(1)} H${(x-2.15).toFixed(1)} Z" fill="hsl(${hue} 95% 76%)" opacity="0.62"/></g>`;
+        const d = i * 10, [x,y] = at(d,70.2), hue = hueAt(d);
+        sapphires += `<g transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x-3.6).toFixed(1)}" y="${(y-4.3).toFixed(1)}" width="7.2" height="8.6" rx="0.5" fill="hsl(${hue} 78% 50%)" stroke="#7e4c45" stroke-width="0.46"/><path d="M${(x-1.9).toFixed(1)} ${(y-2.5).toFixed(1)} H${(x+1.9).toFixed(1)} V${(y+2.5).toFixed(1)} H${(x-1.9).toFixed(1)} Z" fill="hsl(${hue} 92% 72%)" opacity="0.72"/><path d="M${(x-3.6).toFixed(1)} ${(y-4.3).toFixed(1)} L${(x-1.9).toFixed(1)} ${(y-2.5).toFixed(1)} M${(x+3.6).toFixed(1)} ${(y-4.3).toFixed(1)} L${(x+1.9).toFixed(1)} ${(y-2.5).toFixed(1)} M${(x+3.6).toFixed(1)} ${(y+4.3).toFixed(1)} L${(x+1.9).toFixed(1)} ${(y+2.5).toFixed(1)} M${(x-3.6).toFixed(1)} ${(y+4.3).toFixed(1)} L${(x-1.9).toFixed(1)} ${(y+2.5).toFixed(1)}" stroke="hsl(${hue} 60% 34%)" stroke-width="0.34" opacity="0.85"/></g>`;
       }
       for (let h = 1; h < 12; h++) {
-        const d = h * 30, [x,y] = at(d,50.8), hue = (340 + d) % 360;
-        markers += `<g transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x-2.4).toFixed(1)}" y="${(y-6.6).toFixed(1)}" width="4.8" height="13.2" rx="0.42" fill="hsl(${hue} 82% 55%)" stroke="#9e654e" stroke-width="0.58"/><path d="M${(x-1.55).toFixed(1)} ${(y-5.2).toFixed(1)} H${(x+0.7).toFixed(1)} V${(y+4.3).toFixed(1)} H${(x-1.55).toFixed(1)} Z" fill="hsl(${hue} 90% 78%)" opacity="0.60"/></g>`;
+        const d = h * 30, [x,y] = at(d,50.8), hue = hueAt(d);
+        markers += `<g transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x-1.75).toFixed(1)}" y="${(y-4.9).toFixed(1)}" width="3.5" height="9.8" rx="0.36" fill="hsl(${hue} 82% 55%)" stroke="#9e654e" stroke-width="0.52"/><path d="M${(x-1.1).toFixed(1)} ${(y-3.8).toFixed(1)} H${(x+0.55).toFixed(1)} V${(y+3.1).toFixed(1)} H${(x-1.1).toFixed(1)} Z" fill="hsl(${hue} 90% 78%)" opacity="0.60"/></g>`;
       }
       for (let i = 0; i < 60; i++) {
         const d=i*6,[x1,y1]=at(d,61.0),[x2,y2]=at(d,i%5===0?57.6:59.2);
@@ -13474,7 +13485,15 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       for (let i=0;i<4;i++) bracelet += braceletLink(i*11.1,30+i*1.85) + braceletLink(155.6+i*11.1,35.55-i*1.85);
       const sub = (cx,cy,labels) => {
         let s=`<circle cx="${cx}" cy="${cy}" r="16.9" fill="url(#rb-crystal-${id})" stroke="#b96e52" stroke-width="0.86"/><circle cx="${cx}" cy="${cy}" r="14.9" fill="none" stroke="#8e4f3e" stroke-width="0.70"/>`;
-        for(let r=3.5;r<13.8;r+=1.6)s+=`<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none" stroke="#f3d0b7" stroke-width="0.22" opacity="0.43"/>`;
+        // "Gold Crystals" counters: irregular crystallised rose-gold flakes, not rings.
+        const rnd = n => { const x = Math.sin(n * 127.1 + cx * 7.3 + cy * 3.1) * 43758.5453; return x - Math.floor(x); };
+        const tones = ["#f7dcc4","#e9b48e","#d99871","#c07a55","#a9613f"];
+        for (let i = 0; i < 30; i++) {
+          const a = rnd(i) * Math.PI * 2, rr = Math.sqrt(rnd(i + 60)) * 10.4;
+          const px = cx + Math.cos(a) * rr, py = cy + Math.sin(a) * rr;
+          const sz = 1.2 + rnd(i + 120) * 2.2, rot = Math.round(rnd(i + 180) * 360);
+          s += `<path transform="rotate(${rot} ${px.toFixed(1)} ${py.toFixed(1)})" d="M${(px - sz).toFixed(1)} ${py.toFixed(1)} L${px.toFixed(1)} ${(py - sz * 0.8).toFixed(1)} L${(px + sz * 0.9).toFixed(1)} ${py.toFixed(1)} L${px.toFixed(1)} ${(py + sz * 0.7).toFixed(1)} Z" fill="${tones[Math.floor(rnd(i + 240) * tones.length)]}" opacity="0.88"/>`;
+        }
         for(let i=0;i<60;i++){const d=i*6,[x1,y1]=at(d,14.3,cx,cy),[x2,y2]=at(d,i%5===0?10.7:12.5,cx,cy);s+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#744235" stroke-width="${i%5===0?"0.50":"0.23"}" opacity="0.80"/>`;}
         labels.forEach(([n,d])=>{const [x,y]=at(d,9.5,cx,cy);s+=`<text x="${x.toFixed(1)}" y="${(y+.2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.25" font-weight="700" fill="#6f3d31">${n}</text>`;}); return s;
       };
