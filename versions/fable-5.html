@@ -11730,7 +11730,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         const deg = i * 3.6, [x1,y1] = at(deg, 77.0), [x2,y2] = at(deg, i % 10 === 0 ? 71.6 : 73.8);
         bezelTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#efefeb" stroke-width="${i % 10 === 0 ? "1.1" : "0.46"}" opacity="${i % 10 === 0 ? "1" : "0.85"}"/>`;
       }
-      for (const [word,deg] of [["10",0],["02",64],["03",104],["04",140],["05",180],["06",220],["07",255],["08",292],["09",326]]) {
+      for (const [word,deg] of [["10",0],["2",64],["3",104],["4",140],["5",180],["6",220],["7",255],["8",292],["9",326]]) {
         const [x,y] = at(deg, 73.5);
         bezelLabels += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${word === "10" ? "6.9" : "5.3"}" font-weight="500" fill="#f1f1eb" transform="rotate(${upright(deg).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${word}</text>`;
       }
@@ -11743,20 +11743,20 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         const deg = h * 30, [x,y] = at(deg, 47.6);
         markers += `<g transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"><rect x="${(x - 2.25).toFixed(1)}" y="${(y - 6.5).toFixed(1)}" width="4.5" height="13.0" rx="0.58" fill="url(#zen-metal-${id})" stroke="#757d80" stroke-width="0.42"/><rect x="${(x - 1.20).toFixed(1)}" y="${(y - 4.95).toFixed(1)}" width="2.4" height="9.9" rx="0.28" fill="#111415"/></g>`;
       }
-      markers += `<g><rect x="96.5" y="41.4" width="7.0" height="14.1" rx="0.62" fill="url(#zen-metal-${id})" stroke="#717a7d" stroke-width="0.42"/><rect x="98.15" y="43.05" width="3.7" height="10.8" rx="0.26" fill="#101314"/><path d="M45.2 95.7 H55.8 V104.3 H45.2 Z M144.2 95.7 H154.8 V104.3 H144.2 Z M96.2 151.9 H103.8 V160.8 H96.2 Z" fill="url(#zen-metal-${id})" stroke="#717a7d" stroke-width="0.42"/><path d="M47.2 97.5 H53.8 V102.5 H47.2 Z M146.2 97.5 H152.8 V102.5 H146.2 Z M97.9 153.6 H102.1 V159.1 H97.9 Z" fill="#111415"/></g>`;
+      markers += `<g><rect x="96.5" y="41.4" width="7.0" height="14.1" rx="0.62" fill="url(#zen-metal-${id})" stroke="#717a7d" stroke-width="0.42"/><rect x="98.15" y="43.05" width="3.7" height="10.8" rx="0.26" fill="#101314"/></g>`;
 
       const register = (cx, cy, fill, rim, numbers) => {
         let ticks = "", rings = "", nums = "";
-        for (let r = 4; r < 14; r += 1.35) rings += `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(2)}" fill="none" stroke="${rim}" stroke-width="0.18" opacity="0.44"/>`;
+        for (let r = 4.5; r < 18.4; r += 1.55) rings += `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(2)}" fill="none" stroke="${rim}" stroke-width="0.18" opacity="0.44"/>`;
         for (let i = 0; i < 60; i++) {
-          const deg = i * 6, [x1,y1] = at(deg, 15.4, cx, cy), [x2,y2] = at(deg, i % 5 === 0 ? 11.8 : 13.0, cx, cy);
+          const deg = i * 6, [x1,y1] = at(deg, 20.0, cx, cy), [x2,y2] = at(deg, i % 5 === 0 ? 15.6 : 17.1, cx, cy);
           ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#f0f0eb" stroke-width="${i % 5 === 0 ? "0.58" : "0.3"}" opacity="0.88"/>`;
         }
         for (const [word,deg] of numbers) {
-          const [x,y] = at(deg, 9.5, cx, cy);
-          nums += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.5" font-weight="600" fill="#f1f1ec">${word}</text>`;
+          const [x,y] = at(deg, 11.8, cx, cy);
+          nums += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="4.1" font-weight="600" fill="#f1f1ec">${word}</text>`;
         }
-        return `<circle cx="${cx}" cy="${cy}" r="16.55" fill="#e6e6e2" stroke="#a7adaf" stroke-width="0.82"/><circle cx="${cx}" cy="${cy}" r="15.55" fill="${fill}" stroke="${rim}" stroke-width="0.8"/>${rings}${ticks}${nums}`;
+        return `<circle cx="${cx}" cy="${cy}" r="21.4" fill="#e6e6e2" stroke="#a7adaf" stroke-width="0.82"/><circle cx="${cx}" cy="${cy}" r="20.3" fill="${fill}" stroke="${rim}" stroke-width="0.8"/>${rings}${ticks}${nums}`;
       };
 
       return `<defs>
@@ -11824,9 +11824,9 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         ${chapter}${markers}
         <!-- Zenith star and three-line dial signature. -->
         <path d="M100 58.2 L101.9 63.8 L107.8 63.8 L103.0 67.3 L104.9 73.0 L100 69.55 L95.1 73.0 L97.0 67.3 L92.2 63.8 L98.1 63.8 Z" fill="url(#zen-metal-${id})" stroke="#596368" stroke-width="0.38"/><text x="100" y="77.9" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="6.1" font-weight="700" letter-spacing="1.32" fill="#1a1d1e">ZENITH</text><text x="100" y="84.1" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="3.45" font-weight="700" letter-spacing="0.72" fill="#1c1f20">EL PRIMERO</text><text x="100" y="88.8" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.85" font-weight="700" letter-spacing="0.18" fill="#2b2f30">36 000 VpH</text>
-        ${register(64,100,"#c5c4c1","#aaa9a5",[["60",0],["20",120],["40",240]])}${register(136,100,"#23547c","#164365",[["60",0],["20",120],["40",240]])}${register(100,132,"#525556","#35383a",[["45",270],["15",90],["30",180]])}
+        ${register(100,128.5,"#525556","#35383a",[["45",270],["15",90],["30",180]])}${register(69.5,100,"#c5c4c1","#aaa9a5",[["60",0],["20",120],["40",240]])}${register(130.5,100,"#23547c","#164365",[["60",0],["20",120],["40",240]])}
         <!-- The constant seconds is at nine; chronograph counters stay at their zero datum. -->
-        <g class="hand-subsec" data-pivot="64 100"><line x1="64" y1="105.3" x2="64" y2="88.0" stroke="#34383a" stroke-width="1.05"/><circle cx="64" cy="100" r="2.05" fill="url(#zen-metal-${id})" stroke="#596267" stroke-width="0.43"/></g><line x1="136" y1="105.3" x2="136" y2="88.0" stroke="#edf0ed" stroke-width="1.05"/><path d="M136 87.2 L134.5 92.0 H137.5 Z" fill="#d4272b"/><circle cx="136" cy="100" r="2.05" fill="url(#zen-metal-${id})" stroke="#596267" stroke-width="0.43"/><line x1="100" y1="137.3" x2="100" y2="120.2" stroke="#eceeeb" stroke-width="1.05"/><circle cx="100" cy="132" r="2.05" fill="url(#zen-metal-${id})" stroke="#596267" stroke-width="0.43"/>
+        <g class="hand-subsec" data-pivot="69.5 100"><line x1="69.5" y1="106.7" x2="69.5" y2="84.3" stroke="#34383a" stroke-width="1.05"/><circle cx="69.5" cy="100" r="2.05" fill="url(#zen-metal-${id})" stroke="#596267" stroke-width="0.43"/></g><line x1="130.5" y1="106.7" x2="130.5" y2="84.3" stroke="#edf0ed" stroke-width="1.05"/><path d="M130.5 83.5 L129.0 88.3 H132.0 Z" fill="#d4272b"/><circle cx="130.5" cy="100" r="2.05" fill="url(#zen-metal-${id})" stroke="#596267" stroke-width="0.43"/><line x1="100" y1="135.2" x2="100" y2="113.6" stroke="#eceeeb" stroke-width="1.05"/><circle cx="100" cy="128.5" r="2.05" fill="url(#zen-metal-${id})" stroke="#596267" stroke-width="0.43"/>
         <!-- Angled white date aperture at 4:30. -->
         <g transform="rotate(45 132.5 136.5)"><rect x="125.1" y="131.4" width="14.8" height="10.2" rx="0.6" fill="#e7e9e6" stroke="#8c9496" stroke-width="0.65"/><rect x="126.45" y="132.7" width="12.1" height="7.6" rx="0.28" fill="#ffffff"/><text class="date-win" data-date="dom" x="132.5" y="136.5" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="7.0" font-weight="700" fill="#121516">1</text></g><text x="88.5" y="158.8" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.1" font-weight="700" letter-spacing="0.34" fill="#25292a">SWISS</text><text x="111.5" y="158.8" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.1" font-weight="700" letter-spacing="0.34" fill="#25292a">MADE</text><path d="M44 49 C67 39 91 42 115 54 C85 47 61 57 44 84 Z" fill="url(#zen-glass-${id})" opacity="0.25"/>
       </g>
