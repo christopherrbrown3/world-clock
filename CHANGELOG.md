@@ -11,6 +11,9 @@ Notable project changes will be tracked here.
 ## Unreleased
 
 - Added the Claude Fable 5 standalone checkpoint and froze the Codex 5.6 Terra page as a benchmark snapshot.
+- Redesigned the page for the Fable 5 cycle: midnight-indigo and candlelight-gold identity with Fraunces serif titles, per-city sky-wash card headers that follow local daylight (dawn, day, dusk, starfield night), and a follow-the-sun horizon strip plotting every city on a 24-hour arc.
+- Honored prefers-reduced-motion with whole-second ticks, added a meta description, theme color, and an inline SVG favicon.
+- Completed a reference-driven audit of all 62 watch and clock faces (one review and merge per face), fixing defects against photo references or documented model details. Highlights: Navitimer B01 panda-dial inversion, Daytona 126500LN panda registers, Marine Torpilleur rebuilt to its white-enamel/steel colorway, Orloj astrolabe day/night geometry, Grand Seiko Snowflake's invisible seconds hand (degenerate gradient bounding box), recognizable Silver Snoopy medallion figure, and Yacht-Master II bezel/regatta corrections.
 - Added the Codex 5.6 Terra standalone checkpoint and froze the Codex 5.5 page as a benchmark snapshot.
 - Built the Codex 5.6 Terra active version with per-city date and time-difference context, phase accents, accessible city search, safer versioned state, and DST-aware ordering.
 - Refined the Rolex Submariner face against the current 126610LN reference, including its bezel zero marker, platinum-toned scale, Maxi dial, daylight lume, rehaut, and Cyclops date geometry.
