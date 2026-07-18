@@ -11120,8 +11120,13 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         coinEdge += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 2 ? "#f4f6f4" : "#6d777c"}" stroke-width="1.18" opacity="0.92"/>`;
       }
       for (let i = 0; i < 60; i++) {
-        const [x1, y1] = pt(i * 6, 70.1), [x2, y2] = pt(i * 6, i % 5 === 0 ? 65.3 : 67.6);
-        bezelTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e9edf0" stroke-width="${i % 5 === 0 ? "1.0" : "0.42"}" opacity="${i % 5 === 0 ? "0.94" : "0.76"}"/>`;
+        if (i % 5 === 0) {
+          const [x1, y1] = pt(i * 6, 70.1), [x2, y2] = pt(i * 6, 65.3);
+          bezelTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e9edf0" stroke-width="1.0" opacity="0.94"/>`;
+        } else {
+          const [x, y] = pt(i * 6, 67.9);
+          bezelTicks += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="0.82" fill="#e9edf0" opacity="0.88"/>`;
+        }
       }
       for (let n = 1; n <= 5; n++) {
         const deg = n * 60, [x, y] = pt(deg, 68.1);
@@ -11152,15 +11157,15 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       <path d="M53 62 L58 41 Q65 37 80 50 L85 59 Z M147 62 L142 41 Q135 37 120 50 L115 59 Z M53 138 L58 159 Q65 163 80 150 L85 141 Z M147 138 L142 159 Q135 163 120 150 L115 141 Z" fill="url(#sk-case-${id})" stroke="#677278" stroke-width="0.45"/>
       <circle cx="100" cy="100" r="79.8" fill="url(#sk-case-${id})" filter="url(#sk-shadow-${id})"/><circle cx="100" cy="100" r="78.9" fill="none" stroke="#f5f7f6" stroke-width="0.64" opacity="0.72"/><circle cx="100" cy="100" r="77.1" fill="#778187"/>${coinEdge}
       <circle cx="100" cy="100" r="73.1" fill="url(#sk-bezel-${id})" stroke="#061733" stroke-width="0.8"/>${bezelTicks}${bezelNumbers}
-      <path d="M94.0 29.2 H106.0 L100 39.2 Z" fill="#e7ebec" stroke="#061733" stroke-width="0.55"/><circle cx="100" cy="33.0" r="1.65" fill="#f4f5e7"/>
+      <path d="M94.0 29.2 H106.0 L100 39.2 Z" fill="#e7ebec" stroke="#061733" stroke-width="0.55"/>
       <circle cx="100" cy="100" r="58.6" fill="#06173c"/><circle cx="100" cy="100" r="57.8" fill="url(#sk-dial-${id})" stroke="#0a1c42" stroke-width="0.72"/>
       <!-- Small 4-o'clock crown, a defining SKX-series detail. -->
       <g transform="rotate(36 172 128)"><rect x="156.8" y="123.8" width="13.6" height="8.1" rx="1.35" fill="url(#sk-case-${id})" stroke="#59656c" stroke-width="0.5"/><rect x="169.3" y="121.8" width="12.8" height="12.2" rx="2.1" fill="url(#sk-case-${id})" stroke="#536069" stroke-width="0.58"/><path d="M172 123.2 V132.8 M174.1 122.6 V133.4 M176.2 122.2 V133.8 M178.3 122.6 V133.4 M180.4 123.2 V132.8" stroke="#5c676d" stroke-width="0.48"/></g>
       <g clip-path="url(#sk-dialclip-${id})">
         ${dialTicks}
-        <path d="M93.2 52.0 H106.8 L100 64.4 Z" fill="#d3d9da" stroke="#56646c" stroke-width="0.62"/><path d="M95.1 53.6 H104.9 L100 61.5 Z" fill="#edf0df"/>
-        <rect x="97.0" y="136.8" width="6.0" height="14.0" rx="2.4" fill="#d4dbdc" stroke="#53616a" stroke-width="0.62"/><rect x="98.15" y="138.5" width="3.7" height="10.6" rx="1.6" fill="#edf0df"/>
-        <rect x="48.6" y="97.0" width="14.0" height="6.0" rx="2.4" fill="#d4dbdc" stroke="#53616a" stroke-width="0.62"/><rect x="50.3" y="98.15" width="10.6" height="3.7" rx="1.6" fill="#edf0df"/>
+        <path d="M93.2 52.0 H106.8 L100 64.4 Z" fill="#d3d9da" stroke="#56646c" stroke-width="0.62"/><path d="M95.1 53.6 H104.9 L100 61.5 Z" fill="#edf0df"/><line x1="100" y1="64.4" x2="100" y2="70.6" stroke="#d3d9da" stroke-width="1.0"/>
+        <line x1="100" y1="130.4" x2="100" y2="136.8" stroke="#d4dbdc" stroke-width="1.0"/><rect x="97.0" y="136.8" width="6.0" height="14.0" rx="2.4" fill="#d4dbdc" stroke="#53616a" stroke-width="0.62"/><rect x="98.15" y="138.5" width="3.7" height="10.6" rx="1.6" fill="#edf0df"/>
+        <rect x="48.6" y="97.0" width="14.0" height="6.0" rx="2.4" fill="#d4dbdc" stroke="#53616a" stroke-width="0.62"/><rect x="50.3" y="98.15" width="10.6" height="3.7" rx="1.6" fill="#edf0df"/><line x1="62.6" y1="100" x2="69.0" y2="100" stroke="#d4dbdc" stroke-width="1.0"/>
         ${dialMarkers}
         <text x="100" y="73.2" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="7.0" font-weight="700" letter-spacing="0.36" fill="#f0f3f1">SEIKO</text><text x="100" y="82.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="8.4" font-weight="800" font-style="italic" fill="#eef1f0">5</text>
         <text x="100" y="121.7" text-anchor="middle" dominant-baseline="central" font-family="'Brush Script MT',Georgia,cursive" font-size="5.65" font-style="italic" fill="#f0f3f1">Automatic</text>
