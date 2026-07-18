@@ -13668,11 +13668,11 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         const a = deg * Math.PI / 180;
         return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
       };
-      const romans = ["XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"];
+
       let hourScale = "", redScale = "", minuteTrack = "", innerRail = "", coinEdge = "";
       for (let i = 0; i < 12; i++) {
         const [x, y] = at(i * 30, 45.6);
-        hourScale += `<text x="${x.toFixed(1)}" y="${(y + 3.0).toFixed(1)}" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="${i === 0 ? "10.2" : "9.35"}" font-weight="700" fill="#141512">${romans[i]}</text>`;
+        hourScale += `<text x="${x.toFixed(1)}" y="${(y + 3.4).toFixed(1)}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="${i === 0 ? "11.0" : "10.4"}" font-weight="900" fill="#141512">${i === 0 ? 12 : i}</text>`;
         const [rx, ry] = at(i * 30, 62.2);
         redScale += `<text x="${rx.toFixed(1)}" y="${(ry + 1.85).toFixed(1)}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="4.45" font-weight="700" fill="#bd2a21">${i === 0 ? 24 : i + 12}</text>`;
       }
@@ -13714,8 +13714,8 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         <g transform="translate(84.7 134.7)" fill="#151612"><text x="0" y="0" font-family="Arial,Helvetica,sans-serif" font-size="9.25" font-weight="900" font-style="italic" letter-spacing="-1.03">NS</text><path d="M-3.4 -4.75 H1.8 M-3.4 -2.25 H0.1 M-3.4 0.25 H1.6" fill="none" stroke="#151612" stroke-width="0.79"/><text x="14.4" y="-1.05" font-family="Arial,Helvetica,sans-serif" font-size="2.68" font-weight="800" letter-spacing="0.05">NORFOLK</text><text x="14.4" y="2.68" font-family="Arial,Helvetica,sans-serif" font-size="2.68" font-weight="800" letter-spacing="0.05">SOUTHERN</text></g>
         <ellipse cx="75" cy="69" rx="51" ry="23" fill="url(#ns-glass-${id})" transform="rotate(-27 75 69)"/>
       </g>
-      <!-- Heavy open-face railroad hands: no generic wristwatch seconds hand. -->
-      <g filter="url(#ns-hand-shadow-${id})" fill="#171815" stroke="#0c0d0b" stroke-width="0.32"><g class="hand-hour" data-pivot="${CX} ${CY}"><path d="M${CX} ${CY+5.2} L${CX-2.0} ${CY-19.4} Q${CX} ${CY-25.0} ${CX+2.0} ${CY-19.4} L${CX+1.25} ${CY+4.2} Z"/><circle cx="${CX}" cy="${CY-16.4}" r="2.35" fill="url(#ns-dial-${id})" stroke="#171815" stroke-width="0.83"/><path d="M${CX-0.58} ${CY-26.6} H${CX+0.58} V${CY+6.3} H${CX-0.58} Z"/></g><g class="hand-min" data-pivot="${CX} ${CY}"><path d="M${CX} ${CY+6.0} L${CX-1.58} ${CY-40.8} Q${CX} ${CY-47.0} ${CX+1.58} ${CY-40.8} L${CX+1.02} ${CY+5.0} Z"/><circle cx="${CX}" cy="${CY-35.2}" r="2.08" fill="url(#ns-dial-${id})" stroke="#171815" stroke-width="0.76"/><path d="M${CX-0.46} ${CY-48.3} H${CX+0.46} V${CY+7.1} H${CX-0.46} Z"/></g></g><circle cx="${CX}" cy="${CY}" r="2.7" fill="#151612" stroke="#d3aa42" stroke-width="0.68"/><circle cx="${CX}" cy="${CY}" r="0.94" fill="#f4df98"/>`;
+      <!-- Heavy open-face railroad hands with a slim red-tipped center seconds. -->
+      <g filter="url(#ns-hand-shadow-${id})" fill="#171815" stroke="#0c0d0b" stroke-width="0.32"><g class="hand-hour" data-pivot="${CX} ${CY}"><path d="M${CX} ${CY+5.2} L${CX-2.0} ${CY-19.4} Q${CX} ${CY-25.0} ${CX+2.0} ${CY-19.4} L${CX+1.25} ${CY+4.2} Z"/><circle cx="${CX}" cy="${CY-16.4}" r="2.35" fill="url(#ns-dial-${id})" stroke="#171815" stroke-width="0.83"/><path d="M${CX-0.58} ${CY-26.6} H${CX+0.58} V${CY+6.3} H${CX-0.58} Z"/></g><g class="hand-min" data-pivot="${CX} ${CY}"><path d="M${CX} ${CY+6.0} L${CX-1.58} ${CY-40.8} Q${CX} ${CY-47.0} ${CX+1.58} ${CY-40.8} L${CX+1.02} ${CY+5.0} Z"/><circle cx="${CX}" cy="${CY-35.2}" r="2.08" fill="url(#ns-dial-${id})" stroke="#171815" stroke-width="0.76"/><path d="M${CX-0.46} ${CY-48.3} H${CX+0.46} V${CY+7.1} H${CX-0.46} Z"/></g><g class="hand-sec" data-pivot="${CX} ${CY}"><line x1="${CX}" y1="${CY+12.5}" x2="${CX}" y2="${CY-51.5}" stroke="#1a1b18" stroke-width="0.62"/><path d="M${CX} ${CY-51.5} L${CX-0.95} ${CY-44.5} H${CX+0.95} Z" fill="#bd2a21"/><circle cx="${CX}" cy="${CY+9.2}" r="1.7" fill="#1a1b18"/></g></g><circle cx="${CX}" cy="${CY}" r="2.7" fill="#151612" stroke="#d3aa42" stroke-width="0.68"/><circle cx="${CX}" cy="${CY}" r="0.94" fill="#f4df98"/>`;
     }
   };
   LOGOS.railroad = () => "";
