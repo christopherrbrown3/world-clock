@@ -10568,11 +10568,11 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         jubileeRow(151, 64, 10) + jubileeRow(161, 60, 10) + jubileeRow(171, 55, 10) + jubileeRow(181, 50, 10) + jubileeRow(191, 45, 9);
 
       let flutes = "";
-      for (let i = 0; i < 72; i++) {
-        const a0 = i / 72 * Math.PI * 2, a1 = (i + 1) / 72 * Math.PI * 2, am = (i + 0.5) / 72 * Math.PI * 2;
-        const [ox1, oy1] = P(a0, 79.3), [ox2, oy2] = P(a1, 79.3), [ix1, iy1] = P(a0, 69.5), [ix2, iy2] = P(a1, 69.5), [mx, my] = P(am, 79.3);
-        const light = i % 4 === 0 ? "#fff2bd" : i % 4 === 1 ? "#d6a43c" : i % 4 === 2 ? "#865518" : "#f2ca68";
-        flutes += `<polygon points="${ox1.toFixed(1)},${oy1.toFixed(1)} ${ox2.toFixed(1)},${oy2.toFixed(1)} ${ix2.toFixed(1)},${iy2.toFixed(1)} ${ix1.toFixed(1)},${iy1.toFixed(1)}" fill="${light}" stroke="#886023" stroke-width="0.16"/><path d="M${mx.toFixed(1)} ${my.toFixed(1)} L${((ix1 + ix2) / 2).toFixed(1)} ${((iy1 + iy2) / 2).toFixed(1)}" stroke="#fff4c8" stroke-width="0.38" opacity="0.42"/>`;
+      for (let i = 0; i < 128; i++) {
+        const a0 = i / 128 * Math.PI * 2, a1 = (i + 1) / 128 * Math.PI * 2;
+        const [ox1, oy1] = P(a0, 79.3), [ox2, oy2] = P(a1, 79.3), [ix1, iy1] = P(a0, 69.5), [ix2, iy2] = P(a1, 69.5);
+        const light = i % 2 === 0 ? (i % 8 < 4 ? "#fdedae" : "#f6dd8d") : (i % 8 < 4 ? "#c3922f" : "#a97a28");
+        flutes += `<polygon points="${ox1.toFixed(1)},${oy1.toFixed(1)} ${ox2.toFixed(1)},${oy2.toFixed(1)} ${ix2.toFixed(1)},${iy2.toFixed(1)} ${ix1.toFixed(1)},${iy1.toFixed(1)}" fill="${light}" stroke="#96702a" stroke-width="0.1"/>`;
       }
 
       let minuteTrack = "", sunray = "", rehaut = "";
@@ -10603,7 +10603,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         <linearGradient id="dj-hand-${id}" x1="0.2" y1="0" x2="0.8" y2="1"><stop offset="0%" stop-color="#fff1bd"/><stop offset="42%" stop-color="#d5a23c"/><stop offset="63%" stop-color="#8c5917"/><stop offset="100%" stop-color="#f5d47c"/></linearGradient>
         <linearGradient id="dj-lume-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fcfff6"/><stop offset="100%" stop-color="#d9e8cd"/></linearGradient>
         <radialGradient id="dj-dial-${id}" cx="48%" cy="33%" r="82%"><stop offset="0%" stop-color="#fcecc0"/><stop offset="46%" stop-color="#e4bd65"/><stop offset="77%" stop-color="#c29845"/><stop offset="100%" stop-color="#9d7531"/></radialGradient>
-        <radialGradient id="dj-cyclops-${id}" cx="38%" cy="28%" r="78%"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.72"/><stop offset="38%" stop-color="#fff8db" stop-opacity="0.24"/><stop offset="100%" stop-color="#937333" stop-opacity="0.25"/></radialGradient>
+        <radialGradient id="dj-cyclops-${id}" cx="38%" cy="28%" r="78%"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.2"/><stop offset="38%" stop-color="#fff8db" stop-opacity="0.06"/><stop offset="100%" stop-color="#937333" stop-opacity="0.12"/></radialGradient>
         <linearGradient id="dj-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.17"/><stop offset="45%" stop-color="#fff" stop-opacity="0.035"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
         <clipPath id="dj-dialclip-${id}"><circle cx="100" cy="100" r="65.75"/></clipPath><clipPath id="dj-cyclopsclip-${id}"><rect x="138.6" y="89.2" width="25.4" height="21.6" rx="10.8"/></clipPath>
       </defs>
@@ -10624,7 +10624,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       </g>
       <g class="hand-hour"><path d="M100 105.5 L96.55 74 L100 59.6 L103.45 74 L103.45 105.5 Z" fill="url(#dj-hand-${id})" stroke="#805919" stroke-width="0.36"/><path d="M100 101.5 L98.15 74.8 L100 65.2 L101.85 74.8 L101.85 101.5 Z" fill="url(#dj-lume-${id})"/></g><g class="hand-min"><path d="M100 106.5 L97.65 42 L100 32.3 L102.35 42 L102.35 106.5 Z" fill="url(#dj-hand-${id})" stroke="#805919" stroke-width="0.32"/><path d="M100 101.5 L99.05 45 L100 37.6 L100.95 45 L100.95 101.5 Z" fill="url(#dj-lume-${id})"/></g><g class="hand-sec"><line x1="100" y1="117.5" x2="100" y2="31" stroke="#9a6a20" stroke-width="1.06"/><line x1="100" y1="114.5" x2="100" y2="124" stroke="#9a6a20" stroke-width="1.42"/><circle cx="100" cy="32.5" r="1.05" fill="#9a6a20"/></g><circle cx="100" cy="100" r="3.45" fill="url(#dj-gold-${id})" stroke="#805a1b" stroke-width="0.42"/><circle cx="100" cy="100" r="1.05" fill="#fff0ba"/>
       <!-- The Cyclops is intentionally modest and layers above the hands. -->
-      <g clip-path="url(#dj-cyclopsclip-${id})"><text class="date-win" data-date="dom" x="150.1" y="100.3" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow', Arial, Helvetica, sans-serif" font-size="14.5" font-weight="500" fill="#111214">1</text><ellipse cx="145.6" cy="94.5" rx="7.2" ry="3.25" fill="#ffffff" opacity="0.52" transform="rotate(-18 145.6 94.5)"/></g><rect x="138.6" y="89.2" width="25.4" height="21.6" rx="10.8" fill="url(#dj-cyclops-${id})"/><rect x="138.6" y="89.2" width="25.4" height="21.6" rx="10.8" fill="none" stroke="#fff8dc" stroke-width="1.02" opacity="0.78"/><rect x="138.15" y="88.75" width="26.3" height="22.5" rx="11.25" fill="none" stroke="#695424" stroke-width="0.52" opacity="0.56"/>`;
+      <g clip-path="url(#dj-cyclopsclip-${id})"><rect x="142.35" y="90.55" width="15.75" height="19.5" rx="0.1" fill="#fbfaf5" stroke="#332714" stroke-width="0.42"/><text class="date-win" data-date="dom" x="150.1" y="100.3" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow', Arial, Helvetica, sans-serif" font-size="14.5" font-weight="500" fill="#111214">1</text><ellipse cx="145.1" cy="93.3" rx="6.1" ry="2.5" fill="#ffffff" opacity="0.22" transform="rotate(-18 145.1 93.3)"/></g><rect x="138.6" y="89.2" width="25.4" height="21.6" rx="10.8" fill="url(#dj-cyclops-${id})"/><rect x="138.6" y="89.2" width="25.4" height="21.6" rx="10.8" fill="none" stroke="#fff8dc" stroke-width="0.62" opacity="0.55"/><rect x="138.15" y="88.75" width="26.3" height="22.5" rx="11.25" fill="none" stroke="#695424" stroke-width="0.52" opacity="0.56"/>`;
     }
   };
   LOGOS.datejust = () => "";
