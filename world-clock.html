@@ -11554,31 +11554,31 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         const value = 10 + step * 0.5, deg = 90 + Math.log10(value / 10) * 360;
         const major = Number.isInteger(value) && (value % 5 === 0 || [12, 15, 25, 50].includes(value));
         const [x1, y1] = at(deg, 74.05), [x2, y2] = at(deg, major ? 68.1 : 70.85);
-        cScale += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${major ? "#f5f5f0" : "#c7c9c6"}" stroke-width="${major ? "0.70" : "0.33"}" opacity="${major ? "0.96" : "0.72"}"/>`;
+        cScale += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${major ? "#202426" : "#4c5051"}" stroke-width="${major ? "0.70" : "0.33"}" opacity="${major ? "0.96" : "0.72"}"/>`;
       }
       for (const value of [10,11,12,13,14,15,16,17,18,19,20,22,24,25,26,28,30,32,34,35,36,38,40,42,45,48,50,55,60,65,70,75,80,85,90,95,100]) {
         const deg = 90 + Math.log10(value / 10) * 360, [x, y] = at(deg, 71.0), red = value === 60 || value === 100;
         const label = value === 100 ? "10" : String(value);
-        cScale += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${value % 5 === 0 ? "3.55" : "2.84"}" font-weight="700" fill="${red ? "#cd2529" : "#f4f4ed"}" transform="rotate(${labelRotation(deg).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${label}</text>`;
+        cScale += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${value % 5 === 0 ? "3.55" : "2.84"}" font-weight="700" fill="${red ? "#cd2529" : "#26292a"}" transform="rotate(${labelRotation(deg).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${label}</text>`;
       }
       for (let step = 0; step <= 180; step++) {
         const value = 10 + step * 0.5, deg = 90 + Math.log10(value / 10) * 360;
         const major = Number.isInteger(value) && (value % 5 === 0 || [12,15,25,50].includes(value));
         const [x1, y1] = at(deg, 64.0), [x2, y2] = at(deg, major ? 59.3 : 61.5);
-        dScale += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${major ? "#202426" : "#4c5051"}" stroke-width="${major ? "0.63" : "0.28"}" opacity="${major ? "0.92" : "0.68"}"/>`;
+        dScale += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${major ? "#f5f5f0" : "#c7c9c6"}" stroke-width="${major ? "0.63" : "0.28"}" opacity="${major ? "0.92" : "0.68"}"/>`;
       }
       for (const value of [10,11,12,13,14,15,16,17,18,19,20,22,24,25,26,28,30,32,34,35,36,38,40,42,45,48,50,55,60,65,70,75,80,85,90,95,100]) {
         const deg = 90 + Math.log10(value / 10) * 360, [x, y] = at(deg, 62.0);
         const label = value === 100 ? "10" : String(value);
-        dScale += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${value % 5 === 0 ? "2.78" : "2.22"}" font-weight="700" fill="#26292a" transform="rotate(${labelRotation(deg).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${label}</text>`;
+        dScale += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${value % 5 === 0 ? "2.78" : "2.22"}" font-weight="700" fill="#f4f4ed" transform="rotate(${labelRotation(deg).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${label}</text>`;
       }
       for (const [word, deg] of [["MPH",29],["KM",84],["NAUT.",148],["STAT.",217]]) {
         const [x, y] = at(deg, 58.2);
-        dScale += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.68" font-weight="700" fill="#ba2528" transform="rotate(${labelRotation(deg).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${word}</text>`;
+        dScale += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.68" font-weight="700" fill="${word === "KM" ? "#ba2528" : "#eceeea"}" transform="rotate(${labelRotation(deg).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})">${word}</text>`;
       }
       for (const deg of [0, 122, 241]) {
         const [x1, y1] = at(deg, 65.2), [lx, ly] = at(deg - 1.15, 63.1), [rx, ry] = at(deg + 1.15, 63.1);
-        dScale += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} L${lx.toFixed(1)} ${ly.toFixed(1)} L${rx.toFixed(1)} ${ry.toFixed(1)} Z" fill="${deg === 0 ? "#303334" : "#ca2c2c"}"/>`;
+        dScale += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} L${lx.toFixed(1)} ${ly.toFixed(1)} L${rx.toFixed(1)} ${ry.toFixed(1)} Z" fill="#ca2c2c"/>`;
       }
       for (let i = 0; i < 60; i++) {
         const deg = i * 6, [x1, y1] = at(deg, 56.6), [x2, y2] = at(deg, i % 5 === 0 ? 53.55 : 55.0);
@@ -11618,6 +11618,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
 
       return `<defs>
         <linearGradient id="navi-steel-${id}" x1="0.08" y1="0" x2="0.92" y2="1"><stop offset="0%" stop-color="#5c656a"/><stop offset="14%" stop-color="#f8f9f6"/><stop offset="36%" stop-color="#aeb7ba"/><stop offset="54%" stop-color="#ffffff"/><stop offset="78%" stop-color="#8c969a"/><stop offset="100%" stop-color="#505b60"/></linearGradient>
+        <linearGradient id="navi-gold-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#8a6a28"/><stop offset="24%" stop-color="#f0d089"/><stop offset="53%" stop-color="#c39a48"/><stop offset="74%" stop-color="#ecd28c"/><stop offset="100%" stop-color="#7d5f22"/></linearGradient>
         <linearGradient id="navi-metal-${id}" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0%" stop-color="#737c80"/><stop offset="24%" stop-color="#fcfcf7"/><stop offset="53%" stop-color="#a7afb1"/><stop offset="74%" stop-color="#f8f8f2"/><stop offset="100%" stop-color="#60696e"/></linearGradient>
         <!-- A transverse highlight gives the B01's short cylindrical pumps a
              rounded steel barrel rather than a flat, shared capsule. -->
@@ -11644,7 +11645,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         <g transform="rotate(35 176.5 140)"><path d="M161.8 137.6 H178.5 V142.4 H162.4 Z"/></g>
         <path d="M167.8 97.5 C173.0 97.1 177.5 97.4 181.1 98.3 V101.7 C177.5 102.6 173.0 102.9 167.8 102.5 Z"/>
       </g>
-      <circle cx="100" cy="100" r="80.0" fill="url(#navi-steel-${id})" filter="url(#navi-shadow-${id})"/><circle cx="100" cy="100" r="79.0" fill="none" stroke="#f7f8f5" stroke-width="0.66" opacity="0.72"/><circle cx="100" cy="100" r="76.0" fill="#707a7f"/>${teeth}<circle cx="100" cy="100" r="74.6" fill="#0c0e0f" stroke="#3e464a" stroke-width="0.8"/>${cScale}<circle cx="100" cy="100" r="65.2" fill="#e7e8e3" stroke="#0d0f10" stroke-width="0.68"/>${dScale}<circle cx="100" cy="100" r="56.4" fill="#b8bdbe" stroke="#818a8e" stroke-width="0.58"/><circle cx="100" cy="100" r="55.7" fill="url(#navi-dial-${id})" stroke="#f8f8f2" stroke-width="0.46"/>
+      <circle cx="100" cy="100" r="80.0" fill="url(#navi-steel-${id})" filter="url(#navi-shadow-${id})"/><circle cx="100" cy="100" r="79.0" fill="none" stroke="#f7f8f5" stroke-width="0.66" opacity="0.72"/><circle cx="100" cy="100" r="76.0" fill="#707a7f"/>${teeth}<circle cx="100" cy="100" r="74.6" fill="#e7e8e3" stroke="#9ba1a2" stroke-width="0.8"/>${cScale}<circle cx="100" cy="100" r="65.2" fill="#0c0e0f" stroke="#2c3134" stroke-width="0.68"/>${dScale}<circle cx="100" cy="100" r="56.4" fill="#b8bdbe" stroke="#818a8e" stroke-width="0.58"/><circle cx="100" cy="100" r="55.7" fill="url(#navi-dial-${id})" stroke="#f8f8f2" stroke-width="0.46"/>
       <!-- Model-specific B01 chronograph controls: compact radial pumps at two
            and four, each with a narrow collar, rounded barrel and flat cap. -->
       <g stroke="#536067" stroke-width="0.46" stroke-linejoin="round">
@@ -11687,7 +11688,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       </g>
       <g clip-path="url(#navi-dialclip-${id})">
         ${sunburst}${chapter}${markers}
-        <g transform="translate(100 58.2) scale(0.84)" fill="url(#navi-metal-${id})" stroke="#5c6468" stroke-width="0.3"><path d="M-1.4 0 C-5.4 -3.6 -11.1 -3.3 -17 -1.4 C-12.8 -0.2 -9.5 1.25 -5.4 2.2 C-9.1 2.4 -12.4 3.65 -15.5 5.2 C-9.1 5.05 -4.75 3.95 -1.4 1.8 Z"/><path d="M1.4 0 C5.4 -3.6 11.1 -3.3 17 -1.4 C12.8 -0.2 9.5 1.25 5.4 2.2 C9.1 2.4 12.4 3.65 15.5 5.2 C9.1 5.05 4.75 3.95 1.4 1.8 Z"/><circle cx="0" cy="-3.05" r="1.28"/><rect x="-0.58" y="-2.7" width="1.16" height="5" rx="0.35"/></g>
+        <g transform="translate(100 58.2) scale(0.84)" fill="url(#navi-gold-${id})" stroke="#6e5619" stroke-width="0.3"><path d="M-1.4 0 C-5.4 -3.6 -11.1 -3.3 -17 -1.4 C-12.8 -0.2 -9.5 1.25 -5.4 2.2 C-9.1 2.4 -12.4 3.65 -15.5 5.2 C-9.1 5.05 -4.75 3.95 -1.4 1.8 Z"/><path d="M1.4 0 C5.4 -3.6 11.1 -3.3 17 -1.4 C12.8 -0.2 9.5 1.25 5.4 2.2 C9.1 2.4 12.4 3.65 15.5 5.2 C9.1 5.05 4.75 3.95 1.4 1.8 Z"/><circle cx="0" cy="-3.05" r="1.28"/><rect x="-0.58" y="-2.7" width="1.16" height="5" rx="0.35"/></g>
         <text x="100" y="66.0" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.35" font-weight="700" letter-spacing="0.56" fill="#eef0ed">BREITLING</text><text x="100" y="70.2" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.92" font-weight="700" letter-spacing="0.78" fill="#d9dcd9">1884</text>
         ${counter(63.5,100,[["60",0],["20",120],["40",240]])}${counter(136.5,100,[["10",120],["20",240],["30",0]])}${counter(100,136.5,[["3",90],["6",180],["9",270],["12",0]])}
         <!-- Only the nine o'clock B01 running seconds is live. Chronograph counters remain stopped. -->
@@ -11696,7 +11697,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         <rect x="95.0" y="142.05" width="10.0" height="5.75" rx="0.42" fill="#f3f3ee" stroke="#777e80" stroke-width="0.45"/><text class="date-win" data-date="dom" x="100" y="144.93" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="4.42" font-weight="700" fill="#131617">1</text><text x="88.2" y="153.3" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.95" font-weight="700" letter-spacing="0.36" fill="#272a2b">SWISS</text><text x="111.8" y="153.3" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="1.95" font-weight="700" letter-spacing="0.36" fill="#272a2b">MADE</text><path d="M47 53 C69 40 90 41 111 52 C82 47 64 58 47 83 Z" fill="url(#navi-glass-${id})" opacity="0.23"/>
       </g>
       <!-- Central red chronograph seconds is intentionally parked at 12, not driven by the normal seconds engine. -->
-      <g filter="url(#navi-handshadow-${id})"><g class="hand-hour"><path d="M100 106.8 L95.45 98.3 L96.35 68.4 L100 52.3 L103.65 68.4 L104.55 98.3 Z" fill="url(#navi-metal-${id})" stroke="#4d5559" stroke-width="0.54"/><path d="M100 98.7 L98.45 70.3 L100 57.9 L101.55 70.3 L101.55 98.7 Z" fill="#e1e8c8"/></g><g class="hand-min"><path d="M100 107 L96.9 98.2 L97.85 61.5 L100 48.0 L102.15 61.5 L103.1 98.2 Z" fill="url(#navi-metal-${id})" stroke="#4d5559" stroke-width="0.52"/><path d="M100 98.8 L98.95 63.5 L100 52.8 L101.05 63.5 L101.05 98.8 Z" fill="#e1e8c8"/></g></g><g class="navi-chrono-rest"><line x1="100" y1="116.3" x2="100" y2="32.0" stroke="#bd2028" stroke-width="0.82"/><path d="M100 28.4 L98.45 33.0 H101.55 Z" fill="#d3262b" stroke="#731217" stroke-width="0.28"/></g><circle cx="100" cy="100" r="4.1" fill="url(#navi-metal-${id})" stroke="#4e575b" stroke-width="0.55"/><circle cx="100" cy="100" r="2.0" fill="#c6cdca" stroke="#f7f7f0" stroke-width="0.34"/><circle cx="100" cy="100" r="0.75" fill="#717a7d"/><circle cx="100" cy="100" r="55.7" fill="none" stroke="#ffffff" stroke-width="0.6" opacity="0.55"/>`;
+      <g filter="url(#navi-handshadow-${id})"><g class="hand-hour"><path d="M100 106.8 L95.45 98.3 L96.35 68.4 L100 52.3 L103.65 68.4 L104.55 98.3 Z" fill="url(#navi-metal-${id})" stroke="#4d5559" stroke-width="0.54"/><path d="M100 98.7 L98.45 70.3 L100 57.9 L101.55 70.3 L101.55 98.7 Z" fill="#e1e8c8"/></g><g class="hand-min"><path d="M100 107 L96.9 98.2 L97.85 61.5 L100 48.0 L102.15 61.5 L103.1 98.2 Z" fill="url(#navi-metal-${id})" stroke="#4d5559" stroke-width="0.52"/><path d="M100 98.8 L98.95 63.5 L100 52.8 L101.05 63.5 L101.05 98.8 Z" fill="#e1e8c8"/></g></g><g class="navi-chrono-rest"><line x1="100" y1="116.3" x2="100" y2="31.0" stroke="#bd2028" stroke-width="0.82"/><path d="M100 29.6 L96.7 40.4 H103.3 Z" fill="#f2f3ef" stroke="#43494c" stroke-width="0.38" stroke-linejoin="round"/></g><circle cx="100" cy="100" r="4.1" fill="url(#navi-metal-${id})" stroke="#4e575b" stroke-width="0.55"/><circle cx="100" cy="100" r="2.0" fill="#c6cdca" stroke="#f7f7f0" stroke-width="0.34"/><circle cx="100" cy="100" r="0.75" fill="#717a7d"/><circle cx="100" cy="100" r="55.7" fill="none" stroke="#ffffff" stroke-width="0.6" opacity="0.55"/>`;
     }
   };
   LOGOS.navitimer = () => "";
