@@ -10385,15 +10385,15 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         markers += `<g transform="rotate(${hour * 30} ${x.toFixed(1)} ${y.toFixed(1)})"><path d="M${(x - 2.15).toFixed(1)} ${(y - 6.1).toFixed(1)} H${(x + 2.15).toFixed(1)} L${(x + 1.35).toFixed(1)} ${(y + 6.1).toFixed(1)} H${(x - 1.35).toFixed(1)} Z" fill="url(#day-metal-${id})" stroke="#62686b" stroke-width="0.27"/><rect x="${(x - 0.86).toFixed(1)}" y="${(y - 4.3).toFixed(1)}" width="1.72" height="8.6" rx="0.48" fill="url(#day-lume-${id})"/></g>`;
       }
       const subDial = (cx, cy, labels) => {
-        let s = `<circle cx="${cx}" cy="${(cy + 1.15).toFixed(1)}" r="17.8" fill="#000" opacity="0.12"/><circle cx="${cx}" cy="${cy}" r="16.1" fill="#111214" stroke="#050505" stroke-width="0.65"/><circle cx="${cx}" cy="${cy}" r="12.8" fill="url(#day-sub-${id})" stroke="#c4c5c0" stroke-width="0.4"/>`;
-        for (let r = 10.5; r >= 3; r -= 2.1) s += `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none" stroke="#3f4245" stroke-width="0.24" opacity="0.8"/>`;
+        let s = `<circle cx="${cx}" cy="${(cy + 1.15).toFixed(1)}" r="17.8" fill="#000" opacity="0.12"/><circle cx="${cx}" cy="${cy}" r="16.1" fill="#101113" stroke="#050505" stroke-width="0.6"/><circle cx="${cx}" cy="${cy}" r="10.7" fill="url(#day-sub-${id})" stroke="#caccc6" stroke-width="0.42"/>`;
+        for (let r = 9.7; r >= 2.2; r -= 1.5) s += `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none" stroke="#d9d8d0" stroke-width="0.2" opacity="0.75"/>`;
         for (let i = 0; i < 60; i++) {
-          const a = i / 60 * Math.PI * 2, x1 = cx + Math.sin(a) * 11.7, y1 = cy - Math.cos(a) * 11.7, x2 = cx + Math.sin(a) * (i % 5 === 0 ? 8.9 : 10.25), y2 = cy - Math.cos(a) * (i % 5 === 0 ? 8.9 : 10.25);
-          s += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#e8e9e4" stroke-width="${i % 5 === 0 ? 0.45 : 0.2}"/>`;
+          const a = i / 60 * Math.PI * 2, x1 = cx + Math.sin(a) * 15.3, y1 = cy - Math.cos(a) * 15.3, x2 = cx + Math.sin(a) * (i % 5 === 0 ? 11.1 : 13.4), y2 = cy - Math.cos(a) * (i % 5 === 0 ? 11.1 : 13.4);
+          s += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#eceee9" stroke-width="${i % 5 === 0 ? 0.5 : 0.22}"/>`;
         }
         for (const [value, minute] of labels) {
-          const a = minute / 60 * Math.PI * 2, x = cx + Math.sin(a) * 7.3, y = cy - Math.cos(a) * 7.3;
-          s += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow', Arial, sans-serif" font-size="3.2" font-weight="700" fill="#eef0eb">${value}</text>`;
+          const deg = minute * 6, a = deg * Math.PI / 180, x = cx + Math.sin(a) * 13.15, y = cy - Math.cos(a) * 13.15;
+          s += `<rect x="${(x - 2.5).toFixed(1)}" y="${(y - 1.9).toFixed(1)}" width="5" height="3.8" fill="#101113" transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})"/><text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" transform="rotate(${deg} ${x.toFixed(1)} ${y.toFixed(1)})" font-family="'Arial Narrow', Arial, sans-serif" font-size="3.3" font-weight="700" fill="#eef0eb">${value}</text>`;
         }
         return s;
       };
@@ -10405,10 +10405,10 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         <linearGradient id="day-metal-${id}" x1="0.16" y1="0" x2="0.84" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="44%" stop-color="#d7dedf"/><stop offset="65%" stop-color="#879095"/><stop offset="100%" stop-color="#f3f5f4"/></linearGradient>
         <linearGradient id="day-lume-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fbfff3"/><stop offset="100%" stop-color="#d8e7c7"/></linearGradient>
         <radialGradient id="day-dial-${id}" cx="47%" cy="32%" r="82%"><stop offset="0%" stop-color="#ffffff"/><stop offset="62%" stop-color="#f4f3ed"/><stop offset="100%" stop-color="#deded7"/></radialGradient>
-        <radialGradient id="day-sub-${id}" cx="45%" cy="33%" r="78%"><stop offset="0%" stop-color="#2b2d2f"/><stop offset="100%" stop-color="#0c0d0e"/></radialGradient>
+        <radialGradient id="day-sub-${id}" cx="45%" cy="33%" r="78%"><stop offset="0%" stop-color="#ffffff"/><stop offset="60%" stop-color="#f0efe9"/><stop offset="100%" stop-color="#d8d7cf"/></radialGradient>
         <radialGradient id="day-bezel-${id}" cx="50%" cy="30%" r="86%"><stop offset="0%" stop-color="#252525"/><stop offset="60%" stop-color="#101010"/><stop offset="100%" stop-color="#020202"/></radialGradient>
         <linearGradient id="day-glass-${id}" x1="0" y1="0" x2="0.85" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/><stop offset="42%" stop-color="#ffffff" stop-opacity="0.04"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
-        <path id="day-arc-${id}" d="M83 124 A21 21 0 0 1 117 124" fill="none"/>
+        <path id="day-arc-${id}" d="M83 124 A21 21 0 0 1 117 124" fill="none"/><path id="day-units1-${id}" d="M111.05 24.13 A76.8 76.8 0 0 1 158.02 51.65" fill="none"/><path id="day-units2-${id}" d="M117.63 32.03 A71.4 71.4 0 0 1 148.24 48.44" fill="none"/>
         <clipPath id="day-dialclip-${id}"><circle cx="100" cy="100" r="64.8"/></clipPath>
       </defs>
       <!-- Three-piece Oyster bracelet and steel lugs behind the 40 mm case. -->
@@ -10418,7 +10418,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       <!-- Screw-down chronograph pushers and Triplock crown at three. -->
       <g transform="rotate(-29 174 70)"><rect x="165" y="65.5" width="18" height="8.8" rx="2" fill="url(#day-polish-${id})" stroke="#5d6870" stroke-width="0.48"/><rect x="179.8" y="67" width="4.3" height="5.8" rx="0.8" fill="#e8edef"/></g><g transform="rotate(29 174 130)"><rect x="165" y="125.7" width="18" height="8.8" rx="2" fill="url(#day-polish-${id})" stroke="#5d6870" stroke-width="0.48"/><rect x="179.8" y="127.2" width="4.3" height="5.8" rx="0.8" fill="#e8edef"/></g>
       <rect x="180.5" y="95.8" width="6.9" height="8.4" rx="1.2" fill="url(#day-polish-${id})"/><circle cx="191.6" cy="100" r="5.9" fill="url(#day-metal-${id})" stroke="#59636b" stroke-width="0.52"/><path d="M187.7 96.4 V103.6 M189.5 95.2 V104.8 M191.3 94.5 V105.5 M193.1 95.2 V104.8 M194.9 96.4 V103.6" stroke="#56616a" stroke-width="0.48"/><path d="M188.15 96.4 V103.6 M189.95 95.2 V104.8 M191.75 94.5 V105.5 M193.55 95.2 V104.8 M195.35 96.4 V103.6" stroke="#ffffff" stroke-width="0.2" opacity="0.7"/>
-      ${tachyTicks}${tachy}<text x="100" y="22.6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="2.45" font-weight="600" letter-spacing="0.32" fill="#ded8c9">UNITS PER HOUR</text>
+      ${tachyTicks}${tachy}<text font-family="'Arial Narrow', Arial, sans-serif" font-size="4.3" font-weight="700" letter-spacing="0.42" fill="#ded8c9"><textPath href="#day-units1-${id}" startOffset="50%" text-anchor="middle">UNITS PER</textPath></text><text font-family="'Arial Narrow', Arial, sans-serif" font-size="4.3" font-weight="700" letter-spacing="0.42" fill="#ded8c9"><textPath href="#day-units2-${id}" startOffset="50%" text-anchor="middle">HOUR</textPath></text>
       <g clip-path="url(#day-dialclip-${id})">
         ${chapter}${markers}<rect x="37.8" y="96.7" width="7.3" height="4.6" rx="1.2" fill="url(#day-metal-${id})"/><rect x="154.9" y="96.7" width="7.3" height="4.6" rx="1.2" fill="url(#day-metal-${id})"/>
         ${subDial(S9[0], S9[1], [[12,0],[3,15],[6,30],[9,45]])}${subDial(S3[0], S3[1], [[30,0],[10,20],[20,40]])}${subDial(S6[0], S6[1], [[60,0],[20,20],[40,40]])}
@@ -10427,7 +10427,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         <path d="M44 47 H88 L44 96 Z" fill="url(#day-glass-${id})" opacity="0.56"/>
       </g>
       <!-- Calibre 4131: only the 6 o'clock small seconds runs; chronograph registers rest at zero. -->
-      <g class="hand-subsec" data-pivot="${S6[0]} ${S6[1]}"><line x1="${S6[0]}" y1="${S6[1] + 4}" x2="${S6[0]}" y2="${S6[1] - 10.5}" stroke="#e8e9e4" stroke-width="0.88"/><circle cx="${S6[0]}" cy="${S6[1]}" r="1.35" fill="#e8e9e4"/></g><g class="hand-chrono-hour-rest"><line x1="${S9[0]}" y1="${S9[1] + 3.5}" x2="${S9[0]}" y2="${S9[1] - 9.5}" stroke="#e8e9e4" stroke-width="0.78"/><circle cx="${S9[0]}" cy="${S9[1]}" r="1.2" fill="#e8e9e4"/></g><g class="hand-chrono-min-rest"><line x1="${S3[0]}" y1="${S3[1] + 3.5}" x2="${S3[0]}" y2="${S3[1] - 9.5}" stroke="#e8e9e4" stroke-width="0.78"/><circle cx="${S3[0]}" cy="${S3[1]}" r="1.2" fill="#e8e9e4"/></g>
+      <g class="hand-subsec" data-pivot="${S6[0]} ${S6[1]}"><line x1="${S6[0]}" y1="${S6[1] + 4}" x2="${S6[0]}" y2="${S6[1] - 10.5}" stroke="#1a1c1e" stroke-width="0.9"/><circle cx="${S6[0]}" cy="${S6[1]}" r="1.35" fill="#1a1c1e"/></g><g class="hand-chrono-hour-rest"><line x1="${S9[0]}" y1="${S9[1] + 3.5}" x2="${S9[0]}" y2="${S9[1] - 9.5}" stroke="#1a1c1e" stroke-width="0.8"/><circle cx="${S9[0]}" cy="${S9[1]}" r="1.2" fill="#1a1c1e"/></g><g class="hand-chrono-min-rest"><line x1="${S3[0]}" y1="${S3[1] + 3.5}" x2="${S3[0]}" y2="${S3[1] - 9.5}" stroke="#1a1c1e" stroke-width="0.8"/><circle cx="${S3[0]}" cy="${S3[1]}" r="1.2" fill="#1a1c1e"/></g>
       <g class="hand-hour"><path d="M100 105 L96.1 77 L100 61 L103.9 77 L103.9 105 Z" fill="url(#day-metal-${id})" stroke="#596168" stroke-width="0.4"/><path d="M100 99 L98.15 77.5 L100 66.4 L101.85 77.5 L101.85 99 Z" fill="url(#day-lume-${id})"/></g><g class="hand-min"><path d="M100 106 L97.25 43 L100 32 L102.75 43 L102.75 106 Z" fill="url(#day-metal-${id})" stroke="#596168" stroke-width="0.36"/><path d="M100 101 L98.75 44.7 L100 37.5 L101.25 44.7 L101.25 101 Z" fill="url(#day-lume-${id})"/></g>
       <g class="hand-chrono-rest"><line x1="100" y1="114" x2="100" y2="28.7" stroke="#e8e9e4" stroke-width="0.8"/><line x1="100" y1="112" x2="100" y2="121" stroke="#17191c" stroke-width="1.08"/><circle cx="100" cy="100" r="2.85" fill="url(#day-metal-${id})" stroke="#596168" stroke-width="0.42"/></g><circle cx="100" cy="100" r="1" fill="#ffffff"/>`;
     }
