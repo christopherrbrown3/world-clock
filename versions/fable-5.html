@@ -212,10 +212,10 @@
     content: "";
     position: absolute;
     inset: 0 0 auto;
-    height: 3px;
+    height: 2px;
     z-index: 1;
-    background: var(--period-accent, var(--terra));
-    box-shadow: 0 0 20px color-mix(in srgb, var(--period-accent, var(--terra)) 52%, transparent);
+    background: linear-gradient(90deg, transparent, var(--period-accent, var(--terra)) 18%, var(--period-accent, var(--terra)) 82%, transparent);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--period-accent, var(--terra)) 38%, transparent);
   }
   /* Sky wash: the top of each card is that city's local sky, so scanning the
      grid reads like following daylight around the planet. */
@@ -298,7 +298,7 @@
   }
 
   .city {
-    margin-top: 16px;
+    margin: 16px auto 0;
     font-size: 1rem;
     font-weight: 600;
     letter-spacing: 0;
@@ -314,17 +314,17 @@
   .time-context {
     width: fit-content;
     max-width: 100%;
-    margin: 8px auto 0;
-    padding: 4px 8px;
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: 999px;
-    background: rgba(5, 11, 13, 0.24);
-    color: var(--muted);
-    font-size: 0.61rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    margin: 3px auto 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    color: color-mix(in srgb, var(--period-accent, var(--terra)) 62%, var(--muted));
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
     line-height: 1.2;
-    text-transform: uppercase;
+    text-transform: none;
   }
   .sub {
     margin-top: 6px;
@@ -497,9 +497,9 @@
 
   footer {
     margin-top: 60px;
-    color: var(--muted);
-    font-size: 0.72rem;
-    letter-spacing: 1.5px;
+    color: color-mix(in srgb, var(--muted) 70%, transparent);
+    font-size: 0.74rem;
+    letter-spacing: 0.02em;
   }
   .disclaimer {
     margin: 14px auto 0;
@@ -676,7 +676,7 @@
 
     <section class="grid" id="grid" aria-label="World clock cities"></section>
 
-    <footer>UPDATES LIVE · TIMES FROM YOUR DEVICE CLOCK</footer>
+    <footer>Updates live · times from your device clock</footer>
     <p class="disclaimer">This is a personal, non-commercial fan project created for educational and illustrative purposes. All watch and clock designs, brand names, logos, and trademarks are the property of their respective owners. This project is not affiliated with, authorized, sponsored, or endorsed by any of the brands depicted. No commercial use is intended.</p>
   </main>
 
