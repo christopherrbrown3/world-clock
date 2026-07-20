@@ -121,7 +121,7 @@
   .horizon {
     position: relative;
     margin: 0 0 26px;
-    padding: 14px 16px 30px;
+    padding: 14px 16px 44px;
     background: var(--panel);
     border: 1px solid var(--line);
     border-radius: 14px;
@@ -170,10 +170,11 @@
     white-space: nowrap;
     transition: left 0.4s;
   }
+  .horizon-label.row-2 { top: calc(100% + 17px); }
   .horizon-ends {
     display: flex;
     justify-content: space-between;
-    margin-top: 5px;
+    margin-bottom: 5px;
     color: color-mix(in srgb, var(--muted) 65%, transparent);
     font-size: 0.56rem;
     font-weight: 600;
@@ -329,15 +330,26 @@
     text-transform: uppercase;
   }
   .sub {
-    margin-top: 4px;
-    font-size: 0.78rem;
-    font-weight: 400;
-    letter-spacing: 0;
-    color: var(--muted);
-    font-variant-numeric: tabular-nums;
+    margin-top: 6px;
     text-align: center;
-    max-width: 200px;
-    line-height: 1.3;
+    max-width: 220px;
+    line-height: 1.35;
+    font-variant-numeric: tabular-nums;
+  }
+  .sub .sub-time {
+    display: block;
+    color: var(--ink);
+    font-size: 1.28rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.15;
+  }
+  .sub .sub-meta {
+    display: block;
+    margin-top: 2px;
+    color: var(--muted);
+    font-size: 0.74rem;
+    font-weight: 400;
   }
   .face-name {
     width: 100%;
@@ -346,13 +358,13 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    color: var(--brass);
+    color: #e6cd8f;
     background: rgba(255,255,255,0.035);
     border: 1px solid transparent;
     border-radius: 6px;
     cursor: pointer;
     user-select: none;
-    opacity: 0.78;
+    opacity: 1;
     transition: opacity 0.15s, background 0.15s, border-color 0.15s;
     text-align: center;
     max-width: 200px;
@@ -661,8 +673,8 @@
 
     <section class="horizon" aria-label="Cities on the 24-hour day">
       <p class="horizon-title">Follow the sun</p>
-      <div class="horizon-track" id="horizon-track"></div>
       <div class="horizon-ends" aria-hidden="true"><span>MIDNIGHT</span><span>NOON</span><span>MIDNIGHT</span></div>
+      <div class="horizon-track" id="horizon-track"></div>
     </section>
 
     <section class="grid" id="grid" aria-label="World clock cities"></section>
@@ -15306,12 +15318,20 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
     horizonTrack.dataset.cities = cityKey;
     const homeOffset = offsetMinutes(HOME_TIME_ZONE, now);
     let html = "";
-    cities.forEach(city => {
+    const plotted = cities.map(city => {
       const { H, mm } = tzParts(city.tz, now);
-      const pct = ((H * 60 + mm) / 1440) * 100;
-      const isLocal = offsetMinutes(city.tz, now) === homeOffset;
+      return { city, pct: ((H * 60 + mm) / 1440) * 100,
+               isLocal: offsetMinutes(city.tz, now) === homeOffset };
+    }).sort((a, b) => a.pct - b.pct);
+    // Drop close neighbors to a second label row so names never overlap.
+    let prevPct = -100, prevRow = 2;
+    plotted.forEach(pt => {
+      pt.row = (pt.pct - prevPct < 9 && prevRow === 1) ? 2 : 1;
+      prevPct = pt.pct; prevRow = pt.row;
+    });
+    plotted.forEach(({ city, pct, isLocal, row }) => {
       html += `<span class="horizon-dot${isLocal ? " is-local" : ""}" style="left:${pct.toFixed(2)}%" title="${city.city}"></span>` +
-              `<span class="horizon-label" style="left:${pct.toFixed(2)}%">${city.city.toUpperCase()}</span>`;
+              `<span class="horizon-label${row === 2 ? " row-2" : ""}" style="left:${pct.toFixed(2)}%">${city.city.toUpperCase()}</span>`;
     });
     horizonTrack.innerHTML = html;
   }
@@ -15328,7 +15348,13 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         const date = formatterFor(captionDateFormatters, city.tz, {
           weekday: "short", month: "short", day: "numeric"
         }).format(now);
-        subEl.textContent = `${time} · ${date} · ${fmtOffset(city.tz, now)}`;
+        const offsetTxt = fmtOffset(city.tz, now);
+        if (subEl.dataset.render !== "split") {
+          subEl.dataset.render = "split";
+          subEl.innerHTML = `<span class="sub-time"></span><span class="sub-meta"></span>`;
+        }
+        subEl.firstChild.textContent = time;
+        subEl.lastChild.textContent = `${date} · ${offsetTxt}`;
       }
       if (contextEl) {
         const period = timeOfDay(H);
