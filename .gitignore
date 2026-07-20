@@ -2,3 +2,5 @@
 *.log
 work/
 outputs/
+PRODUCT.md
+DESIGN.md

@@ -59,7 +59,7 @@
     gap: 28px;
     padding-bottom: 24px;
     margin-bottom: 32px;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
   }
 
   .title-block {
@@ -67,12 +67,12 @@
   }
 
   .eyebrow {
-    margin-bottom: 10px;
-    color: var(--terra);
-    font-size: 0.66rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    margin-bottom: 0;
+    color: color-mix(in srgb, var(--muted) 72%, transparent);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: none;
   }
 
   h1 {
@@ -85,8 +85,8 @@
     margin-bottom: 12px;
   }
   h1 .amp {
-    font-style: italic;
-    color: var(--terra);
+    font-style: normal;
+    color: var(--ink);
   }
 
   .app-status {
@@ -120,18 +120,15 @@
   /* Follow-the-sun horizon: every city plotted on a 24-hour arc. */
   .horizon {
     position: relative;
-    margin: 0 0 26px;
-    padding: 14px 16px 44px;
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 14px;
+    margin: 0 0 28px;
+    padding: 14px 0 44px;
   }
   .horizon-title {
-    margin-bottom: 12px;
-    color: var(--muted);
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
+    margin-bottom: 10px;
+    color: color-mix(in srgb, var(--muted) 60%, transparent);
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
   .horizon-track {
@@ -354,14 +351,14 @@
   .face-name {
     width: 100%;
     margin-top: 12px;
-    font-size: 0.62rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: #e6cd8f;
-    background: rgba(255,255,255,0.035);
-    border: 1px solid transparent;
-    border-radius: 6px;
+    font-size: 0.64rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: color-mix(in srgb, var(--muted) 78%, transparent);
+    background: none;
+    border: none;
+    border-radius: 0;
     cursor: pointer;
     user-select: none;
     opacity: 1;
@@ -641,7 +638,7 @@
   <main class="app-shell">
     <header class="app-header">
       <div class="title-block">
-        <p class="eyebrow">Claude Fable 5 · World time instrument</p>
+        <p class="eyebrow">Claude Fable 5</p>
         <h1>World <span class="amp">Clock</span></h1>
         <div class="app-status" aria-label="Clock status">
           <span id="city-count">0 cities</span>
