@@ -3,159 +3,195 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>World Clock Versions</title>
+    <title>World Clock — Versions</title>
+    <meta name="description" content="Choose a version of World Clock: the live working build or a frozen AI-model checkpoint, each a standalone HTML/SVG watch-face gallery.">
+    <meta name="theme-color" content="#0d1018">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%230d1018' stroke='%23e3b661' stroke-width='6'/%3E%3Cpath d='M50 50 L50 24 M50 50 L68 60' stroke='%23f4f1ea' stroke-width='7' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%23e3b661'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650&display=swap" rel="stylesheet">
     <style>
       :root {
-        color-scheme: light;
-        --bg: #f3f5f7;
-        --panel: #ffffff;
-        --ink: #17202a;
-        --muted: #5d6875;
-        --line: #d8dee5;
-        --accent: #1766c2;
-        --accent-ink: #ffffff;
+        color-scheme: dark;
+        --wall: #0d1018;
+        --wall-2: #161b28;
+        --panel: rgba(255, 255, 255, 0.055);
+        --line: rgba(255, 255, 255, 0.1);
+        --ink: #f4f1ea;
+        --muted: #a9b1b4;
+        --gold: #e3b661;
+        --focus: #ffe9bd;
       }
 
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
 
       body {
-        margin: 0;
         min-height: 100vh;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: var(--bg);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(74% 48% at 8% -8%, rgba(227, 182, 97, 0.11), transparent 72%),
+          radial-gradient(62% 42% at 97% 2%, rgba(120, 138, 220, 0.09), transparent 74%),
+          radial-gradient(120% 90% at 50% -10%, #232a3e 0%, var(--wall-2) 42%, var(--wall) 100%);
         color: var(--ink);
+        padding: 0 20px;
       }
 
       main {
-        width: min(1040px, calc(100% - 32px));
+        width: min(920px, 100%);
         margin: 0 auto;
-        padding: 42px 0 56px;
-      }
-
-      header {
-        display: grid;
-        gap: 14px;
-        margin-bottom: 28px;
+        padding: 56px 0 72px;
       }
 
       h1 {
-        margin: 0;
-        font-size: clamp(2rem, 4vw, 3.35rem);
+        font-family: "Fraunces", Georgia, serif;
+        font-size: clamp(2.2rem, 5vw, 3.1rem);
+        font-weight: 650;
         line-height: 1;
-        letter-spacing: 0;
+        margin-bottom: 10px;
       }
 
       .lede {
-        max-width: 720px;
-        margin: 0;
+        max-width: 58ch;
         color: var(--muted);
-        font-size: 1rem;
-        line-height: 1.55;
+        font-size: 0.95rem;
+        line-height: 1.6;
       }
 
-      .selector {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
+      .lede a { color: var(--gold); text-decoration: none; }
+      .lede a:hover { text-decoration: underline; }
+
+      /* ---- The lead piece: active build ---- */
+      .lead {
+        display: grid;
+        grid-template-columns: 132px 1fr auto;
         align-items: center;
-        padding: 16px;
-        margin: 28px 0;
-        background: var(--panel);
+        gap: 26px;
+        margin: 44px 0 12px;
+        padding: 26px 28px;
+        background: linear-gradient(152deg, rgba(255, 244, 214, 0.07), rgba(255, 255, 255, 0.015) 55%), var(--panel);
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 18px;
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.2s, transform 0.2s;
       }
 
-      label {
-        font-size: 0.86rem;
-        font-weight: 700;
-        color: var(--muted);
+      .lead:hover { border-color: rgba(227, 182, 97, 0.45); transform: translateY(-2px); }
+
+      .lead h2, .shelf h2 {
+        font-family: "Fraunces", Georgia, serif;
+        font-weight: 650;
+        letter-spacing: 0.01em;
       }
 
-      select,
-      button,
-      .button {
-        min-height: 42px;
-        border-radius: 6px;
-        font: inherit;
-      }
+      .lead h2 { font-size: 1.55rem; margin-bottom: 6px; }
 
-      select {
-        min-width: min(100%, 330px);
-        padding: 0 38px 0 12px;
-        border: 1px solid #b8c2ce;
-        background: #fff;
-        color: var(--ink);
-      }
+      .lead .meta { color: var(--muted); font-size: 0.85rem; line-height: 1.55; max-width: 46ch; }
 
-      button,
-      .button {
+      .state {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        min-width: 112px;
-        padding: 0 16px;
-        border: 1px solid var(--accent);
-        background: var(--accent);
-        color: var(--accent-ink);
-        text-decoration: none;
-        font-weight: 700;
-        cursor: pointer;
+        gap: 7px;
+        margin-bottom: 10px;
+        color: var(--gold);
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
       }
 
-      .grid {
+      .state .pip {
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: var(--gold);
+      }
+
+      .state.running .pip { animation: pulse 2.4s ease-out infinite; }
+
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(227, 182, 97, 0.55); }
+        70% { box-shadow: 0 0 0 9px rgba(227, 182, 97, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(227, 182, 97, 0); }
+      }
+
+      .state.frozen { color: var(--muted); }
+      .state.frozen .pip { background: var(--muted); }
+
+      .open-cue {
+        color: var(--gold);
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      /* ---- The shelf: frozen checkpoints ---- */
+      .shelf { margin-top: 40px; }
+
+      .shelf h2 {
+        font-size: 0.95rem;
+        color: var(--muted);
+        font-weight: 500;
+        margin-bottom: 16px;
+      }
+
+      .shelf-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 14px;
+      }
+
+      .piece {
+        display: grid;
+        grid-template-columns: 76px 1fr;
+        align-items: center;
         gap: 16px;
-      }
-
-      .card {
-        display: grid;
-        gap: 12px;
         padding: 18px;
-        min-height: 188px;
         background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.2s, transform 0.2s;
       }
 
-      .card h2 {
-        margin: 0;
-        font-size: 1.15rem;
-        line-height: 1.2;
-        letter-spacing: 0;
+      .piece:hover { border-color: rgba(227, 182, 97, 0.4); transform: translateY(-2px); }
+
+      .piece h3 {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 1.05rem;
+        font-weight: 650;
+        margin-bottom: 3px;
       }
 
-      .meta {
-        margin: 0;
+      .piece .tag {
         color: var(--muted);
-        font-size: 0.86rem;
-        line-height: 1.45;
+        font-size: 0.74rem;
+        font-variant-numeric: tabular-nums;
       }
 
-      .tag {
-        width: fit-content;
-        padding: 4px 8px;
-        border-radius: 999px;
-        background: #e7eef7;
-        color: #274d78;
-        font-size: 0.72rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
+      /* ---- Dials ---- */
+      .dial { display: block; width: 100%; height: auto; }
+
+      .lead:focus-visible, .piece:focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 3px;
       }
 
-      .card .button {
-        align-self: end;
-        width: fit-content;
+      footer {
+        margin-top: 52px;
+        color: color-mix(in srgb, var(--muted) 65%, transparent);
+        font-size: 0.78rem;
+        line-height: 1.6;
+        max-width: 62ch;
       }
 
-      .note {
-        margin-top: 24px;
-        color: var(--muted);
-        font-size: 0.9rem;
-        line-height: 1.55;
+      @media (max-width: 640px) {
+        .lead { grid-template-columns: 88px 1fr; }
+        .lead .open-cue { display: none; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .lead, .piece { transition: none; }
+        .state.running .pip { animation: none; }
       }
     </style>
   </head>
@@ -163,68 +199,104 @@
     <main>
       <header>
         <h1>World Clock</h1>
-        <p class="lede">Open the active build or a standalone AI-model version. Current model checkpoints can be refreshed while finalized model pages remain viewable over time.</p>
+        <p class="lede">Sixty-two watch and clock faces, drawn as live inline SVG in a single HTML file. The working build runs live; each AI-model checkpoint is preserved exactly as that model left it — its clock stopped, like a piece in a case.</p>
       </header>
 
-      <section class="selector" aria-label="Open a version">
-        <label for="version-select">Version</label>
-        <select id="version-select">
-          <option value="world-clock.html">Active working build</option>
-          <option value="versions/fable-5.html">Claude Fable 5 current checkpoint</option>
-          <option value="versions/codex-5.6.html">Codex 5.6 Terra snapshot</option>
-          <option value="versions/codex-5.5.html">Codex 5.5 snapshot</option>
-          <option value="versions/claude-opus-4.8.html">Claude Opus 4.8 snapshot</option>
-        </select>
-        <button type="button" id="open-selected">Open</button>
+      <a class="lead" href="world-clock.html">
+        <svg class="dial" data-live="true" viewBox="0 0 100 100" aria-hidden="true"></svg>
+        <div>
+          <span class="state running"><span class="pip"></span>Running now</span>
+          <h2>Working build</h2>
+          <p class="meta">The current development page for the Claude Fable 5 cycle. Live time, add and shuffle cities, all 62 faces.</p>
+        </div>
+        <span class="open-cue">Open →</span>
+      </a>
+
+      <section class="shelf" aria-label="Frozen model checkpoints">
+        <h2>Model checkpoints</h2>
+        <div class="shelf-grid">
+          <a class="piece" href="versions/fable-5.html">
+            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
+            <div>
+              <span class="state frozen"><span class="pip"></span>Current checkpoint</span>
+              <h3>Claude Fable 5</h3>
+              <p class="tag">2026-07-17</p>
+            </div>
+          </a>
+          <a class="piece" href="versions/codex-5.6.html">
+            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
+            <div>
+              <span class="state frozen"><span class="pip"></span>Frozen</span>
+              <h3>Codex 5.6 Terra</h3>
+              <p class="tag">2026-07-09</p>
+            </div>
+          </a>
+          <a class="piece" href="versions/codex-5.5.html">
+            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
+            <div>
+              <span class="state frozen"><span class="pip"></span>Frozen</span>
+              <h3>Codex 5.5</h3>
+              <p class="tag">2026-07-09</p>
+            </div>
+          </a>
+          <a class="piece" href="versions/claude-opus-4.8.html">
+            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
+            <div>
+              <span class="state frozen"><span class="pip"></span>Frozen</span>
+              <h3>Claude Opus 4.8</h3>
+              <p class="tag">2026-06-30</p>
+            </div>
+          </a>
+        </div>
       </section>
 
-      <section class="grid" aria-label="Available versions">
-        <article class="card">
-          <span class="tag">Active</span>
-          <h2>Working Build</h2>
-          <p class="meta">Current development page for the Claude Fable 5 cycle. It remains the place for ongoing work before a checkpoint is refreshed.</p>
-          <a class="button" href="world-clock.html">Open</a>
-        </article>
-
-        <article class="card">
-          <span class="tag">Current Model</span>
-          <h2>Claude Fable 5</h2>
-          <p class="meta">Current Claude Fable 5 checkpoint, preserved as a standalone world-clock page while this model is under review.</p>
-          <a class="button" href="versions/fable-5.html">Open</a>
-        </article>
-
-        <article class="card">
-          <span class="tag">Snapshot</span>
-          <h2>Codex 5.6 Terra</h2>
-          <p class="meta">Frozen Codex 5.6 Terra checkpoint, retained as a standalone benchmark snapshot.</p>
-          <a class="button" href="versions/codex-5.6.html">Open</a>
-        </article>
-
-        <article class="card">
-          <span class="tag">Snapshot</span>
-          <h2>Codex 5.5</h2>
-          <p class="meta">Frozen Codex 5.5 checkpoint, retained as a standalone benchmark snapshot.</p>
-          <a class="button" href="versions/codex-5.5.html">Open</a>
-        </article>
-
-        <article class="card">
-          <span class="tag">Snapshot</span>
-          <h2>Claude Opus 4.8</h2>
-          <p class="meta">Imported standalone version from Claude Opus 4.8, preserved as its own page for benchmark viewing.</p>
-          <a class="button" href="versions/claude-opus-4.8.html">Open</a>
-        </article>
-      </section>
-
-      <p class="note">When a new model version is ready, freeze the current working build into a new file under <code>versions/</code>, add it to this page, and keep editing <code>world-clock.html</code> as the active build. Older model pages remain available as immutable snapshots.</p>
+      <footer>Every page here is standalone: save it, open it from a file, no server or build step required. Faces are drawn from reference photos of the real watches and clocks; see the catalog in the repository for the full list.</footer>
     </main>
 
     <script>
-      const select = document.getElementById("version-select");
-      const button = document.getElementById("open-selected");
+      // One shared dial drawing. The live dial's hands run on real time;
+      // frozen dials hold the 10:09:31 catalog pose — a stopped clock for a
+      // frozen checkpoint.
+      function drawDial(svg) {
+        svg.innerHTML = `
+          <circle cx="50" cy="50" r="47" fill="#11141d" stroke="#3a4152" stroke-width="1.6"/>
+          <circle cx="50" cy="50" r="43.5" fill="none" stroke="rgba(227,182,97,0.35)" stroke-width="0.6"/>
+          ${Array.from({ length: 12 }, (_, i) => {
+            const a = i * Math.PI / 6;
+            const x1 = 50 + Math.sin(a) * 40, y1 = 50 - Math.cos(a) * 40;
+            const x2 = 50 + Math.sin(a) * (i % 3 === 0 ? 34 : 36.5), y2 = 50 - Math.cos(a) * (i % 3 === 0 ? 34 : 36.5);
+            return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 3 === 0 ? "#e3b661" : "#6b7280"}" stroke-width="${i % 3 === 0 ? 2 : 1}" stroke-linecap="round"/>`;
+          }).join("")}
+          <line class="h-hr"  x1="50" y1="54" x2="50" y2="28" stroke="#f4f1ea" stroke-width="3" stroke-linecap="round"/>
+          <line class="h-min" x1="50" y1="56" x2="50" y2="17" stroke="#f4f1ea" stroke-width="2" stroke-linecap="round"/>
+          <line class="h-sec" x1="50" y1="58" x2="50" y2="14" stroke="#e3b661" stroke-width="1" stroke-linecap="round"/>
+          <circle cx="50" cy="50" r="2.4" fill="#e3b661"/>`;
+      }
 
-      button.addEventListener("click", () => {
-        window.location.href = select.value;
-      });
+      function setHands(svg, h, m, s) {
+        const rot = (cls, deg) => svg.querySelector(cls).setAttribute("transform", `rotate(${deg} 50 50)`);
+        rot(".h-hr", ((h % 12) + m / 60) * 30);
+        rot(".h-min", (m + s / 60) * 6);
+        rot(".h-sec", s * 6);
+      }
+
+      const dials = document.querySelectorAll(".dial");
+      dials.forEach(drawDial);
+
+      // Frozen pose: the classic catalog position.
+      dials.forEach(d => { if (!d.dataset.live) setHands(d, 10, 9, 31); });
+
+      const live = document.querySelector('.dial[data-live]');
+      if (live) {
+        const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const tick = () => {
+          const now = new Date();
+          setHands(live, now.getHours(), now.getMinutes(), now.getSeconds() + (reduced ? 0 : now.getMilliseconds() / 1000));
+        };
+        tick();
+        if (reduced) setInterval(tick, 1000);
+        else (function loop() { tick(); requestAnimationFrame(loop); })();
+      }
     </script>
   </body>
 </html>
