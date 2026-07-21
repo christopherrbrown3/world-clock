@@ -2854,8 +2854,9 @@
         </g>`;
       }
       const crownMark=(cx,baseY,s,fill)=> {
-        const pt=(dx,dy)=>`${(cx+dx*s).toFixed(2)},${(baseY+dy*s).toFixed(2)}`;
-        const balls=[[-6,-7.5],[-3,-9],[0,-9.7],[3,-9],[6,-7.5]].map(([dx,dy])=>`<circle cx="${(cx+dx*s).toFixed(2)}" cy="${(baseY+dy*s).toFixed(2)}" r="${(1.55*s).toFixed(2)}" fill="${fill}"/>`).join("");
+        const sy=s*1.3;
+        const pt=(dx,dy)=>`${(cx+dx*s).toFixed(2)},${(baseY+dy*sy).toFixed(2)}`;
+        const balls=[[-6,-7.5],[-3,-9],[0,-9.7],[3,-9],[6,-7.5]].map(([dx,dy])=>`<circle cx="${(cx+dx*s).toFixed(2)}" cy="${(baseY+dy*sy).toFixed(2)}" r="${(1.55*s).toFixed(2)}" fill="${fill}"/>`).join("");
         const pts=[pt(-7.2,0),pt(-6,-7.5),pt(-3.2,-3.2),pt(-3,-9),pt(0,-3.6),pt(3,-9),pt(3.2,-3.2),pt(6,-7.5),pt(7.2,0)].join(" ");
         return `<g>${balls}<polygon points="${pts}" fill="${fill}"/><rect x="${(cx-7.4*s).toFixed(1)}" y="${(baseY-0.3*s).toFixed(1)}" width="${(14.8*s).toFixed(1)}" height="${(2.5*s).toFixed(1)}" rx="${(0.8*s).toFixed(1)}" fill="${fill}"/></g>`;
       };
@@ -2870,8 +2871,8 @@
         <rect x="25" y="7" width="150" height="186" rx="12" fill="url(#green-${id})" filter="url(#rsoft-${id})"/>
         <rect x="25" y="7" width="150" height="186" rx="12" fill="none" stroke="url(#greenrim-${id})" stroke-width="2"/>
         <rect x="32" y="14" width="136" height="42" rx="5" fill="#075133" stroke="#d1ad4c" stroke-width="1.1" opacity="0.95"/>
-        ${crownMark(100,33,1.05,"#f3d376")}
-        <text x="100" y="49.2" text-anchor="middle" dominant-baseline="central" font-family="Georgia,'Times New Roman',serif" font-size="10.5" font-weight="700" letter-spacing="2.2" fill="#f4d36b">ROLEX</text>
+        ${crownMark(100,34.5,0.95,"#f3d376")}
+        <text x="100" y="48.4" text-anchor="middle" dominant-baseline="central" font-family="Georgia,'Times New Roman',serif" font-size="10.5" font-weight="700" letter-spacing="1.35" fill="#f4d36b">ROLEX</text>
         <line x1="34" y1="60" x2="166" y2="60" stroke="#04341f" stroke-width="1.2" opacity="0.75"/>
         <circle cx="${CX}" cy="${CY}" r="${DR+13.5}" fill="#05321f"/>
         <circle cx="${CX}" cy="${CY}" r="${DR+12}" fill="url(#flute-${id})"/>
@@ -2882,8 +2883,8 @@
         <g clip-path="url(#rdialclip-${id})">
           ${minutes}
           ${markers}
-          ${crownMark(CX,CY-DR*0.55,0.45,GOLD)}
-          <text x="${CX}" y="${(CY-DR*0.28).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Georgia,'Times New Roman',serif" font-size="6.3" font-weight="700" letter-spacing="1.25" fill="${GRN}">ROLEX</text>
+          ${crownMark(CX,CY-DR*0.60,0.36,GOLD)}
+          <text x="${CX}" y="${(CY-DR*0.44).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Georgia,'Times New Roman',serif" font-size="5.2" font-weight="700" letter-spacing="0.85" fill="${GRN}">ROLEX</text>
           <text x="${CX}" y="${(CY+DR*0.63).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="2.9" font-weight="600" letter-spacing="0.5" fill="${GRN}">GENEVA</text>
           <circle cx="${CX}" cy="${CY}" r="${DR}" fill="url(#rglass-${id})"/>
         </g>
@@ -13450,20 +13451,26 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         const d = i * 3, [x1,y1] = at(d,80.8), [x2,y2] = at(d,77.2);
         scallops += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 2 ? "#f5f7f7" : "#69747a"}" stroke-width="0.78" opacity="0.82"/>`;
       }
-      for (let i = 0; i < 60; i++) {
-        const d = i * 6, [x1,y1] = at(d,74.4), [x2,y2] = at(d, i % 5 === 0 ? 69.0 : 71.9);
-        bezelTicks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#eef2f2" stroke-width="${i % 5 === 0 ? "1.12" : "0.44"}" opacity="${i % 5 === 0 ? "0.94" : "0.78"}"/>`;
-      }
-      [["10",60],["20",120],["30",180],["40",240],["50",300]].forEach(([n,d]) => {
-        const [x,y] = at(d,70.9), rot = d > 90 && d < 270 ? d + 180 : d;
-        bezelNums += `<text x="${x.toFixed(1)}" y="${(y + .5).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="${n === "60" || n === "30" ? "7.7" : "6.4"}" font-weight="700" fill="#eaf0f2" stroke="#49647e" stroke-width="0.30" paint-order="stroke" transform="rotate(${rot} ${x.toFixed(1)} ${y.toFixed(1)})">${n}</text>`;
+      // Ring Command bezel: eleven huge platinum-toned numerals 10..0 fill the
+      // wide blue ceramic band; YACHT-MASTER II is engraved across the bottom.
+      [["0",115],["1",92],["2",69],["3",46],["4",23],["5",0],["6",-23],["7",-46],["8",-69],["9",-92],["10",-115]].forEach(([n,d]) => {
+        const [x,y] = at(d,67.4);
+        bezelNums += `<text x="${x.toFixed(1)}" y="${(y + .5).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="'Arial Narrow',Arial,Helvetica,sans-serif" font-size="11.6" font-weight="700" fill="#e6ecf0" stroke="#31517a" stroke-width="0.34" paint-order="stroke" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})">${n}</text>`;
       });
-      for (let i = 0; i <= 10; i++) {
-        const d = i * 30, [x,y] = at(d,61.6);
-        regatta += `<text x="${x.toFixed(1)}" y="${(y + .3).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="${i === 10 || i === 0 ? "4.1" : "3.55"}" font-weight="700" fill="#111820" transform="rotate(${d > 90 && d < 270 ? d + 180 : d} ${x.toFixed(1)} ${y.toFixed(1)})">${i}</text>`;
-        if (i < 10) {
-          const [tx,ty] = at(d + 15, 61.4);
-          regatta += `<path d="M${tx.toFixed(1)} ${(ty + 2.4).toFixed(1)} L${(tx - 2.1).toFixed(1)} ${(ty - 1.7).toFixed(1)} L${(tx + 2.1).toFixed(1)} ${(ty - 1.7).toFixed(1)} Z" fill="#d3262e" transform="rotate(${d + 15} ${tx.toFixed(1)} ${ty.toFixed(1)})"/>`;
+      const [bzL1,bzL2] = at(244,67.0), [bzR1,bzR2] = at(116,67.0);
+      bezelNums += `<path id="ym-bez-arc-${id}" d="M${bzL1.toFixed(1)} ${bzL2.toFixed(1)} A67.0 67.0 0 0 0 ${bzR1.toFixed(1)} ${bzR2.toFixed(1)}" fill="none"/><text font-family="'Arial Narrow',Arial,Helvetica,sans-serif" font-size="8.4" font-weight="700" letter-spacing="1.35" fill="#e6ecf0" stroke="#31517a" stroke-width="0.30" paint-order="stroke"><textPath href="#ym-bez-arc-${id}" startOffset="50%" text-anchor="middle" dominant-baseline="central">YACHT-MASTER II</textPath></text>`;
+      // Signature blue double-line countdown horseshoe: open at 6 where its
+      // ends tuck behind the seconds subdial ring; numerals 10..1 inside.
+      {
+        const arc = (r, a0, a1) => { const [x0,y0] = at(a0,r), [x1,y1] = at(a1,r); return `M${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 1 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`; };
+        regatta += `<path d="${arc(38.9, 209, 151)}" fill="none" stroke="#16407c" stroke-width="1.05"/><path d="${arc(28.4, 214, 146)}" fill="none" stroke="#16407c" stroke-width="0.85"/>`;
+        for (let i = 0; i < 10; i++) {
+          const d = 227 + i * (266 / 9), [x,y] = at(d,33.5);
+          regatta += `<text x="${x.toFixed(1)}" y="${(y + .3).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="4.7" font-weight="700" fill="#111820" transform="rotate(${d} ${x.toFixed(1)} ${y.toFixed(1)})">${10 - i}</text>`;
+          if (i < 9) {
+            const td = d + 266 / 18, [tx,ty] = at(td,36.3);
+            regatta += `<path d="M${tx.toFixed(1)} ${(ty + 1.9).toFixed(1)} L${(tx - 1.75).toFixed(1)} ${(ty - 1.5).toFixed(1)} L${(tx + 1.75).toFixed(1)} ${(ty - 1.5).toFixed(1)} Z" fill="#d3262e" transform="rotate(${td} ${tx.toFixed(1)} ${ty.toFixed(1)})"/>`;
+          }
         }
       }
       for (let i = 0; i < 60; i++) {
@@ -13499,10 +13506,11 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       </defs>
       <!-- Tapered three-link Oyster bracelet and direct upper/lower Yacht-Master lugs. -->
       ${bracelet}<path d="M60 54 L63 36 Q65 30 73 30 H86 L85 50 Z M140 54 L137 36 Q135 30 127 30 H114 L115 50 Z M60 146 L63 164 Q65 170 73 170 H86 L85 150 Z M140 146 L137 164 Q135 170 127 170 H114 L115 150 Z" fill="url(#ym-polish-${id})" stroke="#627078" stroke-width="0.58"/>
-      <circle cx="100" cy="100" r="79.2" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="78.1" fill="none" stroke="#f7fafb" stroke-width="0.64" opacity="0.80"/>${scallops}<circle cx="100" cy="100" r="75.6" fill="url(#ym-blue-${id})" stroke="#123157" stroke-width="0.76"/>${bezelTicks}${bezelNums}<polygon points="93.6,22.5 106.4,22.5 100,34.3" fill="#edf1ef" stroke="#71818a" stroke-width="0.62"/>
-      <circle cx="100" cy="100" r="64.1" fill="#f4f5f3" stroke="#82909a" stroke-width="0.58"/><g>${regatta}<text font-family="Arial,Helvetica,sans-serif" font-size="2.85" font-weight="700" letter-spacing="0.30" fill="#16407c"><textPath href="#ym-regatta-arc-${id}" startOffset="50%" text-anchor="middle">YACHT-MASTER II</textPath></text></g><circle cx="100" cy="100" r="58.1" fill="url(#ym-dial-${id})" stroke="#d0d5d6" stroke-width="0.55"/>
+      <circle cx="100" cy="100" r="79.2" fill="url(#case-${id})" filter="url(#shadow-${id})"/><circle cx="100" cy="100" r="78.1" fill="none" stroke="#f7fafb" stroke-width="0.64" opacity="0.80"/>${scallops}<circle cx="100" cy="100" r="75.6" fill="url(#ym-blue-${id})" stroke="#123157" stroke-width="0.76"/>${bezelNums}
+      <circle cx="100" cy="100" r="59.4" fill="#c8d0d4" stroke="#7e8c95" stroke-width="0.55"/><circle cx="100" cy="100" r="58.1" fill="url(#ym-dial-${id})" stroke="#d0d5d6" stroke-width="0.55"/>
       <g clip-path="url(#ym-dialclip-${id})">${dialTicks}${markers}
         <g transform="translate(100 72)"><path d="M-4.0 -1.0 L-2.7 -4.8 L-1.25 -1.3 L0 -5.2 L1.25 -1.3 L2.7 -4.8 L4.0 -1.0 L3.0 2.7 H-3.0 Z" fill="#11161b"/><circle cx="-3.8" cy="-3.4" r="0.86" fill="#11161b"/><circle cx="0" cy="-5.5" r="0.86" fill="#11161b"/><circle cx="3.8" cy="-3.4" r="0.86" fill="#11161b"/></g><text x="100" y="80.5" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="6.25" font-weight="700" letter-spacing="0.80" fill="#11161b">ROLEX</text><text x="100" y="86.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.9" font-weight="700" letter-spacing="0.24" fill="#11161b">OYSTER PERPETUAL</text><text x="100" y="90.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.25" font-weight="600" letter-spacing="0.20" fill="#11161b">SUPERLATIVE CHRONOMETER</text><text x="100" y="93.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.25" font-weight="600" letter-spacing="0.20" fill="#11161b">OFFICIALLY CERTIFIED</text>
+        ${regatta}
         <g><circle cx="100" cy="134" r="18.0" fill="url(#ym-metal-${id})" stroke="#728089" stroke-width="0.55"/><circle cx="100" cy="134" r="16.4" fill="url(#ym-blue-${id})" stroke="#193d74" stroke-width="0.52"/>${[["60",0],["10",60],["20",120],["30",180],["40",240],["50",300]].map(([n,d])=>{const [x,y]=at(d,12.8,100,134);return `<text x="${x.toFixed(1)}" y="${(y+.25).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Arial Narrow,Arial,Helvetica,sans-serif" font-size="3.15" font-weight="700" fill="#eff4f7">${n}</text>`;}).join("")}<circle cx="100" cy="134" r="10.9" fill="#f9faf8" stroke="#c1c8cc" stroke-width="0.46"/><g class="hand-subsec" data-pivot="100 134"><path d="M100 138.2 L99.36 134 L100 121.0 L100.64 134 Z" fill="#98a4aa" stroke="#536169" stroke-width="0.30"/></g><circle cx="100" cy="134" r="1.55" fill="#6b7880"/></g>
         <text x="87.4" y="156.1" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.82" font-weight="700" letter-spacing="0.30" fill="#151b20">SWISS</text><text x="112.6" y="156.1" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.82" font-weight="700" letter-spacing="0.30" fill="#151b20">MADE</text><path d="M45 60 C64 42 91 43 113 55 C84 50 62 61 45 87 Z" fill="#fff" opacity="0.22"/></g>
       <!-- Winch-shaped pushers at 2 and 4 and the Triplock crown at three. -->
@@ -14237,7 +14245,7 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
       <rect x="160" y="95" width="9" height="10" rx="1.4" fill="url(#bt-case-${id})" stroke="#50595f" stroke-width="0.50"/><circle cx="175" cy="100" r="6.1" fill="url(#bt-case-${id})" stroke="#4d565c" stroke-width="0.66"/>${crownLines}
       <g clip-path="url(#bt-screenclip-${id})">
         <!-- the digital animation visibly scrolls across the smoke-black display -->
-        <text x="52" y="129" data-digital="ssPrev" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Impact,sans-serif" font-size="34" font-weight="900" fill="#637067" opacity="0.24">29</text><text x="100" y="128" data-digital="ss" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Impact,sans-serif" font-size="43" font-weight="900" letter-spacing="-3.4" fill="url(#bt-digit-${id})">30</text><text x="148" y="129" data-digital="ssNext" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Impact,sans-serif" font-size="34" font-weight="900" fill="#637067" opacity="0.24">31</text><path d="M50 58 Q100 39 147 56" fill="none" stroke="url(#bt-glass-${id})" stroke-width="11" opacity="0.58"/>
+        <text x="45" y="110" data-digital="ssPrev" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Impact,sans-serif" font-size="44" font-weight="900" letter-spacing="-3.4" fill="#637067" opacity="0.24" transform="rotate(19 45 110)">29</text><text x="100" y="121" data-digital="ss" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Impact,sans-serif" font-size="58" font-weight="900" letter-spacing="-4.4" fill="url(#bt-digit-${id})">30</text><text x="155" y="110" data-digital="ssNext" text-anchor="middle" dominant-baseline="central" font-family="Arial Black,Impact,sans-serif" font-size="44" font-weight="900" letter-spacing="-3.4" fill="#637067" opacity="0.24" transform="rotate(-19 155 110)">31</text><path d="M50 58 Q100 39 147 56" fill="none" stroke="url(#bt-glass-${id})" stroke-width="11" opacity="0.58"/>
       </g><text x="100" y="71.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="5.1" font-weight="700" letter-spacing="0.72" fill="#e6e9e5">FOSSIL</text>
       <!-- The physical analog layer supplies only time; seconds live in the display. -->
       <g filter="url(#bt-handshadow-${id})"><g class="hand-hour"><path d="M100 106.4 L96.6 99.8 L97.4 78.5 L100 64.0 L102.6 78.5 L103.4 99.8Z" fill="url(#bt-hand-${id})" stroke="#303a40" stroke-width="0.54"/><path d="M100 69 L101.0 80 L100 96.3 L99 80Z" fill="#f2f4ee"/></g><g class="hand-min"><path d="M100 108.2 L98.1 100 L98.8 58.0 L100 48.0 L101.2 58.0 L101.9 100Z" fill="url(#bt-hand-${id})" stroke="#303a40" stroke-width="0.48"/><path d="M100 51.8 L100.75 61 L100 97.0 L99.25 61Z" fill="#f2f4ee"/></g></g><circle cx="100" cy="100" r="4.05" fill="url(#bt-hand-${id})" stroke="#364047" stroke-width="0.72"/><circle cx="100" cy="100" r="1.4" fill="#f7f9f6"/>`;
@@ -14522,8 +14530,8 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
         return `${body}${shoulderBrush}<path d="M${(farL + 1.2).toFixed(2)} ${(y1 - 0.72).toFixed(2)} H${(farR - 1.2).toFixed(2)}" stroke="#f3f5f3" stroke-width="0.22" opacity="0.2"/>${block(91.7)}${block(108.3)}${innerSeam ? `<path d="M${farL.toFixed(2)} ${(y1 - 0.22).toFixed(2)} H${farR.toFixed(2)}" stroke="#0c1318" stroke-width="0.38" opacity="0.48"/>` : ""}`;
       };
       const bracelet = [
-        topLink(-14, -4.2, 48, 53, 4.0), topLink(-3.2, 11.4, 58, 86, 6.0), topLink(12.3, 33.5, 86, 100, 7.2, false),
-        bottomLink(166.5, 187.7, 100, 86, 7.2, false), bottomLink(188.6, 203.2, 86, 58, 6.0)
+        topLink(-14, -4.2, 44, 46.5, 4.0), topLink(-3.2, 11.4, 47.5, 52.5, 5.4), topLink(12.3, 34.5, 53.5, 58, 6.4, false),
+        bottomLink(165.5, 187.7, 58, 53.5, 6.4, false), bottomLink(188.6, 203.2, 52.5, 47.5, 5.4)
       ].join("");
 
       let bezelBrush = "";
