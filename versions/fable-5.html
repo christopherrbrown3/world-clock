@@ -13795,48 +13795,127 @@ ${Array.from({length:120},(_,i)=>{const a=i/120*Math.PI*2;const[x1,y1]=P(a,92,10
     name: "Grand Central Terminal Information Booth Clock (1913)",
     cadence: "tick",
     render() {
-      const id = "gct-1913", CX = 111, CY = 82;
+      const id = "gct1913", CX = 100, CY = 84;
       const at = (deg, r, cx = CX, cy = CY) => {
         const a = deg * Math.PI / 180;
         return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
       };
-      const numerals = ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
-      let minuteMarks = "", dialNums = "", flutes = "", finialRibs = "", deskOrnament = "";
+      let minuteMarks = "", dialNums = "", scales = "", gadroons = "", acanthus = "";
+      // Radial rectangular minute dashes; black lozenges at the hours (12 emphasized).
       for (let i = 0; i < 60; i++) {
-        const deg = i * 6, [x, y] = at(deg, 43.5);
-        if (i % 5 === 0) minuteMarks += `<rect x="${(x - 1.18).toFixed(1)}" y="${(y - 1.18).toFixed(1)}" width="2.36" height="2.36" fill="#242017" transform="rotate(45 ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
-        else { const [x1, y1] = at(deg, 44.3), [x2, y2] = at(deg, 42.1); minuteMarks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#2b261b" stroke-width="1.35"/>`; }
+        const deg = i * 6, [x, y] = at(deg, 42.6);
+        if (i % 5 === 0) {
+          const sz = i === 0 ? 2.05 : 1.7;
+          minuteMarks += `<rect x="${(x - sz/2).toFixed(2)}" y="${(y - sz).toFixed(2)}" width="${sz}" height="${sz*2}" fill="#161209" transform="rotate(${deg + 45} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+        } else {
+          minuteMarks += `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="0.85" fill="#241e10"/>`;
+        }
       }
+      // Large condensed didone numerals, ~1/5 of dial diameter.
+      const numerals = ["12","1","2","3","4","5","6","7","8","9","10","11"];
       for (let i = 0; i < 12; i++) {
-        const [x, y] = at(i * 30, 33.2);
-        dialNums += `<text x="${x.toFixed(1)}" y="${(y + 2.85).toFixed(1)}" text-anchor="middle" font-family="Baskerville,'Times New Roman',serif" font-size="${i === 0 ? "8.25" : "7.9"}" font-weight="500" fill="#1d1a14">${numerals[i]}</text>`;
+        const [x, y] = at(i * 30, 30.5);
+        dialNums += `<text x="${x.toFixed(1)}" y="${(y + 4.1).toFixed(1)}" text-anchor="middle" font-family="'Bodoni 72','Didot',Baskerville,'Times New Roman',serif" font-size="11.8" font-weight="500" fill="#141008" transform="scale(0.92 1)" style="transform-origin:${x.toFixed(1)}px ${(y+4.1).toFixed(1)}px">${numerals[i]}</text>`;
       }
-      for (let i = 0; i < 13; i++) {
-        const x = 88 + i * 3.75;
-        flutes += `<path d="M${x.toFixed(1)} 138 Q${(x - 4.5).toFixed(1)} 153 ${x.toFixed(1)} 166" fill="none" stroke="${i % 2 ? "#d9b653" : "#6f4d11"}" stroke-width="1.1" opacity="0.84"/>`;
+      // Fish-scale imbrication on the acorn finial.
+      for (let row = 0; row < 4; row++) {
+        const y = 13 + row * 3.4, rr = 5.5 - row * 0.4;
+        for (let k = -2; k <= 2; k++) {
+          const x = CX + k * 4.4 + (row % 2 ? 2.2 : 0);
+          if (Math.abs(x - CX) < 11 - row * 1.5) scales += `<path d="M${(x-2).toFixed(1)} ${y} Q${x} ${(y-2.6).toFixed(1)} ${(x+2).toFixed(1)} ${y}" fill="none" stroke="#5c3f0c" stroke-width="0.5" opacity="0.85"/>`;
+        }
       }
-      for (let i = 0; i < 5; i++) { const x = 101 + i * 5.0; finialRibs += `<path d="M${x.toFixed(1)} 6.5 Q${(x + 8).toFixed(1)} 15 ${(x + 4).toFixed(1)} 25 M${(122 - i * 5.0).toFixed(1)} 6.5 Q${(114 - i * 5.0).toFixed(1)} 15 ${(118 - i * 5.0).toFixed(1)} 25" fill="none" stroke="#715017" stroke-width="0.55" opacity="0.8"/>`; }
-      for (let i = 0; i < 12; i++) { const x = 23 + i * 14.0; deskOrnament += `<path d="M${x.toFixed(1)} 190 q3 -5 6 0 q3 5 6 0" fill="none" stroke="#bd9634" stroke-width="1.05" opacity="0.86"/>`; }
-      const sideTicks = (() => { let s = ""; for (let i = 0; i < 48; i++) { const a = i / 48 * Math.PI * 2; const x1 = 57 + Math.sin(a) * 13.0, y1 = CY - Math.cos(a) * 42.0, x2 = 57 + Math.sin(a) * (i % 4 === 0 ? 9.7 : 11.1), y2 = CY - Math.cos(a) * (i % 4 === 0 ? 36.3 : 39.0); s += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#40351e" stroke-width="${i % 4 === 0 ? "0.72" : "0.36"}"/>`; } return s; })();
+      // Gadrooned petal collar cupping the ball's underside.
+      for (let i = 0; i < 9; i++) {
+        const x = 74 + i * 6;
+        const lift = Math.abs(i - 4) * 1.3;
+        gadroons += `<path d="M${x} ${132 + lift} Q${x + 3} ${126 + lift} ${x + 6} ${132 + lift} L${x + 5} ${140 + lift * 0.5} Q${x + 3} ${142.5 + lift * 0.5} ${x + 1} ${140 + lift * 0.5} Z" fill="url(#gc-petal-${id})" stroke="#4e360a" stroke-width="0.45"/>`;
+      }
+      // Acanthus flutes on the trumpet pedestal.
+      for (let i = 0; i < 9; i++) {
+        const x = 82 + i * 4.5;
+        acanthus += `<path d="M${x} 146 Q${(x - 3.5).toFixed(1)} 158 ${(x - 1).toFixed(1)} 168" fill="none" stroke="${i % 2 ? "#e8c15e" : "#59400e"}" stroke-width="${i % 2 ? "0.85" : "1.5"}" opacity="0.9"/>`;
+      }
+      // Pierced spade hand: split double-bar shaft, fleur tip, scrolled tail.
+      const hand = (L, tail, w) => `
+        <path d="M${CX-w} ${CY-3} L${CX-w*0.75} ${CY-L*0.52} L${CX-w*0.3} ${CY-L*0.52} L${CX-w*0.42} ${CY-3} Z" fill="#171208"/>
+        <path d="M${CX+w} ${CY-3} L${CX+w*0.75} ${CY-L*0.52} L${CX+w*0.3} ${CY-L*0.52} L${CX+w*0.42} ${CY-3} Z" fill="#171208"/>
+        <path d="M${CX-w*0.78} ${CY-L*0.52} C${CX-w*2.1} ${CY-L*0.62} ${CX-w*2.1} ${CY-L*0.78} ${CX-w*0.6} ${CY-L*0.84} L${CX} ${CY-L} L${CX+w*0.6} ${CY-L*0.84} C${CX+w*2.1} ${CY-L*0.78} ${CX+w*2.1} ${CY-L*0.62} ${CX+w*0.78} ${CY-L*0.52} Q${CX} ${CY-L*0.56} ${CX-w*0.78} ${CY-L*0.52} Z" fill="#171208"/>
+        <ellipse cx="${CX}" cy="${CY-L*0.68}" rx="${w*0.62}" ry="${L*0.055}" fill="url(#gc-opal-${id})"/>
+        <path d="M${CX-w*0.5} ${CY-2} L${CX-tail*0.28} ${CY+tail*0.55} Q${CX-tail*0.5} ${CY+tail*0.92} ${CX-tail*0.14} ${CY+tail*0.8} Q${CX} ${CY+tail*0.68} ${CX+tail*0.14} ${CY+tail*0.8} Q${CX+tail*0.5} ${CY+tail*0.92} ${CX+tail*0.28} ${CY+tail*0.55} L${CX+w*0.5} ${CY-2} Z" fill="#171208"/>`;
       return `<defs>
-        <radialGradient id="gc-brass-${id}" cx="34%" cy="25%" r="88%"><stop offset="0%" stop-color="#f2d678"/><stop offset="29%" stop-color="#be9335"/><stop offset="58%" stop-color="#8b641b"/><stop offset="100%" stop-color="#3e2a08"/></radialGradient>
-        <linearGradient id="gc-polish-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff0a5"/><stop offset="22%" stop-color="#c49129"/><stop offset="51%" stop-color="#f4ce6a"/><stop offset="76%" stop-color="#704c0e"/><stop offset="100%" stop-color="#d8aa42"/></linearGradient>
-        <radialGradient id="gc-opal-${id}" cx="45%" cy="35%" r="82%"><stop offset="0%" stop-color="#fff9df"/><stop offset="48%" stop-color="#ffeab0"/><stop offset="82%" stop-color="#e8bd5d"/><stop offset="100%" stop-color="#b58427"/></radialGradient>
-        <linearGradient id="gc-side-opal-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#a77b24"/><stop offset="36%" stop-color="#fff0bc"/><stop offset="66%" stop-color="#fff8d9"/><stop offset="100%" stop-color="#c38d2f"/></linearGradient>
-        <linearGradient id="gc-glass-${id}" x1="0" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.28"/><stop offset="38%" stop-color="#fff" stop-opacity="0.05"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <radialGradient id="gc-brass-${id}" cx="34%" cy="22%" r="92%"><stop offset="0%" stop-color="#f6d98a"/><stop offset="26%" stop-color="#c69a3c"/><stop offset="55%" stop-color="#8a621a"/><stop offset="80%" stop-color="#4c350b"/><stop offset="100%" stop-color="#2e1f05"/></radialGradient>
+        <linearGradient id="gc-polish-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff3b8"/><stop offset="20%" stop-color="#c49129"/><stop offset="46%" stop-color="#f6d167"/><stop offset="72%" stop-color="#6b470d"/><stop offset="100%" stop-color="#d8aa42"/></linearGradient>
+        <linearGradient id="gc-petal-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#eec868"/><stop offset="60%" stop-color="#a1751e"/><stop offset="100%" stop-color="#5b3f0c"/></linearGradient>
+        <radialGradient id="gc-opal-${id}" cx="50%" cy="46%" r="66%"><stop offset="0%" stop-color="#fffef2"/><stop offset="45%" stop-color="#fdf2cb"/><stop offset="85%" stop-color="#f5dfa0"/><stop offset="100%" stop-color="#e3c273"/></radialGradient>
+        <radialGradient id="gc-bloom-${id}" cx="50%" cy="50%" r="50%"><stop offset="60%" stop-color="#ffedb3" stop-opacity="0"/><stop offset="82%" stop-color="#ffedb3" stop-opacity="0.28"/><stop offset="100%" stop-color="#ffedb3" stop-opacity="0"/></radialGradient>
+        <linearGradient id="gc-side-opal-${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#c89b3d"/><stop offset="45%" stop-color="#fff4cd"/><stop offset="100%" stop-color="#e3bc63"/></linearGradient>
+        <linearGradient id="gc-envrefl-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a2807" stop-opacity="0"/><stop offset="55%" stop-color="#52380c" stop-opacity="0.55"/><stop offset="80%" stop-color="#8a6220" stop-opacity="0.5"/><stop offset="100%" stop-color="#2a1c04" stop-opacity="0.75"/></linearGradient>
+        <linearGradient id="gc-glass-${id}" x1="0" y1="0" x2="0.88" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.30"/><stop offset="38%" stop-color="#fff" stop-opacity="0.05"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
         <filter id="gc-shadow-${id}" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="2.4" stdDeviation="3.2" flood-color="#171005" flood-opacity="0.48"/></filter>
         <filter id="gc-hand-shadow-${id}" x="-35%" y="-35%" width="170%" height="170%"><feDropShadow dx="0.55" dy="0.72" stdDeviation="0.50" flood-color="#000" flood-opacity="0.46"/></filter>
-        <clipPath id="gc-front-clip-${id}"><circle cx="${CX}" cy="${CY}" r="47.0"/></clipPath>
+        <clipPath id="gc-front-clip-${id}"><circle cx="${CX}" cy="${CY}" r="45.4"/></clipPath>
       </defs>
-      <!-- The Vanderbilt acorn rises from the top of the brass globe. -->
-      <g filter="url(#gc-shadow-${id})"><rect x="107" y="20" width="8" height="9" rx="1.2" fill="url(#gc-polish-${id})"/><path d="M99 8 Q111 0 123 8 Q126 20 111 27 Q96 20 99 8 Z" fill="url(#gc-polish-${id})" stroke="#6d4e15" stroke-width="0.62"/>${finialRibs}<path d="M96 25 Q111 30 126 25 L123 33 Q111 37 99 33 Z" fill="url(#gc-brass-${id})" stroke="#644611" stroke-width="0.56"/></g>
-      <!-- Perspective left face and the solid brass spherical housing behind the front face. -->
-      <g filter="url(#gc-shadow-${id})"><ellipse cx="56" cy="${CY}" rx="24" ry="54" fill="url(#gc-brass-${id})" stroke="#51380d" stroke-width="0.85"/><ellipse cx="56" cy="${CY}" rx="17.2" ry="46.6" fill="url(#gc-side-opal-${id})" stroke="#876221" stroke-width="0.76"/><g opacity="0.92">${sideTicks}<text x="56" y="43" text-anchor="middle" font-family="Baskerville,'Times New Roman',serif" font-size="6.2" fill="#382e1a">12</text><text x="70" y="85" text-anchor="middle" font-family="Baskerville,'Times New Roman',serif" font-size="6.2" fill="#382e1a">3</text><text x="56" y="126" text-anchor="middle" font-family="Baskerville,'Times New Roman',serif" font-size="6.2" fill="#382e1a">6</text><text x="42" y="85" text-anchor="middle" font-family="Baskerville,'Times New Roman',serif" font-size="6.2" fill="#382e1a">9</text><path d="M56 86 L53 62 Q56 57 59 62 Z M56 86 L54.5 50 L57.5 45 L57.5 86 Z" fill="#252016"/></g><circle cx="${CX}" cy="${CY}" r="59.0" fill="url(#gc-brass-${id})" stroke="#4c330a" stroke-width="0.88"/><path d="M63 41 Q111 18 159 42 Q148 29 111 27 Q76 29 63 41 Z" fill="url(#gc-polish-${id})" opacity="0.34"/><circle cx="${CX}" cy="${CY}" r="52.2" fill="url(#gc-polish-${id})" stroke="#664714" stroke-width="0.82"/><circle cx="${CX}" cy="${CY}" r="48.3" fill="#aa7d25"/><circle cx="${CX}" cy="${CY}" r="47.0" fill="url(#gc-opal-${id})" stroke="#7b5a1a" stroke-width="0.68"/></g>
-      <g clip-path="url(#gc-front-clip-${id})">${minuteMarks}${dialNums}<text x="${CX}" y="103.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.95" font-weight="500" letter-spacing="0.18" fill="#65532e">SELF WINDING CLOCK CO. INC</text><text x="${CX}" y="106.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.75" letter-spacing="0.25" fill="#65532e">NEW YORK</text><path d="M69 47 Q102 36 142 49 Q109 44 84 51 Z" fill="url(#gc-glass-${id})" opacity="0.88"/></g>
-      <!-- Two hand-only faces; the original ball clock has no wristwatch seconds hand. -->
-      <g filter="url(#gc-hand-shadow-${id})" fill="#211c13" stroke="#16120d" stroke-width="0.36"><g class="hand-hour" data-pivot="${CX} ${CY}"><path d="M${CX-0.85} ${CY} L${CX-0.72} ${CY-11.5} C${CX-2.9} ${CY-13.5} ${CX-3.3} ${CY-17.5} ${CX-1.1} ${CY-20.5} L${CX-0.55} ${CY-23.0} L${CX} ${CY-27.4} L${CX+0.55} ${CY-23.0} L${CX+1.1} ${CY-20.5} C${CX+3.3} ${CY-17.5} ${CX+2.9} ${CY-13.5} ${CX+0.72} ${CY-11.5} L${CX+0.85} ${CY} Z"/><path d="M${CX-0.85} ${CY} L${CX-2.5} ${CY+2.6} Q${CX-3.4} ${CY+5.4} ${CX-0.9} ${CY+6.3} L${CX} ${CY+8.4} L${CX+0.9} ${CY+6.3} Q${CX+3.4} ${CY+5.4} ${CX+2.5} ${CY+2.6} L${CX+0.85} ${CY} Z"/><circle cx="${CX}" cy="${CY-15.9}" r="1.15" fill="#efe3b2"/></g><g class="hand-min" data-pivot="${CX} ${CY}"><path d="M${CX-0.78} ${CY} L${CX-0.62} ${CY-29.5} C${CX-2.3} ${CY-31.5} ${CX-2.6} ${CY-35.0} ${CX-0.9} ${CY-38.0} L${CX-0.45} ${CY-40.5} L${CX} ${CY-45.2} L${CX+0.45} ${CY-40.5} L${CX+0.9} ${CY-38.0} C${CX+2.6} ${CY-35.0} ${CX+2.3} ${CY-31.5} ${CX+0.62} ${CY-29.5} L${CX+0.78} ${CY} Z"/><path d="M${CX-0.78} ${CY} L${CX-2.2} ${CY+2.4} Q${CX-3.0} ${CY+5.0} ${CX-0.8} ${CY+5.9} L${CX} ${CY+7.8} L${CX+0.8} ${CY+5.9} Q${CX+3.0} ${CY+5.0} ${CX+2.2} ${CY+2.4} L${CX+0.78} ${CY} Z"/><circle cx="${CX}" cy="${CY-33.4}" r="0.95" fill="#efe3b2"/></g></g><circle cx="${CX}" cy="${CY}" r="3.1" fill="#211c13" stroke="#b18a2e" stroke-width="0.70"/><circle cx="${CX}" cy="${CY}" r="1.08" fill="#d9bb64"/>
-      <!-- Fluted brass pedestal and only the top of the 18-sided information booth. -->
-      <g filter="url(#gc-shadow-${id})"><ellipse cx="111" cy="136.5" rx="31.5" ry="5.8" fill="url(#gc-brass-${id})"/><path d="M80 137 Q111 147 142 137 L134 165 Q111 172 88 165 Z" fill="url(#gc-brass-${id})" stroke="#60430e" stroke-width="0.62"/>${flutes}<ellipse cx="111" cy="166.2" rx="42" ry="6.4" fill="url(#gc-polish-${id})"/><rect x="14" y="169" width="172" height="31" rx="2.3" fill="url(#gc-brass-${id})" stroke="#54390c" stroke-width="0.72"/><rect x="18" y="176" width="164" height="15.6" fill="#1e1a12" stroke="#c49635" stroke-width="0.68"/><circle cx="40" cy="168" r="8.1" fill="#fff7d8" stroke="#8b651c" stroke-width="1.6"/><circle cx="167" cy="168" r="8.1" fill="#fff7d8" stroke="#8b651c" stroke-width="1.6"/><text x="100" y="188.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9.4" font-weight="600" letter-spacing="0.85" fill="#fff2bc">INFORMATION</text><text x="55" y="187.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="5.4" font-weight="700" fill="#fff2bc">MTA</text>${deskOrnament}</g>`;
+      <!-- Solid brass acorn finial: imbricated scales on a molded socle. -->
+      <g filter="url(#gc-shadow-${id})">
+        <path d="M${CX} 3.5 C${CX+9} 8 ${CX+11} 16 ${CX+7} 23 Q${CX} 27.5 ${CX-7} 23 C${CX-11} 16 ${CX-9} 8 ${CX} 3.5 Z" fill="url(#gc-brass-${id})" stroke="#4e360a" stroke-width="0.6"/>
+        <path d="M${CX-2.2} 6.5 C${CX-4.5} 10 ${CX-4.8} 15 ${CX-3.2} 19.5" fill="none" stroke="#ffe9a8" stroke-width="1.1" opacity="0.65"/>
+        ${scales}
+        <path d="M${CX-9.5} 24 Q${CX} 28.5 ${CX+9.5} 24 L${CX+8} 29.5 Q${CX} 33 ${CX-8} 29.5 Z" fill="url(#gc-polish-${id})" stroke="#553b0b" stroke-width="0.55"/>
+        <rect x="${CX-6}" y="30.5" width="12" height="4.5" rx="1.4" fill="url(#gc-brass-${id})" stroke="#4e360a" stroke-width="0.5"/>
+      </g>
+      <!-- The brass sphere with both side faces as foreshortened glowing slivers. -->
+      <g filter="url(#gc-shadow-${id})">
+        <ellipse cx="48.5" cy="${CY}" rx="6.5" ry="47" fill="url(#gc-brass-${id})" stroke="#4a3208" stroke-width="0.7"/>
+        <ellipse cx="47.8" cy="${CY}" rx="3.6" ry="41.5" fill="url(#gc-side-opal-${id})" stroke="#8a6420" stroke-width="0.55"/>
+        <ellipse cx="47.8" cy="${CY}" rx="3.6" ry="41.5" fill="url(#gc-bloom-${id})"/>
+        <path d="M45.5 45 L43.5 42 Q42.8 40 44.8 40.3 L46.8 42.5" fill="none" stroke="#7a591a" stroke-width="0.9"/>
+        <ellipse cx="151.5" cy="${CY}" rx="6.5" ry="47" fill="url(#gc-brass-${id})" stroke="#4a3208" stroke-width="0.7"/>
+        <ellipse cx="152.2" cy="${CY}" rx="3.6" ry="41.5" fill="url(#gc-side-opal-${id})" stroke="#8a6420" stroke-width="0.55"/>
+        <ellipse cx="152.2" cy="${CY}" rx="3.6" ry="41.5" fill="url(#gc-bloom-${id})"/>
+        <path d="M154.5 45 L156.5 42 Q157.2 40 155.2 40.3 L153.2 42.5" fill="none" stroke="#7a591a" stroke-width="0.9"/>
+        <circle cx="${CX}" cy="${CY}" r="56.6" fill="url(#gc-brass-${id})" stroke="#3c2906" stroke-width="0.9"/>
+        <path d="M52 51 Q100 26 148 52 M55 45 Q100 21 145 46 M59 39.5 Q100 17 141 40.5" fill="none" stroke="#33230a" stroke-width="0.75" opacity="0.6"/>
+        <path d="M52 51 Q100 27 148 52" fill="none" stroke="#ffeaa4" stroke-width="0.5" opacity="0.5"/>
+        <path d="M62 122 Q100 146 138 122 L134 128 Q100 148 66 128 Z" fill="url(#gc-envrefl-${id})"/>
+        <path d="M56 60 C54 76 55 100 60 116" fill="none" stroke="#fff0b4" stroke-width="2.6" opacity="0.5" stroke-linecap="round"/>
+        <path d="M147 62 C150 78 149 100 144 114" fill="none" stroke="#6b4c12" stroke-width="2.2" opacity="0.6" stroke-linecap="round"/>
+        <circle cx="${CX}" cy="${CY}" r="51.4" fill="url(#gc-polish-${id})" stroke="#5d4110" stroke-width="0.8"/>
+        <circle cx="${CX}" cy="${CY}" r="48.6" fill="#8a651e"/>
+        <circle cx="${CX}" cy="${CY}" r="47.2" fill="#c79c3f"/>
+        <circle cx="${CX}" cy="${CY}" r="45.4" fill="url(#gc-opal-${id})" stroke="#7b5a1a" stroke-width="0.6"/>
+        <circle cx="${CX}" cy="${CY}" r="45.4" fill="url(#gc-bloom-${id})"/>
+      </g>
+      <g clip-path="url(#gc-front-clip-${id})">
+        <ellipse cx="${CX}" cy="${CY-4}" rx="34" ry="30" fill="#fffef6" opacity="0.35"/>
+        ${minuteMarks}${dialNums}
+        <text x="${CX}" y="${CY + 18.5}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="2.0" font-weight="600" letter-spacing="0.2" fill="#5d4c28">SELF WINDING CLOCK CO. INC</text>
+        <text x="${CX}" y="${CY + 21.6}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="1.8" letter-spacing="0.3" fill="#5d4c28">NEW YORK</text>
+        <path d="M60 50 Q95 38 138 52 Q102 46 76 54 Z" fill="url(#gc-glass-${id})" opacity="0.9"/>
+      </g>
+      <!-- Pierced japanned-steel spade hands with scrolled counterweight tails. -->
+      <g filter="url(#gc-hand-shadow-${id})"><g class="hand-hour" data-pivot="${CX} ${CY}">${hand(27.5, 10, 3.4)}</g><g class="hand-min" data-pivot="${CX} ${CY}">${hand(43.5, 8.5, 2.7)}</g></g>
+      <circle cx="${CX}" cy="${CY}" r="3.6" fill="#171208"/>
+      <path d="M${CX-3.2} ${CY} A3.2 3.2 0 0 1 ${CX+3.2} ${CY}" fill="none" stroke="#3d3013" stroke-width="0.6"/>
+      <circle cx="${CX}" cy="${CY}" r="1.5" fill="#0d0a04" stroke="#4d3c14" stroke-width="0.5"/>
+      <!-- Gadrooned collar, acanthus trumpet pedestal, repousse skirt, booth drum. -->
+      <g filter="url(#gc-shadow-${id})">
+        ${gadroons}
+        <ellipse cx="${CX}" cy="144.5" rx="21" ry="3.4" fill="url(#gc-polish-${id})" stroke="#54390c" stroke-width="0.5"/>
+        <path d="M81 146 Q${CX} 152 119 146 L125 166 Q${CX} 173 75 166 Z" fill="url(#gc-brass-${id})" stroke="#54390c" stroke-width="0.6"/>
+        ${acanthus}
+        <path d="M75 166 Q${CX} 175 125 166 L134 172 Q${CX} 181 66 172 Z" fill="url(#gc-polish-${id})" stroke="#4e360a" stroke-width="0.55"/>
+        <path d="M70 169 q4 -3.5 8 0 q4 3.5 8 0 q4 -3.5 8 0 q4 3.5 8 0 q4 -3.5 8 0 q4 3.5 8 0 q4 -3.5 8 0" fill="none" stroke="#7a5716" stroke-width="0.8" opacity="0.85"/>
+        <path d="M30 176 Q${CX} 168 170 176 L170 200 L30 200 Z" fill="url(#gc-brass-${id})" stroke="#4a3208" stroke-width="0.7"/>
+        <rect x="34" y="182" width="132" height="13" rx="1.6" fill="#17130c" stroke="#8a651e" stroke-width="0.6"/>
+        <text x="${CX}" y="191.6" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="8.0" letter-spacing="1.3" fill="#fff3c8" opacity="0.95">Information</text>
+        <circle cx="24" cy="176" r="6.6" fill="url(#gc-opal-${id})" stroke="#8b651c" stroke-width="1.3"/>
+        <circle cx="24" cy="176" r="6.6" fill="url(#gc-bloom-${id})"/>
+        <rect x="22.4" y="182" width="3.2" height="9" fill="url(#gc-polish-${id})" stroke="#5d4110" stroke-width="0.4"/>
+        <circle cx="176" cy="176" r="6.6" fill="url(#gc-opal-${id})" stroke="#8b651c" stroke-width="1.3"/>
+        <circle cx="176" cy="176" r="6.6" fill="url(#gc-bloom-${id})"/>
+        <rect x="174.4" y="182" width="3.2" height="9" fill="url(#gc-polish-${id})" stroke="#5d4110" stroke-width="0.4"/>
+      </g>`;
     }
   };
   LOGOS.grandcentral = () => "";
