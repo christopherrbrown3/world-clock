@@ -10,6 +10,7 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added the Claude Opus 5 standalone checkpoint, written from scratch against the project specification (its own app kernel, SVG drawing kit, and all 62 watch and clock faces re-authored from reference photographs) and froze the Claude Fable 5 page as a benchmark snapshot.
 - Added the Claude Fable 5 standalone checkpoint and froze the Codex 5.6 Terra page as a benchmark snapshot.
 - Redesigned the page for the Fable 5 cycle: midnight-indigo and candlelight-gold identity with Fraunces serif titles, per-city sky-wash card headers that follow local daylight (dawn, day, dusk, starfield night), and a follow-the-sun horizon strip plotting every city on a 24-hour arc.
 - Honored prefers-reduced-motion with whole-second ticks, added a meta description, theme color, and an inline SVG favicon.

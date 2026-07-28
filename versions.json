@@ -8,11 +8,18 @@
   },
   "snapshots": [
     {
+      "id": "claude-opus-5",
+      "label": "Claude Opus 5",
+      "file": "versions/claude-opus-5.html",
+      "snapshotDate": "2026-07-28",
+      "notes": "Claude Opus 5 checkpoint, written from scratch against the project specification rather than derived from an earlier model's page."
+    },
+    {
       "id": "fable-5",
       "label": "Claude Fable 5",
       "file": "versions/fable-5.html",
       "snapshotDate": "2026-07-17",
-      "notes": "Current Claude Fable 5 checkpoint. Refresh this page while Claude Fable 5 is the active model under review."
+      "notes": "Frozen Claude Fable 5 checkpoint, preserved for benchmark viewing."
     },
     {
       "id": "codex-5.6",
