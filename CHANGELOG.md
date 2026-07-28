@@ -10,6 +10,8 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Rewrote the README as a showcase-facing document and refreshed its graphics from the current build: a hero screenshot spanning eight cities and three daylight states, a twenty-four face catalog grid, and a phone-width capture. All three are captured from a shipped page in a real browser rather than mocked up.
+- Fixed a grid regression on the Claude Opus 5 page where a tall face (tower clock, longcase, rectangular watch) let its SVG intrinsic ratio override the square dial well, stretching that card and breaking the row rhythm.
 - Added the Codex 5.6 Sol standalone checkpoint, written from scratch against the project specification and supplied watch references, with its own time engine, interface, SVG geometry library, and all 62 watch and clock faces.
 - Added the Claude Opus 5 standalone checkpoint, written from scratch against the project specification (its own app kernel, SVG drawing kit, and all 62 watch and clock faces re-authored from reference photographs) and froze the Claude Fable 5 page as a benchmark snapshot.
 - Added the Claude Fable 5 standalone checkpoint and froze the Codex 5.6 Terra page as a benchmark snapshot.
