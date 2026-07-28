@@ -1,0 +1,3517 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Clock - Codex 5.6 Sol</title>
+<meta name="description" content="A standalone world clock with 62 live watch and clock faces drawn as inline SVG.">
+<meta name="theme-color" content="#f2efe7">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2315191b'/%3E%3Ccircle cx='50' cy='50' r='31' fill='none' stroke='%23f6b941' stroke-width='5'/%3E%3Cpath d='M50 16v-9M50 93v-9M16 50H7M93 50h-9M26 26l-7-7M81 81l-7-7M74 26l7-7M19 81l7-7' stroke='%23f6b941' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M50 50V30M50 50l15 9' stroke='%23fff' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='4' fill='%23d65d49'/%3E%3C/svg%3E">
+<style>
+:root {
+  color-scheme: light;
+  --paper: #f2efe7;
+  --paper-2: #e7e3da;
+  --surface: #fcfbf7;
+  --ink: #15191b;
+  --muted: #65706f;
+  --line: #cec9bf;
+  --line-dark: #a8aaa4;
+  --solar: #f6b941;
+  --coral: #d65d49;
+  --cyan: #2c9298;
+  --night: #17313a;
+  --focus: #0a6670;
+  --shadow: rgba(30, 35, 36, 0.13);
+  --sans: "Avenir Next", Avenir, "Segoe UI", Helvetica, Arial, sans-serif;
+  --display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-width: 280px;
+  min-height: 100vh;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input { font: inherit; }
+
+button { color: inherit; }
+
+.appbar {
+  position: sticky;
+  z-index: 30;
+  top: 0;
+  display: grid;
+  grid-template-columns: auto minmax(220px, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  min-height: 72px;
+  padding: 12px max(18px, calc((100vw - 1480px) / 2));
+  background: rgba(242, 239, 231, 0.96);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(18px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sunmark {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  flex: none;
+}
+
+.sunmark::before,
+.sunmark::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+.sunmark::after {
+  inset: 12px;
+  border: 0;
+  background: var(--solar);
+}
+
+.brandcopy { min-width: 0; }
+
+.brand h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.38rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.model {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.add-form {
+  position: relative;
+  width: min(560px, 100%);
+  justify-self: center;
+}
+
+.search-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-shell > svg {
+  position: absolute;
+  left: 13px;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  color: var(--muted);
+}
+
+#city-search {
+  width: 100%;
+  height: 46px;
+  padding: 0 42px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-dark);
+  border-radius: 5px;
+  outline: 0;
+}
+
+#city-search::placeholder { color: #737c7a; }
+
+#city-search:focus {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgba(10, 102, 112, 0.14);
+}
+
+.search-results {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 7px);
+  right: 0;
+  left: 0;
+  max-height: min(390px, 58vh);
+  margin: 0;
+  padding: 5px;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line-dark);
+  border-radius: 5px;
+  box-shadow: 0 18px 44px var(--shadow);
+}
+
+.search-results[hidden] { display: none; }
+
+.search-option {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 3px 14px;
+  padding: 10px 11px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.search-option:hover,
+.search-option[aria-selected="true"] {
+  color: #fff;
+  background: var(--night);
+}
+
+.option-city { font-size: 0.9rem; font-weight: 650; }
+.option-country { color: var(--muted); font-size: 0.72rem; }
+.option-offset {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+}
+
+.search-option:hover .option-country,
+.search-option:hover .option-offset,
+.search-option[aria-selected="true"] .option-country,
+.search-option[aria-selected="true"] .option-offset { color: #c8d7d8; }
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.action,
+.icon-action {
+  display: inline-grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--line-dark);
+  border-radius: 5px;
+}
+
+.action {
+  grid-auto-flow: column;
+  gap: 8px;
+  padding: 0 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.action svg,
+.icon-action svg { width: 18px; height: 18px; }
+
+.action:hover,
+.icon-action:hover {
+  color: #fff;
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: min(1480px, 100%);
+  min-height: 48px;
+  margin: 0 auto;
+  padding: 0 18px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+}
+
+.statusbar p { margin: 0; }
+
+.solar-track {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 180px;
+  color: var(--ink);
+}
+
+.solar-track::before {
+  content: "";
+  width: 44px;
+  height: 6px;
+  flex: none;
+  background:
+    linear-gradient(90deg, var(--night) 0 22%, var(--coral) 22% 35%, var(--solar) 35% 72%, var(--cyan) 72% 84%, var(--night) 84%);
+  border-radius: 1px;
+}
+
+.clock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+  gap: 16px;
+  width: min(1480px, 100%);
+  margin: 0 auto;
+  padding: 18px 18px 72px;
+}
+
+.clock-card {
+  --phase-color: var(--solar);
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-width: 0;
+  min-height: 390px;
+  padding: 14px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(44, 47, 45, 0.06);
+}
+
+.clock-card[data-phase="night"] { --phase-color: #496e78; }
+.clock-card[data-phase="dawn"] { --phase-color: var(--coral); }
+.clock-card[data-phase="day"] { --phase-color: var(--solar); }
+.clock-card[data-phase="dusk"] { --phase-color: var(--cyan); }
+
+.clock-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 4px;
+  background: var(--phase-color);
+}
+
+.card-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.place { min-width: 0; }
+
+.place h2 {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--display);
+  font-size: 1.18rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.place p,
+.card-time p { margin: 4px 0 0; }
+
+.country,
+.offset {
+  color: var(--muted);
+  font-size: 0.67rem;
+  line-height: 1.2;
+}
+
+.card-time { text-align: right; }
+
+.digital-time {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.offset {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.watch-stage {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1;
+  margin: 8px 0 7px;
+  overflow: hidden;
+}
+
+.watch-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.card-foot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 8px;
+  min-height: 54px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.face-name {
+  margin: 0;
+  color: #303739;
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.local-date {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  line-height: 1.25;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.card-actions .icon-action {
+  border-color: transparent;
+}
+
+.card-actions .icon-action:hover { border-color: var(--ink); }
+
+.empty {
+  grid-column: 1 / -1;
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  border: 1px dashed var(--line-dark);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(10, 102, 112, 0.35);
+  outline-offset: 2px;
+}
+
+@media (max-width: 820px) {
+  .appbar {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .add-form {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .action span { display: none; }
+  .action { padding: 0; }
+}
+
+@media (max-width: 520px) {
+  .clock-grid {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 12px 12px 56px;
+  }
+
+  .statusbar { padding: 0 12px; }
+  .status-zone { display: none; }
+  .brand h1 { font-size: 1.22rem; }
+  .clock-card { min-height: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+</style>
+</head>
+<body>
+<header class="appbar">
+  <div class="brand">
+    <span class="sunmark" aria-hidden="true"></span>
+    <div class="brandcopy">
+      <h1>World Clock</h1>
+      <p class="model">Codex 5.6 Sol</p>
+    </div>
+  </div>
+
+  <form class="add-form" id="add-form" role="search" autocomplete="off">
+    <label class="sr-only" for="city-search">Add a city</label>
+    <div class="search-shell">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+        <path d="m20 20-4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <input id="city-search" type="search" placeholder="Add city" role="combobox"
+        aria-autocomplete="list" aria-expanded="false" aria-controls="city-results">
+    </div>
+    <ul class="search-results" id="city-results" role="listbox" aria-label="City matches" hidden></ul>
+  </form>
+
+  <div class="toolbar">
+    <button class="action" id="shuffle-all" type="button" title="Shuffle all faces">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Shuffle</span>
+    </button>
+  </div>
+</header>
+
+<div class="statusbar">
+  <p class="solar-track"><span id="summary">7 cities / 62 faces</span></p>
+  <p class="status-zone" id="home-zone"></p>
+</div>
+
+<main class="clock-grid" id="clock-grid"></main>
+<p class="sr-only" id="live-region" role="status" aria-live="polite"></p>
+
+<script>
+"use strict";
+(() => {
+  const NS = "http://www.w3.org/2000/svg";
+
+  const H = {
+    n(value) {
+      const rounded = Math.round(value * 1000) / 1000;
+      return Object.is(rounded, -0) ? 0 : rounded;
+    },
+
+    esc(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    },
+
+    point(angle, radius, cx = 50, cy = 50) {
+      const rad = angle * Math.PI / 180;
+      return [
+        this.n(cx + Math.sin(rad) * radius),
+        this.n(cy - Math.cos(rad) * radius)
+      ];
+    },
+
+    polar(angle, radius, cx = 50, cy = 50) {
+      return this.point(angle, radius, cx, cy).join(",");
+    },
+
+    ticks({
+      count = 60, outer = 40, inner = 38, majorEvery = 5,
+      majorInner = 35.5, width = 0.45, majorWidth = 1.1,
+      color = "#111", cx = 50, cy = 50, start = 0, skip = () => false
+    } = {}) {
+      let out = "";
+      for (let i = 0; i < count; i += 1) {
+        if (skip(i)) continue;
+        const angle = start + i * 360 / count;
+        const major = majorEvery > 0 && i % majorEvery === 0;
+        const a = this.point(angle, outer, cx, cy);
+        const b = this.point(angle, major ? majorInner : inner, cx, cy);
+        out += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" ` +
+          `stroke="${color}" stroke-width="${major ? majorWidth : width}" stroke-linecap="round"/>`;
+      }
+      return out;
+    },
+
+    numerals({
+      labels, radius = 32, size = 7, color = "#111", family = "Arial, sans-serif",
+      weight = 600, cx = 50, cy = 50, rotate = false, start = 0, dy = 0,
+      skip = () => false
+    }) {
+      let out = "";
+      labels.forEach((label, index) => {
+        if (label === "" || label == null || skip(index)) return;
+        const angle = start + index * 360 / labels.length;
+        const [x, y] = this.point(angle, radius, cx, cy);
+        const transform = rotate ? ` transform="rotate(${angle} ${x} ${y})"` : "";
+        out += `<text x="${x}" y="${this.n(y + dy)}" text-anchor="middle" ` +
+          `dominant-baseline="middle" font-family="${family}" font-size="${size}" ` +
+          `font-weight="${weight}" fill="${color}"${transform}>${this.esc(label)}</text>`;
+      });
+      return out;
+    },
+
+    text(x, y, value, {
+      size = 4, color = "#111", family = "Arial, sans-serif", weight = 500,
+      anchor = "middle", spacing = 0, transform = "", opacity = 1, extra = ""
+    } = {}) {
+      return `<text x="${x}" y="${y}" text-anchor="${anchor}" dominant-baseline="middle" ` +
+        `font-family="${family}" font-size="${size}" font-weight="${weight}" fill="${color}" ` +
+        `letter-spacing="${spacing}" opacity="${opacity}"${transform ? ` transform="${transform}"` : ""} ` +
+        `${extra}>${this.esc(value)}</text>`;
+    },
+
+    arc(cx, cy, radius, from, to) {
+      const p1 = this.point(from, radius, cx, cy);
+      const p2 = this.point(to, radius, cx, cy);
+      const span = ((to - from) % 360 + 360) % 360;
+      return `M${p1[0]} ${p1[1]} A${radius} ${radius} 0 ${span > 180 ? 1 : 0} 1 ${p2[0]} ${p2[1]}`;
+    },
+
+    sector(cx, cy, radius, from, to) {
+      const p1 = this.point(from, radius, cx, cy);
+      const p2 = this.point(to, radius, cx, cy);
+      const span = ((to - from) % 360 + 360) % 360;
+      return `M${cx} ${cy} L${p1[0]} ${p1[1]} A${radius} ${radius} 0 ${span > 180 ? 1 : 0} 1 ${p2[0]} ${p2[1]} Z`;
+    },
+
+    defs(id, { steel = true, gold = false, dial = "#111" } = {}) {
+      return `<defs>
+        ${steel ? `<linearGradient id="${id}-steel" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#626a70"/><stop offset=".18" stop-color="#f8fbfc"/>
+          <stop offset=".43" stop-color="#929ba1"/><stop offset=".7" stop-color="#f3f5f4"/>
+          <stop offset="1" stop-color="#555e64"/>
+        </linearGradient>` : ""}
+        ${gold ? `<linearGradient id="${id}-gold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#7f451c"/><stop offset=".22" stop-color="#f6d79a"/>
+          <stop offset=".52" stop-color="#b86c32"/><stop offset=".77" stop-color="#ffe3a9"/>
+          <stop offset="1" stop-color="#7a3f1e"/>
+        </linearGradient>` : ""}
+        <radialGradient id="${id}-dial" cx=".36" cy=".28" r=".72">
+          <stop offset="0" stop-color="${dial}"/><stop offset=".72" stop-color="${dial}"/>
+          <stop offset="1" stop-color="#050708"/>
+        </radialGradient>
+        <radialGradient id="${id}-glass" cx=".28" cy=".18" r=".85">
+          <stop offset="0" stop-color="#fff" stop-opacity=".18"/>
+          <stop offset=".42" stop-color="#fff" stop-opacity=".02"/>
+          <stop offset="1" stop-color="#2b4952" stop-opacity=".08"/>
+        </radialGradient>
+        <filter id="${id}-shadow" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="1.5" stdDeviation="1.7" flood-color="#000" flood-opacity=".28"/>
+        </filter>
+      </defs>`;
+    },
+
+    roundCase(id, {
+      strap = "#17191a", caseFill = null, bezel = "#c5cbce", dial = "#101314",
+      dialRadius = 36, bezelRadius = 43, crown = true, bracelet = false, gold = false
+    } = {}) {
+      const metal = caseFill || `url(#${id}-${gold ? "gold" : "steel"})`;
+      let body = "";
+      if (bracelet) {
+        for (let y = -8; y < 20; y += 7) {
+          body += `<rect x="35" y="${y}" width="30" height="6.4" rx="1.2" fill="${metal}" stroke="#545c61" stroke-width=".35"/>`;
+        }
+        for (let y = 81; y < 108; y += 7) {
+          body += `<rect x="35" y="${y}" width="30" height="6.4" rx="1.2" fill="${metal}" stroke="#545c61" stroke-width=".35"/>`;
+        }
+      } else {
+        body += `<path d="M36 -5 H64 L67 22 H33 Z M33 78 H67 L64 105 H36 Z" fill="${strap}"/>`;
+        body += `<path d="M39 -5H42V19H39ZM58 -5H61V19H58ZM39 81H42V105H39ZM58 81H61V105H58Z" fill="#fff" opacity=".09"/>`;
+      }
+      body += `<path d="M29 16 Q50 6 71 16 L82 28 Q91 50 82 72 L71 84 Q50 94 29 84 L18 72 Q9 50 18 28 Z" fill="${metal}" stroke="#50585d" stroke-width=".75"/>`;
+      if (crown) {
+        body += `<rect x="90.5" y="43.5" width="5.5" height="13" rx="2.2" fill="${metal}" stroke="#535b60" stroke-width=".7"/>`;
+        body += Array.from({ length: 5 }, (_, i) =>
+          `<line x1="${92 + i}" y1="45" x2="${92 + i}" y2="55" stroke="#626a6f" stroke-width=".3"/>`
+        ).join("");
+      }
+      body += `<circle cx="50" cy="50" r="${bezelRadius}" fill="${bezel}" stroke="#4f565a" stroke-width=".65"/>`;
+      body += `<circle cx="50" cy="50" r="${dialRadius + 1.7}" fill="#70787d"/>`;
+      body += `<circle cx="50" cy="50" r="${dialRadius}" fill="url(#${id}-dial)"/>`;
+      return body;
+    },
+
+    batonHands({
+      hour = 21, minute = 29, second = 32, lume = "#e9f3df",
+      metal = "#d8dde0", outline = "#4c5357", seconds = "#df493d",
+      centerX = 50, centerY = 50, secondHand = true, broad = false
+    } = {}) {
+      const hw = broad ? 2.8 : 2.1;
+      const mw = broad ? 2.3 : 1.65;
+      return `<g data-hand="hour" data-cx="${centerX}" data-cy="${centerY}" filter="none">
+          <path d="M${centerX - hw} ${centerY + 5} L${centerX - hw * .72} ${centerY - hour + 4}
+            L${centerX} ${centerY - hour} L${centerX + hw * .72} ${centerY - hour + 4}
+            L${centerX + hw} ${centerY + 5} Z" fill="${metal}" stroke="${outline}" stroke-width=".45"/>
+          <path d="M${centerX - hw * .45} ${centerY - 3} L${centerX - hw * .32} ${centerY - hour + 5}
+            L${centerX} ${centerY - hour + 2} L${centerX + hw * .32} ${centerY - hour + 5}
+            L${centerX + hw * .45} ${centerY - 3} Z" fill="${lume}"/>
+        </g>
+        <g data-hand="minute" data-cx="${centerX}" data-cy="${centerY}" filter="none">
+          <path d="M${centerX - mw} ${centerY + 6} L${centerX - mw * .65} ${centerY - minute + 3}
+            L${centerX} ${centerY - minute} L${centerX + mw * .65} ${centerY - minute + 3}
+            L${centerX + mw} ${centerY + 6} Z" fill="${metal}" stroke="${outline}" stroke-width=".4"/>
+          <path d="M${centerX - mw * .4} ${centerY - 4} L${centerX - mw * .3} ${centerY - minute + 4}
+            L${centerX} ${centerY - minute + 2} L${centerX + mw * .3} ${centerY - minute + 4}
+            L${centerX + mw * .4} ${centerY - 4} Z" fill="${lume}"/>
+        </g>
+        ${secondHand ? `<g data-hand="second" data-cx="${centerX}" data-cy="${centerY}">
+          <line x1="${centerX}" y1="${centerY + 8}" x2="${centerX}" y2="${centerY - second}"
+            stroke="${seconds}" stroke-width=".65"/>
+          <circle cx="${centerX}" cy="${centerY - second + 2}" r="1.35" fill="none" stroke="${seconds}" stroke-width=".55"/>
+        </g>` : ""}
+        <circle cx="${centerX}" cy="${centerY}" r="2.25" fill="${metal}" stroke="${outline}" stroke-width=".5"/>
+        <circle cx="${centerX}" cy="${centerY}" r=".75" fill="${outline}"/>`;
+    },
+
+    leafHands({
+      hour = 20, minute = 29, color = "#252423", centerX = 50, centerY = 50,
+      second = null, secondColor = color
+    } = {}) {
+      return `<g data-hand="hour" data-cx="${centerX}" data-cy="${centerY}">
+          <path d="M${centerX} ${centerY + 4} C${centerX - 2.1} ${centerY - 3},
+            ${centerX - 2.1} ${centerY - hour + 5},${centerX} ${centerY - hour}
+            C${centerX + 2.1} ${centerY - hour + 5},${centerX + 2.1} ${centerY - 3},${centerX} ${centerY + 4}Z" fill="${color}"/>
+        </g>
+        <g data-hand="minute" data-cx="${centerX}" data-cy="${centerY}">
+          <path d="M${centerX} ${centerY + 5} C${centerX - 1.55} ${centerY - 4},
+            ${centerX - 1.3} ${centerY - minute + 5},${centerX} ${centerY - minute}
+            C${centerX + 1.3} ${centerY - minute + 5},${centerX + 1.55} ${centerY - 4},${centerX} ${centerY + 5}Z" fill="${color}"/>
+        </g>
+        ${second ? `<g data-hand="second" data-cx="${centerX}" data-cy="${centerY}">
+          <line x1="${centerX}" y1="${centerY + 7}" x2="${centerX}" y2="${centerY - second}" stroke="${secondColor}" stroke-width=".55"/>
+        </g>` : ""}
+        <circle cx="${centerX}" cy="${centerY}" r="1.6" fill="${color}"/>`;
+    },
+
+    subdial(cx, cy, radius, {
+      color = "#222", fill = "none", hand = null, labels = [], ring = true,
+      handColor = color
+    } = {}) {
+      return `${ring ? `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="${fill}" stroke="${color}" stroke-width=".55"/>` : ""}
+        ${this.ticks({ count: 20, outer: radius - .6, inner: radius - 1.5, majorEvery: 5,
+          majorInner: radius - 2.5, width: .25, majorWidth: .5, color, cx, cy })}
+        ${labels.length ? this.numerals({ labels, radius: radius - 3.2, size: 2.25, color, cx, cy, weight: 600 }) : ""}
+        ${hand ? `<g data-hand="${hand}" data-cx="${cx}" data-cy="${cy}">
+          <line x1="${cx}" y1="${cy + 2}" x2="${cx}" y2="${cy - radius + 2.5}" stroke="${handColor}" stroke-width=".6"/>
+          <circle cx="${cx}" cy="${cy}" r="1" fill="${handColor}"/>
+        </g>` : ""}`;
+    }
+  };
+
+  const CITIES = [
+    ["pago-pago", "Pago Pago", "American Samoa", "Pacific/Pago_Pago"],
+    ["honolulu", "Honolulu", "United States", "Pacific/Honolulu"],
+    ["anchorage", "Anchorage", "United States", "America/Anchorage"],
+    ["vancouver", "Vancouver", "Canada", "America/Vancouver"],
+    ["san-francisco", "San Francisco", "United States", "America/Los_Angeles"],
+    ["los-angeles", "Los Angeles", "United States", "America/Los_Angeles"],
+    ["seattle", "Seattle", "United States", "America/Los_Angeles"],
+    ["phoenix", "Phoenix", "United States", "America/Phoenix"],
+    ["denver", "Denver", "United States", "America/Denver"],
+    ["mexico-city", "Mexico City", "Mexico", "America/Mexico_City"],
+    ["chicago", "Chicago", "United States", "America/Chicago"],
+    ["dallas", "Dallas", "United States", "America/Chicago"],
+    ["bogota", "Bogota", "Colombia", "America/Bogota"],
+    ["lima", "Lima", "Peru", "America/Lima"],
+    ["new-york", "New York", "United States", "America/New_York"],
+    ["washington", "Washington, D.C.", "United States", "America/New_York"],
+    ["boston", "Boston", "United States", "America/New_York"],
+    ["miami", "Miami", "United States", "America/New_York"],
+    ["toronto", "Toronto", "Canada", "America/Toronto"],
+    ["caracas", "Caracas", "Venezuela", "America/Caracas"],
+    ["santiago", "Santiago", "Chile", "America/Santiago"],
+    ["halifax", "Halifax", "Canada", "America/Halifax"],
+    ["st-johns", "St. John's", "Canada", "America/St_Johns"],
+    ["buenos-aires", "Buenos Aires", "Argentina", "America/Argentina/Buenos_Aires"],
+    ["sao-paulo", "Sao Paulo", "Brazil", "America/Sao_Paulo"],
+    ["azores", "Ponta Delgada", "Azores", "Atlantic/Azores"],
+    ["reykjavik", "Reykjavik", "Iceland", "Atlantic/Reykjavik"],
+    ["london", "London", "United Kingdom", "Europe/London"],
+    ["dublin", "Dublin", "Ireland", "Europe/Dublin"],
+    ["lisbon", "Lisbon", "Portugal", "Europe/Lisbon"],
+    ["casablanca", "Casablanca", "Morocco", "Africa/Casablanca"],
+    ["paris", "Paris", "France", "Europe/Paris"],
+    ["madrid", "Madrid", "Spain", "Europe/Madrid"],
+    ["amsterdam", "Amsterdam", "Netherlands", "Europe/Amsterdam"],
+    ["berlin", "Berlin", "Germany", "Europe/Berlin"],
+    ["zurich", "Zurich", "Switzerland", "Europe/Zurich"],
+    ["glashutte", "Glashutte", "Germany", "Europe/Berlin"],
+    ["milan", "Milan", "Italy", "Europe/Rome"],
+    ["prague", "Prague", "Czechia", "Europe/Prague"],
+    ["stockholm", "Stockholm", "Sweden", "Europe/Stockholm"],
+    ["cape-town", "Cape Town", "South Africa", "Africa/Johannesburg"],
+    ["cairo", "Cairo", "Egypt", "Africa/Cairo"],
+    ["athens", "Athens", "Greece", "Europe/Athens"],
+    ["helsinki", "Helsinki", "Finland", "Europe/Helsinki"],
+    ["istanbul", "Istanbul", "Turkiye", "Europe/Istanbul"],
+    ["jerusalem", "Jerusalem", "Israel", "Asia/Jerusalem"],
+    ["nairobi", "Nairobi", "Kenya", "Africa/Nairobi"],
+    ["moscow", "Moscow", "Russia", "Europe/Moscow"],
+    ["riyadh", "Riyadh", "Saudi Arabia", "Asia/Riyadh"],
+    ["tehran", "Tehran", "Iran", "Asia/Tehran"],
+    ["dubai", "Dubai", "United Arab Emirates", "Asia/Dubai"],
+    ["baku", "Baku", "Azerbaijan", "Asia/Baku"],
+    ["kabul", "Kabul", "Afghanistan", "Asia/Kabul"],
+    ["karachi", "Karachi", "Pakistan", "Asia/Karachi"],
+    ["new-delhi", "New Delhi", "India", "Asia/Kolkata"],
+    ["mumbai", "Mumbai", "India", "Asia/Kolkata"],
+    ["kathmandu", "Kathmandu", "Nepal", "Asia/Kathmandu"],
+    ["dhaka", "Dhaka", "Bangladesh", "Asia/Dhaka"],
+    ["yangon", "Yangon", "Myanmar", "Asia/Yangon"],
+    ["bangkok", "Bangkok", "Thailand", "Asia/Bangkok"],
+    ["jakarta", "Jakarta", "Indonesia", "Asia/Jakarta"],
+    ["singapore", "Singapore", "Singapore", "Asia/Singapore"],
+    ["hong-kong", "Hong Kong", "Hong Kong SAR", "Asia/Hong_Kong"],
+    ["shanghai", "Shanghai", "China", "Asia/Shanghai"],
+    ["taipei", "Taipei", "Taiwan", "Asia/Taipei"],
+    ["manila", "Manila", "Philippines", "Asia/Manila"],
+    ["perth", "Perth", "Australia", "Australia/Perth"],
+    ["seoul", "Seoul", "South Korea", "Asia/Seoul"],
+    ["tokyo", "Tokyo", "Japan", "Asia/Tokyo"],
+    ["adelaide", "Adelaide", "Australia", "Australia/Adelaide"],
+    ["darwin", "Darwin", "Australia", "Australia/Darwin"],
+    ["brisbane", "Brisbane", "Australia", "Australia/Brisbane"],
+    ["sydney", "Sydney", "Australia", "Australia/Sydney"],
+    ["melbourne", "Melbourne", "Australia", "Australia/Melbourne"],
+    ["noumea", "Noumea", "New Caledonia", "Pacific/Noumea"],
+    ["auckland", "Auckland", "New Zealand", "Pacific/Auckland"],
+    ["suva", "Suva", "Fiji", "Pacific/Fiji"],
+    ["apia", "Apia", "Samoa", "Pacific/Apia"],
+    ["kiritimati", "Kiritimati", "Kiribati", "Pacific/Kiritimati"]
+  ].map(([id, name, country, zone]) => ({ id, name, country, zone }));
+
+  const DEFAULT_CITY_IDS = [
+    "los-angeles", "new-york", "london", "zurich", "dubai", "tokyo", "sydney"
+  ];
+
+  const CLOCK = (() => {
+    const formatters = new Map();
+    const WEEKDAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+      "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+    function formatter(zone) {
+      if (!formatters.has(zone)) {
+        formatters.set(zone, new Intl.DateTimeFormat("en-US", {
+          timeZone: zone,
+          hourCycle: "h23",
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+          weekday: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        }));
+      }
+      return formatters.get(zone);
+    }
+
+    function wall(zone, date) {
+      const result = {};
+      formatter(zone).formatToParts(date).forEach((part) => {
+        if (part.type !== "literal") result[part.type] = part.value;
+      });
+      const weekday = WEEKDAYS.indexOf(String(result.weekday).toUpperCase());
+      return {
+        year: Number(result.year),
+        month: Number(result.month) - 1,
+        date: Number(result.day),
+        weekday: weekday < 0 ? 0 : weekday,
+        hour: Number(result.hour) % 24,
+        minute: Number(result.minute),
+        second: Number(result.second),
+        ms: date.getMilliseconds()
+      };
+    }
+
+    function offset(zone, date) {
+      const value = wall(zone, date);
+      const wallAsUtc = Date.UTC(value.year, value.month, value.date,
+        value.hour, value.minute, value.second);
+      const instant = date.getTime() - date.getMilliseconds();
+      return Math.round((wallAsUtc - instant) / 60000);
+    }
+
+    function pad(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function offsetLabel(minutes) {
+      const sign = minutes < 0 ? "-" : "+";
+      const absolute = Math.abs(minutes);
+      return `UTC${sign}${pad(Math.floor(absolute / 60))}:${pad(absolute % 60)}`;
+    }
+
+    function snapshot(zone, date, cadence) {
+      const value = wall(zone, date);
+      const rawSecond = value.second + value.ms / 1000;
+      let second = value.second;
+      if (cadence === "sweep") second = Math.floor(rawSecond * 8) / 8;
+      if (cadence === "glide") second = rawSecond;
+      if (cadence === "mondaine") second = rawSecond >= 58 ? 60 : rawSecond * 60 / 58;
+      const days = (date.getTime() - Date.UTC(2000, 0, 6, 18, 14)) / 86400000;
+      const moon = ((days / 29.530588853) % 1 + 1) % 1;
+      return {
+        ...value,
+        second,
+        hourAngle: ((value.hour % 12) + value.minute / 60 + value.second / 3600) * 30,
+        minuteAngle: (value.minute + value.second / 60) * 6,
+        secondAngle: second * 6,
+        gmtAngle: (value.hour + value.minute / 60) * 15,
+        moon,
+        night: value.hour < 6 || value.hour >= 20
+      };
+    }
+
+    function channel(name, value) {
+      const h12 = value.hour % 12 || 12;
+      const daysInMonth = new Date(Date.UTC(value.year, value.month + 1, 0)).getUTCDate();
+      switch (name) {
+        case "date": return String(value.date);
+        case "date2": return pad(value.date);
+        case "date-tens": return String(Math.floor(value.date / 10));
+        case "date-ones": return String(value.date % 10);
+        case "day": return WEEKDAYS[value.weekday];
+        case "day-date": return `${WEEKDAYS[value.weekday].slice(0, 2)} ${value.date}`;
+        case "month": return MONTHS[value.month];
+        case "month-number": return String(value.month + 1);
+        case "month-date": return `${value.month + 1}-${value.date}`;
+        case "year": return String(value.year);
+        case "hour12": return String(h12);
+        case "hour24": return pad(value.hour);
+        case "minute": return pad(value.minute);
+        case "second": return pad(Math.floor(value.second) % 60);
+        case "ampm": return value.hour < 12 ? "AM" : "PM";
+        case "digital12": return `${h12}:${pad(value.minute)}`;
+        case "digital24": return `${pad(value.hour)}:${pad(value.minute)}`;
+        case "digital-seconds": return `${pad(value.hour)}:${pad(value.minute)}:${pad(Math.floor(value.second) % 60)}`;
+        case "days-in-month": return String(daysInMonth);
+        default: return "";
+      }
+    }
+
+    return { wall, offset, offsetLabel, snapshot, channel, pad, WEEKDAYS, MONTHS };
+  })();
+
+  const FACES = {};
+  const defineFace = (key, name, cadence, draw) => {
+    FACES[key] = { key, name, cadence, draw };
+  };
+
+  /* ------------------------------------------------------------------------
+     Face drawing utilities. These are geometry helpers, not face templates:
+     each object below still owns its case, dial, markers and complications.
+     ------------------------------------------------------------------------ */
+  function appliedMarkers({
+    radius = 29.5, length = 6, width = 2.2, fill = "#edf3e7",
+    stroke = "#aeb6b9", skip = [], circles = false, doubleTwelve = false
+  } = {}) {
+    let out = "";
+    for (let index = 0; index < 12; index += 1) {
+      if (skip.includes(index)) continue;
+      const angle = index * 30;
+      if (circles && ![0, 3, 6, 9].includes(index)) {
+        const [x, y] = H.point(angle, radius + length / 2 - 1);
+        out += `<circle cx="${x}" cy="${y}" r="${width * .72}" fill="${fill}" stroke="${stroke}" stroke-width=".55"/>`;
+      } else if (index === 0 && doubleTwelve) {
+        out += `<path d="M46.2 19.5 49.2 13.5 50 19.5 50.8 13.5 53.8 19.5Z"
+          fill="${fill}" stroke="${stroke}" stroke-width=".55"/>`;
+      } else {
+        const markerLength = [0, 3, 6, 9].includes(index) ? length + 1.5 : length;
+        out += `<rect x="${50 - width / 2}" y="${50 - radius - markerLength / 2}"
+          width="${width}" height="${markerLength}" rx="${Math.min(width / 2, .8)}"
+          fill="${fill}" stroke="${stroke}" stroke-width=".5"
+          transform="rotate(${angle} 50 50)"/>`;
+      }
+    }
+    return out;
+  }
+
+  function bezelLabels(labels, {
+    radius = 39.5, size = 3.8, color = "#e7ece7", start = 0,
+    family = "Arial, sans-serif", weight = 700
+  } = {}) {
+    return labels.map((label, index) => {
+      if (!label) return "";
+      const angle = start + index * 360 / labels.length;
+      const [x, y] = H.point(angle, radius);
+      return H.text(x, y, label, {
+        size, color, family, weight, transform: `rotate(${angle} ${x} ${y})`
+      });
+    }).join("");
+  }
+
+  function crownMark(x = 50, y = 30, color = "#dce2e3", scale = 1) {
+    return `<g transform="translate(${x} ${y}) scale(${scale})" fill="${color}">
+      <circle cx="-4.6" cy="-3.4" r=".7"/><circle cx="-2.3" cy="-4.5" r=".7"/>
+      <circle cx="0" cy="-5" r=".75"/><circle cx="2.3" cy="-4.5" r=".7"/>
+      <circle cx="4.6" cy="-3.4" r=".7"/>
+      <path d="M-4.8-2.8-3.1 2.4H3.1L4.8-2.8 2.2.5 0-3.9-2.2.5Z"/>
+      <rect x="-3.3" y="2.1" width="6.6" height="1.2" rx=".45"/>
+    </g>`;
+  }
+
+  function dateWindow(x, y, {
+    width = 9, height = 6, fill = "#f8f6ed", color = "#111",
+    border = "#9ba0a1", channel = "date", size = 3.8, radius = .5
+  } = {}) {
+    return `<rect x="${x - width / 2}" y="${y - height / 2}" width="${width}" height="${height}"
+      rx="${radius}" fill="${fill}" stroke="${border}" stroke-width=".6"/>
+      ${H.text(x, y + .15, "28", {
+        size, color, family: "Arial, sans-serif", weight: 600,
+        extra: `data-text="${channel}"`
+      })}`;
+  }
+
+  function screw(x, y, radius = 1.7, color = "#b9c0c4", angle = 0) {
+    return `<circle cx="${x}" cy="${y}" r="${radius}" fill="${color}" stroke="#565d61" stroke-width=".45"/>
+      <line x1="${x - radius * .62}" y1="${y}" x2="${x + radius * .62}" y2="${y}"
+        stroke="#3f4548" stroke-width=".5" transform="rotate(${angle} ${x} ${y})"/>`;
+  }
+
+  function tachymeter(id, labels = ["60", "500", "240", "160", "120", "100", "80"]) {
+    const angles = [0, 37, 80, 125, 172, 220, 285];
+    return `<circle cx="50" cy="50" r="42.2" fill="#080a0b" stroke="#596166" stroke-width=".65"/>
+      ${angles.map((angle, index) => {
+        const [x, y] = H.point(angle, 39.6);
+        return H.text(x, y, labels[index], {
+          size: 2.55, color: "#f3f1e9", family: "Arial, sans-serif", weight: 700,
+          transform: `rotate(${angle} ${x} ${y})`
+        });
+      }).join("")}
+      ${H.ticks({ count: 60, outer: 41.2, inner: 40.4, majorEvery: 5,
+        majorInner: 39.9, width: .25, majorWidth: .4, color: "#f3f1e9" })}`;
+  }
+
+  function mercedesHands() {
+    return `<g data-hand="hour" data-cx="50" data-cy="50">
+        <path d="M48.6 54V43L46.1 37.3 50 31.5 53.9 37.3 51.4 43V54Z"
+          fill="#d7dde0" stroke="#596166" stroke-width=".55"/>
+        <circle cx="50" cy="37.5" r="3.15" fill="#d8eadc" stroke="#596166" stroke-width=".55"/>
+        <path d="M47.5 35.6 52.5 39.5M52.5 35.6 47.5 39.5M50 34.4V40.6"
+          stroke="#596166" stroke-width=".42"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="50">
+        <path d="M48.65 55V28L50 20 51.35 28V55Z" fill="#d7dde0"
+          stroke="#596166" stroke-width=".55"/>
+        <path d="M49.25 47V28.2L50 23.5 50.75 28.2V47Z" fill="#d8eadc"/>
+      </g>
+      <g data-hand="second" data-cx="50" data-cy="50">
+        <line x1="50" y1="59" x2="50" y2="18.5" stroke="#d7dde0" stroke-width=".65"/>
+        <circle cx="50" cy="24.5" r="1.65" fill="#d8eadc" stroke="#596166" stroke-width=".45"/>
+      </g>
+      <circle cx="50" cy="50" r="2.35" fill="#d7dde0" stroke="#596166" stroke-width=".55"/>`;
+  }
+
+  function wavePattern(color = "#6db1df") {
+    let out = "";
+    for (let y = 29; y <= 72; y += 5.3) {
+      out += `<path d="M19 ${y} C26 ${y - 2.4} 31 ${y + 2.4} 38 ${y}
+        S50 ${y - 2.4} 57 ${y} 69 ${y + 2.4} 81 ${y}"
+        fill="none" stroke="${color}" stroke-width=".5" opacity=".55"/>`;
+    }
+    return out;
+  }
+
+  function romanTrack({
+    left = 28, top = 25, right = 72, bottom = 75, color = "#20252a"
+  } = {}) {
+    const labels = [
+      ["XII", 50, top], ["I", 61, top + 2], ["II", right - 3, top + 9],
+      ["III", right, 50], ["IIII", right - 3, bottom - 9], ["V", 61, bottom - 2],
+      ["VI", 50, bottom], ["VII", 39, bottom - 2], ["VIII", left + 3, bottom - 9],
+      ["IX", left, 50], ["X", left + 3, top + 9], ["XI", 39, top + 2]
+    ];
+    return labels.map(([label, x, y]) => H.text(x, y, label, {
+      size: 5.3, color, family: "Georgia, serif", weight: 600
+    })).join("");
+  }
+
+  /* Rolex Submariner Date 126610LN. The supplied references establish the
+     broad 41 mm Oyster case, Maxi markers, black Cerachrom scale and Cyclops. */
+  defineFace("submariner", "Rolex Submariner Date 126610LN", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#080b0c" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "#080a0a", dial: "#080b0c", dialRadius: 33.4 })}
+      <circle cx="50" cy="50" r="41.1" fill="#080a0a" stroke="#8b9295" stroke-width=".55"/>
+      <path d="${H.sector(50, 50, 41.1, -7, 7)}" fill="#080a0a"/>
+      <path d="M50 9.8 46.8 15.2H53.2Z" fill="#e9efeb"/>
+      <circle cx="50" cy="13.1" r="1.05" fill="#d8eadc" stroke="#a8ada9" stroke-width=".35"/>
+      ${bezelLabels(["", "10", "20", "30", "40", "50"], { radius: 38.6, size: 3.45 })}
+      ${H.ticks({ count: 60, outer: 40, inner: 39.1, majorEvery: 5, majorInner: 38.4,
+        color: "#d9ded9", width: .24, majorWidth: .45, skip: (i) => i === 0 })}
+      <circle cx="50" cy="50" r="34.2" fill="#303638"/>
+      <circle cx="50" cy="50" r="33.2" fill="url(#${id}-dial)"/>
+      ${appliedMarkers({ radius: 27.8, length: 5.8, width: 2.4,
+        fill: "#dcebdd", stroke: "#d8dcdd", skip: [3], circles: true, doubleTwelve: true })}
+      ${crownMark(50, 29.1, "#e8ecea", .62)}
+      ${H.text(50, 34.3, "ROLEX", { size: 3.5, color: "#e9ece9", family: "Georgia, serif", weight: 700, spacing: .25 })}
+      ${H.text(50, 37.8, "OYSTER PERPETUAL DATE", { size: 1.45, color: "#d9dedb", weight: 600, spacing: .12 })}
+      ${H.text(50, 65.9, "SUBMARINER", { size: 2.15, color: "#e5e8e5", weight: 700, spacing: .18 })}
+      ${H.text(50, 69.1, "1000ft = 300m", { size: 1.5, color: "#d7dcda", weight: 500, spacing: .12 })}
+      ${dateWindow(72.2, 50, { width: 8.2, height: 6.6, size: 3.8 })}
+      <ellipse cx="72.2" cy="50" rx="6.4" ry="5.2" fill="#fff" opacity=".07" stroke="#d9eef0" stroke-width=".7"/>
+      ${mercedesHands()}
+      <circle cx="50" cy="50" r="33.2" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Omega Speedmaster Professional, Hesalite ref. 310.30.42.50.01.001. */
+  defineFace("speedmaster", "Omega Speedmaster Moonwatch Professional 310.30.42.50.01.001", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#111313" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "#090a0a", dial: "#111313", dialRadius: 33.6 })}
+      <rect x="91" y="37" width="5.5" height="7" rx="2" fill="url(#${id}-steel)"/>
+      <rect x="91" y="56" width="5.5" height="7" rx="2" fill="url(#${id}-steel)"/>
+      ${tachymeter(id)}
+      <circle cx="50" cy="50" r="33.6" fill="#111313"/>
+      ${H.ticks({ count: 60, outer: 32.6, inner: 30.9, majorEvery: 5, majorInner: 29.7,
+        color: "#f1eee4", width: .3, majorWidth: .65 })}
+      ${appliedMarkers({ radius: 27.5, length: 5.6, width: 1.15,
+        fill: "#e8e4d6", stroke: "#e8e4d6", skip: [3, 6, 9] })}
+      ${H.text(50, 30, "OMEGA", { size: 3.2, color: "#eeeae1", family: "Arial, sans-serif", weight: 700, spacing: .15 })}
+      ${H.text(50, 33.1, "Speedmaster", { size: 2.45, color: "#eeeae1", family: "Georgia, serif", weight: 500 })}
+      ${H.text(50, 36, "PROFESSIONAL", { size: 1.45, color: "#ddd9d1", weight: 700, spacing: .32 })}
+      ${H.subdial(31, 50, 8.2, { color: "#dcd9d1", hand: "small-second", labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${H.subdial(69, 50, 8.2, { color: "#dcd9d1", labels: ["30", "", "", "10", "", "", "20", ""] })}
+      ${H.subdial(50, 68.2, 8.2, { color: "#dcd9d1", labels: ["12", "", "3", "", "6", "", "9", ""] })}
+      ${H.batonHands({ hour: 19, minute: 27.5, secondHand: false, lume: "#e9e5d4",
+        metal: "#f2f0ea", outline: "#5c6060" })}
+      <line x1="50" y1="58" x2="50" y2="17" stroke="#f0eee8" stroke-width=".5"/>
+      <path d="M49.2 17 50 14.5 50.8 17Z" fill="#f0eee8"/>
+      <circle cx="50" cy="50" r="1.8" fill="#f1efea" stroke="#555" stroke-width=".45"/>
+      <circle cx="50" cy="50" r="33.6" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* White-gold Nautilus 5811: porthole case, ears and horizontal dial relief. */
+  defineFace("nautilus", "Patek Philippe Nautilus 5811/1G-001", "sweep", (id) => {
+    const grooves = Array.from({ length: 17 }, (_, index) => {
+      const y = 31 + index * 2.35;
+      const half = Math.sqrt(Math.max(0, 31 * 31 - (y - 50) ** 2));
+      return `<line x1="${H.n(50 - half)}" y1="${y}" x2="${H.n(50 + half)}" y2="${y}"
+        stroke="#9eb4c2" stroke-width=".5" opacity=".34"/>`;
+    }).join("");
+    const markers = appliedMarkers({ radius: 27.7, length: 6.5, width: 1.75,
+      fill: "#edf3e6", stroke: "#bec6c9", skip: [3], doubleTwelve: true });
+    return {
+      svg: `${H.defs(id, { dial: "#173448" })}
+        ${Array.from({ length: 8 }, (_, i) => `<path d="M35 ${-7 + i * 7}H65V${-2 + i * 7}H35Z"
+          fill="url(#${id}-steel)" stroke="#687077" stroke-width=".35"/>`).join("")}
+        ${Array.from({ length: 8 }, (_, i) => `<path d="M35 ${86 + i * 7}H65V${91 + i * 7}H35Z"
+          fill="url(#${id}-steel)" stroke="#687077" stroke-width=".35"/>`).join("")}
+        <path d="M18 35Q18 17 36 12H64Q82 17 82 35L89 42V58L82 65Q82 83 64 88H36Q18 83 18 65L11 58V42Z"
+          fill="url(#${id}-steel)" stroke="#4e5960" stroke-width=".8"/>
+        <path d="M21.5 36Q21.5 21 37 16H63Q78.5 21 78.5 36L84 42V58L78.5 64Q78.5 79 63 84H37Q21.5 79 21.5 64L16 58V42Z"
+          fill="#d5dadd" stroke="#f5f7f6" stroke-width=".75"/>
+        <circle cx="50" cy="50" r="32.7" fill="url(#${id}-dial)"/>
+        <g clip-path="url(#${id}-dialclip)">${grooves}</g>
+        <defs><clipPath id="${id}-dialclip"><circle cx="50" cy="50" r="32.5"/></clipPath></defs>
+        ${markers}
+        ${H.text(50, 34.2, "PATEK PHILIPPE", { size: 2.6, color: "#ecf0ea", family: "Georgia, serif", weight: 700, spacing: .16 })}
+        ${H.text(50, 37.2, "GENEVE", { size: 1.75, color: "#e2e7e3", family: "Georgia, serif", spacing: .3 })}
+        ${dateWindow(73, 50, { width: 7.5, height: 6.6, fill: "#f4f2e9", size: 3.4 })}
+        ${H.batonHands({ hour: 20, minute: 28, second: 31, lume: "#e8f0e2",
+          metal: "#eef2f3", outline: "#596369", seconds: "#e7edef" })}
+        <circle cx="50" cy="50" r="32.7" fill="url(#${id}-glass)" pointer-events="none"/>`
+    };
+  });
+
+  /* Royal Oak 15510ST: octagonal bezel and large-grid tapisserie. */
+  defineFace("royaloak", "Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06", "sweep", (id) => {
+    const oct = (r) => Array.from({ length: 8 }, (_, i) => H.polar(22.5 + i * 45, r)).join(" ");
+    const grid = Array.from({ length: 9 }, (_, row) =>
+      Array.from({ length: 9 }, (_, col) => {
+        const x = 29 + col * 5.25;
+        const y = 29 + row * 5.25;
+        return `<rect x="${x}" y="${y}" width="4.5" height="4.5" fill="#1b242a"
+          stroke="#374650" stroke-width=".38"/>`;
+      }).join("")
+    ).join("");
+    return {
+      svg: `${H.defs(id, { dial: "#18232a" })}
+        ${Array.from({ length: 7 }, (_, i) => `<rect x="34" y="${-5 + i * 7}" width="32" height="6"
+          rx="1" fill="url(#${id}-steel)" stroke="#586168" stroke-width=".35"/>`).join("")}
+        ${Array.from({ length: 7 }, (_, i) => `<rect x="34" y="${64 + i * 7}" width="32" height="6"
+          rx="1" fill="url(#${id}-steel)" stroke="#586168" stroke-width=".35"/>`).join("")}
+        <polygon points="${oct(46)}" fill="url(#${id}-steel)" stroke="#535d63" stroke-width=".8"/>
+        <polygon points="${oct(40.4)}" fill="#cbd1d3" stroke="#f7f8f6" stroke-width=".7"/>
+        ${Array.from({ length: 8 }, (_, i) => {
+          const [x, y] = H.point(22.5 + i * 45, 36.4);
+          return screw(x, y, 1.65, "#c3c9cb", 22.5 + i * 45);
+        }).join("")}
+        <circle cx="50" cy="50" r="33.4" fill="#17242b"/>
+        <g clip-path="url(#${id}-tapclip)">${grid}</g>
+        <defs><clipPath id="${id}-tapclip"><circle cx="50" cy="50" r="32.7"/></clipPath></defs>
+        ${appliedMarkers({ radius: 27.2, length: 6, width: 1.55,
+          fill: "#eef1e8", stroke: "#c2c8ca", skip: [3], doubleTwelve: true })}
+        ${H.text(50, 34, "AP", { size: 4.5, color: "#e9edef", family: "Georgia, serif", weight: 700 })}
+        ${H.text(50, 38, "AUDEMARS PIGUET", { size: 1.45, color: "#e9edef", weight: 700, spacing: .18 })}
+        ${dateWindow(71.8, 50, { width: 7.2, height: 6.2, fill: "#172126", color: "#f0f2ee", border: "#889297", size: 3.3 })}
+        ${H.batonHands({ hour: 20, minute: 27.5, second: 30.5, lume: "#edf1e5",
+          metal: "#eef2f3", outline: "#5c666c", seconds: "#eef2f3" })}
+        <circle cx="50" cy="50" r="33.4" fill="url(#${id}-glass)" pointer-events="none"/>`
+    };
+  });
+
+  /* Calatrava 5227G-015, represented in its black-lacquer white-gold form. */
+  defineFace("calatrava", "Patek Philippe Calatrava 5227G-015", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#111315" })}
+      ${H.roundCase(id, { strap: "#201717", bezel: "url(#" + id + "-steel)", dial: "#111315", dialRadius: 36.2 })}
+      <circle cx="50" cy="50" r="35.8" fill="#111315"/>
+      ${H.ticks({ count: 60, outer: 33.3, inner: 32.6, majorEvery: 5, majorInner: 31.2,
+        color: "#d9dcda", width: .22, majorWidth: .55 })}
+      ${appliedMarkers({ radius: 28.3, length: 6.3, width: 1.35,
+        fill: "#e8ecec", stroke: "#aeb5b8", skip: [3], doubleTwelve: true })}
+      ${H.text(50, 34.2, "PATEK PHILIPPE", { size: 2.7, color: "#e9ece9", family: "Georgia, serif", weight: 700, spacing: .12 })}
+      ${H.text(50, 37.2, "GENEVE", { size: 1.75, color: "#dce0de", family: "Georgia, serif", spacing: .24 })}
+      ${dateWindow(71.5, 50, { width: 7.2, height: 6.4, fill: "#f7f5ed", size: 3.4 })}
+      ${H.leafHands({ hour: 20.5, minute: 29, color: "#e1e5e6", second: 31, secondColor: "#e1e5e6" })}
+      <circle cx="50" cy="50" r="35.8" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Tank Louis Cartier small quartz: rectangular railway dial and two hands. */
+  defineFace("tank", "Cartier Tank Louis Cartier WGTA0342", "tick", (id) => {
+    let rail = "";
+    for (let index = 0; index < 12; index += 1) {
+      const angle = index * 30;
+      const a = H.point(angle, 22, 50, 52);
+      const b = H.point(angle, 24, 50, 52);
+      rail += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#252b31" stroke-width=".55"/>`;
+    }
+    return {
+      viewBox: "0 0 100 112",
+      svg: `${H.defs(id, { gold: true, dial: "#f4f0e4" })}
+        <path d="M34-4H66L64 19H36ZM36 93H64L66 116H34Z" fill="#2b1715"/>
+        <path d="M26 13H74L80 20V92L74 99H26L20 92V20Z" fill="url(#${id}-gold)" stroke="#713c20" stroke-width=".8"/>
+        <rect x="27.5" y="18" width="45" height="76" rx="2" fill="#cda461"/>
+        <rect x="31" y="20.5" width="38" height="71" rx="1.2" fill="#f4f0e4" stroke="#8b703c" stroke-width=".65"/>
+        <rect x="34.8" y="26.5" width="30.4" height="51" fill="none" stroke="#252b31" stroke-width=".6"/>
+        ${rail}
+        ${romanTrack({ left: 36.5, top: 29, right: 63.5, bottom: 75, color: "#20252a" })}
+        ${H.text(50, 43.2, "CARTIER", { size: 2.5, color: "#20252a", family: "Georgia, serif", weight: 700, spacing: .16 })}
+        ${H.text(50, 84.5, "SWISS MADE", { size: 1.25, color: "#20252a", weight: 600, spacing: .16 })}
+        <g data-hand="hour" data-cx="50" data-cy="52">
+          <path d="M49.2 55 48.5 39 50 34 51.5 39 50.8 55Z" fill="#235696" stroke="#152e55" stroke-width=".4"/>
+        </g>
+        <g data-hand="minute" data-cx="50" data-cy="52">
+          <path d="M49.25 56 48.9 31 50 27 51.1 31 50.75 56Z" fill="#235696" stroke="#152e55" stroke-width=".4"/>
+        </g>
+        <circle cx="50" cy="52" r="1.6" fill="#275994" stroke="#142f54" stroke-width=".4"/>
+        <rect x="78.8" y="46.5" width="5" height="11" rx="2.5" fill="url(#${id}-gold)"/>
+        <circle cx="84.5" cy="52" r="2.4" fill="#244b8a" stroke="#d0b06b" stroke-width=".7"/>
+        <path d="M32 24 57 21 43 48Z" fill="#fff" opacity=".11"/>`
+    };
+  });
+
+  /* Reverso Classic Monoface: reversible carrier, gadroons and small seconds. */
+  defineFace("reverso", "Jaeger-LeCoultre Reverso Classic Monoface Small Seconds", "sweep", (id) => ({
+    viewBox: "0 0 100 112",
+    svg: `${H.defs(id, { dial: "#e7e1d2" })}
+      <path d="M36-5H64L66 15H34ZM34 97H66L64 117H36Z" fill="#563528"/>
+      <rect x="24" y="9" width="52" height="94" rx="3" fill="url(#${id}-steel)" stroke="#5f686d" stroke-width=".8"/>
+      <rect x="28" y="13" width="44" height="86" rx="2" fill="#d5d9d9" stroke="#f8f8f5" stroke-width=".6"/>
+      <path d="M27 18H73M27 21H73M27 24H73M27 88H73M27 91H73M27 94H73"
+        stroke="#6b7479" stroke-width=".65"/>
+      <rect x="31.2" y="26" width="37.6" height="60" fill="#e9e4d8" stroke="#a5a096" stroke-width=".5"/>
+      <rect x="33.5" y="30" width="33" height="46" fill="#ddd7c8" stroke="#b5ad9d" stroke-width=".35"/>
+      ${[12, 2, 4, 8, 10].map((label, index) => {
+        const positions = [[50, 35], [61, 40], [63, 57], [37, 57], [39, 40]];
+        return H.text(positions[index][0], positions[index][1], label, {
+          size: 4.2, color: "#172f48", family: "Georgia, serif", weight: 600
+        });
+      }).join("")}
+      ${H.text(50, 45, "JAEGER-LECOULTRE", { size: 1.85, color: "#172f48", family: "Georgia, serif", weight: 700, spacing: .05 })}
+      ${H.subdial(50, 68.5, 7.4, { color: "#17324c", hand: "small-second", labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${H.leafHands({ hour: 13.5, minute: 19.5, color: "#214d7a", centerX: 50, centerY: 52 })}
+      <rect x="74.8" y="49" width="4.7" height="14" rx="1.8" fill="url(#${id}-steel)"/>
+      <path d="M33 28 51 27 39 48Z" fill="#fff" opacity=".16"/>`
+  }));
+
+  /* Seamaster Diver 300M: blue ceramic wave dial, lyre case and helium valve. */
+  defineFace("seamaster", "Omega Seamaster Diver 300M 210.30.42.20.03.001", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#07569a" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "#0a4f8b", dial: "#07569a", dialRadius: 33.2 })}
+      <circle cx="50" cy="50" r="41" fill="#06447d" stroke="#72808a" stroke-width=".65"/>
+      <path d="M50 9.5 46.6 14.8H53.4Z" fill="#dfe9e8"/>
+      <circle cx="50" cy="13.2" r="1.15" fill="#d8eddf"/>
+      ${bezelLabels(["", "10", "20", "30", "40", "50"], { radius: 38.4, size: 3.2 })}
+      ${H.ticks({ count: 60, outer: 40, inner: 39.2, majorEvery: 5, majorInner: 38.4,
+        color: "#e6eded", width: .24, majorWidth: .45, skip: (i) => i === 0 })}
+      <circle cx="50" cy="50" r="33.2" fill="#07569a"/>
+      <g clip-path="url(#${id}-waves)">${wavePattern("#79bde7")}</g>
+      <defs><clipPath id="${id}-waves"><circle cx="50" cy="50" r="32.8"/></clipPath></defs>
+      ${appliedMarkers({ radius: 27.6, length: 5.4, width: 2.1,
+        fill: "#e2f2e2", stroke: "#e8edef", skip: [6], circles: true, doubleTwelve: true })}
+      ${H.text(50, 31.5, "OMEGA", { size: 3.3, color: "#f0f2ef", weight: 700, spacing: .2 })}
+      ${H.text(50, 35, "Seamaster", { size: 2.5, color: "#e33d37", family: "Georgia, serif", weight: 600 })}
+      ${H.text(50, 65, "CO-AXIAL", { size: 1.5, color: "#f0f2ef", weight: 700, spacing: .18 })}
+      ${H.text(50, 68, "MASTER CHRONOMETER", { size: 1.3, color: "#f0f2ef", weight: 600, spacing: .12 })}
+      ${dateWindow(50, 74, { width: 7.2, height: 5.2, size: 3.1 })}
+      <circle cx="12.5" cy="34" r="3.1" fill="url(#${id}-steel)" stroke="#556066" stroke-width=".55"/>
+      ${H.batonHands({ hour: 19, minute: 27.5, second: 30.5, lume: "#e6f3e2",
+        metal: "#ecf1f2", outline: "#59656b", seconds: "#df3a36", broad: true })}
+      <circle cx="50" cy="50" r="33.2" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Lange 1: off-centre time, outsize date, small seconds and reserve arc. */
+  defineFace("lange1", "A. Lange & Sohne Lange 1", "sweep", (id) => {
+    const roman = ["XII", "", "II", "", "IIII", "", "VI", "", "VIII", "", "X", ""];
+    return {
+      svg: `${H.defs(id, { gold: true, dial: "#e8e0cf" })}
+        ${H.roundCase(id, { strap: "#3a211a", bezel: "url(#" + id + "-gold)", dial: "#e8e0cf", dialRadius: 36.8, gold: true })}
+        <circle cx="50" cy="50" r="36.2" fill="#e8e0cf"/>
+        <circle cx="38.5" cy="48" r="20.3" fill="#eee7d9" stroke="#b4aa98" stroke-width=".55"/>
+        ${H.ticks({ count: 60, outer: 19.2, inner: 18.2, majorEvery: 5, majorInner: 16.9,
+          color: "#34302a", width: .25, majorWidth: .55, cx: 38.5, cy: 48 })}
+        ${H.numerals({ labels: roman, radius: 14.4, size: 3.2, color: "#2b2926",
+          family: "Georgia, serif", weight: 600, cx: 38.5, cy: 48 })}
+        ${H.text(38.5, 38.1, "A. LANGE & SOHNE", { size: 1.5, color: "#302d28", family: "Georgia, serif", weight: 700 })}
+        ${H.text(38.5, 40.6, "GLASHUTTE I/SA", { size: 1.1, color: "#302d28", weight: 600, spacing: .1 })}
+        <rect x="59.5" y="27" width="24" height="13" fill="#c8bca7" stroke="#6f6658" stroke-width=".7"/>
+        <rect x="61.2" y="28.7" width="9.2" height="9.6" fill="#f8f5ed" stroke="#817769" stroke-width=".45"/>
+        <rect x="73.1" y="28.7" width="9.2" height="9.6" fill="#f8f5ed" stroke="#817769" stroke-width=".45"/>
+        ${H.text(65.8, 33.8, "2", { size: 6.4, color: "#171718", family: "Georgia, serif", weight: 600, extra: `data-text="date-tens"` })}
+        ${H.text(77.7, 33.8, "8", { size: 6.4, color: "#171718", family: "Georgia, serif", weight: 600, extra: `data-text="date-ones"` })}
+        ${H.subdial(68.5, 65.5, 11.2, { color: "#35302a", hand: "small-second", labels: ["60", "", "15", "", "30", "", "45", ""] })}
+        <path d="${H.arc(72, 49, 13.5, 310, 50)}" fill="none" stroke="#3b3630" stroke-width=".65"/>
+        ${H.text(62, 47, "AUF", { size: 1.45, color: "#38332e", weight: 700 })}
+        ${H.text(82, 47, "AB", { size: 1.45, color: "#38332e", weight: 700 })}
+        <g data-hand="hour" data-cx="38.5" data-cy="48">
+          <path d="M38.5 51C36.7 45 36.9 36 38.5 31 40.1 36 40.3 45 38.5 51Z" fill="#29354c"/>
+        </g>
+        <g data-hand="minute" data-cx="38.5" data-cy="48">
+          <path d="M38.5 52C37.2 43 37.3 30 38.5 25.5 39.7 30 39.8 43 38.5 52Z" fill="#29354c"/>
+        </g>
+        <circle cx="38.5" cy="48" r="1.7" fill="#29354c"/>
+        <circle cx="50" cy="50" r="36.2" fill="url(#${id}-glass)" pointer-events="none"/>`
+    };
+  });
+
+  /* IWC Portugieser Chronograph IW371605. */
+  defineFace("portugieser", "IWC Portugieser Chronograph IW371605", "sweep", (id) => {
+    const labels = ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+    return {
+      svg: `${H.defs(id, { dial: "#123762" })}
+        ${H.roundCase(id, { strap: "#152f57", bezel: "url(#" + id + "-steel)", dial: "#123762", dialRadius: 36 })}
+        <circle cx="50" cy="50" r="35.6" fill="#123762"/>
+        ${H.ticks({ count: 60, outer: 34.6, inner: 33.4, majorEvery: 5, majorInner: 32.4,
+          color: "#d9e0e5", width: .25, majorWidth: .5 })}
+        ${H.numerals({ labels, radius: 29, size: 5, color: "#e3e6e6",
+          family: "Georgia, serif", weight: 500 })}
+        ${H.text(50, 38.5, "IWC", { size: 5.2, color: "#e5e7e6", family: "Georgia, serif", weight: 600 })}
+        ${H.text(50, 42, "SCHAFFHAUSEN", { size: 1.4, color: "#e5e7e6", weight: 600, spacing: .2 })}
+        ${H.subdial(50, 28.5, 8.2, { color: "#dce1e3", labels: ["30", "", "", "10", "", "", "20", ""] })}
+        ${H.subdial(50, 70.5, 8.2, { color: "#dce1e3", hand: "small-second", labels: ["60", "", "15", "", "30", "", "45", ""] })}
+        ${H.leafHands({ hour: 20, minute: 29, color: "#e7ebed" })}
+        <line x1="50" y1="56" x2="50" y2="15" stroke="#e9edef" stroke-width=".42"/>
+        <circle cx="50" cy="50" r="1.7" fill="#e9edef"/>
+        <rect x="91" y="36" width="5.5" height="7" rx="2" fill="url(#${id}-steel)"/>
+        <rect x="91" y="57" width="5.5" height="7" rx="2" fill="url(#${id}-steel)"/>
+        <circle cx="50" cy="50" r="35.6" fill="url(#${id}-glass)" pointer-events="none"/>`
+    };
+  });
+
+  /* Daytona 126500LN: black Cerachrom bezel and white panda counter rings. */
+  defineFace("daytona", "Rolex Cosmograph Daytona 126500LN", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#f1f0eb" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "#080a0a", dial: "#f1f0eb", dialRadius: 33.2 })}
+      <rect x="91" y="35.5" width="5.8" height="8" rx="2.4" fill="url(#${id}-steel)"/>
+      <rect x="91" y="56.5" width="5.8" height="8" rx="2.4" fill="url(#${id}-steel)"/>
+      ${tachymeter(id, ["60", "400", "240", "180", "140", "100", "80"])}
+      <circle cx="50" cy="50" r="33.2" fill="#f1f0eb"/>
+      ${H.ticks({ count: 60, outer: 32.3, inner: 31.4, majorEvery: 5, majorInner: 29.8,
+        color: "#151718", width: .25, majorWidth: .6 })}
+      ${appliedMarkers({ radius: 27.2, length: 5.6, width: 1.45,
+        fill: "#edf1e7", stroke: "#858b8e", skip: [3, 6, 9], doubleTwelve: true })}
+      ${crownMark(50, 28.2, "#9aa0a2", .62)}
+      ${H.text(50, 32.7, "ROLEX", { size: 2.45, color: "#151718", family: "Georgia, serif", weight: 700 })}
+      ${H.text(50, 35.5, "OYSTER PERPETUAL", { size: 1.2, color: "#1b1d1e", weight: 700, spacing: .08 })}
+      ${H.subdial(31.5, 50, 8.4, { color: "#111416", fill: "#f1f0eb", hand: "small-second", labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${H.subdial(68.5, 50, 8.4, { color: "#111416", fill: "#f1f0eb", labels: ["30", "", "", "10", "", "", "20", ""] })}
+      ${H.subdial(50, 68, 8.4, { color: "#111416", fill: "#f1f0eb", labels: ["12", "", "3", "", "6", "", "9", ""] })}
+      ${H.batonHands({ hour: 18.5, minute: 26.5, secondHand: false, lume: "#eff2e8",
+        metal: "#dce0e1", outline: "#50575b" })}
+      <line x1="50" y1="57" x2="50" y2="17" stroke="#1b1d1e" stroke-width=".5"/>
+      <path d="M49.3 18 50 15.2 50.7 18Z" fill="#d84034"/>
+      <circle cx="50" cy="50" r="2" fill="#d9ddde" stroke="#555c60" stroke-width=".5"/>
+      <circle cx="50" cy="50" r="33.2" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* GMT-Master II 126710BLRO, with two-colour 24-hour bezel and red GMT hand. */
+  defineFace("gmt", "Rolex GMT-Master II 126710BLRO", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#090b0c" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "#10131e", dial: "#090b0c", dialRadius: 33.2 })}
+      <path d="${H.sector(50, 50, 41, 270, 90)}" fill="#173b72"/>
+      <path d="${H.sector(50, 50, 41, 90, 270)}" fill="#9f292a"/>
+      <circle cx="50" cy="50" r="34.3" fill="#596166"/>
+      <circle cx="50" cy="50" r="33.2" fill="#090b0c"/>
+      ${bezelLabels(["24", "2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22"],
+        { radius: 38.6, size: 2.85, start: 0 })}
+      ${H.ticks({ count: 24, outer: 40.4, inner: 39.7, majorEvery: 2, majorInner: 39.1,
+        color: "#dce2df", width: .3, majorWidth: .42 })}
+      ${appliedMarkers({ radius: 27.7, length: 5.8, width: 2.35,
+        fill: "#dcebdd", stroke: "#d8dcdd", skip: [3], circles: true, doubleTwelve: true })}
+      ${crownMark(50, 29.1, "#e8ecea", .6)}
+      ${H.text(50, 34, "ROLEX", { size: 3.1, color: "#e9ece9", family: "Georgia, serif", weight: 700 })}
+      ${H.text(50, 37.2, "OYSTER PERPETUAL DATE", { size: 1.3, color: "#d9dedb", weight: 600, spacing: .1 })}
+      ${H.text(50, 65.8, "GMT-MASTER II", { size: 1.8, color: "#da3c38", weight: 700, spacing: .16 })}
+      ${dateWindow(72, 50, { width: 8.2, height: 6.5, size: 3.7 })}
+      <g data-hand="gmt" data-cx="50" data-cy="50">
+        <line x1="50" y1="55" x2="50" y2="19" stroke="#d83b35" stroke-width="1.25"/>
+        <path d="M50 14 46.6 20.7 53.4 20.7Z" fill="#d8eadc" stroke="#d83b35" stroke-width="1"/>
+      </g>
+      ${mercedesHands()}
+      <ellipse cx="72" cy="50" rx="6.2" ry="5.1" fill="#fff" opacity=".07" stroke="#d9eef0" stroke-width=".65"/>
+      <circle cx="50" cy="50" r="33.2" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Datejust 41: mint sunray dial, fluted bezel and five-link Jubilee. */
+  defineFace("datejust", "Rolex Datejust 41 126334", "sweep", (id) => {
+    const flutes = Array.from({ length: 72 }, (_, index) => {
+      const angle = index * 5;
+      const a = H.point(angle, 43.4);
+      const b = H.point(angle, index % 2 ? 39.3 : 38.8);
+      return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"
+        stroke="${index % 2 ? "#70777b" : "#f8faf9"}" stroke-width="1.15"/>`;
+    }).join("");
+    const links = (top) => Array.from({ length: 8 }, (_, row) => {
+      const y = top + row * 6.7;
+      return `<rect x="34" y="${y}" width="7" height="6.1" rx="1.8" fill="#a9b0b3"/>
+        <rect x="41.5" y="${y}" width="5.2" height="6.1" rx="1.8" fill="#eef1f1"/>
+        <rect x="46.9" y="${y}" width="6.2" height="6.1" rx="1.8" fill="#a8afb2"/>
+        <rect x="53.3" y="${y}" width="5.2" height="6.1" rx="1.8" fill="#eef1f1"/>
+        <rect x="58.7" y="${y}" width="7" height="6.1" rx="1.8" fill="#a9b0b3"/>`;
+    }).join("");
+    return {
+      svg: `${H.defs(id, { dial: "#4d9a74" })}
+        ${links(-19)}${links(73)}
+        <path d="M29 15Q50 7 71 15L84 29Q91 50 84 71L71 85Q50 93 29 85L16 71Q9 50 16 29Z"
+          fill="url(#${id}-steel)" stroke="#555d62" stroke-width=".75"/>
+        <circle cx="50" cy="50" r="43.6" fill="#bac0c2"/>
+        ${flutes}
+        <circle cx="50" cy="50" r="37.5" fill="#697276"/>
+        <circle cx="50" cy="50" r="36.2" fill="url(#${id}-dial)"/>
+        ${Array.from({ length: 48 }, (_, index) => {
+          const angle = index * 7.5;
+          const a = H.point(angle, 35.5);
+          return `<line x1="50" y1="50" x2="${a[0]}" y2="${a[1]}"
+            stroke="${index % 2 ? "#d8ffe7" : "#174c3b"}" stroke-width=".16" opacity=".24"/>`;
+        }).join("")}
+        ${H.ticks({ count: 60, outer: 34.8, inner: 34.1, majorEvery: 5, majorInner: 32.4,
+          color: "#e6ece7", width: .22, majorWidth: .5 })}
+        ${appliedMarkers({ radius: 28.8, length: 7, width: 1.75,
+          fill: "#eef3e9", stroke: "#c6cdce", skip: [3], doubleTwelve: true })}
+        ${crownMark(50, 27.3, "#edf0ed", .68)}
+        ${H.text(50, 33.1, "ROLEX", { size: 3.15, color: "#edf0ed", family: "Georgia, serif", weight: 700 })}
+        ${H.text(50, 36.4, "OYSTER PERPETUAL", { size: 1.45, color: "#e9ede9", weight: 650, spacing: .12 })}
+        ${H.text(50, 66, "SUPERLATIVE CHRONOMETER", { size: 1.2, color: "#e8ece8", weight: 650, spacing: .08 })}
+        ${H.text(50, 68.4, "OFFICIALLY CERTIFIED", { size: 1.2, color: "#e8ece8", weight: 650, spacing: .08 })}
+        ${dateWindow(73, 50, { width: 8, height: 6.6, size: 3.6 })}
+        <ellipse cx="73" cy="50" rx="6.1" ry="5.1" fill="#fff" opacity=".08" stroke="#e1f2f2" stroke-width=".7"/>
+        ${H.batonHands({ hour: 21, minute: 29, second: 32, lume: "#eaf2e6",
+          metal: "#e5e9ea", outline: "#5f686c", seconds: "#e4e9ea" })}
+        <circle cx="50" cy="50" r="36.2" fill="url(#${id}-glass)" pointer-events="none"/>`
+    };
+  });
+
+  /* Grand Seiko SBGA211. The dial texture is generated as shallow wind-cut
+     ridges; the Spring Drive seconds hand uses the continuous glide cadence. */
+  defineFace("snowflake", "Grand Seiko Snowflake SBGA211", "glide", (id) => {
+    const snow = Array.from({ length: 46 }, (_, index) => {
+      const y = 22 + (index * 17 % 58);
+      const x = 18 + (index * 29 % 62);
+      const length = 5 + (index * 7 % 11);
+      return `<path d="M${x} ${y}q${length * .35} ${index % 2 ? -2 : 2} ${length} ${index % 3 - 1}"
+        fill="none" stroke="${index % 2 ? "#cad4d8" : "#ffffff"}"
+        stroke-width=".45" opacity=".65"/>`;
+    }).join("");
+    return {
+      svg: `${H.defs(id, { dial: "#f5f6f3" })}
+        ${H.roundCase(id, { bracelet: true, bezel: "url(#" + id + "-steel)", dial: "#f5f6f3", dialRadius: 36.5 })}
+        <circle cx="50" cy="50" r="36.2" fill="#f4f5f2"/>
+        <g clip-path="url(#${id}-snowclip)">${snow}</g>
+        <defs><clipPath id="${id}-snowclip"><circle cx="50" cy="50" r="35.8"/></clipPath></defs>
+        ${H.ticks({ count: 60, outer: 34.7, inner: 33.9, majorEvery: 5, majorInner: 32.2,
+          color: "#1d2327", width: .22, majorWidth: .5 })}
+        ${appliedMarkers({ radius: 28.6, length: 7.8, width: 1.55,
+          fill: "#f1f4f4", stroke: "#777f84", skip: [3], doubleTwelve: true })}
+        ${H.text(50, 31.5, "GS", { size: 5.1, color: "#232a2d", family: "Georgia, serif", weight: 700 })}
+        ${H.text(50, 36, "Grand Seiko", { size: 3.1, color: "#202629", family: "Georgia, serif", weight: 700 })}
+        ${H.text(50, 68.8, "SPRING DRIVE", { size: 1.45, color: "#202629", weight: 700, spacing: .14 })}
+        ${dateWindow(72.2, 48.7, { width: 8.1, height: 6.5, fill: "#f8f8f5", color: "#1c2225", size: 3.5 })}
+        <path d="${H.arc(35.5, 65.2, 9.2, 215, 35)}" fill="none" stroke="#555d61" stroke-width=".75"/>
+        ${Array.from({ length: 7 }, (_, index) => {
+          const angle = 215 + index * 30;
+          const a = H.point(angle, 9.2, 35.5, 65.2);
+          const b = H.point(angle, 7.7, 35.5, 65.2);
+          return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#555d61" stroke-width=".35"/>`;
+        }).join("")}
+        <line x1="35.5" y1="65.2" x2="31" y2="59" stroke="#5c6468" stroke-width=".7"/>
+        <circle cx="35.5" cy="65.2" r="1.1" fill="#9ca4a7"/>
+        <g data-hand="hour" data-cx="50" data-cy="50">
+          <path d="M47.9 53 48.6 34 50 27 51.4 34 52.1 53Z" fill="#d6dcde" stroke="#555d61" stroke-width=".55"/>
+          <path d="M50 29V51" stroke="#fff" stroke-width=".55"/>
+        </g>
+        <g data-hand="minute" data-cx="50" data-cy="50">
+          <path d="M48.7 54 49 26 50 18 51 26 51.3 54Z" fill="#d6dcde" stroke="#555d61" stroke-width=".5"/>
+          <path d="M50 20V52" stroke="#fff" stroke-width=".45"/>
+        </g>
+        <g data-hand="second" data-cx="50" data-cy="50">
+          <line x1="50" y1="58" x2="50" y2="16" stroke="#1264ad" stroke-width=".65"/>
+        </g>
+        <circle cx="50" cy="50" r="2" fill="#e1e5e6" stroke="#596166" stroke-width=".5"/>
+        <circle cx="50" cy="50" r="36.2" fill="url(#${id}-glass)" pointer-events="none"/>`
+    };
+  });
+
+  /* Casio G-Shock DW-5600UE-1. */
+  defineFace("gshock", "Casio G-Shock DW-5600UE-1", "digital", (id) => ({
+    viewBox: "0 0 100 112",
+    svg: `${H.defs(id, { steel: false, dial: "#9da58f" })}
+      <path d="M31-4H69L73 15H27ZM27 97H73L69 116H31Z" fill="#171a1b"/>
+      ${Array.from({ length: 9 }, (_, index) => `<line x1="31" y1="${index * 4}" x2="69" y2="${index * 4}"
+        stroke="#3c4243" stroke-width="1.1"/>`).join("")}
+      <path d="M21 14H79L88 25V87L79 98H21L12 87V25Z" fill="#171a1b" stroke="#3d4445" stroke-width="1"/>
+      <path d="M26 20H74L81 29V82L74 91H26L19 82V29Z" fill="#2c3031" stroke="#080a0a" stroke-width="1"/>
+      ${H.text(50, 24.5, "G-SHOCK", { size: 5.4, color: "#e1e4df", weight: 800, spacing: .4 })}
+      ${H.text(50, 88.1, "PROTECTION", { size: 4.5, color: "#e1e4df", weight: 800, spacing: .35 })}
+      <rect x="25" y="31" width="50" height="43" rx="2" fill="#111414" stroke="#717979" stroke-width=".8"/>
+      <path d="M27 34H73V71H27Z" fill="#a8af98" stroke="#cad0bd" stroke-width=".6"/>
+      <rect x="29" y="36.2" width="42" height="7.4" fill="#8d9682" stroke="#5e665a" stroke-width=".4"/>
+      ${H.text(33, 40, "CASIO", { size: 2.9, color: "#172018", weight: 800, anchor: "start", spacing: .18 })}
+      ${H.text(68, 40, "ALM SIG", { size: 2.2, color: "#172018", weight: 700, anchor: "end" })}
+      ${H.text(36, 48.5, "TU", { size: 4.2, color: "#151b16", family: "monospace", weight: 700, extra: `data-text="day"` })}
+      ${H.text(66, 48.5, "7-28", { size: 3.8, color: "#151b16", family: "monospace", weight: 700, anchor: "end", extra: `data-text="month-date"` })}
+      ${H.text(50, 61.5, "12:00:00", { size: 8.2, color: "#111712", family: "monospace", weight: 700, extra: `data-text="digital-seconds"` })}
+      ${H.text(50, 68.2, "ILLUMINATOR", { size: 2.2, color: "#172018", weight: 700, spacing: .25 })}
+      <rect x="8.5" y="34" width="7" height="12" rx="2" fill="#242829"/>
+      <rect x="84.5" y="34" width="7" height="12" rx="2" fill="#242829"/>
+      <rect x="8.5" y="68" width="7" height="12" rx="2" fill="#242829"/>
+      <rect x="84.5" y="68" width="7" height="12" rx="2" fill="#242829"/>`
+  }));
+
+  /* Casio F-91W: compact blue-striped positive LCD. */
+  defineFace("f91w", "Casio F-91W", "digital", (id) => ({
+    viewBox: "0 0 100 112",
+    svg: `${H.defs(id, { steel: false, dial: "#a8ae94" })}
+      <path d="M33-5H67L72 18H28ZM28 94H72L67 117H33Z" fill="#1a1d1e"/>
+      ${Array.from({ length: 11 }, (_, index) => `<line x1="33" y1="${index * 3.5}" x2="67" y2="${index * 3.5}"
+        stroke="#3d4243" stroke-width=".8"/>`).join("")}
+      <path d="M25 15H75L83 24V88L75 97H25L17 88V24Z" fill="#242829" stroke="#0b0d0d" stroke-width="1"/>
+      <rect x="23" y="22" width="54" height="68" rx="3" fill="#171a1b" stroke="#4d5354" stroke-width=".6"/>
+      <path d="M27 27H73" stroke="#2e8ec0" stroke-width="2"/>
+      <path d="M27 31H73" stroke="#1c6084" stroke-width=".7"/>
+      ${H.text(29, 35.4, "CASIO", { size: 4.1, color: "#e6e8e5", weight: 800, anchor: "start" })}
+      ${H.text(71, 35.3, "F-91W", { size: 2.9, color: "#3aa5d3", weight: 800, anchor: "end" })}
+      <rect x="28" y="41" width="44" height="31" rx="1" fill="#a9af96" stroke="#cbd1bd" stroke-width=".7"/>
+      ${H.text(31, 47, "AL", { size: 2.5, color: "#182019", family: "monospace", weight: 700, anchor: "start" })}
+      ${H.text(68, 47, "TU 28", { size: 2.9, color: "#182019", family: "monospace", weight: 700, anchor: "end", extra: `data-text="day-date"` })}
+      ${H.text(50, 60, "12:00", { size: 9.5, color: "#111812", family: "monospace", weight: 700, extra: `data-text="digital12"` })}
+      ${H.text(67, 66.8, "00", { size: 4, color: "#111812", family: "monospace", weight: 700, extra: `data-text="second"` })}
+      ${H.text(50, 78, "WATER RESIST", { size: 2.7, color: "#e7c44c", weight: 750, spacing: .25 })}
+      <rect x="12" y="37" width="6" height="11" rx="2" fill="#242829"/>
+      <rect x="82" y="37" width="6" height="11" rx="2" fill="#242829"/>
+      <rect x="12" y="69" width="6" height="11" rx="2" fill="#242829"/>`
+  }));
+
+  /* Apple Watch Activity Analog, using continuous seconds and live ring arcs. */
+  defineFace("apple", "Apple Watch Activity Analog", "glide", (id) => ({
+    viewBox: "0 0 100 112",
+    svg: `${H.defs(id, { steel: false, dial: "#050607" })}
+      <path d="M35-4H65L68 13H32ZM32 99H68L65 116H35Z" fill="#252728"/>
+      <rect x="13" y="10" width="74" height="92" rx="20" fill="#16191a" stroke="#4d5456" stroke-width="1.1"/>
+      <rect x="17" y="14" width="66" height="84" rx="17" fill="#020303"/>
+      <rect x="87" y="34" width="5" height="16" rx="2.5" fill="#4c5152"/>
+      <circle cx="90" cy="56" r="4.3" fill="#4e5354"/>
+      <g transform="translate(31 37) rotate(-90)">
+        <circle cx="0" cy="0" r="13" fill="none" stroke="#2f1013" stroke-width="3.5"/>
+        <circle cx="0" cy="0" r="13" fill="none" stroke="#ee315a" stroke-width="3.5"
+          stroke-dasharray="67 82" stroke-linecap="round"/>
+        <circle cx="0" cy="0" r="8.5" fill="none" stroke="#123519" stroke-width="3"/>
+        <circle cx="0" cy="0" r="8.5" fill="none" stroke="#86e64f" stroke-width="3"
+          stroke-dasharray="43 54" stroke-linecap="round"/>
+        <circle cx="0" cy="0" r="4.4" fill="none" stroke="#122d3a" stroke-width="2.4"/>
+        <circle cx="0" cy="0" r="4.4" fill="none" stroke="#48a8ee" stroke-width="2.4"
+          stroke-dasharray="21 28" stroke-linecap="round"/>
+      </g>
+      ${H.text(68, 25, "72", { size: 4.7, color: "#f4f5f3", family: "monospace", weight: 700 })}
+      ${H.text(68, 30, "BPM", { size: 2.1, color: "#f05c65", weight: 700 })}
+      ${H.text(68, 83, "18°", { size: 4.7, color: "#f4f5f3", family: "monospace", weight: 700 })}
+      ${H.text(68, 88, "CLEAR", { size: 1.9, color: "#62b8ee", weight: 700 })}
+      ${H.ticks({ count: 12, outer: 30, inner: 28, majorEvery: 3, majorInner: 26.5,
+        color: "#f1f2ef", width: .7, majorWidth: 1.4, cx: 50, cy: 57 })}
+      <g data-hand="hour" data-cx="50" data-cy="57">
+        <line x1="50" y1="61" x2="50" y2="40" stroke="#f5f5f2" stroke-width="3.2" stroke-linecap="round"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="57">
+        <line x1="50" y1="62" x2="50" y2="32" stroke="#f5f5f2" stroke-width="2.2" stroke-linecap="round"/>
+      </g>
+      <g data-hand="second" data-cx="50" data-cy="57">
+        <line x1="50" y1="65" x2="50" y2="28" stroke="#f08e2f" stroke-width=".8"/>
+      </g>
+      <circle cx="50" cy="57" r="2.5" fill="#f4f5f3"/>`
+  }));
+
+  /* Swatch Once Again GB743: black polymer case and split day/date aperture. */
+  defineFace("swatch", "Swatch Once Again GB743", "tick", (id) => ({
+    viewBox: "0 0 100 112",
+    svg: `${H.defs(id, { steel: false, dial: "#f4f2e9" })}
+      <path d="M35-5H65L68 17H32ZM32 95H68L65 117H35Z" fill="#151718"/>
+      ${Array.from({ length: 12 }, (_, index) => `<line x1="35" y1="${index * 3}" x2="65" y2="${index * 3}"
+        stroke="#3a3d3e" stroke-width=".75"/>`).join("")}
+      <circle cx="50" cy="55" r="40" fill="#161819"/>
+      <circle cx="50" cy="55" r="35.2" fill="#f4f2e9"/>
+      ${H.ticks({ count: 60, outer: 33.6, inner: 32.2, majorEvery: 5, majorInner: 29.6,
+        color: "#17191a", width: .35, majorWidth: .8, cx: 50, cy: 55 })}
+      ${H.numerals({ labels: ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+        radius: 26, size: 4.2, color: "#151718", family: "Arial, sans-serif", weight: 700, cx: 50, cy: 55 })}
+      ${H.text(50, 39.8, "swatch", { size: 3.8, color: "#151718", weight: 750 })}
+      ${H.text(50, 43.2, "SWISS", { size: 1.5, color: "#151718", weight: 700, spacing: .2 })}
+      <rect x="60" y="51.5" width="14.5" height="7" fill="#f8f6ee" stroke="#2b2d2e" stroke-width=".7"/>
+      <rect x="60" y="51.5" width="7.8" height="7" fill="#17191a"/>
+      ${H.text(63.9, 55.1, "MON", { size: 2.5, color: "#f5f4ed", weight: 700, extra: `data-text="day"` })}
+      ${H.text(70.8, 55.1, "28", { size: 3.1, color: "#161819", weight: 700, extra: `data-text="date"` })}
+      ${H.batonHands({ hour: 19, minute: 27, second: 31, lume: "#191b1c",
+        metal: "#191b1c", outline: "#191b1c", seconds: "#d93432", centerX: 50, centerY: 55 })}
+      <circle cx="50" cy="55" r="35.2" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Braun BN0021BKBKG: flat black dial, yellow quartz seconds. */
+  defineFace("braun", "Braun BN0021", "tick", (id) => ({
+    svg: `${H.defs(id, { dial: "#17191a" })}
+      ${H.roundCase(id, { strap: "#18191a", bezel: "#b9bdbe", dial: "#17191a", dialRadius: 37 })}
+      <circle cx="50" cy="50" r="36.4" fill="#17191a"/>
+      ${H.ticks({ count: 60, outer: 33.5, inner: 32.6, majorEvery: 5, majorInner: 30.4,
+        color: "#e4e5e0", width: .28, majorWidth: .85 })}
+      ${H.numerals({ labels: ["12", "", "", "3", "", "", "6", "", "", "9", "", ""],
+        radius: 26, size: 5.3, color: "#e9e9e4", family: "Arial, sans-serif", weight: 500 })}
+      ${H.text(50, 35.5, "BRAUN", { size: 2.6, color: "#e9e9e4", weight: 700, spacing: .25 })}
+      ${dateWindow(70, 50, { width: 7, height: 5.5, fill: "#e9e8e1", size: 3 })}
+      <g data-hand="hour" data-cx="50" data-cy="50">
+        <rect x="48.6" y="31" width="2.8" height="23" rx=".7" fill="#e7e7e2"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="50">
+        <rect x="49" y="22" width="2" height="33" rx=".6" fill="#e7e7e2"/>
+      </g>
+      <g data-hand="second" data-cx="50" data-cy="50">
+        <line x1="50" y1="58" x2="50" y2="18" stroke="#f0ce29" stroke-width=".75"/>
+      </g>
+      <circle cx="50" cy="50" r="1.8" fill="#e7e7e2"/>
+      <circle cx="50" cy="50" r="36.4" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Mondaine Swiss Railway stop2go: block hands and red lollipop seconds. */
+  defineFace("mondaine", "Mondaine Swiss Railway stop2go", "mondaine", (id) => ({
+    svg: `${H.defs(id, { dial: "#f5f4ee" })}
+      ${H.roundCase(id, { strap: "#222223", bezel: "url(#" + id + "-steel)", dial: "#f5f4ee", dialRadius: 37 })}
+      <circle cx="50" cy="50" r="36.5" fill="#f5f4ee"/>
+      ${H.ticks({ count: 60, outer: 34.3, inner: 31.8, majorEvery: 5, majorInner: 27.8,
+        color: "#111314", width: .75, majorWidth: 2.3 })}
+      ${H.text(50, 64.8, "MONDAINE", { size: 2.8, color: "#17191a", weight: 700, spacing: .3 })}
+      ${H.text(50, 68, "SBB CFF FFS", { size: 1.5, color: "#17191a", weight: 700, spacing: .22 })}
+      <g data-hand="hour" data-cx="50" data-cy="50">
+        <rect x="47.8" y="31" width="4.4" height="23" fill="#111314"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="50">
+        <rect x="48.3" y="21" width="3.4" height="34" fill="#111314"/>
+      </g>
+      <g data-hand="second" data-cx="50" data-cy="50">
+        <line x1="50" y1="58" x2="50" y2="21" stroke="#df302b" stroke-width="1"/>
+        <circle cx="50" cy="17.8" r="3.8" fill="#df302b"/>
+      </g>
+      <circle cx="50" cy="50" r="2.3" fill="#df302b"/>
+      <circle cx="50" cy="50" r="36.5" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* TAG Heuer Monaco Calibre 11: square blue dial, left crown, twin registers. */
+  defineFace("monaco", "TAG Heuer Monaco Calibre 11", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#1b5991" })}
+      <path d="M34-5H66L69 16H31ZM31 84H69L66 105H34Z" fill="#1f1f20"/>
+      <rect x="14" y="12" width="72" height="76" rx="10" fill="url(#${id}-steel)" stroke="#555f65" stroke-width=".9"/>
+      <rect x="19" y="17" width="62" height="66" rx="7" fill="#d4dadd" stroke="#fafafa" stroke-width=".65"/>
+      <rect x="22" y="20" width="56" height="60" rx="5" fill="#1b5991"/>
+      ${H.ticks({ count: 60, outer: 26, inner: 24.6, majorEvery: 5, majorInner: 22.8,
+        color: "#ecf0ef", width: .3, majorWidth: .7 })}
+      ${appliedMarkers({ radius: 20.5, length: 5.2, width: 1.25,
+        fill: "#edf0ea", stroke: "#d6dcdd", skip: [3, 9] })}
+      <path d="M45 27H55L58 31 50 38 42 31Z" fill="#f1f3f1" stroke="#d74336" stroke-width=".7"/>
+      ${H.text(50, 31, "TAG", { size: 2.4, color: "#1b5a36", weight: 800 })}
+      ${H.text(50, 34, "HEUER", { size: 2.2, color: "#1b5a36", weight: 800 })}
+      ${H.text(50, 41, "MONACO", { size: 1.8, color: "#f1f2ef", weight: 700, spacing: .3 })}
+      <rect x="27" y="43" width="15" height="14" rx="1" fill="#e9e8df" stroke="#c2c6c5" stroke-width=".6"/>
+      <rect x="58" y="43" width="15" height="14" rx="1" fill="#e9e8df" stroke="#c2c6c5" stroke-width=".6"/>
+      ${H.subdial(34.5, 50, 5.7, { color: "#1b2530", labels: ["30", "", "", "10", "", "", "20", ""] })}
+      ${H.subdial(65.5, 50, 5.7, { color: "#1b2530", hand: "small-second", labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${dateWindow(50, 67, { width: 8, height: 5.5, fill: "#f2f0e7", size: 3.1 })}
+      ${H.batonHands({ hour: 15, minute: 22, secondHand: false, lume: "#eaf0e5",
+        metal: "#e9edef", outline: "#53616a", centerX: 50, centerY: 51 })}
+      <line x1="50" y1="57" x2="50" y2="24" stroke="#df3a34" stroke-width=".55"/>
+      <circle cx="50" cy="51" r="1.8" fill="#e8edef" stroke="#59646a" stroke-width=".45"/>
+      <rect x="8" y="43" width="7" height="14" rx="2.5" fill="url(#${id}-steel)"/>
+      <rect x="85" y="31" width="6" height="9" rx="2" fill="url(#${id}-steel)"/>
+      <rect x="85" y="62" width="6" height="9" rx="2" fill="url(#${id}-steel)"/>
+      <rect x="22" y="20" width="56" height="60" rx="5" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Panerai Luminor Marina: sandwich numerals and locking crown bridge. */
+  defineFace("panerai", "Panerai Luminor Marina PAM03312", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#141719" })}
+      <path d="M34-5H66L69 16H31ZM31 84H69L66 105H34Z" fill="#211a18"/>
+      <rect x="12" y="12" width="76" height="76" rx="15" fill="url(#${id}-steel)" stroke="#555f64" stroke-width=".8"/>
+      <circle cx="50" cy="50" r="36.5" fill="#d8dddc"/>
+      <circle cx="50" cy="50" r="34.5" fill="#141719"/>
+      ${H.ticks({ count: 60, outer: 32.7, inner: 32, majorEvery: 5, majorInner: 30,
+        color: "#b6cbaa", width: .2, majorWidth: .45 })}
+      ${H.numerals({ labels: ["12", "", "", "3", "", "", "6", "", "", "9", "", ""],
+        radius: 25, size: 8.2, color: "#c7d8b8", family: "Arial, sans-serif", weight: 700 })}
+      ${[1, 2, 4, 5, 7, 8, 10, 11].map((index) => {
+        const [x, y] = H.point(index * 30, 25.7);
+        return `<rect x="${x - 1}" y="${y - 3}" width="2" height="6" rx="1" fill="#c7d8b8"
+          transform="rotate(${index * 30} ${x} ${y})"/>`;
+      }).join("")}
+      ${H.text(50, 35.5, "LUMINOR MARINA", { size: 2.3, color: "#d8e0d3", weight: 650, spacing: .25 })}
+      ${H.text(50, 39, "PANERAI", { size: 3.3, color: "#d8e0d3", weight: 750, spacing: .28 })}
+      ${dateWindow(72, 50, { width: 7.2, height: 6.2, fill: "#e7e6de", size: 3.2 })}
+      ${H.subdial(29.5, 50, 7.2, { color: "#bdcab5", hand: "small-second", labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${H.batonHands({ hour: 19, minute: 27, secondHand: false, lume: "#c7d8b8",
+        metal: "#bdc5c6", outline: "#4f595d", broad: true })}
+      <rect x="87" y="38" width="8" height="24" rx="3" fill="url(#${id}-steel)" stroke="#50595e" stroke-width=".7"/>
+      <path d="M86 36H97V64H86V59H92V41H86Z" fill="#9da5a8" stroke="#50585d" stroke-width=".6"/>
+      <circle cx="50" cy="50" r="34.5" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Rolex trackside clock: green event board and oversized white dial. */
+  defineFace("f1", "Rolex Trackside Clock", "sweep", (id) => ({
+    viewBox: "0 0 100 112",
+    svg: `${H.defs(id, { gold: true, dial: "#f2f0e6" })}
+      <rect x="7" y="7" width="86" height="98" rx="3" fill="#075f3c" stroke="#d4b04f" stroke-width="2"/>
+      ${crownMark(50, 18, "#d8b552", 1.65)}
+      ${H.text(50, 28, "ROLEX", { size: 7.5, color: "#d8b552", family: "Georgia, serif", weight: 700, spacing: .6 })}
+      <circle cx="50" cy="65" r="33" fill="#d7b450" stroke="#efd883" stroke-width="1"/>
+      <circle cx="50" cy="65" r="30.5" fill="#f2f0e6"/>
+      ${H.ticks({ count: 60, outer: 29, inner: 27.4, majorEvery: 5, majorInner: 24.8,
+        color: "#15191a", width: .45, majorWidth: 1.1, cx: 50, cy: 65 })}
+      ${H.numerals({ labels: ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+        radius: 21.2, size: 5.5, color: "#15191a", family: "Georgia, serif", weight: 700, cx: 50, cy: 65 })}
+      <g data-hand="hour" data-cx="50" data-cy="65">
+        <path d="M47.8 69 48.3 50 50 44 51.7 50 52.2 69Z" fill="#15191a"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="65">
+        <path d="M48.5 70 49 42 50 36 51 42 51.5 70Z" fill="#15191a"/>
+      </g>
+      <g data-hand="second" data-cx="50" data-cy="65">
+        <line x1="50" y1="72" x2="50" y2="35" stroke="#147048" stroke-width=".75"/>
+      </g>
+      <circle cx="50" cy="65" r="2.2" fill="#d4b04f" stroke="#15191a" stroke-width=".55"/>`
+  }));
+
+  /* Elizabeth Tower clock: architectural frame rather than wristwatch form. */
+  defineFace("bigben", "Big Ben (Elizabeth Tower)", "tick", (id) => ({
+    viewBox: "0 0 100 124",
+    svg: `${H.defs(id, { gold: true, dial: "#f3efe1" })}
+      <path d="M25 0H75L70 12H30Z" fill="#4b5d54" stroke="#24342f" stroke-width="1"/>
+      <path d="M20 12H80L86 30H14Z" fill="#d0aa58" stroke="#66502d" stroke-width="1"/>
+      <rect x="12" y="29" width="76" height="75" fill="#c2a35d" stroke="#63512f" stroke-width="1"/>
+      <path d="M17 35H83V98H17Z" fill="#1d463e" stroke="#0e2925" stroke-width="1.2"/>
+      ${Array.from({ length: 9 }, (_, index) =>
+        `<path d="M${18 + index * 8} 31V102M15 ${35 + index * 7.5}H85"
+          stroke="#d3b56a" stroke-width=".5" opacity=".55"/>`
+      ).join("")}
+      <circle cx="50" cy="66" r="31.5" fill="#123f3a" stroke="#d7b86c" stroke-width="2.3"/>
+      <circle cx="50" cy="66" r="27.8" fill="#f3efe1" stroke="#191e1e" stroke-width=".8"/>
+      ${H.ticks({ count: 60, outer: 26.6, inner: 25.3, majorEvery: 5, majorInner: 22.6,
+        color: "#111719", width: .4, majorWidth: .9, cx: 50, cy: 66 })}
+      ${H.numerals({ labels: ["XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"],
+        radius: 18.4, size: 5.7, color: "#111719", family: "Georgia, serif", weight: 700, cx: 50, cy: 66 })}
+      <g data-hand="hour" data-cx="50" data-cy="66">
+        <path d="M48.8 69 48.8 53 46.8 49 50 43 53.2 49 51.2 53 51.2 69Z" fill="#111719"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="66">
+        <path d="M49.1 71 49.1 44 47.6 40 50 35.5 52.4 40 50.9 44 50.9 71Z" fill="#111719"/>
+      </g>
+      <circle cx="50" cy="66" r="2.1" fill="#111719"/>
+      <path d="M18 104H82L76 124H24Z" fill="#c1a15b" stroke="#62502e" stroke-width="1"/>
+      <path d="M25 106V121M38 106V124M50 106V124M62 106V124M75 106V121"
+        stroke="#4f4530" stroke-width="1"/>`
+  }));
+
+  /* Seiko 5 Sports SRPD51, blue 5KX dial and four-o'clock crown. */
+  defineFace("seiko5", "Seiko 5 Sports SRPD51", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#104f7b" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "#0b3555", dial: "#104f7b", dialRadius: 33.2, crown: false })}
+      <circle cx="50" cy="50" r="41" fill="#0a3150" stroke="#7a858b" stroke-width=".65"/>
+      <path d="M50 9.2 46.5 15H53.5Z" fill="#dce8df"/>
+      ${bezelLabels(["", "10", "20", "30", "40", "50"], { radius: 38.6, size: 3.3 })}
+      ${H.ticks({ count: 60, outer: 40, inner: 39.2, majorEvery: 5, majorInner: 38.3,
+        color: "#e1e8e4", width: .24, majorWidth: .45, skip: (i) => i === 0 })}
+      <circle cx="50" cy="50" r="33.2" fill="url(#${id}-dial)"/>
+      ${appliedMarkers({ radius: 27.8, length: 5.7, width: 2.35,
+        fill: "#e1eddf", stroke: "#d8ddde", skip: [3], circles: true, doubleTwelve: true })}
+      ${H.text(50, 31.5, "SEIKO", { size: 3.9, color: "#e8ecea", weight: 750, spacing: .2 })}
+      ${H.text(50, 36.2, "5", { size: 5.2, color: "#e8ecea", family: "Georgia, serif", weight: 700 })}
+      ${H.text(50, 65.8, "Automatic", { size: 2.4, color: "#e8ecea", family: "Georgia, serif", weight: 500 })}
+      <rect x="65" y="46.4" width="13" height="7.2" fill="#f4f2ea" stroke="#9da4a6" stroke-width=".6"/>
+      <rect x="65" y="46.4" width="7.4" height="7.2" fill="#f4f2ea"/>
+      ${H.text(68.7, 50.2, "MON", { size: 2.4, color: "#1b446d", weight: 700, extra: `data-text="day"` })}
+      ${H.text(75.1, 50.2, "28", { size: 3.2, color: "#15191a", weight: 700, extra: `data-text="date"` })}
+      ${H.batonHands({ hour: 19, minute: 27, second: 31, lume: "#dfeddd",
+        metal: "#d9dfe1", outline: "#536067", seconds: "#e6eaea", broad: true })}
+      <g transform="translate(85 70) rotate(38)">
+        <rect x="-2.8" y="-6" width="5.6" height="12" rx="2" fill="url(#${id}-steel)" stroke="#525d63" stroke-width=".55"/>
+      </g>
+      <circle cx="50" cy="50" r="33.2" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Blancpain Villeret complete calendar: pointer date and moon aperture. */
+  defineFace("moonphase", "Blancpain Villeret Quantieme Complet", "sweep", (id) => {
+    const dateNumerals = Array.from({ length: 31 }, (_, index) => {
+      const angle = index * 360 / 31;
+      const [x, y] = H.point(angle, 31.5);
+      return index % 2 === 0 ? H.text(x, y, String(index + 1), {
+        size: 1.7, color: "#303031", family: "Georgia, serif", weight: 600,
+        transform: `rotate(${angle} ${x} ${y})`
+      }) : "";
+    }).join("");
+    return {
+      svg: `${H.defs(id, { gold: true, dial: "#f4f0e6" })}
+        ${H.roundCase(id, { strap: "#3a2019", bezel: "url(#" + id + "-gold)", dial: "#f4f0e6", dialRadius: 36.5, gold: true })}
+        <circle cx="50" cy="50" r="36.2" fill="#f4f0e6"/>
+        ${dateNumerals}
+        ${H.ticks({ count: 31, outer: 34.2, inner: 33.4, majorEvery: 1, majorInner: 33.4,
+          color: "#5b5650", width: .25, majorWidth: .25 })}
+        ${H.numerals({ labels: ["XII", "I", "II", "III", "IIII", "V", "VI", "VII", "VIII", "IX", "X", "XI"],
+          radius: 24.3, size: 5.2, color: "#272625", family: "Georgia, serif", weight: 500 })}
+        ${H.text(50, 37.2, "BLANCPAIN", { size: 3.1, color: "#272625", family: "Georgia, serif", weight: 700, spacing: .1 })}
+        ${H.text(50, 40.2, "VILLERET", { size: 1.4, color: "#272625", weight: 600, spacing: .25 })}
+        <rect x="31" y="45" width="13" height="6" fill="#f9f6ed" stroke="#968a79" stroke-width=".55"/>
+        <rect x="56" y="45" width="13" height="6" fill="#f9f6ed" stroke="#968a79" stroke-width=".55"/>
+        ${H.text(37.5, 48.1, "TUE", { size: 2.6, color: "#242322", weight: 650, extra: `data-text="day"` })}
+        ${H.text(62.5, 48.1, "JUL", { size: 2.6, color: "#242322", weight: 650, extra: `data-text="month"` })}
+        <path d="M39 68A11 11 0 0 1 61 68V72H39Z" fill="#173c6d" stroke="#93856d" stroke-width=".6"/>
+        <g data-moon>
+          <circle cx="50" cy="67" r="7.3" fill="#e5c16b"/>
+          <circle cx="47.5" cy="65.4" r=".8" fill="#ad8a45"/>
+          <circle cx="53" cy="68" r=".65" fill="#ad8a45"/>
+          <circle cx="50.5" cy="63.4" r=".45" fill="#ad8a45"/>
+        </g>
+        <path d="M39 68Q44 62 50 68T61 68V74H39Z" fill="#f4f0e6"/>
+        <g data-hand="date" data-cx="50" data-cy="50">
+          <line x1="50" y1="55" x2="50" y2="18" stroke="#2d5d8c" stroke-width=".7"/>
+          <path d="M48.5 19.5 50 16 51.5 19.5Z" fill="#2d5d8c"/>
+        </g>
+        ${H.leafHands({ hour: 20, minute: 28, color: "#8d5b2c", second: 30, secondColor: "#8d5b2c" })}
+        <circle cx="50" cy="50" r="36.2" fill="url(#${id}-glass)" pointer-events="none"/>`
+    };
+  });
+
+  /* Richard Mille RM 011: tonneau case, skeleton bridges and three registers. */
+  defineFace("richardmille", "Richard Mille RM 011 Felipe Massa", "sweep", (id) => {
+    const screws = [[22, 17], [78, 17], [18, 50], [82, 50], [22, 83], [78, 83]]
+      .map(([x, y], index) => screw(x, y, 1.7, "#596167", index * 27)).join("");
+    return {
+      svg: `${H.defs(id, { gold: true, dial: "#17191a" })}
+        <path d="M31-6H69L73 12H27ZM27 88H73L69 106H31Z" fill="#d94e32"/>
+        <path d="M27 8Q50 2 73 8 88 22 86 50 88 78 73 92 50 98 27 92 12 78 14 50 12 22 27 8Z"
+          fill="url(#${id}-gold)" stroke="#6a3922" stroke-width="1"/>
+        <path d="M29 13Q50 7 71 13 81 25 80 50 81 75 71 87 50 93 29 87 19 75 20 50 19 25 29 13Z"
+          fill="#17191a" stroke="#c49769" stroke-width=".8"/>
+        ${screws}
+        <path d="M31 21 68 30 60 77 34 82 25 48Z" fill="none" stroke="#8f9698" stroke-width="2.5" opacity=".6"/>
+        <path d="M67 22 39 38 69 66 40 81" fill="none" stroke="#d1d5d5" stroke-width="2" opacity=".58"/>
+        ${Array.from({ length: 8 }, (_, index) => {
+          const [x, y] = H.point(index * 45, 25);
+          return `<circle cx="${x}" cy="${y}" r="${5 + index % 3}" fill="none" stroke="#72797b" stroke-width=".65"/>
+            <circle cx="${x}" cy="${y}" r="1.6" fill="#be4564"/>`;
+        }).join("")}
+        ${H.ticks({ count: 60, outer: 35, inner: 33.8, majorEvery: 5, majorInner: 31.5,
+          color: "#e9ece9", width: .25, majorWidth: .75 })}
+        ${H.numerals({ labels: ["12", "", "2", "", "4", "", "6", "", "8", "", "10", ""],
+          radius: 28.2, size: 5.3, color: "#f1f2ee", family: "Arial, sans-serif", weight: 800 })}
+        ${H.text(50, 27, "RICHARD MILLE", { size: 2, color: "#e7e9e6", weight: 750, spacing: .2 })}
+        ${H.subdial(35, 48, 8.3, { color: "#e2e5e2", hand: "small-second", labels: ["60", "", "15", "", "30", "", "45", ""] })}
+        ${H.subdial(65, 48, 8.3, { color: "#e2e5e2", labels: ["30", "", "", "10", "", "", "20", ""] })}
+        ${H.subdial(50, 68, 7.7, { color: "#e2e5e2", labels: ["12", "", "3", "", "6", "", "9", ""] })}
+        ${dateWindow(71.5, 67.5, { width: 6.2, height: 5.3, fill: "#eeeae0", size: 2.8 })}
+        ${H.batonHands({ hour: 18, minute: 25, secondHand: false, lume: "#e6efe3",
+          metal: "#e3e7e8", outline: "#515a5f", broad: true })}
+        <line x1="50" y1="57" x2="50" y2="15" stroke="#e23f35" stroke-width=".55"/>
+        <circle cx="50" cy="50" r="2.2" fill="#dfe3e4" stroke="#545d62" stroke-width=".5"/>
+        <path d="M26 18Q46 8 65 16L37 45Z" fill="#fff" opacity=".07"/>`
+    };
+  });
+
+  /* Tudor Black Bay Fifty-Eight: gilt scale and broad snowflake hands. */
+  defineFace("blackbay58", "TUDOR Black Bay Fifty-Eight M79030N", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#101314" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "#111314", dial: "#101314", dialRadius: 33.5 })}
+      <circle cx="50" cy="50" r="41" fill="#111314" stroke="#7f878b" stroke-width=".65"/>
+      <path d="M50 9.6 46.4 15.5H53.6Z" fill="#d9c98e"/>
+      <circle cx="50" cy="13.2" r="1.1" fill="#e0d39d"/>
+      ${bezelLabels(["", "10", "20", "30", "40", "50"], {
+        radius: 38.5, size: 3.25, color: "#d6c689"
+      })}
+      ${H.ticks({ count: 60, outer: 40, inner: 39.2, majorEvery: 5, majorInner: 38.4,
+        color: "#d6c689", width: .24, majorWidth: .45, skip: (i) => i === 0 })}
+      <circle cx="50" cy="50" r="33.5" fill="#101314"/>
+      ${appliedMarkers({ radius: 27.7, length: 5.8, width: 2.25,
+        fill: "#d8cfaa", stroke: "#b79f5f", circles: true, doubleTwelve: true })}
+      <path d="M47 29H53L52 34H48Z" fill="#d4bf79"/>
+      ${H.text(50, 34.8, "TUDOR", { size: 3.2, color: "#dccb91", family: "Georgia, serif", weight: 700, spacing: .25 })}
+      ${H.text(50, 38, "GENEVE", { size: 1.5, color: "#dccb91", weight: 650, spacing: .35 })}
+      ${H.text(50, 65.5, "200m:660ft", { size: 1.5, color: "#d8c98f", weight: 650, spacing: .15 })}
+      <g data-hand="hour" data-cx="50" data-cy="50">
+        <path d="M48.2 55V42L45.7 38 50 32.5 54.3 38 51.8 42V55Z"
+          fill="#d7cfab" stroke="#a88e55" stroke-width=".65"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="50">
+        <path d="M48.7 56V26L50 20 51.3 26V56Z" fill="#d7cfab" stroke="#a88e55" stroke-width=".6"/>
+      </g>
+      <g data-hand="second" data-cx="50" data-cy="50">
+        <line x1="50" y1="59" x2="50" y2="18" stroke="#d5c68e" stroke-width=".65"/>
+        <path d="M48.6 26 50 22.5 51.4 26Z" fill="#d5c68e"/>
+      </g>
+      <circle cx="50" cy="50" r="2.2" fill="#d4c384" stroke="#8f7848" stroke-width=".5"/>
+      <circle cx="50" cy="50" r="33.5" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Breitling Navitimer B01: layered slide-rule scales and three registers. */
+  defineFace("navitimer", "Breitling Navitimer B01 Chronograph 43", "sweep", (id) => {
+    const outerNums = Array.from({ length: 20 }, (_, index) => {
+      const angle = index * 18;
+      const [x, y] = H.point(angle, 39);
+      return H.text(x, y, String((60 + index * 5) % 100), {
+        size: 2.1, color: "#202224", weight: 650,
+        transform: `rotate(${angle} ${x} ${y})`
+      });
+    }).join("");
+    return {
+      svg: `${H.defs(id, { dial: "#101214" })}
+        ${H.roundCase(id, { strap: "#211b19", bezel: "url(#" + id + "-steel)", dial: "#101214", dialRadius: 30.4 })}
+        <circle cx="50" cy="50" r="42.4" fill="#e5e3dc" stroke="#626b70" stroke-width=".8"/>
+        ${H.ticks({ count: 100, outer: 41.5, inner: 40.7, majorEvery: 5, majorInner: 39.8,
+          color: "#1d2022", width: .2, majorWidth: .4 })}
+        ${outerNums}
+        <circle cx="50" cy="50" r="36.1" fill="#111315" stroke="#ecebe5" stroke-width=".5"/>
+        ${H.ticks({ count: 60, outer: 35.3, inner: 34.4, majorEvery: 5, majorInner: 32.9,
+          color: "#f0eee7", width: .25, majorWidth: .55 })}
+        ${H.ticks({ count: 60, outer: 31.8, inner: 31.2, majorEvery: 5, majorInner: 30,
+          color: "#f0eee7", width: .2, majorWidth: .45 })}
+        ${appliedMarkers({ radius: 27.5, length: 5.3, width: 1.35,
+          fill: "#e8ece4", stroke: "#bdc4c5", skip: [3, 6, 9], doubleTwelve: true })}
+        <path d="M45 29Q50 25 55 29L50 31Z" fill="#d2ad61"/>
+        ${H.text(50, 33.3, "BREITLING", { size: 2.5, color: "#f0eee8", weight: 750, spacing: .22 })}
+        ${H.text(50, 36, "1884", { size: 1.35, color: "#f0eee8", weight: 650 })}
+        ${H.text(50, 38.4, "NAVITIMER", { size: 1.4, color: "#f0eee8", weight: 650, spacing: .2 })}
+        ${H.subdial(31.5, 50, 7.8, { color: "#151719", fill: "#e8e6df", hand: "small-second",
+          labels: ["60", "", "15", "", "30", "", "45", ""] })}
+        ${H.subdial(68.5, 50, 7.8, { color: "#151719", fill: "#e8e6df",
+          labels: ["30", "", "", "10", "", "", "20", ""] })}
+        ${H.subdial(50, 68, 7.8, { color: "#151719", fill: "#e8e6df",
+          labels: ["12", "", "3", "", "6", "", "9", ""] })}
+        ${dateWindow(50, 74, { width: 5.8, height: 4.8, fill: "#f2f0e8", size: 2.7 })}
+        ${H.batonHands({ hour: 18, minute: 25.5, secondHand: false, lume: "#eef1e6",
+          metal: "#e5e9ea", outline: "#525d63", broad: true })}
+        <line x1="50" y1="57" x2="50" y2="14" stroke="#d92c2c" stroke-width=".55"/>
+        <circle cx="50" cy="50" r="2" fill="#e7ebeb" stroke="#566168" stroke-width=".5"/>
+        <circle cx="50" cy="50" r="42.4" fill="url(#${id}-glass)" pointer-events="none"/>`
+    };
+  });
+
+  /* Zenith Chronomaster Sport: tenth-second bezel and overlapping tri-colour
+     El Primero registers. */
+  defineFace("elprimero", "Zenith Chronomaster Sport 03.3100.3600/69.M3100", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#f1f0e9" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "#090b0c", dial: "#f1f0e9", dialRadius: 33.5 })}
+      <circle cx="50" cy="50" r="41.4" fill="#090b0c"/>
+      ${bezelLabels(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"], {
+        radius: 38.7, size: 2.8, start: 36
+      })}
+      ${H.ticks({ count: 100, outer: 40.4, inner: 39.7, majorEvery: 10, majorInner: 38.9,
+        color: "#e5e7e2", width: .2, majorWidth: .4 })}
+      <circle cx="50" cy="50" r="33.5" fill="#f1f0e9"/>
+      ${H.ticks({ count: 60, outer: 32.6, inner: 31.7, majorEvery: 5, majorInner: 30.5,
+        color: "#202325", width: .22, majorWidth: .5 })}
+      ${appliedMarkers({ radius: 27.6, length: 6, width: 1.35,
+        fill: "#edf1e8", stroke: "#858d91", skip: [3, 6, 9], doubleTwelve: true })}
+      <path d="M47.5 27 51.5 27 49 31 53 31 47 36 49.2 32.5 45.4 32.5Z" fill="#202325"/>
+      ${H.text(50, 37.2, "ZENITH", { size: 2.5, color: "#202325", weight: 750, spacing: .3 })}
+      ${H.subdial(35, 50, 8.5, { color: "#202325", fill: "#aab0b3", hand: "small-second",
+        labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${H.subdial(65, 50, 8.5, { color: "#202325", fill: "#50688b",
+        labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${H.subdial(50, 67, 8.5, { color: "#202325", fill: "#b8a6a5",
+        labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${dateWindow(72.5, 63, { width: 6.2, height: 5.2, fill: "#f3f1e9", size: 2.8 })}
+      ${H.batonHands({ hour: 18, minute: 26, secondHand: false, lume: "#eef2e9",
+        metal: "#dce1e2", outline: "#566168" })}
+      <line x1="50" y1="57" x2="50" y2="15" stroke="#da3f38" stroke-width=".55"/>
+      <path d="M49.2 16 50 13.5 50.8 16Z" fill="#da3f38"/>
+      <circle cx="50" cy="50" r="2" fill="#dde2e3" stroke="#555f64" stroke-width=".5"/>`
+  }));
+
+  /* Vacheron Constantin Overseas: blue lacquer, Maltese-cross bezel and
+     integrated bracelet. */
+  defineFace("overseas", "Vacheron Constantin Overseas Self-Winding 4520V/210A-B128", "sweep", (id) => {
+    const bezel = Array.from({ length: 6 }, (_, index) => {
+      const angle = index * 60;
+      const p1 = H.point(angle - 10, 42);
+      const p2 = H.point(angle, 38.5);
+      const p3 = H.point(angle + 10, 42);
+      return `<path d="M${p1[0]} ${p1[1]}L${p2[0]} ${p2[1]}L${p3[0]} ${p3[1]}"
+        fill="none" stroke="#eef1f1" stroke-width="4.2" stroke-linejoin="miter"/>`;
+    }).join("");
+    return {
+      svg: `${H.defs(id, { dial: "#123e7a" })}
+        ${Array.from({ length: 8 }, (_, i) => `<path d="M34 ${-7 + i * 7} 42 ${-3 + i * 7} 50 ${-7 + i * 7}
+          58 ${-3 + i * 7} 66 ${-7 + i * 7}V${-1 + i * 7}H34Z" fill="url(#${id}-steel)" stroke="#677076" stroke-width=".3"/>`).join("")}
+        ${Array.from({ length: 8 }, (_, i) => `<path d="M34 ${83 + i * 7} 42 ${87 + i * 7} 50 ${83 + i * 7}
+          58 ${87 + i * 7} 66 ${83 + i * 7}V${89 + i * 7}H34Z" fill="url(#${id}-steel)" stroke="#677076" stroke-width=".3"/>`).join("")}
+        <circle cx="50" cy="50" r="45" fill="url(#${id}-steel)" stroke="#555f64" stroke-width=".8"/>
+        ${bezel}
+        <circle cx="50" cy="50" r="35.8" fill="#123e7a" stroke="#7d8990" stroke-width=".65"/>
+        ${Array.from({ length: 40 }, (_, index) => {
+          const angle = index * 9;
+          const [x, y] = H.point(angle, 34);
+          return `<line x1="50" y1="50" x2="${x}" y2="${y}" stroke="#4080bd" stroke-width=".18" opacity=".35"/>`;
+        }).join("")}
+        ${H.ticks({ count: 60, outer: 34.5, inner: 33.7, majorEvery: 5, majorInner: 31.9,
+          color: "#e6eceb", width: .22, majorWidth: .5 })}
+        ${appliedMarkers({ radius: 28, length: 6.8, width: 1.55,
+          fill: "#ecf2e8", stroke: "#c0c9cc", skip: [3], doubleTwelve: true })}
+        <path d="M50 29 48.4 31.5 46 30.2 47.3 33 45.1 35.2 48.1 34.5 50 37 51.9 34.5 54.9 35.2 52.7 33 54 30.2 51.6 31.5Z"
+          fill="#e8ecec"/>
+        ${H.text(50, 40, "VACHERON CONSTANTIN", { size: 1.6, color: "#e8eceb", family: "Georgia, serif", weight: 700, spacing: .08 })}
+        ${H.text(50, 42.7, "GENEVE", { size: 1.25, color: "#e8eceb", weight: 650, spacing: .22 })}
+        ${dateWindow(72.5, 50, { width: 7.3, height: 6.2, fill: "#f3f1e9", size: 3.3 })}
+        ${H.batonHands({ hour: 20, minute: 28, second: 31, lume: "#edf3e8",
+          metal: "#ecf1f1", outline: "#5a666c", seconds: "#edf1f1" })}
+        <circle cx="50" cy="50" r="35.8" fill="url(#${id}-glass)" pointer-events="none"/>`
+    };
+  });
+
+  /* Hublot Big Bang Unico Red Magic: ceramic case, six H screws and open work. */
+  defineFace("bigbang", "Hublot Big Bang Unico Red Magic 42", "sweep", (id) => {
+    const gears = [[39, 38, 9], [61, 40, 8], [44, 62, 10], [65, 65, 7]]
+      .map(([x, y, r], index) => `<circle cx="${x}" cy="${y}" r="${r}" fill="none"
+        stroke="${index % 2 ? "#7b7f80" : "#b7b9b9"}" stroke-width="1.2"/>
+        ${H.ticks({ count: 18, outer: r, inner: r - 1.3, majorEvery: 1, majorInner: r - 1.3,
+          color: "#9ca0a0", width: .35, majorWidth: .35, cx: x, cy: y })}
+        <circle cx="${x}" cy="${y}" r="2" fill="#7b2230"/>`).join("");
+    return {
+      svg: `${H.defs(id, { steel: false, dial: "#17191a" })}
+        <path d="M34-5H66L70 16H30ZM30 84H70L66 105H34Z" fill="#b51825"/>
+        <path d="M25 9 75 9 90 24 90 76 75 91 25 91 10 76 10 24Z"
+          fill="#b71926" stroke="#651019" stroke-width="1.1"/>
+        <circle cx="50" cy="50" r="41.5" fill="#c32632" stroke="#7d131c" stroke-width=".8"/>
+        ${Array.from({ length: 6 }, (_, index) => {
+          const [x, y] = H.point(index * 60, 38);
+          return screw(x, y, 2.1, "#5a5e60", index * 60);
+        }).join("")}
+        <circle cx="50" cy="50" r="34.5" fill="#17191a" stroke="#555c60" stroke-width=".6"/>
+        ${gears}
+        ${H.ticks({ count: 60, outer: 33.4, inner: 32.5, majorEvery: 5, majorInner: 30.7,
+          color: "#e9ece8", width: .25, majorWidth: .65 })}
+        ${H.numerals({ labels: ["12", "", "2", "", "4", "", "6", "", "8", "", "10", ""],
+          radius: 27, size: 6, color: "#f0f1ed", family: "Arial, sans-serif", weight: 800 })}
+        ${H.text(50, 33.5, "HUBLOT", { size: 3.3, color: "#f0f1ed", weight: 800, spacing: .25 })}
+        ${H.subdial(67, 50, 8.5, { color: "#f0f1ed", fill: "rgba(0,0,0,.35)",
+          labels: ["60", "", "15", "", "30", "", "45", ""] })}
+        ${H.subdial(50, 68, 8.2, { color: "#f0f1ed", fill: "rgba(0,0,0,.35)",
+          hand: "small-second", labels: ["60", "", "15", "", "30", "", "45", ""] })}
+        ${H.batonHands({ hour: 18.5, minute: 26.5, secondHand: false, lume: "#eef3e7",
+          metal: "#edf0f0", outline: "#575f63", broad: true })}
+        <line x1="50" y1="57" x2="50" y2="15" stroke="#e8eeee" stroke-width=".55"/>
+        <circle cx="50" cy="50" r="2.2" fill="#e4e8e8" stroke="#555e62" stroke-width=".55"/>
+        <rect x="90" y="42" width="6.5" height="16" rx="2.5" fill="#17191a"/>`
+    };
+  });
+
+  /* Tissot PRX Powermatic 80: integrated bracelet and blue waffle dial. */
+  defineFace("prx", "Tissot PRX 40mm Powermatic 80 T137.407.11.041.00", "sweep", (id) => {
+    const waffle = Array.from({ length: 10 }, (_, row) =>
+      Array.from({ length: 10 }, (_, col) =>
+        `<rect x="${25 + col * 5.3}" y="${25 + row * 5.3}" width="4.5" height="4.5"
+          fill="${(row + col) % 2 ? "#154c80" : "#1a5b93"}" stroke="#0e3d6a" stroke-width=".25"/>`
+      ).join("")
+    ).join("");
+    return {
+      svg: `${H.defs(id, { dial: "#18568d" })}
+        ${Array.from({ length: 14 }, (_, index) => `<path d="M31 ${-9 + index * 7.8}H69L65 ${-3 + index * 7.8}H35Z"
+          fill="url(#${id}-steel)" stroke="#616a70" stroke-width=".35"/>`).join("")}
+        <path d="M27 14H73L84 27V73L73 86H27L16 73V27Z" fill="url(#${id}-steel)" stroke="#566066" stroke-width=".8"/>
+        <circle cx="50" cy="50" r="37.4" fill="#d8ddde"/>
+        <circle cx="50" cy="50" r="35.2" fill="#18568d"/>
+        <g clip-path="url(#${id}-waffle)">${waffle}</g>
+        <defs><clipPath id="${id}-waffle"><circle cx="50" cy="50" r="34.7"/></clipPath></defs>
+        ${H.ticks({ count: 60, outer: 34, inner: 33.2, majorEvery: 5, majorInner: 31.5,
+          color: "#e8eeee", width: .22, majorWidth: .5 })}
+        ${appliedMarkers({ radius: 28.3, length: 7, width: 1.55,
+          fill: "#edf2e7", stroke: "#c0c8ca", skip: [3], doubleTwelve: true })}
+        ${H.text(50, 33.5, "TISSOT", { size: 3.4, color: "#edf0ed", weight: 800, spacing: .22 })}
+        ${H.text(50, 36.5, "1853", { size: 1.5, color: "#edf0ed", weight: 650, spacing: .2 })}
+        ${H.text(50, 66, "POWERMATIC 80", { size: 1.45, color: "#edf0ed", weight: 700, spacing: .15 })}
+        ${dateWindow(72.4, 50, { width: 7.2, height: 6.2, fill: "#f3f1e9", size: 3.2 })}
+        ${H.batonHands({ hour: 20, minute: 28, second: 31, lume: "#edf2e7",
+          metal: "#e7ecec", outline: "#576269", seconds: "#ecefee" })}
+        <circle cx="50" cy="50" r="35.2" fill="url(#${id}-glass)" pointer-events="none"/>`
+    };
+  });
+
+  /* Hamilton Khaki Field Mechanical: outer hours and inner 24-hour scale. */
+  defineFace("khaki", "Hamilton Khaki Field Mechanical 38mm H69439931", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#181a1a" })}
+      ${H.roundCase(id, { strap: "#6a5c43", bezel: "#a9afb1", dial: "#181a1a", dialRadius: 37 })}
+      <circle cx="50" cy="50" r="36.4" fill="#181a1a"/>
+      ${H.ticks({ count: 60, outer: 34.8, inner: 33.5, majorEvery: 5, majorInner: 31.5,
+        color: "#e7e7df", width: .3, majorWidth: .7 })}
+      ${H.numerals({ labels: ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+        radius: 27.5, size: 5.2, color: "#e8e8e0", family: "Arial, sans-serif", weight: 700 })}
+      ${H.numerals({ labels: ["24", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"],
+        radius: 19.9, size: 2.5, color: "#c3c4bc", family: "Arial, sans-serif", weight: 650 })}
+      ${H.text(50, 38.3, "HAMILTON", { size: 2.3, color: "#ecece4", weight: 750, spacing: .23 })}
+      ${H.text(50, 64, "MECHANICAL", { size: 1.55, color: "#d6d7d0", weight: 650, spacing: .22 })}
+      ${H.batonHands({ hour: 19, minute: 27, second: 31, lume: "#d9c796",
+        metal: "#d9dce0", outline: "#51595d", seconds: "#d84b3d", broad: true })}
+      <circle cx="50" cy="50" r="36.4" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Bell & Ross BR-03: square matte ceramic instrument case. */
+  defineFace("br03", "Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB", "sweep", (id) => ({
+    svg: `${H.defs(id, { steel: false, dial: "#101213" })}
+      <path d="M34-5H66L70 15H30ZM30 85H70L66 105H34Z" fill="#161819"/>
+      <rect x="8" y="8" width="84" height="84" rx="12" fill="#1b1e1f" stroke="#090a0a" stroke-width="1.2"/>
+      ${screw(18, 18, 2.2, "#3d4243", 45)}${screw(82, 18, 2.2, "#3d4243", -45)}
+      ${screw(18, 82, 2.2, "#3d4243", -45)}${screw(82, 82, 2.2, "#3d4243", 45)}
+      <circle cx="50" cy="50" r="35.5" fill="#101213" stroke="#383d3f" stroke-width=".7"/>
+      ${H.ticks({ count: 60, outer: 33.6, inner: 32.4, majorEvery: 5, majorInner: 29.7,
+        color: "#d6ddcd", width: .3, majorWidth: .75 })}
+      ${H.numerals({ labels: ["12", "", "", "3", "", "", "6", "", "", "9", "", ""],
+        radius: 23.5, size: 8.7, color: "#d8dfcf", family: "Arial, sans-serif", weight: 800 })}
+      ${H.text(50, 37.6, "BELL & ROSS", { size: 2.4, color: "#e1e6da", weight: 750, spacing: .2 })}
+      ${H.text(50, 65, "AUTOMATIC", { size: 1.5, color: "#d4dacd", weight: 650, spacing: .23 })}
+      ${dateWindow(70, 58.5, { width: 7, height: 5.5, fill: "#151718", color: "#e3e6df", border: "#666c6c", size: 3 })}
+      ${H.batonHands({ hour: 19, minute: 28, second: 31, lume: "#d9dfd0",
+        metal: "#b8bec0", outline: "#4f575b", seconds: "#dce1db", broad: true })}
+      <circle cx="50" cy="50" r="35.5" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Marine Torpilleur 1182: white enamel, blue Roman hands and small seconds. */
+  defineFace("marine", "Ulysse Nardin Marine Torpilleur 1182-310/42", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#f5f3eb" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "url(#" + id + "-steel)", dial: "#f5f3eb", dialRadius: 36.2 })}
+      <circle cx="50" cy="50" r="36" fill="#f5f3eb"/>
+      ${H.ticks({ count: 60, outer: 34.5, inner: 33.4, majorEvery: 5, majorInner: 31.4,
+        color: "#1d4772", width: .25, majorWidth: .55 })}
+      ${H.numerals({ labels: ["12", "1", "2", "3", "4", "5", "", "7", "8", "9", "10", "11"],
+        radius: 27, size: 5.8, color: "#1c4a78", family: "Arial, sans-serif", weight: 650 })}
+      <path d="M50 29V36M46.5 32.5H53.5M47.5 29.5Q50 25 52.5 29.5"
+        fill="none" stroke="#1b4c78" stroke-width=".75"/>
+      ${H.text(50, 38, "ULYSSE NARDIN", { size: 2.2, color: "#1b4166", family: "Georgia, serif", weight: 700, spacing: .12 })}
+      ${H.text(50, 41, "LE LOCLE SUISSE", { size: 1.15, color: "#1b4166", weight: 650, spacing: .14 })}
+      ${H.subdial(50, 67, 10.2, { color: "#1c4771", hand: "small-second",
+        labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${dateWindow(50, 73.5, { width: 6.8, height: 4.6, fill: "#f8f6ef", color: "#1d4165", size: 2.7 })}
+      <circle cx="50" cy="29" r="6.6" fill="none" stroke="#1c4771" stroke-width=".5"/>
+      <path d="${H.arc(50, 29, 5.2, 220, 140)}" fill="none" stroke="#c03b35" stroke-width="1"/>
+      <line x1="50" y1="29" x2="47.5" y2="24.8" stroke="#1d4772" stroke-width=".65"/>
+      ${H.leafHands({ hour: 20, minute: 28, color: "#245c96" })}
+      <circle cx="50" cy="50" r="36" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Freak X Carb: no conventional dial; the minute bridge is the carousel. */
+  defineFace("freak", "Ulysse Nardin Freak X Carb 2303-270/CARB", "sweep", (id) => {
+    const gears = [[38, 58, 9], [61, 62, 10], [53, 43, 7], [69, 43, 5]]
+      .map(([x, y, r], index) => `<circle cx="${x}" cy="${y}" r="${r}" fill="none"
+        stroke="${index % 2 ? "#555a5d" : "#aeb4b6"}" stroke-width="1"/>
+        ${H.ticks({ count: 14, outer: r, inner: r - 1.4, majorEvery: 1, majorInner: r - 1.4,
+          color: "#7f8588", width: .35, majorWidth: .35, cx: x, cy: y })}
+        <circle cx="${x}" cy="${y}" r="1.8" fill="#a22b56"/>`).join("");
+    return {
+      svg: `${H.defs(id, { steel: false, dial: "#17191b" })}
+        ${H.roundCase(id, { strap: "#171718", caseFill: "#242728", bezel: "#252829", dial: "#17191b", dialRadius: 36 })}
+        <circle cx="50" cy="50" r="35.8" fill="#17191b"/>
+        ${H.ticks({ count: 60, outer: 34.2, inner: 33.4, majorEvery: 5, majorInner: 30.8,
+          color: "#ecf0ed", width: .23, majorWidth: .65 })}
+        ${appliedMarkers({ radius: 28.5, length: 6.4, width: 1.4,
+          fill: "#e9efe8", stroke: "#aeb6b8", doubleTwelve: true })}
+        ${gears}
+        ${H.text(50, 27.5, "ULYSSE NARDIN", { size: 2.2, color: "#eef0ed", weight: 750, spacing: .16 })}
+        <g data-hand="hour" data-cx="50" data-cy="50">
+          <path d="M47.5 54 47.5 40 50 33 52.5 40 52.5 54Z"
+            fill="#e4e8e8" stroke="#4e5558" stroke-width=".6"/>
+          <path d="M49 49V40L50 36.5 51 40V49Z" fill="#111416"/>
+        </g>
+        <g data-hand="minute" data-cx="50" data-cy="50">
+          <path d="M46 57 48.2 45 49 21 50 16 51 21 51.8 45 54 57 50 53Z"
+            fill="#dfe4e4" stroke="#4e5558" stroke-width=".6"/>
+          <path d="M49.2 46 49.4 23 50 19 50.6 23 50.8 46Z" fill="#151819"/>
+          <circle cx="50" cy="25" r="3.3" fill="none" stroke="#8f9699" stroke-width=".65"/>
+        </g>
+        <circle cx="50" cy="50" r="2.4" fill="#aa315c" stroke="#c1c6c7" stroke-width=".55"/>
+        <circle cx="50" cy="50" r="35.8" fill="url(#${id}-glass)" pointer-events="none"/>`
+    };
+  });
+
+  /* Patek 5270J perpetual calendar chronograph: triple calendar windows,
+     day/night and leap-year indicators, moonphase and twin chronograph dials. */
+  defineFace("patek", "Patek Philippe Perpetual Calendar Chronograph 5270J-001", "sweep", (id) => ({
+    svg: `${H.defs(id, { gold: true, dial: "#f2ede1" })}
+      ${H.roundCase(id, { strap: "#42241c", bezel: "url(#" + id + "-gold)", dial: "#f2ede1", dialRadius: 36.5, gold: true })}
+      <rect x="91" y="36" width="5.5" height="7" rx="2" fill="url(#${id}-gold)"/>
+      <rect x="91" y="57" width="5.5" height="7" rx="2" fill="url(#${id}-gold)"/>
+      <circle cx="50" cy="50" r="36.1" fill="#f2ede1"/>
+      ${H.ticks({ count: 60, outer: 34.8, inner: 33.8, majorEvery: 5, majorInner: 31.9,
+        color: "#302d29", width: .25, majorWidth: .55 })}
+      ${appliedMarkers({ radius: 28.3, length: 6.2, width: 1.25,
+        fill: "#d39b4f", stroke: "#9c6630", skip: [0, 3, 6, 9] })}
+      ${H.text(50, 31.5, "PATEK PHILIPPE", { size: 2.6, color: "#252321", family: "Georgia, serif", weight: 700, spacing: .1 })}
+      ${H.text(50, 34.5, "GENEVE", { size: 1.6, color: "#252321", family: "Georgia, serif", spacing: .24 })}
+      <rect x="31" y="38" width="12" height="5.8" fill="#f8f4e9" stroke="#927c62" stroke-width=".5"/>
+      <rect x="44" y="37.2" width="12" height="7.4" fill="#f8f4e9" stroke="#927c62" stroke-width=".5"/>
+      <rect x="57" y="38" width="12" height="5.8" fill="#f8f4e9" stroke="#927c62" stroke-width=".5"/>
+      ${H.text(37, 41, "TUE", { size: 2.5, color: "#242220", weight: 650, extra: `data-text="day"` })}
+      ${H.text(50, 41, "28", { size: 3.8, color: "#242220", family: "Georgia, serif", weight: 650, extra: `data-text="date"` })}
+      ${H.text(63, 41, "JUL", { size: 2.5, color: "#242220", weight: 650, extra: `data-text="month"` })}
+      ${H.subdial(32.5, 57, 9.2, { color: "#3b3732", hand: "small-second",
+        labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${H.subdial(67.5, 57, 9.2, { color: "#3b3732",
+        labels: ["30", "", "", "10", "", "", "20", ""] })}
+      <path d="M41 69A9 9 0 0 1 59 69V74H41Z" fill="#183c6b" stroke="#a88145" stroke-width=".55"/>
+      <g data-moon><circle cx="50" cy="68" r="5.5" fill="#d9b75f"/></g>
+      <path d="M41 69Q45 65 50 70T59 69V75H41Z" fill="#f2ede1"/>
+      ${H.leafHands({ hour: 19, minute: 27, color: "#aa7031" })}
+      <line x1="50" y1="57" x2="50" y2="15" stroke="#aa7031" stroke-width=".48"/>
+      <circle cx="50" cy="50" r="1.9" fill="#c58d47"/>
+      <circle cx="50" cy="50" r="36.1" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Explorer 36: 3-6-9 dial and Mercedes handset. */
+  defineFace("explorer", "Rolex Explorer 36 124270", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#090b0c" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "url(#" + id + "-steel)", dial: "#090b0c", dialRadius: 36 })}
+      <circle cx="50" cy="50" r="35.5" fill="#090b0c"/>
+      ${H.ticks({ count: 60, outer: 34, inner: 33.2, majorEvery: 5, majorInner: 31.5,
+        color: "#e3e8e4", width: .22, majorWidth: .5 })}
+      ${[1, 2, 4, 5, 7, 8, 10, 11].map((index) => {
+        const [x, y] = H.point(index * 30, 27.5);
+        return `<rect x="${x - 1}" y="${y - 3.4}" width="2" height="6.8" rx=".8"
+          fill="#dfeadd" stroke="#c6ccce" stroke-width=".5"
+          transform="rotate(${index * 30} ${x} ${y})"/>`;
+      }).join("")}
+      ${H.text(50, 17.5, "12", { size: 1, opacity: 0 })}
+      ${H.text(72.5, 50, "3", { size: 8.2, color: "#e1ebe0", family: "Arial, sans-serif", weight: 800 })}
+      ${H.text(50, 73, "6", { size: 8.2, color: "#e1ebe0", family: "Arial, sans-serif", weight: 800 })}
+      ${H.text(27.5, 50, "9", { size: 8.2, color: "#e1ebe0", family: "Arial, sans-serif", weight: 800 })}
+      <path d="M50 14 46.4 20.2H53.6Z" fill="#dfeadd" stroke="#c6ccce" stroke-width=".5"/>
+      ${crownMark(50, 30, "#edf0ed", .62)}
+      ${H.text(50, 35, "ROLEX", { size: 3.1, color: "#edf0ed", family: "Georgia, serif", weight: 700 })}
+      ${H.text(50, 38.2, "OYSTER PERPETUAL", { size: 1.35, color: "#e7ebe8", weight: 650, spacing: .12 })}
+      ${H.text(50, 63.5, "EXPLORER", { size: 1.8, color: "#e7ebe8", weight: 700, spacing: .22 })}
+      ${mercedesHands()}
+      <circle cx="50" cy="50" r="35.5" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Santos de Cartier Large: rounded square steel case, exposed screws and
+     blue sword hands. */
+  defineFace("santos", "Cartier Santos de Cartier Large WSSA0018", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#f1f0e9" })}
+      ${Array.from({ length: 14 }, (_, index) => `<rect x="32" y="${-9 + index * 8}" width="36" height="7"
+        rx="1.2" fill="url(#${id}-steel)" stroke="#667076" stroke-width=".35"/>
+        ${screw(36, -5 + index * 8, .8, "#9ea5a8", 0)}${screw(64, -5 + index * 8, .8, "#9ea5a8", 0)}`).join("")}
+      <rect x="10" y="10" width="80" height="80" rx="15" fill="url(#${id}-steel)" stroke="#566066" stroke-width=".9"/>
+      ${[[20, 20], [80, 20], [20, 80], [80, 80], [50, 15], [50, 85], [15, 50], [85, 50]]
+        .map(([x, y], index) => screw(x, y, 1.45, "#bfc5c7", index * 23)).join("")}
+      <rect x="18" y="18" width="64" height="64" rx="10" fill="#f1f0e9" stroke="#9da3a4" stroke-width=".7"/>
+      <rect x="23" y="23" width="54" height="54" rx="7" fill="none" stroke="#25292d" stroke-width=".6"/>
+      ${romanTrack({ left: 27, top: 27, right: 73, bottom: 73, color: "#20252a" })}
+      ${H.text(50, 39, "CARTIER", { size: 2.8, color: "#22272b", family: "Georgia, serif", weight: 700, spacing: .12 })}
+      ${dateWindow(50, 69, { width: 7, height: 5.2, fill: "#f5f3eb", color: "#22272b", size: 2.8 })}
+      <g data-hand="hour" data-cx="50" data-cy="50">
+        <path d="M49.1 54 48.3 35 50 30 51.7 35 50.9 54Z" fill="#23589b" stroke="#15345e" stroke-width=".45"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="50">
+        <path d="M49.2 55 48.8 27 50 23 51.2 27 50.8 55Z" fill="#23589b" stroke="#15345e" stroke-width=".45"/>
+      </g>
+      <g data-hand="second" data-cx="50" data-cy="50">
+        <line x1="50" y1="58" x2="50" y2="20" stroke="#23589b" stroke-width=".55"/>
+      </g>
+      <circle cx="50" cy="50" r="1.9" fill="#245b9d" stroke="#15345e" stroke-width=".45"/>
+      <circle cx="92" cy="50" r="3.4" fill="#275a9d" stroke="#bfc5c6" stroke-width="1"/>`
+  }));
+
+  /* IWC Big Pilot 43: large conical crown, sparse Arabic dial and triangle. */
+  defineFace("bigpilot", "IWC Big Pilot's Watch 43 IW329301", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#111314" })}
+      ${H.roundCase(id, { strap: "#422d22", bezel: "url(#" + id + "-steel)", dial: "#111314", dialRadius: 36.5, crown: false })}
+      <circle cx="50" cy="50" r="36" fill="#111314"/>
+      ${H.ticks({ count: 60, outer: 34.5, inner: 33.1, majorEvery: 5, majorInner: 30.5,
+        color: "#e7ece5", width: .35, majorWidth: .85 })}
+      ${H.numerals({ labels: ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+        radius: 26.2, size: 6.8, color: "#e9eee7", family: "Arial, sans-serif", weight: 700 })}
+      <path d="M50 14.5 45.8 21H54.2Z" fill="#e7ece5"/>
+      <circle cx="44.2" cy="17" r="1.1" fill="#e7ece5"/><circle cx="55.8" cy="17" r="1.1" fill="#e7ece5"/>
+      ${H.text(50, 34, "IWC", { size: 5, color: "#e9eee7", family: "Georgia, serif", weight: 600 })}
+      ${H.text(50, 38, "SCHAFFHAUSEN", { size: 1.6, color: "#e9eee7", weight: 650, spacing: .25 })}
+      ${H.text(50, 65, "AUTOMATIC", { size: 1.7, color: "#e0e5df", weight: 650, spacing: .25 })}
+      ${H.batonHands({ hour: 20, minute: 28, second: 31, lume: "#e7eee2",
+        metal: "#e7ebeb", outline: "#555f64", seconds: "#e5eae7", broad: true })}
+      <path d="M91 42 98 46V54L91 58 86 54V46Z" fill="url(#${id}-steel)" stroke="#535d62" stroke-width=".7"/>
+      ${Array.from({ length: 6 }, (_, index) => `<line x1="${91 + index}" y1="44" x2="${91 + index}" y2="56"
+        stroke="#626b70" stroke-width=".35"/>`).join("")}
+      <circle cx="50" cy="50" r="36" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Blancpain Fifty Fathoms Automatique: sapphire dive bezel and date at 4:30. */
+  defineFace("fiftyfathoms", "Blancpain Fifty Fathoms Automatique 5015 1130 71S", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#0d1114" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "#0d1114", dial: "#0d1114", dialRadius: 32.6 })}
+      <circle cx="50" cy="50" r="41.5" fill="#10161a" stroke="#89949a" stroke-width=".75"/>
+      <circle cx="50" cy="50" r="39.4" fill="#11171b" stroke="#29343a" stroke-width=".8"/>
+      <path d="M50 10.4 46.5 16.1H53.5Z" fill="#dce9d8"/>
+      <circle cx="50" cy="13.7" r="1.1" fill="#dce9d8"/>
+      ${bezelLabels(["", "10", "20", "30", "40", "50"], { radius: 37.5, size: 3.5 })}
+      ${H.ticks({ count: 60, outer: 39, inner: 38.1, majorEvery: 5, majorInner: 37.2,
+        color: "#e4ebe5", width: .25, majorWidth: .48, skip: (i) => i === 0 })}
+      <circle cx="50" cy="50" r="32.6" fill="#0d1114"/>
+      ${H.ticks({ count: 60, outer: 31.5, inner: 30.7, majorEvery: 5, majorInner: 28.9,
+        color: "#e2e9e3", width: .22, majorWidth: .5 })}
+      ${H.numerals({ labels: ["12", "", "", "3", "", "", "6", "", "", "9", "", ""],
+        radius: 24.5, size: 7.2, color: "#dce9d8", family: "Arial, sans-serif", weight: 700 })}
+      ${[1, 2, 4, 5, 7, 8, 10, 11].map((index) => {
+        const [x, y] = H.point(index * 30, 25.5);
+        return `<rect x="${x - 1.1}" y="${y - 3.2}" width="2.2" height="6.4" rx=".9"
+          fill="#dce9d8" transform="rotate(${index * 30} ${x} ${y})"/>`;
+      }).join("")}
+      ${H.text(50, 34, "BLANCPAIN", { size: 2.8, color: "#edf0ec", family: "Georgia, serif", weight: 700, spacing: .12 })}
+      ${H.text(50, 37, "FIFTY FATHOMS", { size: 1.5, color: "#edf0ec", weight: 650, spacing: .2 })}
+      ${dateWindow(67.2, 67.2, { width: 6.8, height: 5.4, fill: "#f2f0e8", size: 2.9 })}
+      ${H.batonHands({ hour: 19, minute: 27, second: 30, lume: "#dce9d8",
+        metal: "#dbe0e1", outline: "#505a60", seconds: "#e5ebe7", broad: true })}
+      <circle cx="50" cy="50" r="39.4" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Breguet Type XX 2067: black military dial, fluted caseband and flyback
+     registers at 3, 6 and 9. */
+  defineFace("typexx", "Breguet Type XX Chronographe 2067 2067ST/92/3WU", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#141617" })}
+      ${H.roundCase(id, { strap: "#3b2620", bezel: "url(#" + id + "-steel)", dial: "#141617", dialRadius: 34.2 })}
+      ${Array.from({ length: 40 }, (_, index) => {
+        const angle = index * 9;
+        const a = H.point(angle, 44);
+        const b = H.point(angle, 42.6);
+        return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#697176" stroke-width=".7"/>`;
+      }).join("")}
+      <rect x="91" y="35" width="5.7" height="8" rx="2.2" fill="url(#${id}-steel)"/>
+      <rect x="91" y="57" width="5.7" height="8" rx="2.2" fill="url(#${id}-steel)"/>
+      <circle cx="50" cy="50" r="34.2" fill="#141617"/>
+      ${H.ticks({ count: 60, outer: 33.1, inner: 31.9, majorEvery: 5, majorInner: 29.4,
+        color: "#ecece4", width: .3, majorWidth: .8 })}
+      ${H.numerals({ labels: ["12", "1", "2", "", "4", "5", "", "7", "8", "", "10", "11"],
+        radius: 26.3, size: 5.8, color: "#ecece4", family: "Arial, sans-serif", weight: 700 })}
+      ${H.text(50, 34.5, "BREGUET", { size: 2.7, color: "#ecece4", family: "Georgia, serif", weight: 700, spacing: .16 })}
+      ${H.text(50, 37.5, "TYPE XX", { size: 1.45, color: "#ecece4", weight: 650, spacing: .25 })}
+      ${H.subdial(31.5, 50, 8.2, { color: "#e8e8e1", hand: "small-second",
+        labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${H.subdial(68.5, 50, 8.2, { color: "#e8e8e1",
+        labels: ["30", "", "", "10", "", "", "20", ""] })}
+      ${H.subdial(50, 68, 7.8, { color: "#e8e8e1",
+        labels: ["12", "", "3", "", "6", "", "9", ""] })}
+      ${dateWindow(70.5, 66.5, { width: 6.2, height: 5.2, fill: "#eceae2", size: 2.8 })}
+      ${H.batonHands({ hour: 18.5, minute: 26, secondHand: false, lume: "#d7d4ba",
+        metal: "#e3e5e4", outline: "#50585d", broad: true })}
+      <line x1="50" y1="57" x2="50" y2="15" stroke="#ecece4" stroke-width=".52"/>
+      <circle cx="50" cy="50" r="2" fill="#e5e7e6" stroke="#555d61" stroke-width=".5"/>
+      <circle cx="50" cy="50" r="34.2" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Panerai Radiomir Black Seal: cushion case, wire lugs and sandwich dial. */
+  defineFace("radiomir", "Panerai Radiomir Black Seal Logo PAM00754", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#17191a" })}
+      <path d="M32 19Q28 8 37 0M68 19Q72 8 63 0M32 81Q28 92 37 100M68 81Q72 92 63 100"
+        fill="none" stroke="#aab0b2" stroke-width="2.2"/>
+      <path d="M25 10Q50 5 75 10 90 25 90 50 90 75 75 90 50 95 25 90 10 75 10 50 10 25 25 10Z"
+        fill="url(#${id}-steel)" stroke="#555f64" stroke-width=".9"/>
+      <path d="M27 15Q50 10 73 15 85 27 85 50 85 73 73 85 50 90 27 85 15 73 15 50 15 27 27 15Z"
+        fill="#17191a" stroke="#90989b" stroke-width=".65"/>
+      ${H.ticks({ count: 60, outer: 34, inner: 33.2, majorEvery: 5, majorInner: 31,
+        color: "#bdcba8", width: .22, majorWidth: .5 })}
+      ${H.numerals({ labels: ["12", "", "", "3", "", "", "6", "", "", "9", "", ""],
+        radius: 25, size: 9, color: "#c5d2b0", family: "Arial, sans-serif", weight: 700 })}
+      ${[1, 2, 4, 5, 7, 8, 10, 11].map((index) => {
+        const [x, y] = H.point(index * 30, 25.5);
+        return `<rect x="${x - 1.1}" y="${y - 3.2}" width="2.2" height="6.4" rx="1"
+          fill="#c5d2b0" transform="rotate(${index * 30} ${x} ${y})"/>`;
+      }).join("")}
+      ${H.text(50, 35.8, "RADIOMIR", { size: 2.5, color: "#dce3d5", weight: 650, spacing: .26 })}
+      ${H.text(50, 39.2, "PANERAI", { size: 3.2, color: "#dce3d5", weight: 750, spacing: .3 })}
+      ${H.text(50, 65.5, "BLACK SEAL", { size: 1.6, color: "#d3dacd", weight: 650, spacing: .23 })}
+      ${H.batonHands({ hour: 19.5, minute: 28, second: 31, lume: "#c6d3b2",
+        metal: "#aeb6b8", outline: "#4e575b", seconds: "#dadfd8", broad: true })}
+      <rect x="89" y="44" width="6" height="12" rx="2.5" fill="url(#${id}-steel)"/>
+      <path d="M21 25Q38 12 61 16L35 45Z" fill="#fff" opacity=".06"/>`
+  }));
+
+  /* TAG Heuer Carrera CBN2011: blue sunray dial and three recessed counters. */
+  defineFace("carrera", "TAG Heuer Carrera Chronograph CBN2011.BA0642", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#164a78" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "#0e2334", dial: "#164a78", dialRadius: 33.7 })}
+      ${tachymeter(id, ["60", "400", "240", "180", "140", "100", "80"])}
+      <circle cx="50" cy="50" r="33.7" fill="url(#${id}-dial)"/>
+      ${Array.from({ length: 44 }, (_, index) => {
+        const [x, y] = H.point(index * 360 / 44, 33);
+        return `<line x1="50" y1="50" x2="${x}" y2="${y}" stroke="#4d8fbd" stroke-width=".15" opacity=".3"/>`;
+      }).join("")}
+      ${H.ticks({ count: 60, outer: 32.8, inner: 31.8, majorEvery: 5, majorInner: 30,
+        color: "#e7eceb", width: .24, majorWidth: .55 })}
+      ${appliedMarkers({ radius: 27.2, length: 6, width: 1.4,
+        fill: "#edf2e8", stroke: "#bec7ca", skip: [3, 6, 9], doubleTwelve: true })}
+      <path d="M45 28H55L58 31 50 38 42 31Z" fill="#edf0ed" stroke="#46945f" stroke-width=".5"/>
+      ${H.text(50, 31.5, "TAG", { size: 2.3, color: "#175c36", weight: 800 })}
+      ${H.text(50, 34, "HEUER", { size: 2.1, color: "#175c36", weight: 800 })}
+      ${H.text(50, 38, "CARRERA", { size: 1.6, color: "#edf0ed", weight: 700, spacing: .24 })}
+      ${H.subdial(31.5, 50, 8, { color: "#e4eaeb", hand: "small-second",
+        labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${H.subdial(68.5, 50, 8, { color: "#e4eaeb",
+        labels: ["30", "", "", "10", "", "", "20", ""] })}
+      ${H.subdial(50, 68, 8, { color: "#e4eaeb",
+        labels: ["12", "", "3", "", "6", "", "9", ""] })}
+      ${dateWindow(50, 74.5, { width: 6.5, height: 4.8, fill: "#f2f0e8", size: 2.8 })}
+      ${H.batonHands({ hour: 18.5, minute: 26.5, secondHand: false, lume: "#eaf1e7",
+        metal: "#e5eaeb", outline: "#566168" })}
+      <line x1="50" y1="57" x2="50" y2="15" stroke="#df3833" stroke-width=".52"/>
+      <circle cx="50" cy="50" r="2" fill="#e5e9ea" stroke="#556067" stroke-width=".5"/>`
+  }));
+
+  /* Silver Snoopy Award 50th: blue ceramic tachymeter, silver dial and Snoopy
+     medallion in the nine-o'clock register. */
+  defineFace("snoopy", "Omega Speedmaster Silver Snoopy Award 50th Anniversary", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#e9e8e2" })}
+      ${H.roundCase(id, { strap: "#173a64", bezel: "#164b82", dial: "#e9e8e2", dialRadius: 33.5 })}
+      <circle cx="50" cy="50" r="41.4" fill="#174d85" stroke="#77828a" stroke-width=".65"/>
+      ${bezelLabels(["60", "500", "240", "160", "120", "100", "80"], {
+        radius: 38.9, size: 2.4, color: "#eef0ec"
+      })}
+      ${H.ticks({ count: 60, outer: 40.4, inner: 39.6, majorEvery: 5, majorInner: 38.8,
+        color: "#eef0ec", width: .22, majorWidth: .42 })}
+      <circle cx="50" cy="50" r="33.5" fill="#e9e8e2"/>
+      ${H.ticks({ count: 60, outer: 32.6, inner: 31.6, majorEvery: 5, majorInner: 29.8,
+        color: "#174b80", width: .25, majorWidth: .58 })}
+      ${appliedMarkers({ radius: 27.4, length: 5.8, width: 1.2,
+        fill: "#174b80", stroke: "#174b80", skip: [3, 6, 9] })}
+      ${H.text(50, 29.5, "OMEGA", { size: 3.1, color: "#164b82", weight: 750, spacing: .18 })}
+      ${H.text(50, 32.7, "Speedmaster", { size: 2.3, color: "#164b82", family: "Georgia, serif", weight: 600 })}
+      ${H.text(50, 35.5, "PROFESSIONAL", { size: 1.35, color: "#164b82", weight: 700, spacing: .25 })}
+      <circle cx="31.5" cy="50" r="8.4" fill="#174d85" stroke="#0d3965" stroke-width=".6"/>
+      <circle cx="31.5" cy="48.5" r="3" fill="#f1f0eb"/>
+      <ellipse cx="30.6" cy="47.2" rx="1.4" ry="1.8" fill="#f1f0eb" stroke="#1b2630" stroke-width=".35"/>
+      <path d="M31.6 46.7Q34.5 45.7 34 48.3Q32.8 49.3 31.4 48.2Z" fill="#1a252e"/>
+      <circle cx="30.5" cy="46.8" r=".32" fill="#111"/>
+      <path d="M29.5 50Q31.5 48.8 33.4 50.5L34 54H29Z" fill="#f1f0eb"/>
+      ${H.text(31.5, 56.5, "50", { size: 2.5, color: "#f1f0eb", weight: 750 })}
+      ${H.subdial(68.5, 50, 8.4, { color: "#f1f0eb", fill: "#174d85",
+        labels: ["30", "", "", "10", "", "", "20", ""] })}
+      ${H.subdial(50, 68, 8.4, { color: "#f1f0eb", fill: "#174d85",
+        labels: ["12", "", "3", "", "6", "", "9", ""] })}
+      ${H.batonHands({ hour: 18.5, minute: 26, secondHand: false, lume: "#e8ebe5",
+        metal: "#174d85", outline: "#0d365e" })}
+      <line x1="50" y1="57" x2="50" y2="15" stroke="#174d85" stroke-width=".55"/>
+      <circle cx="50" cy="50" r="2" fill="#174d85"/>
+      <circle cx="50" cy="50" r="33.5" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Rolex Milgauss Z-Blue: green crystal and orange lightning seconds. */
+  defineFace("milgauss", "Rolex Milgauss 116400GV-0002 Z-Blue", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#08769b" })}
+      ${H.roundCase(id, { bracelet: true, bezel: "url(#" + id + "-steel)", dial: "#08769b", dialRadius: 36 })}
+      <circle cx="50" cy="50" r="35.6" fill="url(#${id}-dial)"/>
+      ${Array.from({ length: 42 }, (_, index) => {
+        const [x, y] = H.point(index * 360 / 42, 35);
+        return `<line x1="50" y1="50" x2="${x}" y2="${y}" stroke="#49b9ce" stroke-width=".14" opacity=".24"/>`;
+      }).join("")}
+      ${H.ticks({ count: 60, outer: 34.2, inner: 33.3, majorEvery: 5, majorInner: 31.3,
+        color: "#ecf0ed", width: .22, majorWidth: .5 })}
+      ${appliedMarkers({ radius: 28, length: 6.6, width: 1.55,
+        fill: "#e9f0df", stroke: "#bcc5c7", doubleTwelve: true })}
+      ${crownMark(50, 28.5, "#edf0ed", .65)}
+      ${H.text(50, 33.8, "ROLEX", { size: 3.1, color: "#edf0ed", family: "Georgia, serif", weight: 700 })}
+      ${H.text(50, 37, "OYSTER PERPETUAL", { size: 1.35, color: "#edf0ed", weight: 650, spacing: .12 })}
+      ${H.text(50, 65, "MILGAUSS", { size: 1.8, color: "#f07b28", weight: 750, spacing: .2 })}
+      ${H.batonHands({ hour: 20, minute: 28, secondHand: false, lume: "#eaf1df",
+        metal: "#e7ebec", outline: "#59646a" })}
+      <g data-hand="second" data-cx="50" data-cy="50">
+        <path d="M50 59 48.8 50 51.5 43.5 48.8 37 51.6 30.5 49.2 24 50 17"
+          fill="none" stroke="#f27b25" stroke-width="1.1" stroke-linejoin="miter"/>
+        <path d="M48.7 19 50 15.5 51.3 19Z" fill="#f27b25"/>
+      </g>
+      <circle cx="50" cy="50" r="2.1" fill="#f27b25" stroke="#6b4b32" stroke-width=".45"/>
+      <circle cx="50" cy="50" r="36.5" fill="none" stroke="#47b977" stroke-width="1.8" opacity=".8"/>
+      <circle cx="50" cy="50" r="35.6" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Yacht-Master II 126680: blue regatta bezel and programmable ten-minute
+     countdown arc, based on the supplied front views. */
+  defineFace("yachtmaster2", "Rolex Yacht-Master II 126680", "sweep", (id) => {
+    const countdown = Array.from({ length: 11 }, (_, index) => {
+      const angle = 305 + index * 11;
+      const [x, y] = H.point(angle, 20);
+      return H.text(x, y, String(10 - index), {
+        size: 3.4, color: "#115c9f", family: "Arial, sans-serif", weight: 750,
+        transform: `rotate(${angle} ${x} ${y})`
+      });
+    }).join("");
+    return {
+      svg: `${H.defs(id, { dial: "#f2f0e8" })}
+        ${H.roundCase(id, { bracelet: true, bezel: "#105794", dial: "#f2f0e8", dialRadius: 32.8 })}
+        <circle cx="50" cy="50" r="41.3" fill="#105794" stroke="#77848c" stroke-width=".7"/>
+        ${bezelLabels(["YACHT-MASTER II", "", "", "", "", ""], {
+          radius: 38.7, size: 2.8, color: "#eef1ed"
+        })}
+        ${H.ticks({ count: 60, outer: 40.2, inner: 39.3, majorEvery: 5, majorInner: 38.5,
+          color: "#eef1ed", width: .23, majorWidth: .45 })}
+        <circle cx="50" cy="50" r="32.8" fill="#f2f0e8"/>
+        ${H.ticks({ count: 60, outer: 31.8, inner: 30.9, majorEvery: 5, majorInner: 29.2,
+          color: "#1d2428", width: .22, majorWidth: .5 })}
+        <path d="${H.arc(50, 50, 24, 305, 55)}" fill="none" stroke="#1460a0" stroke-width="4.4"/>
+        ${countdown}
+        ${appliedMarkers({ radius: 27.2, length: 5.7, width: 1.45,
+          fill: "#e9f0e5", stroke: "#9da8ab", skip: [0, 1, 2, 10, 11] })}
+        ${crownMark(50, 31, "#9fa5a6", .58)}
+        ${H.text(50, 35.2, "ROLEX", { size: 2.8, color: "#202427", family: "Georgia, serif", weight: 700 })}
+        ${H.text(50, 63, "OYSTER PERPETUAL", { size: 1.25, color: "#202427", weight: 650, spacing: .1 })}
+        ${H.subdial(50, 68, 7.8, { color: "#25292b", hand: "small-second",
+          labels: ["60", "", "15", "", "30", "", "45", ""] })}
+        ${H.batonHands({ hour: 18, minute: 26, secondHand: false, lume: "#eef2e8",
+          metal: "#dbe0e2", outline: "#59646a", broad: true })}
+        <g data-hand="minute" data-cx="50" data-cy="50">
+          <line x1="50" y1="55" x2="50" y2="22" stroke="#115b9b" stroke-width="1.15"/>
+          <path d="M47.8 26 50 20 52.2 26Z" fill="#115b9b"/>
+        </g>
+        <line x1="50" y1="57" x2="50" y2="16" stroke="#d63e34" stroke-width=".6"/>
+        <circle cx="50" cy="50" r="2.1" fill="#d9dee0" stroke="#586269" stroke-width=".5"/>`
+    };
+  });
+
+  /* Jorg Gray JGC6500 Secret Service Edition: three registers and central
+     Secret Service badge. */
+  defineFace("jorggray", "Jorg Gray JGC6500 Secret Service Edition", "tick", (id) => ({
+    svg: `${H.defs(id, { dial: "#141617" })}
+      ${H.roundCase(id, { strap: "#221a18", bezel: "url(#" + id + "-steel)", dial: "#141617", dialRadius: 36 })}
+      <rect x="91" y="34" width="6" height="8" rx="2" fill="url(#${id}-steel)"/>
+      <rect x="91" y="58" width="6" height="8" rx="2" fill="url(#${id}-steel)"/>
+      <circle cx="50" cy="50" r="35.7" fill="#141617"/>
+      ${H.ticks({ count: 60, outer: 34.3, inner: 33, majorEvery: 5, majorInner: 30.5,
+        color: "#f0f0e9", width: .3, majorWidth: .8 })}
+      ${H.numerals({ labels: ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+        radius: 28, size: 4.6, color: "#f0f0e9", family: "Arial, sans-serif", weight: 700 })}
+      <path d="M50 30 52.2 35 58 35.5 53.5 39.2 55 45 50 42 45 45 46.5 39.2 42 35.5 47.8 35Z"
+        fill="none" stroke="#dadcd7" stroke-width=".65"/>
+      <circle cx="50" cy="38.5" r="4.3" fill="none" stroke="#dadcd7" stroke-width=".55"/>
+      ${H.text(50, 38.5, "USSS", { size: 1.25, color: "#dadcd7", weight: 750 })}
+      ${H.subdial(32, 52, 8.2, { color: "#ededE7", hand: "small-second",
+        labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${H.subdial(68, 52, 8.2, { color: "#ededE7",
+        labels: ["24", "", "6", "", "12", "", "18", ""] })}
+      ${H.subdial(50, 69, 8.2, { color: "#ededE7",
+        labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${dateWindow(69.5, 68, { width: 6, height: 5.2, fill: "#f0eee6", size: 2.8 })}
+      ${H.batonHands({ hour: 18, minute: 26, secondHand: false, lume: "#e7eadf",
+        metal: "#e3e7e7", outline: "#515b61", broad: true })}
+      <line x1="50" y1="57" x2="50" y2="14" stroke="#d53631" stroke-width=".55"/>
+      <circle cx="50" cy="50" r="2" fill="#e5e8e8" stroke="#555e63" stroke-width=".5"/>`
+  }));
+
+  /* Rainbow Daytona 116595RBOW: baguette sapphire bezel and markers. */
+  defineFace("rainbow", "Rolex Cosmograph Daytona 116595RBOW-0001", "sweep", (id) => {
+    const spectrum = ["#e8356e", "#f04a36", "#f58a27", "#f2cf3a", "#72bf50", "#2bb4a6",
+      "#3488d9", "#5959cf", "#994bc5", "#d33f9b", "#ed3f74", "#f05a3d"];
+    const gems = Array.from({ length: 36 }, (_, index) => {
+      const angle = index * 10;
+      const [x, y] = H.point(angle, 39.5);
+      return `<rect x="${x - 1.1}" y="${y - 2.3}" width="2.2" height="4.6" rx=".3"
+        fill="${spectrum[Math.floor(index / 3) % spectrum.length]}" stroke="#f6d29a" stroke-width=".3"
+        transform="rotate(${angle} ${x} ${y})"/>`;
+    }).join("");
+    return {
+      svg: `${H.defs(id, { gold: true, dial: "#121316" })}
+        ${H.roundCase(id, { bracelet: true, caseFill: "url(#" + id + "-gold)", bezel: "#7d462b",
+          dial: "#121316", dialRadius: 33.2, gold: true })}
+        <circle cx="50" cy="50" r="42" fill="#a45e37" stroke="#f1c389" stroke-width=".7"/>
+        ${gems}
+        <circle cx="50" cy="50" r="34.1" fill="#d19a67"/>
+        <circle cx="50" cy="50" r="33.2" fill="#121316"/>
+        ${H.ticks({ count: 60, outer: 32.5, inner: 31.7, majorEvery: 5, majorInner: 30,
+          color: "#e6bc89", width: .24, majorWidth: .52 })}
+        ${spectrum.map((color, index) => {
+          const [x, y] = H.point(index * 30, 27);
+          return `<rect x="${x - 1.5}" y="${y - 3.1}" width="3" height="6.2" rx=".45"
+            fill="${color}" stroke="#e4aa71" stroke-width=".45" transform="rotate(${index * 30} ${x} ${y})"/>`;
+        }).join("")}
+        ${crownMark(50, 29, "#e8b979", .62)}
+        ${H.text(50, 34.2, "ROLEX", { size: 2.8, color: "#e8b979", family: "Georgia, serif", weight: 700 })}
+        ${H.text(50, 37, "OYSTER PERPETUAL", { size: 1.2, color: "#e8b979", weight: 650, spacing: .1 })}
+        ${H.subdial(31.5, 50, 8.4, { color: "#1a1715", fill: "#b9855d", hand: "small-second",
+          labels: ["60", "", "15", "", "30", "", "45", ""] })}
+        ${H.subdial(68.5, 50, 8.4, { color: "#1a1715", fill: "#b9855d",
+          labels: ["30", "", "", "10", "", "", "20", ""] })}
+        ${H.subdial(50, 68, 8.4, { color: "#1a1715", fill: "#b9855d",
+          labels: ["12", "", "3", "", "6", "", "9", ""] })}
+        ${H.batonHands({ hour: 18, minute: 26, secondHand: false, lume: "#19191a",
+          metal: "#d59a65", outline: "#6e432b" })}
+        <line x1="50" y1="57" x2="50" y2="15" stroke="#e1a36c" stroke-width=".55"/>
+        <circle cx="50" cy="50" r="2" fill="#d59a65" stroke="#6f432a" stroke-width=".5"/>`
+    };
+  });
+
+  /* Norfolk Southern commemorative railroad pocket watch. */
+  defineFace("railroad", "Norfolk Southern Railroad Pocket Watch (1994)", "tick", (id) => ({
+    viewBox: "0 0 100 112",
+    svg: `${H.defs(id, { dial: "#f4f0e2" })}
+      <path d="M38 12Q38 0 50 0T62 12" fill="none" stroke="#aeb5b7" stroke-width="3"/>
+      <rect x="45" y="8" width="10" height="7" rx="2" fill="url(#${id}-steel)"/>
+      <circle cx="50" cy="62" r="43" fill="url(#${id}-steel)" stroke="#555e63" stroke-width=".8"/>
+      <circle cx="50" cy="62" r="38.5" fill="#f4f0e2" stroke="#9da1a0" stroke-width=".65"/>
+      ${H.ticks({ count: 60, outer: 36.5, inner: 35.2, majorEvery: 5, majorInner: 32.6,
+        color: "#1c2022", width: .3, majorWidth: .7, cx: 50, cy: 62 })}
+      ${H.numerals({ labels: ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+        radius: 28, size: 6.1, color: "#1c2022", family: "Georgia, serif", weight: 700, cx: 50, cy: 62 })}
+      ${["60", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((label, index) => {
+        const [x, y] = H.point(index * 30, 34, 50, 62);
+        return H.text(x, y, label, { size: 2.1, color: "#c33b32", weight: 700 });
+      }).join("")}
+      <path d="M43 40H57L60 45 50 51 40 45Z" fill="#222729"/>
+      ${H.text(50, 43.2, "NS", { size: 3.2, color: "#f4f0e2", weight: 800 })}
+      ${H.text(50, 49, "NORFOLK SOUTHERN", { size: 1.6, color: "#202426", weight: 750, spacing: .15 })}
+      ${H.subdial(50, 82, 8.2, { color: "#282b2c", hand: "small-second",
+        labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      ${H.leafHands({ hour: 20, minute: 29, color: "#27537b", centerX: 50, centerY: 62 })}
+      <circle cx="50" cy="62" r="38.5" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* NOMOS Metro 1101: wire lugs, mint minute dots, power reserve and date. */
+  defineFace("nomosmetro", "NOMOS Glashutte Metro date power reserve 1101", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#f1f0e8" })}
+      <path d="M35 18 31 0M65 18 69 0M35 82 31 100M65 82 69 100"
+        stroke="#a9afb1" stroke-width="2.2"/>
+      <circle cx="50" cy="50" r="42" fill="url(#${id}-steel)" stroke="#555e63" stroke-width=".75"/>
+      <circle cx="50" cy="50" r="37.2" fill="#f1f0e8"/>
+      ${H.ticks({ count: 60, outer: 35.4, inner: 34.5, majorEvery: 5, majorInner: 32.5,
+        color: "#34383a", width: .24, majorWidth: .55 })}
+      ${Array.from({ length: 12 }, (_, index) => {
+        const [x, y] = H.point(index * 30, 30.8);
+        return `<circle cx="${x}" cy="${y}" r="1.15" fill="${index % 3 === 0 ? "#df6b58" : "#68b8a8"}"/>`;
+      }).join("")}
+      ${H.numerals({ labels: ["12", "", "2", "", "4", "", "6", "", "8", "", "10", ""],
+        radius: 25.2, size: 5.2, color: "#2f3335", family: "Arial, sans-serif", weight: 500 })}
+      ${H.text(50, 35.5, "NOMOS", { size: 3.2, color: "#2f3335", weight: 650, spacing: .18 })}
+      ${H.text(50, 38.5, "GLASHUTTE", { size: 1.4, color: "#2f3335", weight: 600, spacing: .2 })}
+      <path d="${H.arc(35, 48, 7.5, 205, 335)}" fill="none" stroke="#4b5052" stroke-width=".55"/>
+      <path d="${H.arc(35, 48, 6, 205, 285)}" fill="none" stroke="#dc6b58" stroke-width="2.2"/>
+      <line x1="35" y1="48" x2="31.5" y2="43.2" stroke="#33383a" stroke-width=".55"/>
+      ${dateWindow(50, 71.5, { width: 11.5, height: 6.2, fill: "#f6f4ec", color: "#303436", size: 3.3 })}
+      ${H.subdial(50, 63.5, 7.2, { color: "#34383a", hand: "small-second",
+        labels: ["60", "", "15", "", "30", "", "45", ""] })}
+      <g data-hand="hour" data-cx="50" data-cy="50">
+        <line x1="50" y1="54" x2="50" y2="31" stroke="#2f3335" stroke-width="1.3"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="50">
+        <line x1="50" y1="55" x2="50" y2="21" stroke="#2f3335" stroke-width=".95"/>
+      </g>
+      <circle cx="50" cy="50" r="1.7" fill="#df6b58"/>`
+  }));
+
+  /* Grand Central Terminal information-booth clock: four-faced brass globe. */
+  defineFace("grandcentral", "Grand Central Terminal Information Booth Clock (1913)", "tick", (id) => ({
+    viewBox: "0 0 100 116",
+    svg: `${H.defs(id, { gold: true, dial: "#f0a928" })}
+      <path d="M46 4Q50-3 54 4L57 11H43Z" fill="url(#${id}-gold)" stroke="#6d4821" stroke-width=".7"/>
+      <path d="M31 12Q50 4 69 12L81 25V87L69 100Q50 108 31 100L19 87V25Z"
+        fill="url(#${id}-gold)" stroke="#5e3d1c" stroke-width="1.1"/>
+      <path d="M23 30Q16 50 23 72L14 79V23Z" fill="#ad6d23" stroke="#5f3c1c" stroke-width=".7"/>
+      <path d="M77 30Q84 50 77 72L86 79V23Z" fill="#ad6d23" stroke="#5f3c1c" stroke-width=".7"/>
+      <ellipse cx="50" cy="56" rx="33" ry="39" fill="#c17b22" stroke="#f2c36e" stroke-width="1"/>
+      <circle cx="50" cy="56" r="29.5" fill="#f0a928" stroke="#6f491f" stroke-width=".9"/>
+      <circle cx="50" cy="56" r="27.8" fill="#f7b737"/>
+      ${H.ticks({ count: 60, outer: 26.5, inner: 25.5, majorEvery: 5, majorInner: 23.5,
+        color: "#211d18", width: .35, majorWidth: .8, cx: 50, cy: 56 })}
+      ${H.numerals({ labels: ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+        radius: 19.8, size: 6.3, color: "#211d18", family: "Georgia, serif", weight: 500, cx: 50, cy: 56 })}
+      ${H.text(50, 69.5, "SETH THOMAS", { size: 1.35, color: "#3b2c1c", family: "Georgia, serif", weight: 600, spacing: .12 })}
+      <g data-hand="hour" data-cx="50" data-cy="56">
+        <path d="M48.7 59 48.7 45 46.7 41 50 36 53.3 41 51.3 45 51.3 59Z" fill="#231f1b"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="56">
+        <path d="M49 61 49 38 47.5 34 50 29 52.5 34 51 38 51 61Z" fill="#231f1b"/>
+      </g>
+      <circle cx="50" cy="56" r="2.1" fill="#28211b"/>
+      <path d="M28 97Q50 109 72 97L68 108H32Z" fill="url(#${id}-gold)" stroke="#66421e" stroke-width=".7"/>
+      <path d="M32 22Q42 13 54 16L36 42Z" fill="#fff" opacity=".12"/>`
+  }));
+
+  /* Howard Miller Chateau 610-520: carved bonnet, moon arch, three weights and
+     a lyre pendulum, all kept in the clock's real tall proportions. */
+  defineFace("howardmiller", "Howard Miller Chateau 610-520 Grandfather Clock", "tick", (id) => ({
+    viewBox: "0 0 100 164",
+    svg: `${H.defs(id, { gold: true, dial: "#e3c47c" })}
+      <path d="M18 8Q24-2 34 3L50 10 66 3Q76-2 82 8V20H18Z" fill="#5b2918" stroke="#2e140d" stroke-width="1"/>
+      <path d="M20 10Q31 19 40 8M60 8Q69 19 80 10" fill="none" stroke="#8b5130" stroke-width="2.2"/>
+      <path d="M15 18H85V154H15Z" fill="#5d2b19" stroke="#2b130c" stroke-width="1.2"/>
+      <path d="M20 22H80V72H20Z" fill="#7b4327" stroke="#2f170f" stroke-width=".9"/>
+      <path d="M24 26H76V68H24Z" fill="#171a19" stroke="#9d6837" stroke-width=".8"/>
+      <path d="${H.arc(50, 42, 21, 270, 90)}" fill="#193557" stroke="#b98a44" stroke-width=".8"/>
+      <circle cx="50" cy="49" r="18.5" fill="#e6c77e" stroke="#a97d3d" stroke-width=".8"/>
+      ${H.ticks({ count: 60, outer: 17.4, inner: 16.7, majorEvery: 5, majorInner: 15,
+        color: "#3a2a1b", width: .25, majorWidth: .55, cx: 50, cy: 49 })}
+      ${H.numerals({ labels: ["XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"],
+        radius: 11.8, size: 4, color: "#37281b", family: "Georgia, serif", weight: 650, cx: 50, cy: 49 })}
+      <g data-hand="hour" data-cx="50" data-cy="49">
+        <path d="M49.1 52 49.1 43 47.8 40 50 36.5 52.2 40 50.9 43 50.9 52Z" fill="#2b251f"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="49">
+        <path d="M49.3 53 49.3 38.5 48.2 35.5 50 32 51.8 35.5 50.7 38.5 50.7 53Z" fill="#2b251f"/>
+      </g>
+      <circle cx="50" cy="49" r="1.4" fill="#2b251f"/>
+      <path d="M21 74H79V142H21Z" fill="#2c1710" stroke="#9a5e34" stroke-width=".8"/>
+      <path d="M27 78Q50 72 73 78V137Q50 143 27 137Z" fill="#2c211a" stroke="#8f613a" stroke-width=".8"/>
+      <path d="M35 78V119M50 76V122M65 78V119" stroke="#b58b4a" stroke-width="1.7"/>
+      <path d="M31 80H39V112H31ZM46 78H54V115H46ZM61 80H69V112H61Z"
+        fill="url(#${id}-gold)" stroke="#73501f" stroke-width=".5"/>
+      <path d="M50 113V127" stroke="#b58b4a" stroke-width="1.7"/>
+      <path d="M42 126Q50 117 58 126L63 134Q50 141 37 134Z" fill="url(#${id}-gold)" stroke="#73501f" stroke-width=".65"/>
+      <path d="M12 154H88L82 164H18Z" fill="#4f2518" stroke="#2a130c" stroke-width="1"/>
+      <rect x="20" y="145" width="60" height="10" fill="#744027" stroke="#2d150d" stroke-width=".8"/>`
+  }));
+
+  /* Ingersoll Mickey Mouse (1933): Mickey's arms are the time hands. */
+  defineFace("mickey", "Ingersoll Mickey Mouse (1933)", "tick", (id) => ({
+    viewBox: "0 0 100 112",
+    svg: `${H.defs(id, { dial: "#e9dfc4" })}
+      <path d="M36 13Q36 2 50 2T64 13" fill="none" stroke="#919698" stroke-width="2.8"/>
+      <circle cx="50" cy="60" r="42" fill="url(#${id}-steel)" stroke="#535b60" stroke-width=".8"/>
+      <circle cx="50" cy="60" r="38" fill="#e9dfc4" stroke="#9f9787" stroke-width=".65"/>
+      ${H.ticks({ count: 60, outer: 35.8, inner: 34.8, majorEvery: 5, majorInner: 32.6,
+        color: "#222222", width: .3, majorWidth: .75, cx: 50, cy: 60 })}
+      ${H.numerals({ labels: ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+        radius: 29.2, size: 6.3, color: "#1e1d1c", family: "Arial, sans-serif", weight: 750, cx: 50, cy: 60 })}
+      <circle cx="43.5" cy="37.5" r="5.7" fill="#161616"/>
+      <circle cx="56.5" cy="37.5" r="5.7" fill="#161616"/>
+      <ellipse cx="50" cy="44" rx="8.5" ry="9.5" fill="#161616"/>
+      <ellipse cx="52" cy="44.5" rx="6.3" ry="7" fill="#e3d7b9"/>
+      <ellipse cx="54.6" cy="43.5" rx="3.5" ry="2.4" fill="#161616"/>
+      <circle cx="51" cy="42.2" r=".7" fill="#161616"/>
+      <path d="M50 48Q54 51 58 47" fill="none" stroke="#c6342d" stroke-width="1.2"/>
+      <ellipse cx="50" cy="61" rx="8.5" ry="12.5" fill="#161616"/>
+      <path d="M42 58Q50 53 58 58V70Q50 76 42 70Z" fill="#d43b2d"/>
+      <circle cx="46" cy="60.5" r="1.5" fill="#f2df9b"/><circle cx="54" cy="60.5" r="1.5" fill="#f2df9b"/>
+      <path d="M44 72 39 80M56 72 61 80" stroke="#161616" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="37.5" cy="82" rx="5.5" ry="2.8" fill="#d9b939"/>
+      <ellipse cx="62.5" cy="82" rx="5.5" ry="2.8" fill="#d9b939"/>
+      ${H.text(71, 48, "MICKEY", { size: 2.8, color: "#2a2825", weight: 750 })}
+      ${H.text(71, 51.2, "MOUSE", { size: 2.8, color: "#2a2825", weight: 750 })}
+      ${H.text(71, 54.4, "INGERSOLL", { size: 1.9, color: "#2a2825", weight: 700 })}
+      <g data-hand="hour" data-cx="50" data-cy="60">
+        <path d="M47.5 59Q41 54 34 47" fill="none" stroke="#161616" stroke-width="3.2" stroke-linecap="round"/>
+        <ellipse cx="32.5" cy="45.5" rx="3.6" ry="2.6" fill="#d6b830" stroke="#7d6821" stroke-width=".4"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="60">
+        <path d="M52.5 59Q61 52 69 40" fill="none" stroke="#161616" stroke-width="3.2" stroke-linecap="round"/>
+        <ellipse cx="70.5" cy="38.5" rx="3.6" ry="2.6" fill="#d6b830" stroke="#7d6821" stroke-width=".4"/>
+      </g>
+      <circle cx="50" cy="60" r="2.2" fill="#191919"/>`
+  }));
+
+  /* Hamilton Khaki Field King: day/date at twelve and inner 24-hour numerals. */
+  defineFace("kingkhaki", "Hamilton Khaki Field King Auto H64455533", "sweep", (id) => ({
+    svg: `${H.defs(id, { dial: "#171919" })}
+      ${H.roundCase(id, { strap: "#583a27", bezel: "url(#" + id + "-steel)", dial: "#171919", dialRadius: 36.5 })}
+      <circle cx="50" cy="50" r="36" fill="#171919"/>
+      ${H.ticks({ count: 60, outer: 34.4, inner: 33.1, majorEvery: 5, majorInner: 30.8,
+        color: "#e4e5dd", width: .3, majorWidth: .75 })}
+      ${H.numerals({ labels: ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+        radius: 27.2, size: 5.5, color: "#e6e7df", family: "Arial, sans-serif", weight: 700 })}
+      ${H.numerals({ labels: ["24", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"],
+        radius: 20.2, size: 2.6, color: "#bfc1ba", family: "Arial, sans-serif", weight: 650 })}
+      <rect x="36" y="16.5" width="28" height="8" fill="#f0eee6" stroke="#777d7e" stroke-width=".6"/>
+      <rect x="36" y="16.5" width="16" height="8" fill="#f0eee6"/>
+      ${H.text(44, 20.8, "TUE", { size: 3.1, color: "#1a1d1d", weight: 750, extra: `data-text="day"` })}
+      ${H.text(58, 20.8, "28", { size: 3.8, color: "#1a1d1d", weight: 750, extra: `data-text="date"` })}
+      ${H.text(50, 36.5, "HAMILTON", { size: 2.5, color: "#e8e8e1", weight: 750, spacing: .2 })}
+      ${H.text(50, 64.5, "KHAKI AUTOMATIC", { size: 1.4, color: "#d5d6d0", weight: 650, spacing: .15 })}
+      ${H.batonHands({ hour: 19, minute: 27.5, second: 31, lume: "#d8c89b",
+        metal: "#d9ddde", outline: "#515a5e", seconds: "#d83e35", broad: true })}
+      <circle cx="50" cy="50" r="36" fill="url(#${id}-glass)" pointer-events="none"/>`
+  }));
+
+  /* Casio MQ-24-7B2: thin black resin case and high-contrast Arabic dial. */
+  defineFace("casiomq24", "CASIO MQ-24-7B2LL", "tick", (id) => ({
+    viewBox: "0 0 100 112",
+    svg: `${H.defs(id, { steel: false, dial: "#f4f3ed" })}
+      <path d="M37-5H63L66 17H34ZM34 95H66L63 117H37Z" fill="#17191a"/>
+      ${Array.from({ length: 12 }, (_, index) => `<line x1="37" y1="${index * 3}" x2="63" y2="${index * 3}"
+        stroke="#3c4041" stroke-width=".7"/>`).join("")}
+      <circle cx="50" cy="55" r="39.5" fill="#17191a"/>
+      <circle cx="50" cy="55" r="35.2" fill="#f4f3ed"/>
+      ${H.ticks({ count: 60, outer: 33.8, inner: 32.8, majorEvery: 5, majorInner: 30,
+        color: "#181a1b", width: .3, majorWidth: .75, cx: 50, cy: 55 })}
+      ${H.numerals({ labels: ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+        radius: 25.2, size: 6.1, color: "#17191a", family: "Arial, sans-serif", weight: 700, cx: 50, cy: 55 })}
+      ${H.text(50, 40, "CASIO", { size: 3.5, color: "#17191a", weight: 750, spacing: .16 })}
+      ${H.text(50, 70.5, "QUARTZ", { size: 1.5, color: "#17191a", weight: 650, spacing: .22 })}
+      <g data-hand="hour" data-cx="50" data-cy="55">
+        <rect x="48.5" y="37" width="3" height="22" rx=".7" fill="#17191a"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="55">
+        <rect x="49" y="27" width="2" height="33" rx=".5" fill="#17191a"/>
+      </g>
+      <g data-hand="second" data-cx="50" data-cy="55">
+        <line x1="50" y1="63" x2="50" y2="24" stroke="#d23d34" stroke-width=".65"/>
+      </g>
+      <circle cx="50" cy="55" r="1.8" fill="#17191a"/>`
+  }));
+
+  /* Fossil Big Tic JR-7845: analog hour/minute hands over giant LCD seconds. */
+  defineFace("bigtic", "Fossil Big Tic JR-7845", "tick", (id) => ({
+    svg: `${H.defs(id, { dial: "#26343b" })}
+      ${H.roundCase(id, { strap: "#6c432c", bezel: "url(#" + id + "-steel)", dial: "#26343b", dialRadius: 36.5 })}
+      <circle cx="50" cy="50" r="36" fill="#26343b"/>
+      ${H.ticks({ count: 60, outer: 34.4, inner: 33.6, majorEvery: 5, majorInner: 30.8,
+        color: "#dde5e4", width: .26, majorWidth: .7 })}
+      ${H.numerals({ labels: ["12", "", "", "3", "", "", "6", "", "", "9", "", ""],
+        radius: 26.3, size: 6.5, color: "#e6ece9", family: "Arial, sans-serif", weight: 700 })}
+      <rect x="30" y="37" width="40" height="26" rx="2" fill="#778981" stroke="#aebbb5" stroke-width=".7"/>
+      ${H.text(50, 51, "00", { size: 21, color: "#1c2925", family: "monospace", weight: 700, extra: `data-text="second"` })}
+      ${H.text(50, 29.5, "FOSSIL", { size: 2.8, color: "#e5ebe8", weight: 750, spacing: .3 })}
+      ${H.text(50, 70, "BIG TIC", { size: 1.7, color: "#dfe5e2", weight: 700, spacing: .28 })}
+      <g data-hand="hour" data-cx="50" data-cy="50">
+        <path d="M48.2 55V35L50 29 51.8 35V55Z" fill="#eef1ec" stroke="#566269" stroke-width=".55"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="50">
+        <path d="M48.8 56V27L50 20 51.2 27V56Z" fill="#ed7f30" stroke="#7e4727" stroke-width=".5"/>
+      </g>
+      <circle cx="50" cy="50" r="2.1" fill="#e8ece9" stroke="#576268" stroke-width=".5"/>`
+  }));
+
+  /* Timex Easy Reader day/date with an INDIGLO panel that illuminates after
+     local dusk. */
+  defineFace("timexindiglo", "Timex Easy Reader Day Date T20041 (INDIGLO)", "tick", (id) => ({
+    svg: `${H.defs(id, { dial: "#f7f5ed" })}
+      ${H.roundCase(id, { strap: "#3d241b", bezel: "url(#" + id + "-steel)", dial: "#f7f5ed", dialRadius: 36.5 })}
+      <circle cx="50" cy="50" r="36" fill="#f7f5ed"/>
+      <circle cx="50" cy="50" r="35.6" fill="#b8ead7" opacity="0" data-id="indiglo"/>
+      ${H.ticks({ count: 60, outer: 34.2, inner: 33.2, majorEvery: 5, majorInner: 30.8,
+        color: "#1c2022", width: .3, majorWidth: .75 })}
+      ${H.numerals({ labels: ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+        radius: 26, size: 6.2, color: "#1c2022", family: "Arial, sans-serif", weight: 700 })}
+      ${H.text(50, 34.5, "TIMEX", { size: 3, color: "#1c2022", weight: 750, spacing: .25 })}
+      <rect x="63.5" y="46.5" width="14" height="7" fill="#f9f7ef" stroke="#5d6364" stroke-width=".55"/>
+      <rect x="63.5" y="46.5" width="7.4" height="7" fill="#f9f7ef"/>
+      ${H.text(67.2, 50.1, "TUE", { size: 2.4, color: "#1c2022", weight: 700, extra: `data-text="day"` })}
+      ${H.text(74.1, 50.1, "28", { size: 3.1, color: "#1c2022", weight: 700, extra: `data-text="date"` })}
+      ${H.text(50, 66, "INDIGLO", { size: 1.5, color: "#266d78", weight: 700, spacing: .22 })}
+      <g data-hand="hour" data-cx="50" data-cy="50"><path d="M48.5 54V33L50 28 51.5 33V54Z" fill="#202426"/></g>
+      <g data-hand="minute" data-cx="50" data-cy="50"><path d="M49 55V25L50 20 51 25V55Z" fill="#202426"/></g>
+      <g data-hand="second" data-cx="50" data-cy="50"><line x1="50" y1="58" x2="50" y2="18" stroke="#df3b33" stroke-width=".65"/></g>
+      <circle cx="50" cy="50" r="1.9" fill="#202426"/>`,
+    update(svg, snapshot) {
+      const panel = svg.querySelector('[data-id="indiglo"]');
+      if (panel) panel.setAttribute("opacity", snapshot.night ? ".62" : "0");
+    }
+  }));
+
+  /* Westclox 70010A twin-bell alarm clock. */
+  defineFace("twinbell", "Westclox Twin Bell Alarm Clock 70010A", "tick", (id) => ({
+    viewBox: "0 0 100 118",
+    svg: `${H.defs(id, { dial: "#f6f5ef" })}
+      <path d="M19 35Q6 19 18 10Q33 8 40 27Z" fill="url(#${id}-steel)" stroke="#636b70" stroke-width=".8"/>
+      <path d="M81 35Q94 19 82 10Q67 8 60 27Z" fill="url(#${id}-steel)" stroke="#636b70" stroke-width=".8"/>
+      <path d="M19 11Q50-6 81 11" fill="none" stroke="#8e969a" stroke-width="2.5"/>
+      <line x1="30" y1="27" x2="24" y2="18" stroke="#8c9498" stroke-width="2"/>
+      <line x1="70" y1="27" x2="76" y2="18" stroke="#8c9498" stroke-width="2"/>
+      <rect x="47" y="12" width="6" height="10" rx="2" fill="url(#${id}-steel)"/>
+      <circle cx="50" cy="65" r="40" fill="url(#${id}-steel)" stroke="#555e63" stroke-width=".9"/>
+      <circle cx="50" cy="65" r="35.5" fill="#f6f5ef"/>
+      ${H.ticks({ count: 60, outer: 33.8, inner: 32.8, majorEvery: 5, majorInner: 30.3,
+        color: "#17191a", width: .3, majorWidth: .8, cx: 50, cy: 65 })}
+      ${H.numerals({ labels: ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+        radius: 25.7, size: 7.3, color: "#17191a", family: "Georgia, serif", weight: 700, cx: 50, cy: 65 })}
+      ${H.text(50, 49, "Westclox", { size: 3.5, color: "#17191a", family: "Georgia, serif", weight: 700 })}
+      <g data-hand="hour" data-cx="50" data-cy="65">
+        <path d="M47.8 69 47.8 50 50 44 52.2 50 52.2 69Z" fill="#111314"/>
+        <path d="M49 63V51L50 48 51 51V63Z" fill="#cde7a4"/>
+      </g>
+      <g data-hand="minute" data-cx="50" data-cy="65">
+        <path d="M48.5 70 48.5 42 50 36 51.5 42 51.5 70Z" fill="#111314"/>
+        <path d="M49.3 63V43L50 40 50.7 43V63Z" fill="#cde7a4"/>
+      </g>
+      <g data-hand="second" data-cx="50" data-cy="65">
+        <line x1="50" y1="73" x2="50" y2="34" stroke="#d7332f" stroke-width=".7"/>
+      </g>
+      <circle cx="50" cy="65" r="2.3" fill="#111314"/>
+      <path d="M26 101 17 116M74 101 83 116" stroke="#8e969a" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="16" cy="116" r="2" fill="#8e969a"/><circle cx="84" cy="116" r="2" fill="#8e969a"/>`
+  }));
+
+  /* French Comtoise longcase, c. 1850: pressed-brass dial surround and
+     exposed lyre pendulum. */
+  defineFace("grandfather", "Comtoise Longcase Clock - Musee du Temps, c. 1850", "tick", (id) => ({
+    viewBox: "0 0 100 164",
+    svg: `${H.defs(id, { gold: true, dial: "#efe3c4" })}
+      <path d="M18 8Q24 0 32 5L50 0 68 5Q76 0 82 8V25H18Z" fill="#6a351c" stroke="#32180e" stroke-width="1"/>
+      <path d="M12 24H88V154H12Z" fill="#704021" stroke="#32190e" stroke-width="1.2"/>
+      <path d="M18 29H82V76H18Z" fill="#a76d2c" stroke="#3c210f" stroke-width=".9"/>
+      <path d="M23 34Q27 24 36 31L50 25 64 31Q73 24 77 34V70H23Z" fill="url(#${id}-gold)" stroke="#73501f" stroke-width=".8"/>
+      ${Array.from({ length: 14 }, (_, index) => {
+        const angle = index * 360 / 14;
+        const [x, y] = H.point(angle, 23.5, 50, 51);
+        return `<path d="M50 51L${x} ${y}" stroke="#8f6a28" stroke-width=".35" opacity=".7"/>`;
+      }).join("")}
+      <circle cx="50" cy="51" r="19.5" fill="#efe3c4" stroke="#8c6b33" stroke-width=".75"/>
+      ${H.ticks({ count: 60, outer: 18.3, inner: 17.5, majorEvery: 5, majorInner: 15.5,
+        color: "#26231e", width: .25, majorWidth: .55, cx: 50, cy: 51 })}
+      ${H.numerals({ labels: ["XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"],
+        radius: 12.2, size: 4.1, color: "#26231e", family: "Georgia, serif", weight: 650, cx: 50, cy: 51 })}
+      <g data-hand="hour" data-cx="50" data-cy="51"><path d="M49 54 49 44 47.6 41 50 37 52.4 41 51 44 51 54Z" fill="#2a261f"/></g>
+      <g data-hand="minute" data-cx="50" data-cy="51"><path d="M49.3 55 49.3 39 48.2 36 50 32 51.8 36 50.7 39 50.7 55Z" fill="#2a261f"/></g>
+      <circle cx="50" cy="51" r="1.5" fill="#2a261f"/>
+      <path d="M20 78H80V140H20Z" fill="#301c12" stroke="#9b6631" stroke-width=".8"/>
+      <path d="M28 82Q50 76 72 82V136Q50 142 28 136Z" fill="#211711" stroke="#8c5a2d" stroke-width=".7"/>
+      <path d="M50 79V117" stroke="#b88b3b" stroke-width="1.4"/>
+      <path d="M40 115Q50 105 60 115L65 127Q50 137 35 127Z" fill="url(#${id}-gold)" stroke="#76531f" stroke-width=".65"/>
+      <path d="M16 144H84V156H16ZM10 156H90L84 164H16Z" fill="#5f321d" stroke="#32180e" stroke-width="1"/>`
+  }));
+
+  /* Prague Orloj, 2018-restored astrolabe: outer Old Czech time, Roman hour
+     ring, zodiac band, day/night fields and sun/moon pointers. */
+  defineFace("orloj", "Prague Old Town Astronomical Clock (2018-restored astrolabe)", "tick", (id) => {
+    const zodiac = ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"];
+    const oldCzech = Array.from({ length: 24 }, (_, index) => {
+      const label = String((index + 1) % 24 || 24);
+      const [x, y] = H.point(index * 15, 42);
+      return H.text(x, y, label, {
+        size: 2.4, color: "#d9b54c", family: "Georgia, serif", weight: 700,
+        transform: `rotate(${index * 15} ${x} ${y})`
+      });
+    }).join("");
+    return {
+      svg: `${H.defs(id, { gold: true, dial: "#1c6781" })}
+        <rect x="2" y="2" width="96" height="96" rx="4" fill="#222828" stroke="#0f1313" stroke-width="1.2"/>
+        <circle cx="50" cy="50" r="46" fill="#102f3d" stroke="#c7a13d" stroke-width="2"/>
+        <circle cx="50" cy="50" r="43.5" fill="#124b64" stroke="#d3ad45" stroke-width="1"/>
+        ${oldCzech}
+        <circle cx="50" cy="50" r="37.5" fill="#2a91ad" stroke="#d9b54c" stroke-width="1.1"/>
+        <path d="${H.sector(50, 50, 37.5, 250, 110)}" fill="#c58c45" opacity=".9"/>
+        <path d="${H.sector(50, 50, 33, 285, 75)}" fill="#122c58" opacity=".92"/>
+        <path d="${H.sector(50, 50, 26, 305, 55)}" fill="#121f35" opacity=".95"/>
+        ${H.numerals({ labels: ["XII", "I", "II", "III", "IIII", "V", "VI", "VII", "VIII", "IX", "X", "XI"],
+          radius: 32.5, size: 4.1, color: "#ead06a", family: "Georgia, serif", weight: 650 })}
+        <g transform="rotate(-18 50 50)">
+          <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#d9b54c" stroke-width="3.6"/>
+          <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#1f6a9b" stroke-width="2.5"/>
+          ${zodiac.map((symbol, index) => {
+            const angle = index * 30;
+            const [x, y] = H.point(angle, 29, 50, 50);
+            return H.text(x, y, symbol, { size: 4, color: "#f0d36d", family: "Georgia, serif", weight: 650 });
+          }).join("")}
+        </g>
+        ${Array.from({ length: 12 }, (_, index) => {
+          const angle = index * 15 - 82.5;
+          return `<path d="${H.arc(50, 50, 21 + index * .65, 205, 335)}" fill="none"
+            stroke="#efd36a" stroke-width=".35" opacity=".75"/>`;
+        }).join("")}
+        <circle cx="50" cy="50" r="12.5" fill="#11384b" stroke="#d6b14a" stroke-width=".9"/>
+        <g data-hand="hour" data-cx="50" data-cy="50">
+          <line x1="50" y1="58" x2="50" y2="13" stroke="#e8c552" stroke-width="1.1"/>
+          <circle cx="50" cy="20" r="4.2" fill="#f2cf4d" stroke="#a67e20" stroke-width=".6"/>
+          ${Array.from({ length: 8 }, (_, index) => {
+            const a = H.point(index * 45, 7, 50, 20);
+            const b = H.point(index * 45, 5, 50, 20);
+            return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#f2cf4d" stroke-width=".8"/>`;
+          }).join("")}
+        </g>
+        <g data-hand="minute" data-cx="50" data-cy="50">
+          <line x1="50" y1="60" x2="50" y2="10" stroke="#d8ba53" stroke-width=".75"/>
+          <circle cx="50" cy="16" r="3" fill="#1c2030" stroke="#d8ba53" stroke-width=".7"/>
+        </g>
+        <g data-hand="moon" data-cx="50" data-cy="50">
+          <line x1="50" y1="58" x2="50" y2="12" stroke="#9ec8d7" stroke-width=".7"/>
+          <circle cx="50" cy="17" r="3.5" fill="#d7dce2" stroke="#243c57" stroke-width=".6"/>
+          <path d="M50 13.5A3.5 3.5 0 0 1 50 20.5Z" fill="#1d2435"/>
+        </g>
+        <circle cx="50" cy="50" r="2.2" fill="#d8b44c" stroke="#2d2517" stroke-width=".55"/>
+        <path d="M16 22Q35 7 60 12L34 40Z" fill="#fff" opacity=".06"/>`
+    };
+  });
+
+  const FACE_CONTRACT = {
+    submariner: true,
+    speedmaster: true,
+    nautilus: true,
+    royaloak: true,
+    calatrava: true,
+    tank: true,
+    reverso: true,
+    seamaster: true,
+    lange1: true,
+    portugieser: true,
+    daytona: true,
+    gmt: true,
+    datejust: true,
+    snowflake: true,
+    gshock: true,
+    f91w: true,
+    apple: true,
+    swatch: true,
+    braun: true,
+    mondaine: true,
+    monaco: true,
+    panerai: true,
+    f1: true,
+    bigben: true,
+    seiko5: true,
+    moonphase: true,
+    richardmille: true,
+    blackbay58: true,
+    navitimer: true,
+    elprimero: true,
+    overseas: true,
+    bigbang: true,
+    prx: true,
+    khaki: true,
+    br03: true,
+    twinbell: true,
+    grandfather: true,
+    orloj: true,
+    marine: true,
+    freak: true,
+    patek: true,
+    explorer: true,
+    santos: true,
+    bigpilot: true,
+    fiftyfathoms: true,
+    typexx: true,
+    radiomir: true,
+    carrera: true,
+    snoopy: true,
+    milgauss: true,
+    yachtmaster2: true,
+    jorggray: true,
+    rainbow: true,
+    railroad: true,
+    nomosmetro: true,
+    grandcentral: true,
+    howardmiller: true,
+    mickey: true,
+    kingkhaki: true,
+    casiomq24: true,
+    bigtic: true,
+    timexindiglo: true
+  };
+
+  const FACE_KEYS = Object.keys(FACES);
+  const contractKeys = Object.keys(FACE_CONTRACT);
+  if (FACE_KEYS.length !== contractKeys.length ||
+      contractKeys.some((key) => !FACES[key])) {
+    throw new Error("Face registry does not satisfy the 62-face model contract.");
+  }
+  const CITY_BY_ID = new Map(CITIES.map((city) => [city.id, city]));
+  const STORAGE_KEY = "world-clock.codex-5.6-sol.v1";
+  const reduceMotion = window.matchMedia ?
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches : false;
+
+  const state = {
+    cities: [],
+    homeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"
+  };
+
+  function shuffle(values) {
+    const result = values.slice();
+    for (let index = result.length - 1; index > 0; index -= 1) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [result[index], result[swapIndex]] = [result[swapIndex], result[index]];
+    }
+    return result;
+  }
+
+  function usedFaces(except = null) {
+    return new Set(state.cities
+      .filter((entry) => entry !== except)
+      .map((entry) => entry.face)
+      .filter(Boolean));
+  }
+
+  function chooseFace(except = null, avoid = null) {
+    const used = usedFaces(except);
+    let choices = FACE_KEYS.filter((key) => !used.has(key) && key !== avoid);
+    if (!choices.length) choices = FACE_KEYS.filter((key) => key !== avoid);
+    if (!choices.length) choices = FACE_KEYS.slice();
+    return choices[Math.floor(Math.random() * choices.length)];
+  }
+
+  function assignAllFaces() {
+    const available = shuffle(FACE_KEYS);
+    state.cities.forEach((entry, index) => {
+      entry.face = available[index % available.length];
+    });
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        version: 1,
+        cities: state.cities.map(({ cityId, face }) => ({ cityId, face }))
+      }));
+    } catch (error) {
+      // Storage can be disabled for file URLs. The app remains fully usable.
+    }
+  }
+
+  function load() {
+    try {
+      const value = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (value && Array.isArray(value.cities)) {
+        const seen = new Set();
+        state.cities = value.cities.flatMap((entry) => {
+          if (!entry || !CITY_BY_ID.has(entry.cityId) || seen.has(entry.cityId)) return [];
+          seen.add(entry.cityId);
+          return [{
+            cityId: entry.cityId,
+            face: FACES[entry.face] ? entry.face : null
+          }];
+        });
+      }
+    } catch (error) {
+      state.cities = [];
+    }
+
+    if (!state.cities.length) {
+      state.cities = DEFAULT_CITY_IDS.map((cityId) => ({ cityId, face: null }));
+      assignAllFaces();
+    } else {
+      state.cities.forEach((entry) => {
+        if (!entry.face) entry.face = chooseFace(entry);
+      });
+    }
+  }
+
+  function ordered(date) {
+    return state.cities.map((entry) => {
+      const city = CITY_BY_ID.get(entry.cityId);
+      return { entry, city, offset: CLOCK.offset(city.zone, date) };
+    }).sort((a, b) =>
+      a.offset - b.offset ||
+      a.city.name.localeCompare(b.city.name, "en") ||
+      a.city.id.localeCompare(b.city.id, "en")
+    );
+  }
+
+  function icon(name) {
+    if (name === "shuffle") {
+      return `<svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`;
+    }
+    return `<svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M18 6 6 18M6 6l12 12" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round"/>
+    </svg>`;
+  }
+
+  function cardMarkup(row) {
+    const face = FACES[row.entry.face];
+    const cityName = H.esc(row.city.name);
+    return `<article class="clock-card" data-city="${row.city.id}">
+      <header class="card-head">
+        <div class="place">
+          <h2>${cityName}</h2>
+          <p class="country">${H.esc(row.city.country)}</p>
+        </div>
+        <div class="card-time">
+          <p class="digital-time" data-role="time">--:--</p>
+          <p class="offset" data-role="offset">${CLOCK.offsetLabel(row.offset)}</p>
+        </div>
+      </header>
+      <div class="watch-stage">
+        <svg class="watch-svg" data-role="watch" aria-hidden="true"></svg>
+      </div>
+      <footer class="card-foot">
+        <div>
+          <p class="face-name">${H.esc(face.name)}</p>
+          <p class="local-date" data-role="date"></p>
+        </div>
+        <div class="card-actions">
+          <button class="icon-action" type="button" data-action="shuffle"
+            title="Shuffle face" aria-label="Shuffle the face for ${cityName}">${icon("shuffle")}</button>
+          <button class="icon-action" type="button" data-action="remove"
+            title="Remove city" aria-label="Remove ${cityName}">${icon("remove")}</button>
+        </div>
+      </footer>
+    </article>`;
+  }
+
+  const DOM = {
+    grid: document.getElementById("clock-grid"),
+    form: document.getElementById("add-form"),
+    input: document.getElementById("city-search"),
+    results: document.getElementById("city-results"),
+    shuffle: document.getElementById("shuffle-all"),
+    summary: document.getElementById("summary"),
+    home: document.getElementById("home-zone"),
+    live: document.getElementById("live-region")
+  };
+
+  const instances = new Map();
+  let rows = [];
+
+  function namespaceSvg(markup, prefix) {
+    return markup
+      .replace(/(^|\s)id="([^"]+)"/g,
+        (all, leading, id) => `${leading}id="${prefix}-${id}"`)
+      .replace(/url\(#([^)]+)\)/g, (all, id) => `url(#${prefix}-${id})`)
+      .replace(/\bhref="#([^"]+)"/g, (all, id) => `href="#${prefix}-${id}"`);
+  }
+
+  function mountFace(svg, key, cityId) {
+    const face = FACES[key];
+    const drawing = face.draw(`${key}-${cityId.replace(/[^a-z0-9]/gi, "")}`);
+    svg.setAttribute("viewBox", drawing.viewBox || "0 0 100 100");
+    svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+    svg.innerHTML = namespaceSvg(drawing.svg, `face-${cityId}-${key}`);
+    return {
+      face,
+      svg,
+      hands: [...svg.querySelectorAll("[data-hand]")],
+      texts: [...svg.querySelectorAll("[data-text]")],
+      moon: [...svg.querySelectorAll("[data-moon]")],
+      custom: drawing.update || null
+    };
+  }
+
+  function phaseFor(snapshot) {
+    const hour = snapshot.hour + snapshot.minute / 60;
+    if (hour < 5.5 || hour >= 20.5) return "night";
+    if (hour < 7.5) return "dawn";
+    if (hour < 18) return "day";
+    return "dusk";
+  }
+
+  function updateFace(instance, date) {
+    const snapshot = CLOCK.snapshot(instance.city.zone, date, instance.face.cadence);
+    instance.hands.forEach((node) => {
+      const channel = node.dataset.hand;
+      let angle = 0;
+      if (channel === "hour") angle = snapshot.hourAngle;
+      else if (channel === "minute") angle = snapshot.minuteAngle;
+      else if (channel === "second" || channel === "small-second") angle = snapshot.secondAngle;
+      else if (channel === "gmt") angle = snapshot.gmtAngle;
+      else if (channel === "day") angle = snapshot.weekday * 360 / 7;
+      else if (channel === "date") angle = (snapshot.date - 1) * 360 / 31;
+      else if (channel === "month") angle = snapshot.month * 30;
+      else if (channel === "moon") angle = snapshot.moon * 360;
+      const cx = Number(node.dataset.cx || 50);
+      const cy = Number(node.dataset.cy || 50);
+      node.setAttribute("transform", `rotate(${H.n(angle)} ${cx} ${cy})`);
+    });
+    instance.texts.forEach((node) => {
+      const value = CLOCK.channel(node.dataset.text, snapshot);
+      if (node.textContent !== value) node.textContent = value;
+    });
+    instance.moon.forEach((node) => {
+      node.setAttribute("transform", `translate(${H.n((snapshot.moon - .5) * 9)} 0)`);
+    });
+    if (instance.custom) instance.custom(instance.svg, snapshot);
+    return snapshot;
+  }
+
+  function render() {
+    const date = new Date();
+    rows = ordered(date);
+    instances.clear();
+
+    if (!rows.length) {
+      DOM.grid.innerHTML = `<p class="empty">No cities selected</p>`;
+      DOM.summary.textContent = `0 cities / ${FACE_KEYS.length} faces`;
+      return;
+    }
+
+    DOM.grid.innerHTML = rows.map(cardMarkup).join("");
+    rows.forEach((row) => {
+      const card = DOM.grid.querySelector(`[data-city="${row.city.id}"]`);
+      const mounted = mountFace(card.querySelector('[data-role="watch"]'),
+        row.entry.face, row.city.id);
+      instances.set(row.city.id, {
+        ...mounted,
+        card,
+        city: row.city,
+        offset: row.offset,
+        time: card.querySelector('[data-role="time"]'),
+        offsetNode: card.querySelector('[data-role="offset"]'),
+        dateNode: card.querySelector('[data-role="date"]'),
+        lastMinute: null,
+        lastDate: null,
+        lastPhase: null
+      });
+    });
+    DOM.summary.textContent = `${rows.length} ${rows.length === 1 ? "city" : "cities"} / ${FACE_KEYS.length} faces`;
+    update(new Date());
+  }
+
+  function update(date) {
+    const homeOffset = CLOCK.offset(state.homeZone, date);
+    rows.forEach((row) => {
+      const instance = instances.get(row.city.id);
+      if (!instance) return;
+      const snapshot = updateFace(instance, date);
+      const minuteKey = `${snapshot.hour}:${snapshot.minute}`;
+      if (minuteKey !== instance.lastMinute) {
+        instance.lastMinute = minuteKey;
+        instance.time.textContent = CLOCK.channel("digital24", snapshot);
+        const difference = row.offset - homeOffset;
+        const relation = difference === 0 ? "local" :
+          `${difference > 0 ? "+" : "-"}${Math.floor(Math.abs(difference) / 60)}h` +
+          `${Math.abs(difference) % 60 ? CLOCK.pad(Math.abs(difference) % 60) : ""}`;
+        instance.offsetNode.textContent = `${CLOCK.offsetLabel(row.offset)} / ${relation}`;
+      }
+      const dateKey = `${snapshot.year}-${snapshot.month}-${snapshot.date}`;
+      if (dateKey !== instance.lastDate) {
+        instance.lastDate = dateKey;
+        instance.dateNode.textContent =
+          `${CLOCK.WEEKDAYS[snapshot.weekday]} ${CLOCK.MONTHS[snapshot.month]} ${snapshot.date}`;
+      }
+      const phase = phaseFor(snapshot);
+      if (phase !== instance.lastPhase) {
+        instance.lastPhase = phase;
+        instance.card.dataset.phase = phase;
+      }
+    });
+  }
+
+  function announce(message) {
+    DOM.live.textContent = message;
+  }
+
+  DOM.grid.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-action]");
+    if (!button) return;
+    const card = button.closest("[data-city]");
+    const entry = state.cities.find((item) => item.cityId === card.dataset.city);
+    if (!entry) return;
+    const city = CITY_BY_ID.get(entry.cityId);
+
+    if (button.dataset.action === "shuffle") {
+      const previous = entry.face;
+      entry.face = chooseFace(entry, previous);
+      save();
+      render();
+      announce(`${city.name} now shows ${FACES[entry.face].name}.`);
+      const replacement = DOM.grid.querySelector(
+        `[data-city="${city.id}"] [data-action="shuffle"]`);
+      if (replacement) replacement.focus();
+    } else {
+      state.cities = state.cities.filter((item) => item !== entry);
+      save();
+      render();
+      announce(`${city.name} removed.`);
+      DOM.input.focus();
+    }
+  });
+
+  DOM.shuffle.addEventListener("click", () => {
+    assignAllFaces();
+    save();
+    render();
+    announce(`Shuffled ${state.cities.length} faces.`);
+  });
+
+  const search = { matches: [], active: -1 };
+
+  function normalize(value) {
+    return value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function cityMatches(query) {
+    const needle = normalize(query.trim());
+    if (!needle) return [];
+    const selected = new Set(state.cities.map((entry) => entry.cityId));
+    const matches = CITIES.filter((city) => {
+      if (selected.has(city.id)) return false;
+      const haystack = `${normalize(city.name)} ${normalize(city.country)}`;
+      return haystack.includes(needle);
+    });
+    matches.sort((a, b) => {
+      const aStarts = normalize(a.name).startsWith(needle) ? 0 : 1;
+      const bStarts = normalize(b.name).startsWith(needle) ? 0 : 1;
+      return aStarts - bStarts || a.name.localeCompare(b.name, "en");
+    });
+    return matches.slice(0, 9);
+  }
+
+  function closeSearch() {
+    search.matches = [];
+    search.active = -1;
+    DOM.results.hidden = true;
+    DOM.results.innerHTML = "";
+    DOM.input.setAttribute("aria-expanded", "false");
+    DOM.input.removeAttribute("aria-activedescendant");
+  }
+
+  function renderSearch() {
+    search.matches = cityMatches(DOM.input.value);
+    search.active = -1;
+    if (!search.matches.length) {
+      closeSearch();
+      return;
+    }
+    const date = new Date();
+    DOM.results.innerHTML = search.matches.map((city, index) =>
+      `<li class="search-option" id="city-option-${index}" role="option"
+        aria-selected="false" data-city="${city.id}">
+        <span class="option-city">${H.esc(city.name)}</span>
+        <span class="option-country">${H.esc(city.country)}</span>
+        <span class="option-offset">${CLOCK.offsetLabel(CLOCK.offset(city.zone, date))}</span>
+      </li>`
+    ).join("");
+    DOM.results.hidden = false;
+    DOM.input.setAttribute("aria-expanded", "true");
+  }
+
+  function setActive(index) {
+    if (!search.matches.length) return;
+    search.active = (index + search.matches.length) % search.matches.length;
+    [...DOM.results.children].forEach((option, optionIndex) => {
+      option.setAttribute("aria-selected",
+        optionIndex === search.active ? "true" : "false");
+    });
+    const active = DOM.results.children[search.active];
+    DOM.input.setAttribute("aria-activedescendant", active.id);
+    active.scrollIntoView({ block: "nearest" });
+  }
+
+  function addCity(cityId) {
+    const city = CITY_BY_ID.get(cityId);
+    if (!city || state.cities.some((entry) => entry.cityId === cityId)) return;
+    const entry = { cityId, face: null };
+    state.cities.push(entry);
+    entry.face = chooseFace(entry);
+    DOM.input.value = "";
+    closeSearch();
+    save();
+    render();
+    announce(`${city.name} added with ${FACES[entry.face].name}.`);
+  }
+
+  DOM.input.addEventListener("input", renderSearch);
+  DOM.input.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      if (DOM.results.hidden) renderSearch();
+      setActive(search.active + 1);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      if (DOM.results.hidden) renderSearch();
+      setActive(search.active - 1);
+    } else if (event.key === "Enter" && search.matches.length) {
+      event.preventDefault();
+      addCity(search.matches[search.active < 0 ? 0 : search.active].id);
+    } else if (event.key === "Escape") {
+      closeSearch();
+    }
+  });
+
+  DOM.results.addEventListener("mousedown", (event) => {
+    const option = event.target.closest("[data-city]");
+    if (!option) return;
+    event.preventDefault();
+    addCity(option.dataset.city);
+  });
+
+  DOM.form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (search.matches.length) addCity(search.matches[search.active < 0 ? 0 : search.active].id);
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!DOM.form.contains(event.target)) closeSearch();
+  });
+
+  let lastOrderKey = "";
+  function loop() {
+    const date = new Date();
+    const nextOrderKey = ordered(date).map((row) => `${row.city.id}:${row.offset}`).join("|");
+    if (nextOrderKey !== lastOrderKey) {
+      lastOrderKey = nextOrderKey;
+      render();
+    } else {
+      update(date);
+    }
+  }
+
+  function start() {
+    if (reduceMotion) {
+      loop();
+      window.setInterval(loop, 1000);
+    } else {
+      const frame = () => {
+        loop();
+        window.requestAnimationFrame(frame);
+      };
+      frame();
+    }
+  }
+
+  load();
+  DOM.home.textContent = `${state.homeZone.replace(/_/g, " ")} / ${CLOCK.offsetLabel(CLOCK.offset(state.homeZone, new Date()))}`;
+  render();
+  start();
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      lastOrderKey = "";
+      loop();
+    }
+  });
+})();
+</script>
+</body>
+</html>

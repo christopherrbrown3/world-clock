@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "codex-5.6-sol",
+      "label": "Codex 5.6 Sol",
+      "file": "versions/codex-5.6-sol.html",
+      "snapshotDate": "2026-07-28",
+      "notes": "Codex 5.6 Sol checkpoint, authored from scratch against the project specification and supplied reference photographs."
+    },
+    {
       "id": "claude-opus-5",
       "label": "Claude Opus 5",
       "file": "versions/claude-opus-5.html",
