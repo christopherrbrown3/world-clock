@@ -15,7 +15,8 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
-- `versions/claude-opus-5.html`: current Claude Opus 5 checkpoint, authored from scratch against this specification.
+- `versions/codex-5.6-sol.html`: current Codex 5.6 Sol checkpoint, authored from scratch against this specification.
+- `versions/claude-opus-5.html`: finalized Claude Opus 5 checkpoint.
 - `versions/fable-5.html`: finalized Claude Fable 5 checkpoint.
 - `versions/codex-5.6.html`: finalized Codex 5.6 Terra snapshot.
 - `versions/codex-5.5.html`: finalized Codex 5.5 snapshot.
