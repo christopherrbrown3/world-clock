@@ -8,11 +8,18 @@
   },
   "snapshots": [
     {
+      "id": "fable-5.1",
+      "label": "Claude Fable 5.1",
+      "file": "versions/fable-5.1.html",
+      "snapshotDate": "2026-09-02",
+      "notes": "Claude Fable 5.1 checkpoint, written from scratch against the project specification and supplied reference photographs: its own time engine, interface, SVG drawing kit and all 62 faces."
+    },
+    {
       "id": "codex-5.6-sol",
       "label": "Codex 5.6 Sol",
       "file": "versions/codex-5.6-sol.html",
       "snapshotDate": "2026-07-28",
-      "notes": "Codex 5.6 Sol checkpoint, authored from scratch against the project specification and supplied reference photographs."
+      "notes": "Frozen Codex 5.6 Sol checkpoint, authored from scratch against the project specification and supplied reference photographs."
     },
     {
       "id": "claude-opus-5",
