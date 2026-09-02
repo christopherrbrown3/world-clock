@@ -6130,12 +6130,12 @@ registerFace("rainbow", {
     const stone = (a, r1, r2, hw1, hw2) => {
       const h = hue(a);
       const quad = (q1, q2, w1, w2) => `M${S.p(a - w1, q1)} L${S.p(a + w1, q1)} L${S.p(a + w2, q2)} L${S.p(a - w2, q2)} Z`;
-      return `<path d="${quad(r1, r2, hw1, hw2)}" fill="hsl(${S.n(h)},88%,40%)"/>` +
-        `<path d="${quad(r1 + 0.9, r2 - 0.9, hw1 * 0.6, hw2 * 0.6)}" fill="hsl(${S.n(h)},95%,58%)"/>` +
-        `<path d="${quad(r1 + 1.6, r2 - 2.6, hw1 * 0.28, hw2 * 0.28)}" fill="hsl(${S.n(h)},100%,78%)" opacity="0.8"/>`;
+      return `<path d="${quad(r1, r2, hw1, hw2)}" fill="hsl(${S.n(h)},72%,38%)"/>` +
+        `<path d="${quad(r1 + 0.6, r2 - 0.6, hw1 * 0.62, hw2 * 0.62)}" fill="hsl(${S.n(h)},78%,52%)"/>` +
+        `<path d="${quad(r1 + 1.0, r2 - 1.6, hw1 * 0.3, hw2 * 0.3)}" fill="hsl(${S.n(h)},85%,72%)" opacity="0.75"/>`;
     };
     let bezel = "";
-    for (let i = 0; i < 36; i++) bezel += stone(i * 10, 36.6, 42.9, 4.05, 4.15);
+    for (let i = 0; i < 36; i++) bezel += stone(i * 10, 38.4, 42.7, 3.85, 4.0);
 
     /* Registers with Everose "Gold Crystals" faces; 9 o'clock is the live running seconds. */
     const register = (cx, cy, labels, nTicks, majorEvery) => {
@@ -6170,7 +6170,7 @@ registerFace("rainbow", {
     const chrono = `<g transform="translate(50 50)"><path d="M-0.38 7.8 L-0.38 -31.6 L0.38 -31.6 L0.38 7.8 Z" fill="${ROSE2}"/><path d="M-0.9 4 L-0.9 8.8 L0.9 8.8 L0.9 4 Z" fill="${ROSE2}"/><circle r="1.55" fill="${ROSE2}"/><circle r="0.6" fill="#3a2620"/></g>`;
 
     /* Diamond-set lugs and crown guards. */
-    const dia = (x, y, r = 0.9) => S.circle(x, y, r, { fill: S.url("dia") }) + S.circle(x, y, r * 0.45, { fill: "#fff", opacity: 0.9 });
+    const dia = (x, y, r = 0.9) => S.circle(x, y, r * 0.62, { fill: S.url("dia"), stroke: "#b98a72", "stroke-width": 0.18 }) + S.circle(x - r * 0.15, y - r * 0.15, r * 0.22, { fill: "#fff", opacity: 0.85 });
     let diamonds = "";
     [[25.4, 12.2], [26.6, 8.6], [29.6, 6.1], [33.2, 5.4], [74.6, 12.2], [73.4, 8.6], [70.4, 6.1], [66.8, 5.4]].forEach(([x, y]) => { diamonds += dia(x, y) + dia(x, 100 - y); });
     [[90.4, 45.4], [90.4, 50], [90.4, 54.6]].forEach(([x, y]) => { diamonds += dia(x, y, 0.75); });
