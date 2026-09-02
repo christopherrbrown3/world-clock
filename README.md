@@ -90,7 +90,8 @@ standalone page and frozen once that model's cycle ends, so results can be compa
 | Version | Page | Snapshot | State |
 |---|---|---|---|
 | Active build | [world-clock.html](world-clock.html) | — | In development |
-| Codex 5.6 Sol | [versions/codex-5.6-sol.html](versions/codex-5.6-sol.html) | 2026-07-28 | Current checkpoint |
+| Claude Fable 5.1 | [versions/fable-5.1.html](versions/fable-5.1.html) | 2026-09-02 | Current checkpoint |
+| Codex 5.6 Sol | [versions/codex-5.6-sol.html](versions/codex-5.6-sol.html) | 2026-07-28 | Frozen |
 | Claude Opus 5 | [versions/claude-opus-5.html](versions/claude-opus-5.html) | 2026-07-28 | Frozen |
 | Claude Fable 5 | [versions/fable-5.html](versions/fable-5.html) | 2026-07-17 | Frozen |
 | Codex 5.6 Terra | [versions/codex-5.6.html](versions/codex-5.6.html) | 2026-07-09 | Frozen |
