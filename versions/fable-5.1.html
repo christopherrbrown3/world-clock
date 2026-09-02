@@ -1625,8 +1625,8 @@ registerFace("portugieser", {
     const leafSmall = `<path d="M0 2.4 C-0.9 1.2 -1.05 -3 0 -8 C1.05 -3 0.9 1.2 0 2.4 Z" fill="${RH}"/><circle r="0.85" fill="${RH}"/>`;
 
     /* Leaf (feuille) hands, rhodium-plated. */
-    const hourHand = `<path d="M0 3.6 C-2.4 1.6 -2.5 -10 0 -24.5 C2.5 -10 2.4 1.6 0 3.6 Z" fill="${RH}"/><path d="M0 -22 C-0.7 -14 -0.9 -6 -0.6 0 L0 0 Z" fill="#000" opacity="0.14"/>`;
-    const minuteHand = `<path d="M0 3.8 C-2.0 1.8 -2.1 -14 0 -36.5 C2.1 -14 2.0 1.8 0 3.8 Z" fill="${RH}"/><path d="M0 -34 C-0.6 -20 -0.8 -8 -0.5 0 L0 0 Z" fill="#000" opacity="0.14"/>`;
+    const hourHand = `<path d="M0 2.8 C-2.4 1.2 -2.5 -10 0 -24.5 C2.5 -10 2.4 1.2 0 2.8 Z" fill="${RH}"/><path d="M0 -22 C-0.7 -14 -0.9 -6 -0.6 0 L0 0 Z" fill="#000" opacity="0.14"/>`;
+    const minuteHand = `<path d="M0 3.0 C-2.0 1.4 -2.1 -14 0 -36.5 C2.1 -14 2.0 1.4 0 3.0 Z" fill="${RH}"/><path d="M0 -34 C-0.6 -20 -0.8 -8 -0.5 0 L0 0 Z" fill="#000" opacity="0.14"/>`;
     const chrono = `<g transform="translate(50 50)"><path d="M-0.32 7.5 L-0.32 -38.6 L0.32 -38.6 L0.32 7.5 Z" fill="${RH}"/><circle cy="9.2" r="1.7" fill="${RH}"/><circle r="1.9" fill="${RH}"/><circle r="0.55" fill="#1d2a3d"/></g>`;
 
     /* Blue alligator strap with scale pattern and stitching. */
@@ -2063,6 +2063,111 @@ registerFace("datejust", {
       ${S.handGroup("s", secondHand)}
       <ellipse cx="77.6" cy="50" rx="6.2" ry="5.4" fill="${S.url("cyc")}" stroke="#ffffff" stroke-opacity="0.25" stroke-width="0.35"/>
       ${S.crystal(50, 50, R_DIAL + 1, { opacity: 0.1 })}
+    `;
+  }
+});
+}
+
+/* ==== face: snowflake ==== */
+{
+registerFace("snowflake", {
+  name: "Grand Seiko Snowflake",
+  cadence: "glide",
+  draw(S) {
+    const INK = "#1b1c1e";
+    const R_DIAL = 38.4;
+    const PV = [39.2, 61.8];   // power reserve pivot
+
+    /* Snow texture: deterministic soft blotches, drawn over a faintly graded white */
+    let seed = 7;
+    const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    let snow = "";
+    for (let i = 0; i < 260; i++) {
+      const a = rnd() * 360, r = Math.sqrt(rnd()) * 37.5;
+      const [x, y] = S.pt(a, r);
+      const rx = 0.7 + rnd() * 2.2, ry = 0.5 + rnd() * 1.4, rot = rnd() * 180;
+      const light = rnd() > 0.45;
+      snow += `<ellipse cx="${S.n(x)}" cy="${S.n(y)}" rx="${S.n(rx)}" ry="${S.n(ry)}" transform="rotate(${S.n(rot)} ${S.n(x)} ${S.n(y)})" fill="${light ? "#ffffff" : "#c9ccd0"}" opacity="${S.n(0.18 + rnd() * 0.3)}"/>`;
+    }
+
+    /* Faceted applied markers: two-tone bevel, long batons; 12 is doubled; 3 gives way to the date */
+    const marker = (deg, w, r1, r2) => {
+      const [x, y] = S.pt(deg, (r1 + r2) / 2);
+      const h = r2 - r1;
+      return `<g transform="rotate(${deg} ${S.n(x)} ${S.n(y)})">
+        ${S.rect(x - w / 2, y - h / 2, w, h, { fill: "#5a6168" })}
+        ${S.rect(x - w / 2 + 0.2, y - h / 2 + 0.2, w / 2 - 0.2, h - 0.4, { fill: S.url("facetL") })}
+        ${S.rect(x, y - h / 2 + 0.2, w / 2 - 0.2, h - 0.4, { fill: S.url("facetR") })}
+      </g>`;
+    };
+    let markers = "";
+    for (let i = 1; i < 12; i++) { if (i === 3) continue; markers += marker(i * 30, 2.3, 27.6, 35.2); }
+    markers += marker(-1.9, 2.3, 27.6, 35.2) + marker(1.9, 2.3, 27.6, 35.2);
+
+    /* Power reserve fan at 8 o'clock */
+    const arc = (r, a0, a1) => `M${S.p(a0, r, PV[0], PV[1])} A${r} ${r} 0 0 1 ${S.p(a1, r, PV[0], PV[1])}`;
+    let pres = `<path d="${arc(9.2, 232, 326)} L${S.p(326, 5.6, PV[0], PV[1])} ${arc(5.6, 326, 232).replace("0 0 1", "0 0 0")} Z" fill="#d9dbdc" opacity="0.55"/>`;
+    pres += `<path d="${arc(9.2, 232, 258)} L${S.p(258, 5.6, PV[0], PV[1])} A5.6 5.6 0 0 0 ${S.p(232, 5.6, PV[0], PV[1])} Z" fill="#2d3033"/>`;
+    for (let k = 232; k <= 326; k += 6.7) pres += `<line x1="${S.p(k, 6.2, PV[0], PV[1]).replace(" ", '" y1="')}" x2="${S.p(k, 9.2, PV[0], PV[1]).replace(" ", '" y2="')}" stroke="${INK}" stroke-width="0.28"/>`;
+    pres += `<path d="${arc(9.2, 232, 326)}" fill="none" stroke="${INK}" stroke-width="0.35"/><path d="${arc(5.6, 232, 326)}" fill="none" stroke="${INK}" stroke-width="0.3"/>`;
+    pres += `<g transform="translate(${PV[0]} ${PV[1]}) rotate(314)"><path d="M-0.5 1.6 L-0.35 -8.4 L0.35 -8.4 L0.5 1.6 Z" fill="${S.url("steel")}"/><circle r="1.05" fill="${S.url("steel")}"/></g>`;
+
+    /* Dauphine hands: two facets, light and dark */
+    const dauphine = (len, w) => `<path d="M0 ${len * 0.12} L${-w} -3 L0 ${-len} Z" fill="${S.url("facetL")}"/><path d="M0 ${len * 0.12} L${w} -3 L0 ${-len} Z" fill="${S.url("facetD")}"/><path d="M0 ${len * 0.12} L${-w} -3 L0 ${-len} L${w} -3 Z" fill="none" stroke="#3b4147" stroke-width="0.18"/>`;
+    const hourHand = dauphine(21.5, 2.3);
+    const minuteHand = dauphine(32.5, 1.9);
+    const secondHand = `<path d="M-0.35 11 L-0.35 -34.5 L0.35 -34.5 L0.35 11 Z" fill="${S.url("blued")}"/><circle r="1.6" fill="${S.url("blued")}"/><circle r="0.55" fill="#cfd4d8"/>`;
+
+    return `
+      <defs>
+        ${S.linear("brace", { a: 90, stops: [[0, "#6d747b"], [0.15, "#e2e6e9"], [0.5, "#aab1b7"], [0.85, "#e2e6e9"], [1, "#666d74"]] })}
+        ${S.linear("case", { a: 135, stops: [[0, "#fafbfc"], [0.35, "#cdd3d8"], [0.7, "#868e95"], [1, "#d3d9de"]] })}
+        ${S.linear("bezel", { a: 135, stops: [[0, "#ffffff"], [0.4, "#c2c9cf"], [0.7, "#737b83"], [1, "#e6eaee"]] })}
+        ${S.linear("steel", { a: 120, stops: [[0, "#ffffff"], [0.5, "#aeb5bc"], [1, "#e8ecef"]] })}
+        ${S.linear("facetL", { a: 100, stops: [[0, "#ffffff"], [0.5, "#dde2e6"], [1, "#b7bec5"]] })}
+        ${S.linear("facetR", { a: 100, stops: [[0, "#9aa2aa"], [0.5, "#6c747c"], [1, "#a9b1b8"]] })}
+        ${S.linear("facetD", { a: 100, stops: [[0, "#7c848c"], [0.5, "#4f565d"], [1, "#8a9299"]] })}
+        ${S.linear("blued", { a: 90, stops: [[0, "#3f6fc4"], [0.5, "#17357e"], [1, "#2d55a8"]] })}
+        ${S.radial("dialg", { cx: 0.42, cy: 0.35, r: 0.95, stops: [[0, "#ffffff"], [0.6, "#f4f5f4"], [1, "#e1e4e6"]] })}
+        <clipPath id="${S.id("dialclip")}"><circle cx="50" cy="50" r="${R_DIAL}"/></clipPath>
+      </defs>
+
+      <!-- Titanium three-link bracelet -->
+      ${S.rect(29, 0, 42, 13, { fill: S.url("brace") })}${S.rect(29, 87, 42, 13, { fill: S.url("brace") })}
+      ${S.rect(42.5, 0, 15, 13, { fill: "#dfe4e8", opacity: 0.5 })}${S.rect(42.5, 87, 15, 13, { fill: "#dfe4e8", opacity: 0.5 })}
+      <path d="M42.5 0 V13 M57.5 0 V13 M42.5 87 V100 M57.5 87 V100" stroke="#4b525a" stroke-width="0.5"/>
+      <path d="M29 6.5 H71 M29 93.5 H71" stroke="#3f464e" stroke-width="0.7"/>
+      <!-- Lugs and case -->
+      <path d="M23.5 27 Q26 7.5 34 6.5 L66 6.5 Q74 7.5 76.5 27 Z" fill="${S.url("case")}"/>
+      <path d="M23.5 73 Q26 92.5 34 93.5 L66 93.5 Q74 92.5 76.5 73 Z" fill="${S.url("case")}"/>
+      <path d="M29 6.5 L30.5 20 M71 6.5 L69.5 20 M29 93.5 L30.5 80 M71 93.5 L69.5 80" stroke="#59616a" stroke-width="0.5"/>
+      <!-- Crown -->
+      ${S.rect(93.4, 45.6, 5.6, 8.8, { rx: 1.4, fill: S.url("steel") })}
+      ${Array.from({ length: 6 }, (_, i) => `<line x1="${S.n(94.3 + i * 0.8)}" y1="46.3" x2="${S.n(94.3 + i * 0.8)}" y2="53.7" stroke="#5d656c" stroke-width="0.3"/>`).join("")}
+      ${S.circle(50, 50, 44.6, { fill: S.url("case") })}
+      ${S.circle(50, 50, 42.2, { fill: S.url("bezel") })}
+      ${S.circle(50, 50, R_DIAL + 0.8, { fill: "none", stroke: "#50585f", "stroke-width": 0.5 })}
+      <!-- Snow dial -->
+      ${S.circle(50, 50, R_DIAL, { fill: S.url("dialg") })}
+      <g clip-path="${S.url("dialclip")}">
+        ${snow}
+        ${S.ticks({ count: 60, r1: 36.2, r2: 37.2, w: 0.32, color: INK, skip: (i) => i % 5 === 0 })}
+        ${S.ticks({ count: 60, r1: 35.9, r2: 37.2, w: 0.45, color: INK, skip: (i) => i % 5 !== 0 })}
+        <!-- GS logo and name -->
+        ${S.text(50, 33.4, "GS", { size: 5.6, family: S.FONT.serif, weight: 700, color: S.url("facetD"), letter: -0.6, italic: true })}
+        ${S.text(50, 39.6, "Grand Seiko", { size: 3.7, family: S.FONT.serif, weight: 600, color: INK, letter: 0.1 })}
+        ${pres}
+        ${S.text(50, 69.6, "SPRING DRIVE", { size: 1.75, family: S.FONT.sans, weight: 600, color: INK, letter: 0.3 })}
+        ${markers}
+        <!-- Framed date at 3 -->
+        ${S.rect(72.0, 47.0, 8.6, 6.0, { rx: 0.4, fill: S.url("steel") })}
+        ${S.dateWindow(72.7, 47.6, 7.2, 4.8, { fill: "#f7f7f5", color: INK, size: 3.8, family: S.FONT.sans, weight: 600, frame: "#6a727a", frameW: 0.3, rx: 0.2 })}
+      </g>
+      <!-- Hands -->
+      ${S.handGroup("h", hourHand)}
+      ${S.handGroup("m", minuteHand)}
+      ${S.handGroup("s", secondHand)}
+      ${S.crystal(50, 50, R_DIAL + 1.5, { opacity: 0.1 })}
     `;
   }
 });
@@ -2548,38 +2653,37 @@ registerFace("monaco", {
   draw(S) {
     const W = "#f4f5f2", RED = "#d8202a";
     /* Case x/y 21-79 (rounded square); dial x/y 27-73; registers at (36.5,50) and (63.5,50) */
-    const D0 = 27, D1 = 73, RL = 36.5, RR = 63.5, RY = 50, RS = 7.6;
+    const D0 = 27, D1 = 73, RL = 36.5, RR = 63.5, RY = 50, RS = 7.2;
 
     /* Sunray: fine radial spokes clipped to the dial. */
     let spokes = "";
-    for (let i = 0; i < 90; i++) {
-      const a = i * 4;
-      spokes += `<line x1="50" y1="50" x2="${S.p(a, 40).replace(" ", '" y2="')}" stroke="${i % 2 ? "#ffffff" : "#000000"}" stroke-width="0.7" opacity="${i % 2 ? 0.05 : 0.07}"/>`;
+    for (let i = 0; i < 120; i++) {
+      const a = i * 3;
+      spokes += `<line x1="50" y1="50" x2="${S.p(a, 40).replace(" ", '" y2="')}" stroke="${i % 2 ? "#ffffff" : "#000000"}" stroke-width="0.55" opacity="${i % 2 ? 0.035 : 0.05}"/>`;
     }
 
-    /* Horizontal white hour batons with red accent at 1,2,4,5,7,8,10,11. */
+    /* Horizontal white hour batons with red accent, laid along the square perimeter. */
     let marks = "";
-    for (const h of [1, 2, 4, 5, 7, 8, 10, 11]) {
-      const [x, y] = S.pt(h * 30, 19.6);
-      marks += S.rect(x - 3.1, y - 0.9, 6.2, 1.8, { rx: 0.2, fill: S.url("lume") });
-      marks += S.rect(x - 3.1, y + 1.0, 6.2, 0.45, { fill: RED });
+    for (const [x, y] of [[39.8, 31.6], [60.2, 31.6], [RL, 39.6], [RR, 39.6], [RL, 60.4], [RR, 60.4], [39.8, 68.4], [60.2, 68.4]]) {
+      marks += S.rect(x - 2.9, y - 0.85, 5.8, 1.7, { rx: 0.2, fill: S.url("lume") });
+      marks += S.rect(x - 2.9, y + 0.95, 5.8, 0.4, { fill: RED });
     }
 
     /* Squared registers: seconds (left, live) and 30-minute counter (right). */
-    const register = (cx, cy, labels, count) => {
+    const register = (cx, cy, numCfg, count) => {
       let s = S.rect(cx - RS, cy - RS, 2 * RS, 2 * RS, { rx: 1.6, fill: S.url("reg") });
       s += S.rect(cx - RS, cy - RS, 2 * RS, 2 * RS, { rx: 1.6, fill: "none", stroke: "#5b6470", "stroke-width": 0.3 });
       s += S.ticks({ count: count, r1: RS - 2.0, r2: RS - 1.0, w: 0.22, color: "#2a2f36", cx, cy, skip: (i) => i % (count / 12) === 0 });
       s += S.ticks({ count: 12, r1: RS - 2.6, r2: RS - 1.0, w: 0.4, color: "#2a2f36", cx, cy });
-      s += S.numerals({ count: 4, start: 90, step: 90, r: RS - 4.3, size: 1.7, family: S.FONT.sans, weight: 600, color: "#22262c", cx, cy, labels });
+      s += S.numerals({ ...numCfg, r: RS - 4.2, size: 1.7, family: S.FONT.sans, weight: 600, color: "#22262c", cx, cy });
       return s;
     };
     const regHand = `<path d="M-0.35 1.8 L-0.35 -5.6 L0 -6.4 L0.35 -5.6 L0.35 1.8 Z" fill="#2c3238"/><circle r="0.6" fill="#2c3238"/>`;
 
     /* Hands: steel batons with lume; red chronograph seconds parked at 12. */
-    const hourHand = `<rect x="-1.4" y="-15.5" width="2.8" height="17.5" rx="0.4" fill="${S.url("steelh")}"/><rect x="-0.7" y="-14.5" width="1.4" height="12.5" fill="${S.url("lume")}"/><circle r="1.7" fill="${S.url("steelh")}"/>`;
-    const minuteHand = `<rect x="-1.15" y="-21.5" width="2.3" height="23.5" rx="0.4" fill="${S.url("steelh")}"/><rect x="-0.55" y="-20.5" width="1.1" height="17.5" fill="${S.url("lume")}"/><circle r="1.1" fill="#3b4148"/>`;
-    const chrono = `<path d="M-0.35 5 L-0.35 -22 L0.35 -22 L0.35 5 Z" fill="${RED}"/><path d="M-1.3 -12.5 L0 -16.5 L1.3 -12.5 L0 -8.5 Z" fill="${RED}"/><circle r="0.8" fill="${RED}"/>`;
+    const hourHand = `<rect x="-1.2" y="-15.5" width="2.4" height="17.3" rx="0.35" fill="${S.url("steelh")}"/><rect x="-0.6" y="-14.6" width="1.2" height="12.6" fill="${S.url("lume")}"/><circle r="1.6" fill="${S.url("steelh")}"/>`;
+    const minuteHand = `<rect x="-1.0" y="-21.5" width="2.0" height="23.3" rx="0.35" fill="${S.url("steelh")}"/><rect x="-0.5" y="-20.6" width="1.0" height="17.6" fill="${S.url("lume")}"/><circle r="1.05" fill="#3b4148"/>`;
+    const chrono = `<path d="M-0.3 3.2 L-0.3 -22.2 L0.3 -22.2 L0.3 3.2 Z" fill="${RED}"/><circle cy="4.4" r="1.2" fill="${RED}"/><circle r="0.75" fill="${RED}"/>`;
 
     /* Perforated strap. */
     let holes = "";
@@ -2591,7 +2695,7 @@ registerFace("monaco", {
       <defs>
         ${S.linear("case", { a: 120, stops: [[0, "#fdfdfe"], [0.3, "#c9d0d6"], [0.6, "#7f878f"], [0.85, "#dfe4e8"], [1, "#6c747c"]] })}
         ${S.linear("steelh", { a: 110, stops: [[0, "#ffffff"], [0.45, "#d7dce1"], [0.7, "#8f979f"], [1, "#e7ebee"]] })}
-        ${S.radial("dial", { cx: 0.5, cy: 0.42, r: 0.75, stops: [[0, "#2b5fbf"], [0.5, "#153a8c"], [1, "#0a1e55"]] })}
+        ${S.radial("dial", { cx: 0.5, cy: 0.42, r: 0.75, stops: [[0, "#2350ad"], [0.5, "#11307c"], [1, "#081846"]] })}
         ${S.radial("reg", { cx: 0.5, cy: 0.4, r: 0.8, stops: [[0, "#ffffff"], [0.7, "#eceeee"], [1, "#cfd4d8"]] })}
         ${S.radial("lume", { cx: 0.4, cy: 0.35, r: 0.9, stops: [[0, "#ffffff"], [1, "#d9dcd3"]] })}
         ${S.linear("strap", { a: 0, stops: [[0, "#141416"], [0.5, "#2a2a2e"], [1, "#101012"]] })}
@@ -2618,8 +2722,8 @@ registerFace("monaco", {
       <g clip-path="${S.url("dclip")}">
         ${spokes}
         ${marks}
-        ${register(RL, RY, ["15", "30", "45", "60"], 60)}
-        ${register(RR, RY, ["5", "10", "20", "30"], 30)}
+        ${register(RL, RY, { count: 4, start: 90, step: 90, labels: ["15", "30", "45", "60"] }, 60)}
+        ${register(RR, RY, { count: 3, start: 120, step: 120, labels: ["10", "20", "30"] }, 30)}
         <!-- Heuer shield and printing, below the hands -->
         <g transform="translate(50 31.2)">
           <path d="M-5.2 -2.6 H5.2 V0.6 Q5.2 3 0 4.4 Q-5.2 3 -5.2 0.6 Z" fill="${RED}"/>
@@ -2741,6 +2845,86 @@ registerFace("panerai", {
       ${S.handGroup("m", minuteHand)}
       ${S.circle(50, 50, 1.6, { fill: S.url("hand") })}
       ${S.crystal(50, 50, R_DIAL + 1, { opacity: 0.1 })}
+    `;
+  }
+});
+}
+
+/* ==== face: f1 ==== */
+{
+registerFace("f1", {
+  name: "Rolex Trackside Clock",
+  cadence: "sweep",
+  viewBox: "0 0 100 122",
+  draw(S) {
+    const CX = 50, CY = 43, R_DIAL = 30.5, R_BZ = 38.5;
+    const GREEN = "#0d5a3f", DKGREEN = "#0a3f2d", GOLD = S.url("gold"), PALE = "#d3ead9";
+
+    /* Fluted bezel: alternating lit and shaded facets, as on the Datejust fluted bezel. */
+    let flutes = "";
+    for (let i = 0; i < 72; i++) {
+      const a0 = i * 5, a1 = a0 + 5;
+      flutes += `<path d="M${S.p(a0, R_BZ, CX, CY)} L${S.p(a0 + 2.5, R_BZ - 2.2, CX, CY)} L${S.p(a1, R_BZ, CX, CY)} Z" fill="${i % 2 ? "#f4d78a" : "#a77c22"}"/>`;
+      flutes += `<path d="M${S.p(a0, R_DIAL + 1.6, CX, CY)} L${S.p(a0 + 2.5, R_BZ - 2.2, CX, CY)} L${S.p(a1, R_DIAL + 1.6, CX, CY)} Z" fill="${i % 2 ? "#c9a24a" : "#e5c46a"}"/>`;
+    }
+
+    /* Green baton markers with a pale inner fill; the crown replaces the 12 baton. */
+    let batons = "";
+    for (let i = 1; i < 12; i++) {
+      const a = i * 30, [x, y] = S.pt(a, 23.6, CX, CY);
+      batons += `<g transform="rotate(${a} ${S.n(x)} ${S.n(y)})">${S.rect(x - 1.55, y - 4.0, 3.1, 8.0, { rx: 0.3, fill: DKGREEN })}${S.rect(x - 0.85, y - 3.3, 1.7, 6.6, { rx: 0.2, fill: PALE })}</g>`;
+    }
+
+    const crown = (x, y, k, fill) => `<g fill="${fill}" transform="translate(${x} ${y}) scale(${k})">
+        <path d="M-6.3 3.4 H6.3 L5.7 1.1 L3.3 2.4 L2.85 0 L0 1.5 L-2.85 0 L-3.3 2.4 L-5.7 1.1 Z"/>
+        <path d="M-6.2 0.6 L-3.3 2.6 M-3.1 -0.6 L-1.4 2.2 M0 -1 L0 2 M3.1 -0.6 L1.4 2.2 M6.2 0.6 L3.3 2.6" stroke="${fill}" stroke-width="0.9"/>
+        <circle cx="-6.2" cy="0.6" r="0.95"/><circle cx="-3.1" cy="-0.6" r="0.95"/><circle cx="0" cy="-1.1" r="1"/><circle cx="3.1" cy="-0.6" r="0.95"/><circle cx="6.2" cy="0.6" r="0.95"/>
+        <rect x="-5.4" y="3.9" width="10.8" height="1.3" rx="0.4"/>
+      </g>`;
+
+    /* Hands: green batons with a pale centre stripe; thin green seconds needle with counterweight. */
+    const hourHand = `<path d="M-1.7 3 L-1.7 -16.5 L0 -19.5 L1.7 -16.5 L1.7 3 Z" fill="${DKGREEN}"/><path d="M-0.8 -1 L-0.8 -15.5 L0 -17.5 L0.8 -15.5 L0.8 -1 Z" fill="${PALE}"/>`;
+    const minuteHand = `<path d="M-1.5 3 L-1.5 -25.5 L0 -28.5 L1.5 -25.5 L1.5 3 Z" fill="${DKGREEN}"/><path d="M-0.7 -1 L-0.7 -24.5 L0 -26.5 L0.7 -24.5 L0.7 -1 Z" fill="${PALE}"/>`;
+    const secondHand = `<path d="M-0.4 7.5 L-0.4 -28.5 L0.4 -28.5 L0.4 7.5 Z" fill="${DKGREEN}"/><circle cy="5" r="1.4" fill="${DKGREEN}"/><circle r="1.7" fill="${DKGREEN}"/>`;
+
+    return `
+      <defs>
+        ${S.linear("panel", { a: 90, stops: [[0, "#12634a"], [0.5, "#0b4f3a"], [1, "#083b2b"]] })}
+        ${S.linear("gold", { a: 110, stops: [[0, "#fdf0b8"], [0.3, "#e6c15c"], [0.6, "#b8892a"], [1, "#f1d685"]] })}
+        ${S.radial("dial", { cx: 0.45, cy: 0.4, r: 0.8, stops: [[0, "#ffffff"], [0.7, "#f6f6f2"], [1, "#e6e6e0"]] })}
+        ${S.radial("rim", { cx: 0.5, cy: 0.5, r: 0.5, stops: [[0.88, "#000", 0], [1, "#000", 0.45]] })}
+        <clipPath id="${S.id("dialclip")}"><circle cx="${CX}" cy="${CY}" r="${R_DIAL}"/></clipPath>
+      </defs>
+
+      <!-- Rolex-green signage panel with its rounded top edge -->
+      ${S.rect(0, 0, 100, 122, { fill: S.url("panel") })}
+      <path d="M0 0 H100 V3 Q50 0.5 0 3 Z" fill="#1a7a5c" opacity="0.5"/>
+      <path d="M0 119 H100 V122 H0 Z" fill="#052a1f"/>
+      <!-- Housing flange and gold fluted bezel -->
+      ${S.circle(CX, CY, R_BZ + 2.4, { fill: "#062b20" })}
+      ${S.circle(CX, CY, R_BZ + 0.9, { fill: "#b28c33" })}
+      ${S.circle(CX, CY, R_BZ, { fill: GOLD })}
+      ${flutes}
+      ${S.circle(CX, CY, R_DIAL + 1.6, { fill: "#8c6a1c" })}
+      ${S.circle(CX, CY, R_DIAL + 0.6, { fill: "#2a2a24" })}
+      <!-- White dial -->
+      ${S.circle(CX, CY, R_DIAL, { fill: S.url("dial") })}
+      <g clip-path="${S.url("dialclip")}">
+        ${batons}
+        ${crown(CX, CY - 22.5, 0.7, GOLD)}
+        ${S.text(CX, CY - 12.6, "ROLEX", { size: 4.4, family: S.FONT.serif, weight: 700, color: DKGREEN, letter: 0.5 })}
+      </g>
+      <!-- Hands -->
+      ${S.handGroup("h", hourHand, { cx: CX, cy: CY })}
+      ${S.handGroup("m", minuteHand, { cx: CX, cy: CY })}
+      ${S.handGroup("s", secondHand, { cx: CX, cy: CY })}
+      ${S.circle(CX, CY, 0.6, { fill: PALE })}
+      ${S.circle(CX, CY, R_DIAL, { fill: S.url("rim") })}
+      ${S.crystal(CX, CY, R_DIAL, { opacity: 0.08 })}
+
+      <!-- Gold crown and ROLEX wordmark on the panel below the clock -->
+      ${crown(CX, 92, 1.15, GOLD)}
+      ${S.text(CX, 113, "ROLEX", { size: 11.5, family: S.FONT.serif, weight: 700, color: GOLD, letter: 0.8 })}
     `;
   }
 });
@@ -2997,7 +3181,7 @@ registerFace("moonphase", {
     const leaf = (len, w, tail) => `<path d="M0 ${S.n(tail)} C${S.n(-w)} ${S.n(-len * 0.3)} ${S.n(-w * 0.6)} ${S.n(-len * 0.8)} 0 ${S.n(-len)} C${S.n(w * 0.6)} ${S.n(-len * 0.8)} ${S.n(w)} ${S.n(-len * 0.3)} 0 ${S.n(tail)} Z" fill="${GOLD}"/>
       <path d="M0 ${S.n(tail)} C${S.n(-w)} ${S.n(-len * 0.3)} ${S.n(-w * 0.6)} ${S.n(-len * 0.8)} 0 ${S.n(-len)} Z" fill="#6e4520" opacity="0.28"/><circle r="1.3" fill="${GOLD}"/>`;
     /* Serpentine blued-steel date hand with crescent tip, reaching the date track (r 33). */
-    const serpent = `<path d="M0 3.5 L0 -5 C0 -8.5 2.2 -10.5 2.2 -14 C2.2 -17.5 -2.2 -19.5 -2.2 -23 C-2.2 -26 0 -27.5 0 -29.6" fill="none" stroke="${BLUE}" stroke-width="0.6" stroke-linecap="round"/>
+    const serpent = `<path d="M0 3.5 L0 -5 C0 -8.5 1.5 -10.5 1.5 -14 C1.5 -17.5 -1.5 -19.5 -1.5 -23 C-1.5 -26 0 -27.5 0 -29.6" fill="none" stroke="${BLUE}" stroke-width="0.6" stroke-linecap="round"/>
       <path d="M-1.7 -31.1 A1.9 1.9 0 1 1 1.7 -31.1 A1.35 1.35 0 1 0 -1.7 -31.1 Z" fill="${BLUE}"/><circle r="1.0" fill="${BLUE}"/>`;
     const secondHand = `<path d="M-0.28 8 L-0.28 -33.6 L0.28 -33.6 L0.28 8 Z" fill="${GOLD}"/><path d="M-0.7 8 L-0.7 3 L0.7 3 L0.7 8 Z" fill="${GOLD}"/><circle r="0.75" fill="${GOLD}"/>`;
 
@@ -3047,7 +3231,7 @@ registerFace("moonphase", {
           ${S.handGroup("moon", `<g transform="translate(0 3.7)"><circle r="3.5" fill="${S.url("moonf")}"/><circle cx="-1.2" cy="-0.8" r="0.35" fill="#8a5a22"/><circle cx="1.2" cy="-0.8" r="0.35" fill="#8a5a22"/><path d="M-1.4 0.9 Q0 2.2 1.4 0.9" fill="none" stroke="#8a5a22" stroke-width="0.3"/><path d="M0 -0.3 L0.5 0.4 L-0.1 0.4" fill="none" stroke="#8a5a22" stroke-width="0.25"/></g>`, { cx: MC[0], cy: MC[1] + 0.4 })}
         </g>
         <path d="${arch}" fill="none" stroke="${GOLD}" stroke-width="0.4"/>
-        ${S.text(50, 84.6, "SWISS MADE", { size: 1.2, family: S.FONT.sans, weight: 500, color: INK, letter: 0.15 })}
+        ${S.text(50, 86.5, "SWISS MADE", { size: 1.05, family: S.FONT.sans, weight: 500, color: INK, letter: 0.15 })}
       </g>
       <!-- Hands -->
       ${S.handGroup("h", leaf(19.5, 2.2, 3))}
@@ -3613,6 +3797,7 @@ registerFace("overseas", {
         ${S.radial("dialg", { cx: 0.5, cy: 0.45, r: 0.75, stops: [[0, "#2a63c8"], [0.55, "#1746a4"], [1, "#0b2a6e"]] })}
         ${S.linear("crown", { a: 90, stops: [[0, "#858d95"], [0.25, "#f3f6f8"], [0.55, "#aeb6be"], [1, "#747c84"]] })}
         <clipPath id="${S.id("dialclip")}"><circle cx="50" cy="50" r="${R_DIAL}"/></clipPath>
+        <clipPath id="${S.id("bezclip")}"><circle cx="50" cy="50" r="42.6"/></clipPath>
       </defs>
 
       ${brac(true)}${brac(false)}
@@ -3625,7 +3810,7 @@ registerFace("overseas", {
       <!-- Polished bezel with six half-round notches -->
       ${S.circle(50, 50, 42.6, { fill: S.url("bezel") })}
       ${S.circle(50, 50, 42.6, { fill: "none", stroke: "#4d545b", "stroke-width": 0.4 })}
-      ${notches}
+      <g clip-path="${S.url("bezclip")}">${notches}</g>
       ${S.circle(50, 50, 36.2, { fill: "#2a3037" })}
       ${S.circle(50, 50, 36.2, { fill: "none", stroke: "#0d1116", "stroke-width": 0.4 })}
       ${S.circle(50, 50, R_DIAL + 0.9, { fill: "#d3d9de" })}
@@ -4403,6 +4588,123 @@ registerFace("marine", {
       <circle cx="50" cy="50" r="1.4" fill="${BLUE}"/>
       ${S.crystal(50, 50, R_DIAL + 1, { opacity: 0.12 })}
     `;
+  }
+});
+}
+
+/* ==== face: freak ==== */
+{
+registerFace("freak", {
+  name: "Ulysse Nardin Freak X Carb 2303-270/CARB",
+  cadence: "sweep",
+  draw(S) {
+    const LUME = S.url("lume"), STEEL = S.url("steel"), DK = "#1a1c1f";
+    const R_BEZ = 43.6, R_RING = 35.6, R_DIAL = 34.0;
+
+    /* Faceted Carbonium bezel: 12 broad facets, marbled carbon texture. */
+    let bezelPath = "";
+    for (let i = 0; i < 12; i++) {
+      const a = i * 30;
+      bezelPath += `${i ? "L" : "M"}${S.p(a - 11, R_BEZ)} L${S.p(a - 4, R_BEZ - 1.3)} L${S.p(a + 4, R_BEZ - 1.3)} L${S.p(a + 11, R_BEZ)} `;
+    }
+    bezelPath += "Z";
+    let marble = "";
+    for (let i = 0; i < 90; i++) {
+      const a0 = (i * 47.3) % 360, len = 6 + (i * 13) % 17, r = 36.4 + (i * 7.7) % 6.4;
+      const shade = ["#5a5d61", "#3b3e42", "#787c81", "#26282b", "#8d9196"][i % 5];
+      marble += `<path d="M${S.p(a0, r)} A${S.n(r)} ${S.n(r)} 0 0 1 ${S.p(a0 + len, r)}" fill="none" stroke="${shade}" stroke-width="${S.n(0.6 + (i % 3) * 0.5)}" stroke-linecap="round" opacity="0.75"/>`;
+    }
+
+    /* Flange: minute ring with applied lume batons, thin Arabic 12/3/6/9. */
+    let batons = "";
+    for (let i = 0; i < 12; i++) {
+      if (i % 3 === 0) continue;
+      const [x, y] = S.pt(i * 30, 30.2);
+      batons += `<g transform="rotate(${i * 30} ${S.n(x)} ${S.n(y)})">${S.rect(x - 0.9, y - 2.6, 1.8, 5.2, { fill: STEEL })}${S.rect(x - 0.45, y - 2.2, 0.9, 4.4, { fill: LUME })}</g>`;
+    }
+    const nums = S.numerals({ count: 4, start: 0, step: 90, r: 30.0, size: 4.6, family: S.FONT.cond, weight: 400, color: "#dfe2e5", labels: ["12", "3", "6", "9"], letter: -0.1 });
+
+    /* Movement gear helper (local coords). */
+    const gear = (cx, cy, r, teeth, fill, hub = "#9a9ea3") => {
+      let d = "";
+      for (let i = 0; i < teeth; i++) {
+        const a0 = (i / teeth) * 360, a1 = ((i + 0.5) / teeth) * 360, q = 360 / teeth * 0.25;
+        d += `${i ? "L" : "M"}${S.p(a0, r, cx, cy)} L${S.p(a0 + q, r * 0.84, cx, cy)} L${S.p(a1, r * 0.84, cx, cy)} L${S.p(a1 + q, r, cx, cy)} `;
+      }
+      return `<path d="${d}Z" fill="${fill}"/>` + S.circle(cx, cy, r * 0.62, { fill: "none", stroke: "#0d0e10", "stroke-width": 0.35 })
+        + [0, 60, 120].map((k) => `<line x1="${S.p(k, r * 0.15, cx, cy).replace(" ", '" y1="')}" x2="${S.p(k + 180, r * 0.15, cx, cy).replace(" ", '" y2="')}" stroke="#0d0e10" stroke-width="0.25"/>`).join("")
+        + S.circle(cx, cy, r * 0.13, { fill: hub });
+    };
+
+    /* Minute "hand": the entire baguette movement. Balance wheel at the tail, lume arrow at the tip. */
+    const balance = `<g class="${S.id("bal")}" transform="translate(0 18.5)">
+        ${S.circle(0, 0, 7.4, { fill: "none", stroke: S.url("bal"), "stroke-width": 1.6 })}
+        ${Array.from({ length: 36 }, (_, i) => `<line x1="${S.p(i * 10, 5.2, 0, 0).replace(" ", '" y1="')}" x2="${S.p(i * 10, 6.6, 0, 0).replace(" ", '" y2="')}" stroke="#4c6fb0" stroke-width="0.3"/>`).join("")}
+        <path d="M-6.6 0 L6.6 0 M0 -6.6 L0 6.6" stroke="#2e3339" stroke-width="1.1"/>
+        ${S.circle(0, 0, 1.3, { fill: "#c9ccd0" })}${S.circle(0, 0, 0.5, { fill: "#3a3e43" })}
+      </g>`;
+    const minuteMov = `
+      <path d="M-6.5 26 Q-8.5 18.5 -5 12 L-3 4 Q-3.2 -8 -2 -19 L0 -25 L2 -19 Q3.2 -8 3 4 L5 12 Q8.5 18.5 6.5 26 Z" fill="${S.url("bridge")}" stroke="#0a0b0c" stroke-width="0.35"/>
+      <path d="M-2.4 2 L2.4 2 L1.6 -19 L-1.6 -19 Z" fill="#0f1012" opacity="0.7"/>
+      ${balance}
+      ${gear(0, 10.5, 3.6, 18, "#6c7075")}${gear(0, 0, 4.4, 22, "#7a7e83")}${gear(0, -7.6, 3.4, 16, "#6c7075")}${gear(0, -13.5, 2.5, 12, "#84888d")}
+      ${S.circle(-4.6, 13.5, 0.7, { fill: "#c9ccd0" })}${S.circle(4.6, 13.5, 0.7, { fill: "#c9ccd0" })}${S.circle(-2.4, -3.5, 0.55, { fill: "#c9ccd0" })}${S.circle(2.4, -3.5, 0.55, { fill: "#c9ccd0" })}
+      ${S.circle(0, 5.3, 0.7, { fill: "#d33" })}
+      <path d="M-3.4 -21 L0 -32 L3.4 -21 L0 -24 Z" fill="${STEEL}"/><path d="M-2.2 -21.8 L0 -29.5 L2.2 -21.8 L0 -23.8 Z" fill="${LUME}"/>
+      <circle r="1.7" fill="#c9ccd0"/><circle r="0.6" fill="#2a2d31"/>`;
+
+    /* Hour: broad lume arrowhead on the rotating central disc. */
+    const hourDisc = `
+      ${S.circle(0, 0, 24.4, { fill: "none", stroke: "#2a2d31", "stroke-width": 0.5 })}
+      <path d="M-4.4 -12.5 L0 -23 L4.4 -12.5 L0 -15.6 Z" fill="${STEEL}"/><path d="M-3 -13.5 L0 -21 L3 -13.5 L0 -15.9 Z" fill="${LUME}"/>
+      ${S.rect(-1.4, 9.5, 2.8, 2.8, { fill: "#3b6fd6" })}`;
+
+    return `
+      <defs>
+        ${S.linear("steel", { a: 120, stops: [[0, "#f4f6f8"], [0.5, "#b3b9bf"], [1, "#6c737a"]] })}
+        ${S.radial("lume", { cx: 0.4, cy: 0.35, r: 0.9, stops: [[0, "#ffffff"], [1, "#d3dad6"]] })}
+        ${S.linear("bridge", { a: 100, stops: [[0, "#4a4e53"], [0.5, "#2b2e32"], [1, "#404449"]] })}
+        ${S.linear("bal", { a: 60, stops: [[0, "#6d8fd8"], [0.5, "#2c4a8a"], [1, "#4f74c4"]] })}
+        ${S.radial("case", { cx: 0.4, cy: 0.3, r: 0.9, stops: [[0, "#3a3d41"], [0.6, "#15171a"], [1, "#0a0b0c"]] })}
+        ${S.radial("bezbase", { cx: 0.5, cy: 0.5, r: 0.5, stops: [[0.8, "#2c2f33"], [1, "#4a4e53"]] })}
+        ${S.linear("ring", { a: 135, stops: [[0, "#e6e9ec"], [0.45, "#8c9298"], [0.7, "#d5d9dd"], [1, "#5c626a"]] })}
+        ${S.radial("dial", { cx: 0.45, cy: 0.4, r: 0.8, stops: [[0, "#2a2c30"], [0.5, "#121316"], [1, "#050506"]] })}
+        ${S.linear("rubber", { a: 0, stops: [[0, "#0a0a0b"], [0.5, "#1f2022"], [1, "#0a0a0b"]] })}
+        <clipPath id="${S.id("bezclip")}"><path d="${bezelPath}"/></clipPath>
+      </defs>
+      <!-- Rubber strap with fine texture, FREAK plaque on the lower lug -->
+      ${S.rect(30, 0, 40, 14, { fill: S.url("rubber") })}${S.rect(30, 86, 40, 14, { fill: S.url("rubber") })}
+      ${Array.from({ length: 12 }, (_, i) => `<line x1="30" y1="${S.n(1 + i * 1.15)}" x2="70" y2="${S.n(1 + i * 1.15)}" stroke="#000" stroke-width="0.35" opacity="0.6"/><line x1="30" y1="${S.n(99 - i * 1.15)}" x2="70" y2="${S.n(99 - i * 1.15)}" stroke="#000" stroke-width="0.35" opacity="0.6"/>`).join("")}
+      <path d="M27 24 L30.5 8 Q31.5 5 34.5 5 L65.5 5 Q68.5 5 69.5 8 L73 24 Z" fill="${S.url("case")}"/>
+      <path d="M27 76 L30.5 92 Q31.5 95 34.5 95 L65.5 95 Q68.5 95 69.5 92 L73 76 Z" fill="${S.url("case")}"/>
+      ${S.rect(40, 90.6, 20, 4.4, { rx: 0.8, fill: "#0c0d0e", stroke: "#3c4045", "stroke-width": 0.35 })}
+      ${S.text(50, 93.9, "FREAK", { size: 2.6, family: S.FONT.sans, weight: 500, color: "#b9bec3", letter: 0.7 })}
+      <!-- Crown at 3 -->
+      ${S.rect(93.2, 44.6, 5.4, 10.8, { rx: 1.4, fill: "#1e2024", stroke: "#4a4e53", "stroke-width": 0.35 })}
+      ${Array.from({ length: 7 }, (_, i) => `<line x1="${S.n(93.8 + i * 0.7)}" y1="45.3" x2="${S.n(93.8 + i * 0.7)}" y2="54.7" stroke="#0a0b0c" stroke-width="0.3"/>`).join("")}
+      <!-- Case and Carbonium bezel -->
+      ${S.circle(50, 50, 44.6, { fill: S.url("case") })}
+      <path d="${bezelPath}" fill="${S.url("bezbase")}" stroke="#5f6469" stroke-width="0.3"/>
+      <g clip-path="${S.url("bezclip")}">${marble}</g>
+      ${S.circle(50, 50, R_RING + 0.3, { fill: "none", stroke: "#0a0b0c", "stroke-width": 0.8 })}
+      ${S.circle(50, 50, R_RING, { fill: S.url("ring") })}
+      ${S.circle(50, 50, R_DIAL, { fill: S.url("dial") })}
+      <!-- Dial: guilloche rings, minute track, batons, printing (below the movement) -->
+      ${Array.from({ length: 16 }, (_, i) => S.circle(50, 50, 8 + i * 1.02, { fill: "none", stroke: "#2b2e32", "stroke-width": 0.22 })).join("")}
+      ${S.circle(50, 50, 27.2, { fill: "none", stroke: "#3a3e43", "stroke-width": 0.35 })}
+      ${S.ticks({ count: 60, r1: 32.4, r2: 33.6, w: 0.35, color: "#c4c8cc", skip: (i) => i % 5 === 0 })}
+      ${S.ticks({ count: 12, r1: 32.0, r2: 33.6, w: 0.7, color: "#e6e9ec" })}
+      ${batons}${nums}
+      <text transform="translate(${S.p(150, 19)}) rotate(-60)" text-anchor="middle" font-family="${S.FONT.sans}" font-size="2.6" font-weight="600" letter-spacing="0.6" fill="#d5d9dd">ULYSSE NARDIN</text>
+      <!-- Hour pointer disc under the movement, then the rotating baguette movement as minute hand -->
+      ${S.handGroup("h", hourDisc)}
+      ${S.handGroup("m", minuteMov)}
+      ${S.crystal(50, 50, R_DIAL + 1.5, { opacity: 0.1 })}
+    `;
+  },
+  update(svg, t, S) {
+    const b = svg.querySelector("." + S.id("bal"));
+    if (b) b.setAttribute("transform", "translate(0 18.5) rotate(" + (28 * Math.sin(t.raw * Math.PI * 8)).toFixed(1) + ")");
   }
 });
 }
@@ -5482,18 +5784,18 @@ registerFace("yachtmaster2", {
       const a = 82 - (n - 1) * 21, [x, y] = S.pt(a, 39.6);
       bezel += `<text x="${S.n(x)}" y="${S.n(y)}" transform="rotate(${S.n(a)} ${S.n(x)} ${S.n(y)})" font-family="${S.FONT.sans}" font-weight="700" font-size="7" fill="${S.url("plat")}" text-anchor="middle" dominant-baseline="central" letter-spacing="-0.3">${n}</text>`;
     }
-    bezel += S.arcText({ str: "YACHT-MASTER II", r: 38.6, a0: 218, a1: 142, size: 5.2, family: S.FONT.sans, weight: 700, color: S.url("plat"), letter: 0.3, flip: true, name: "ym2name" });
+    bezel += S.arcText({ str: "YACHT-MASTER II", r: 38.4, a0: 142, a1: 218, size: 5.2, family: S.FONT.sans, weight: 700, color: S.url("plat"), letter: 0.3, flip: true, name: "ym2name" });
     let knurl = "";
     for (let i = 0; i < 90; i++) knurl += line(i * 4, 43.2, 44.6, i % 2 ? "#6d757d" : "#eef1f4", 1.5);
 
     /* Countdown horseshoe: 10 at lower left through 12 to 0 at lower right, red triangles between numerals. */
-    const STEP = 22.6, A10 = 360 - 11.3 - 4 * STEP, A0 = 11.3 + 5 * STEP;
-    let shoe = `<path d="${arc(21.6, A10, A0)}" fill="none" stroke="${BLUE}" stroke-width="0.7"/><path d="${arc(16.2, A10, A0)}" fill="none" stroke="${BLUE}" stroke-width="0.7"/>`;
-    shoe += `<path d="M${S.p(A10, 21.6)} L${S.p(A10, 16.2)} M${S.p(A0, 21.6)} L${S.p(A0, 16.2)}" stroke="${BLUE}" stroke-width="0.7" stroke-linecap="round"/>`;
+    const STEP = 22.5, A10 = 255, A0 = A10 + 10 * STEP - 360;
+    let shoe = `<path d="${arc(21.8, A10, A0)}" fill="none" stroke="${BLUE}" stroke-width="0.55"/><path d="${arc(16.2, A10, A0)}" fill="none" stroke="${BLUE}" stroke-width="0.55"/>`;
+    shoe += `<path d="M${S.p(A10, 21.8)} L${S.p(A10, 16.2)} M${S.p(A0, 21.8)} L${S.p(A0, 16.2)}" stroke="${BLUE}" stroke-width="0.55" stroke-linecap="round"/>`;
     for (let n = 10; n >= 0; n--) {
-      const a = A10 + (10 - n) * STEP, [x, y] = S.pt(a, 18.9);
-      shoe += `<text x="${S.n(x)}" y="${S.n(y)}" transform="rotate(${S.n(a)} ${S.n(x)} ${S.n(y)})" font-family="${S.FONT.sans}" font-weight="700" font-size="3.1" fill="${BLUE}" text-anchor="middle" dominant-baseline="central">${n}</text>`;
-      if (n > 0) { const m = a + STEP / 2; shoe += `<path d="M${S.p(m, 17.6)} L${S.p(m - 3.2, 20.4)} L${S.p(m + 3.2, 20.4)} Z" fill="${RED}"/>`; }
+      const a = A10 + (10 - n) * STEP, [x, y] = S.pt(a, 18.7);
+      shoe += `<text x="${S.n(x)}" y="${S.n(y)}" transform="rotate(${S.n(a)} ${S.n(x)} ${S.n(y)})" font-family="${S.FONT.sans}" font-weight="700" font-size="2.7" fill="${BLUE}" text-anchor="middle" dominant-baseline="central">${n}</text>`;
+      if (n > 0) { const m = a + STEP / 2; shoe += `<path d="M${S.p(m, 18.4)} L${S.p(m - 2.3, 20.9)} L${S.p(m + 2.3, 20.9)} Z" fill="${RED}"/>`; }
     }
 
     /* Applied markers: triangle at 12, baton at 6, squares elsewhere. */
@@ -6145,6 +6447,104 @@ registerFace("howardmiller", {
   update(svg, t, S) {
     const g = svg.querySelector(S.ref("pend"));
     if (g) g.setAttribute("transform", `rotate(${(3.6 * Math.sin(2 * Math.PI * (t.raw % 2) / 2)).toFixed(3)} 50 70)`);
+  }
+});
+}
+
+/* ==== face: mickey ==== */
+{
+registerFace("mickey", {
+  name: "Ingersoll Mickey Mouse (1933)",
+  cadence: "tick",
+  draw(S) {
+    const RD = 38.5, K = "#161412", CREAM = S.url("dial"), RED = "#d8331f", YEL = "#f0c020";
+    const CHROME = S.url("chrome");
+
+    /* Minute track: radial dashes, longer at hours. Numerals hand-lettered look. */
+    const track = S.ticks({ count: 60, r1: 34.8, r2: 36.4, w: 0.55, color: K, skip: (i) => i % 5 === 0 }) +
+      S.ticks({ count: 12, r1: 33.6, r2: 36.6, w: 0.8, color: K });
+    const nums = S.numerals({ count: 12, r: 29.4, size: 6.4, family: S.FONT.sans, weight: 700, color: K,
+      labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"], letter: -0.3 });
+
+    /* Pie-eyed Mickey: static body; the two arms are the hands. */
+    const body = `
+      <ellipse cx="39" cy="76.6" rx="4.6" ry="2.3" fill="${YEL}" stroke="${K}" stroke-width="0.4"/>
+      <ellipse cx="61.5" cy="76.6" rx="4.6" ry="2.3" fill="${YEL}" stroke="${K}" stroke-width="0.4"/>
+      <path d="M45.5 62 L40.5 75 M54.5 62 L59.5 75" stroke="${K}" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M45.5 44 Q44.5 50 44 55 L56 55 Q55.5 50 53 44.5 Q49.5 41.5 45.5 44 Z" fill="${K}"/>
+      <path d="M43.5 54 Q43 60 44 63.5 L56 63.5 Q57 60 56.5 54 Z" fill="${RED}" stroke="${K}" stroke-width="0.4"/>
+      <ellipse cx="47.3" cy="59.3" rx="1.25" ry="1.5" fill="#f4ead2" stroke="${K}" stroke-width="0.3"/>
+      <ellipse cx="52.7" cy="59.3" rx="1.25" ry="1.5" fill="#f4ead2" stroke="${K}" stroke-width="0.3"/>
+      <circle cx="39.5" cy="31.5" r="3.4" fill="${K}"/><circle cx="49.6" cy="29.8" r="3.4" fill="${K}"/>
+      <circle cx="45" cy="37" r="6.3" fill="${K}"/>
+      <ellipse cx="47.2" cy="39.4" rx="4.6" ry="3.6" fill="#f4ead2"/>
+      <ellipse cx="51.6" cy="40.4" rx="3.7" ry="2.4" fill="#f4ead2" stroke="${K}" stroke-width="0.3"/>
+      <ellipse cx="54.6" cy="39.6" rx="1.5" ry="1.05" fill="${K}"/>
+      <path d="M44.8 34.4 a1.1 1.9 0 1 1 0.01 0 Z" fill="${K}"/><path d="M47.6 34.4 a1.1 1.9 0 1 1 0.01 0 Z" fill="${K}"/>
+      <path d="M44.2 35.4 l1.3 -0.9 M47.0 35.4 l1.3 -0.9" stroke="#f4ead2" stroke-width="0.5"/>
+      <path d="M46.5 42 Q49.5 44.4 52.5 42.2 Q49.5 43.2 46.5 42 Z" fill="${RED}" stroke="${K}" stroke-width="0.35"/>
+      <path d="M45.8 41.6 Q49.4 43.6 53 41.8" fill="none" stroke="${K}" stroke-width="0.4"/>`;
+
+    /* Arms as hands (pivot-local, 12 = -y): black arm, yellow mitt at the tip. */
+    const mitt = (y) => `<circle cx="0" cy="${y}" r="2.5" fill="${YEL}" stroke="${K}" stroke-width="0.4"/>
+      <circle cx="-1.5" cy="${y - 1.9}" r="1.1" fill="${YEL}" stroke="${K}" stroke-width="0.35"/><circle cx="0.4" cy="${y - 2.4}" r="1.1" fill="${YEL}" stroke="${K}" stroke-width="0.35"/><circle cx="1.9" cy="${y - 1.4}" r="1.0" fill="${YEL}" stroke="${K}" stroke-width="0.35"/>
+      <circle cx="0" cy="${y}" r="2.1" fill="${YEL}"/><path d="M-1.2 ${y + 1.3} L1.2 ${y + 1.3}" stroke="${K}" stroke-width="0.35"/>`;
+    const hourHand = `<path d="M-1.2 1 L-1 -12 L1 -12 L1.2 1 Z" fill="${K}"/>${mitt(-13.5)}`;
+    const minuteHand = `<path d="M-1 1 L-0.9 -21.5 L0.9 -21.5 L1 1 Z" fill="${K}"/>${mitt(-23)}`;
+
+    /* Seconds: rotating disc at 6 with three tiny running Mickeys. */
+    const tiny = (a) => `<g transform="rotate(${a}) translate(0 -3.6) scale(0.45)">
+      <circle cx="-2.2" cy="-2.4" r="1.4" fill="${K}"/><circle cx="2.2" cy="-2.4" r="1.4" fill="${K}"/><circle r="2.3" fill="${K}"/>
+      <path d="M-1 2.4 L-1.2 5.5 M1 2.4 L2.2 5" stroke="${K}" stroke-width="1"/><rect x="-1.6" y="2.2" width="3.2" height="2" fill="${RED}"/></g>`;
+    const secDisc = `<circle r="6.4" fill="${CREAM}"/>${tiny(0)}${tiny(120)}${tiny(240)}<circle r="0.5" fill="${K}"/>`;
+
+    return `
+      <defs>
+        ${S.linear("chrome", { a: 135, stops: [[0, "#fafbfc"], [0.3, "#c9ced3"], [0.55, "#7e858c"], [0.8, "#d9dee2"], [1, "#9aa1a8"]] })}
+        ${S.linear("bezel", { a: 135, stops: [[0, "#e8ebee"], [0.5, "#8e959c"], [1, "#eef1f3"]] })}
+        ${S.radial("dial", { cx: 0.42, cy: 0.35, r: 0.9, stops: [[0, "#f7efd9"], [0.6, "#eadfbf"], [1, "#d5c69c"]] })}
+        ${S.linear("strap", { a: 0, stops: [[0, "#0d0b0a"], [0.15, "#2d2724"], [0.5, "#1a1614"], [0.85, "#2d2724"], [1, "#0d0b0a"]] })}
+        ${S.linear("crown", { a: 90, stops: [[0, "#858d95"], [0.25, "#f3f6f8"], [0.6, "#aeb6be"], [1, "#6c747c"]] })}
+        <clipPath id="${S.id("dialclip")}"><circle cx="50" cy="50" r="${RD}"/></clipPath>
+      </defs>
+      <!-- Strap and wire lugs -->
+      ${S.rect(37, 0, 26, 14, { fill: S.url("strap") })}${S.rect(37, 86, 26, 14, { fill: S.url("strap") })}
+      <path d="M39 0 L39 14 M61 0 L61 14 M39 86 L39 100 M61 86 L61 100" stroke="#6a5a48" stroke-width="0.4" stroke-dasharray="1 0.8"/>
+      <ellipse cx="50" cy="5.5" rx="5.5" ry="4" fill="${CHROME}" stroke="#4d545c" stroke-width="0.4"/>
+      <circle cx="47.2" cy="4" r="1.3" fill="#3a3f45"/><circle cx="52.8" cy="4" r="1.3" fill="#3a3f45"/><circle cx="50" cy="6.2" r="2" fill="#3a3f45"/>
+      <path d="M38.5 12 L38.5 7 Q38.5 5 40.5 5 L59.5 5 Q61.5 5 61.5 7 L61.5 12" fill="none" stroke="${CHROME}" stroke-width="2.4"/>
+      <path d="M38.5 88 L38.5 93 Q38.5 95 40.5 95 L59.5 95 Q61.5 95 61.5 93 L61.5 88" fill="none" stroke="${CHROME}" stroke-width="2.4"/>
+      <!-- Crown at 3 -->
+      ${S.rect(93.5, 45.5, 5.5, 9, { rx: 1.2, fill: S.url("crown") })}
+      ${Array.from({ length: 6 }, (_, i) => `<line x1="${S.n(94.2 + i * 0.85)}" y1="46" x2="${S.n(94.2 + i * 0.85)}" y2="54" stroke="#5b636b" stroke-width="0.3"/>`).join("")}
+      <!-- Chrome case and stepped bezel -->
+      ${S.circle(50, 50, 44.6, { fill: CHROME, stroke: "#4d545c", "stroke-width": 0.5 })}
+      ${S.circle(50, 50, 41.6, { fill: S.url("bezel") })}
+      ${S.circle(50, 50, RD + 0.8, { fill: "#2a2d31" })}
+      <!-- Dial -->
+      ${S.circle(50, 50, RD, { fill: CREAM })}
+      <g clip-path="${S.url("dialclip")}">
+        ${track}${nums}
+        ${S.text(67.5, 48.4, "MICKEY", { size: 2.9, family: S.FONT.sans, weight: 700, color: K, letter: 0.2 })}
+        ${S.text(67.5, 52.4, "MOUSE", { size: 2.9, family: S.FONT.sans, weight: 700, color: K, letter: 0.2 })}
+        ${S.text(67.5, 56.4, "INGERSOLL", { size: 2.55, family: S.FONT.sans, weight: 700, color: K, letter: 0.1 })}
+        ${S.circle(67.5, 59.6, 0.9, { fill: "none", stroke: K, "stroke-width": 0.3 })}${S.text(67.5, 60.2, "c", { size: 1.2, family: S.FONT.sans, weight: 700, color: K })}
+        ${S.text(30.5, 62.6, "MADE IN", { size: 1.7, family: S.FONT.sans, weight: 700, color: K })}
+        ${S.text(30.5, 65.0, "U.S.A.", { size: 1.7, family: S.FONT.sans, weight: 700, color: K })}
+        ${body}
+        <!-- Seconds subdial ring -->
+        ${S.circle(50, 74, 7.6, { fill: "none", stroke: K, "stroke-width": 0.35 })}
+        ${S.ticks({ count: 60, r1: 6.7, r2: 7.5, w: 0.25, color: K, cx: 50, cy: 74, skip: (i) => i % 5 !== 0 })}
+        ${S.ticks({ count: 60, r1: 7.0, r2: 7.5, w: 0.2, color: K, cx: 50, cy: 74, skip: (i) => i % 5 === 0 })}
+        ${S.handGroup("s", secDisc, { cx: 50, cy: 74 })}
+        ${S.circle(50, 74, 6.4, { fill: "none", stroke: K, "stroke-width": 0.3 })}
+      </g>
+      <!-- Arms = hands -->
+      ${S.handGroup("h", hourHand)}
+      ${S.handGroup("m", minuteHand)}
+      ${S.circle(50, 50, 1.0, { fill: "#2a2a2a" })}
+      ${S.crystal(50, 50, RD + 1.5, { opacity: 0.14 })}
+    `;
   }
 });
 }
