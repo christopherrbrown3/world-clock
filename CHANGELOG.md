@@ -10,6 +10,7 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added the Gemini 3.8 Flash standalone checkpoint, written from scratch with its own interface, time engine, and all 62 watch and clock faces. Added it to the version picker and manifest, and froze Claude Fable 5.1 as the preceding benchmark snapshot.
 - Promoted the Claude Fable 5.1 page to the active working build (`world-clock.html`) and pointed the version picker's lead card at the Fable 5.1 cycle. The Fable 5 page remains preserved unchanged in `versions/fable-5.html`. Aligned the Swatch face name with the catalog.
 - Added the Claude Fable 5.1 standalone checkpoint, written from scratch against the project specification and the supplied reference photographs: an independent `Intl` time engine with per-face cadences (sweep, tick, glide, digital, stop2go), a declarative hand and aperture binding layer, an SVG drawing kit with per-instance ids, a graphite-and-signal-orange interface with keyboard city search, and all 62 watch and clock faces. Froze the Codex 5.6 Sol page as a benchmark snapshot.
 - Rewrote the README as a showcase-facing document and refreshed its graphics from the current build: a hero screenshot spanning eight cities and three daylight states, a twenty-four face catalog grid, and a phone-width capture. All three are captured from a shipped page in a real browser rather than mocked up.

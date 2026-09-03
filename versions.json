@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "gemini-3.8-flash",
+      "label": "Gemini 3.8 Flash",
+      "file": "versions/gemini-3.8-flash.html",
+      "snapshotDate": "2026-09-03",
+      "notes": "Gemini 3.8 Flash checkpoint, written from scratch against the project specification with its own interface, time engine, and all 62 watch and clock faces."
+    },
+    {
       "id": "fable-5.1",
       "label": "Claude Fable 5.1",
       "file": "versions/fable-5.1.html",
