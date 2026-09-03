@@ -15,7 +15,8 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
-- `versions/fable-5.1.html`: current Claude Fable 5.1 checkpoint, authored from scratch against this specification.
+- `versions/gemini-3.8-flash.html`: current Gemini 3.8 Flash checkpoint, authored from scratch against this specification.
+- `versions/fable-5.1.html`: finalized Claude Fable 5.1 checkpoint, authored from scratch against this specification.
 - `versions/codex-5.6-sol.html`: finalized Codex 5.6 Sol checkpoint, authored from scratch against this specification.
 - `versions/claude-opus-5.html`: finalized Claude Opus 5 checkpoint.
 - `versions/fable-5.html`: finalized Claude Fable 5 checkpoint.
