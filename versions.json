@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "grok-4.5",
+      "label": "Grok 4.5",
+      "file": "versions/grok-4.5.html",
+      "snapshotDate": "2026-09-03",
+      "notes": "Grok 4.5 checkpoint, written from scratch against the project specification with its own interface, time engine, and all 62 watch and clock faces."
+    },
+    {
       "id": "gemini-3.8-flash",
       "label": "Gemini 3.8 Flash",
       "file": "versions/gemini-3.8-flash.html",
