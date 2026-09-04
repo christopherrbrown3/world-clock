@@ -90,7 +90,8 @@ standalone page and frozen once that model's cycle ends, so results can be compa
 | Version | Page | Snapshot | State |
 |---|---|---|---|
 | Active build | [world-clock.html](world-clock.html) | — | In development |
-| Gemini 3.8 Flash | [versions/gemini-3.8-flash.html](versions/gemini-3.8-flash.html) | 2026-09-03 | Current checkpoint |
+| Grok 4.5 | [versions/grok-4.5.html](versions/grok-4.5.html) | 2026-09-03 | Current checkpoint |
+| Gemini 3.8 Flash | [versions/gemini-3.8-flash.html](versions/gemini-3.8-flash.html) | 2026-09-03 | Frozen |
 | Claude Fable 5.1 | [versions/fable-5.1.html](versions/fable-5.1.html) | 2026-09-02 | Frozen |
 | Codex 5.6 Sol | [versions/codex-5.6-sol.html](versions/codex-5.6-sol.html) | 2026-07-28 | Frozen |
 | Claude Opus 5 | [versions/claude-opus-5.html](versions/claude-opus-5.html) | 2026-07-28 | Frozen |
