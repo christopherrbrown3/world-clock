@@ -11,12 +11,11 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 - `world-clock.html`: active working build.
 - `versions/*.html`: standalone model-version pages. Finalized model versions are immutable.
 - `versions.json`: manifest of real model-version pages available in the app.
-- `index.html`: simple version picker for GitHub Pages and local browsing.
+- `index.html`: project introduction and release-ordered model directory for GitHub Pages and local browsing.
 
 ## Current Model Pages
 
 - `versions/astra.html`: current Codex Astra checkpoint, authored from scratch with its own interface, time engine and all 62 faces.
-
 - `versions/grok-4.5.html`: finalized Grok 4.5 checkpoint, authored from scratch against this specification.
 - `versions/gemini-3.8-flash.html`: finalized Gemini 3.8 Flash checkpoint, authored from scratch against this specification.
 - `versions/fable-5.1.html`: finalized Claude Fable 5.1 checkpoint, authored from scratch against this specification.
@@ -33,21 +32,22 @@ Do not create placeholder pages for model versions that do not exist yet.
 
 When a new model version is ready:
 
-1. Finish the current model work in `world-clock.html` and the current `versions/*.html` checkpoint.
-2. Treat the previous model page as finalized unless the maintainer explicitly asks to revise it.
-3. Copy the active build into `versions/<model-id>.html` for the new model.
-4. Add the new model entry to `versions.json`.
-5. Add a card and dropdown option in `index.html`.
-6. Update README and changelog text when the public list changes.
-7. Run `npm test`.
-8. Commit through a pull request.
-9. Optionally tag the model checkpoint:
+1. Confirm whether the task is an independent implementation or an improvement of an existing page. For independent work, start a new `versions/<model-id>.html` without copying another model’s implementation. For inherited work, copy only the agreed source page.
+2. Preserve finalized model pages. Do not change `world-clock.html` unless the task explicitly includes the active build.
+3. Finish and validate the new standalone page against the catalog and required app behavior.
+4. Add its actual snapshot date and file to `versions.json`.
+5. Add a linked row to `index.html` in model release order, newest first. Preserve the order of existing tied dates. Update its visible rendition count and introduction when the count changes. Keep the index about the project and model links, without specific watch previews.
+6. Update the README model table, this page’s current-model list, and the changelog. Include reference notes and rendered screenshots for the new rendition.
+7. Run `npm test` and the relevant browser checks, then commit and push checkpoints through a pull request.
+8. Merge after the checks pass and the maintainer authorizes it. Optionally tag the model checkpoint:
 
    ```sh
    git tag -a model/<model-id> -m "<Model Name> snapshot"
    git push origin model/<model-id>
    ```
 
-After the new model page is created, continue using `world-clock.html` as the active working file for the next iteration.
+The index and README use model release dates recorded in the index’s `data-release-date` attributes. The manifest uses `snapshotDate`, which is the project checkpoint date. Do not sort the index by manifest snapshot dates or assume those dates are model release dates. Confirm the release date when adding an entry.
+
+Promoting a rendition to the active build is a separate, explicit operation. A new model entry does not require copying it into `world-clock.html`.
 
 For example, Claude Fable 5 uses `versions/fable-5.html` and the `fable-5` manifest entry, while the earlier Codex 5.6 Terra page remains frozen unless a maintainer asks for a correction.
