@@ -18,9 +18,11 @@ A new model can either reuse and improve an existing model page or create a new 
 - While a model is currently active, its checkpoint page can be refreshed.
 - When a newer model begins, freeze the previous model page and create a new page for the new model.
 
-Follow `docs/model-versioning.md` for the file, manifest, picker, and pull request steps. Keep `versions.json` limited to real pages that exist in the repo. Do not add placeholder future versions.
+Follow `docs/model-versioning.md` for the file, manifest, directory, and pull request steps. Keep `versions.json` limited to real pages that exist in the repo. Do not add placeholder future versions.
 
 Use `docs/watch-face-catalog.md` as the public list of supported faces. Update it when a model adds, removes, renames, or replaces a face.
+
+The index is a separate project introduction and release-ordered directory. Keep specific watch previews on model pages. An index-only task must not alter those pages.
 
 ## Required App Behavior
 

@@ -2,138 +2,100 @@
 
 # World Clock
 
-**A world clock that renders 62 iconic watch and clock faces as live inline SVG.**<br>
-One standalone HTML file — no build step, no server, no dependencies, nothing fetched from the network.
+**One brief. Ten visions.**
+
+62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
 [![CI](https://github.com/christopherrbrown3/world-clock/actions/workflows/ci.yml/badge.svg)](https://github.com/christopherrbrown3/world-clock/actions/workflows/ci.yml)
-[![Live demo](https://img.shields.io/badge/demo-GitHub%20Pages-c08a3e)](https://christopherrbrown3.github.io/world-clock/)
-[![Faces](https://img.shields.io/badge/faces-62-b9c5ce)](docs/watch-face-catalog.md)
-[![Dependencies](https://img.shields.io/badge/dependencies-none-b9c5ce)](package.json)
-[![License](https://img.shields.io/badge/license-MIT-b9c5ce)](LICENSE)
+[![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
+[![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Open the live demo →](https://christopherrbrown3.github.io/world-clock/)**
+**[Explore the project](https://christopherrbrown3.github.io/world-clock/) · [Open Astra](https://christopherrbrown3.github.io/world-clock/versions/astra.html)**
 
 </div>
 
-![The World Clock interface: eight cities ordered west to east, each showing a different watch face at its local time](docs/assets/preview.png)
+![The project index introduces World Clock and lists model renditions by release date](docs/assets/index-desktop.png)
 
-## What this is
+## The experiment
 
-A functional world clock, and a study in how far inline SVG can be pushed. Every face is drawn
-from reference photographs of the real object — case shape, dial texture, marker geometry, hand
-form, printed text, and complications — then rendered live against the browser clock. There are
-no raster images, no sprites, and no server rendering anywhere in the project.
+Give different AI models the same specification: build a complete world clock with 62 recognizable timepieces. Compare what each model notices—case proportions, dial textures, typography, hand geometry, and motion—and how it turns those details into code.
 
-Each page in this repository is a single self-contained `.html` file. Save one to disk, open it
-offline, and it still keeps time.
+The [project index](index.html) introduces the experiment and links to each model’s collection. It contains no specific watch previews. Each rendition has its own interface and implementation, preserved for comparison. Earlier work includes both inherited and independently authored implementations; the [versioning guide](docs/model-versioning.md) explains the two paths.
 
-## The catalog
+The faces themselves are client-side SVG, built against reference photographs rather than embedded watch images. Documentation screenshots show the rendered results. Detail, behavior, and fidelity vary between renditions; these differences are part of the experiment.
 
-Sixty-two objects, spanning dive watches, chronographs, dress watches, integrated-bracelet sports
-watches, digital LCDs, a smartwatch, station and terminal clocks, an astronomical clock, a
-longcase clock, an alarm clock, a pocket watch, and a character watch.
+## Explore the renditions
 
-![A grid of twenty-four rendered faces, showing the range of object types in the catalog](docs/assets/gallery.png)
+Listed in the same newest-release-first order as the index. **Model release** is the repository’s recorded release date; **snapshot** is the date this project captured the rendition. They are different chronologies.
 
-Objects that are not round wristwatches are not drawn as round wristwatches. Big Ben, the Grand
-Central information booth clock, the Prague astronomical clock, the Comtoise longcase, the
-Westclox twin bell and the Norfolk Southern pocket watch each keep their real proportions.
+| Model | Model release | Snapshot |
+| --- | --- | --- |
+| [Codex Astra](versions/astra.html) | 2026-09-05 | 2026-09-05 |
+| [Gemini 3.8 Flash](versions/gemini-3.8-flash.html) | 2026-09-02 | 2026-09-03 |
+| [Claude Fable 5.1](versions/fable-5.1.html) | 2026-08-02 | 2026-09-02 |
+| [Claude Opus 5](versions/claude-opus-5.html) | 2026-07-24 | 2026-07-28 |
+| [Codex 5.6 Sol](versions/codex-5.6-sol.html) | 2026-07-09 | 2026-07-28 |
+| [Codex 5.6 Terra](versions/codex-5.6.html) | 2026-07-09 | 2026-07-09 |
+| [Grok 4.5](versions/grok-4.5.html) | 2026-07-08 | 2026-09-03 |
+| [Claude Fable 5](versions/fable-5.html) | 2026-06-09 | 2026-07-17 |
+| [Claude Opus 4.8](versions/claude-opus-4.8.html) | 2026-05-28 | 2026-06-30 |
+| [Codex 5.5](versions/codex-5.5.html) | 2026-04-23 | 2026-07-09 |
 
-See **[docs/watch-face-catalog.md](docs/watch-face-catalog.md)** for the full validated list.
+The [active development build](world-clock.html) remains available separately. It is not automatically replaced by the newest model entry. [versions.json](versions.json) records the available snapshots.
 
-## Features
+## Inside a collection
 
-| | |
-|---|---|
-| **62 faces** | Rendered as inline SVG, drawn from reference photographs |
-| **Correct local time** | Zones resolved through `Intl` and the IANA database, so DST is always current |
-| **Live complications** | Date, day/date, GMT, digital, moonphase, subdials, power reserve, regatta countdown |
-| **Movement-accurate motion** | Sweep, quartz tick, Spring Drive glide, and the Mondaine stop2go 58-second pause |
-| **City management** | Add and remove cities from 130+ locations, with keyboard-accessible search |
-| **Shuffle** | Reshuffle every face, or any single face, without repeating a face |
-| **Automatic ordering** | Cities sort west to east by current UTC offset, and re-sort as offsets change |
-| **Offline first** | Works from `file://`, GitHub Pages, or any static server |
-| **Accessible** | WCAG AA contrast, ≥44px targets, visible focus, `prefers-reduced-motion` honored |
+The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
 
-<div align="center">
-<img src="docs/assets/mobile.png" alt="The same interface at phone width, with controls stacked and one card per row" width="380">
-<p><em>Responsive down to phone width, with no horizontal overflow.</em></p>
-</div>
+Astra implements all 62 faces with its own SVG toolkit and time engine, 176 selectable cities, saved city settings, a searchable collection, enlarged inspection, and chronograph controls.
 
-## Quick start
+![Astra’s independently drawn collection of working timepieces](docs/assets/astra-desktop.png)
 
-No install, no build, no toolchain:
+[See Astra at phone width](docs/assets/astra-mobile.png) · [Browse the 62-object catalog](docs/watch-face-catalog.md) · [Read Astra’s reference and approximation notes](docs/astra-reference-notes.md)
+
+Time comes from the browser clock and its `Intl` time-zone data, including daylight-saving rules available in that browser. Moon phases, power reserve, and other mechanical or astronomical displays can be simulations; a rendition’s notes explain its approximations. Keeping the browser and operating system current helps keep time-zone rules current.
+
+## Run locally
+
+No application install or build step is required:
 
 ```sh
 git clone https://github.com/christopherrbrown3/world-clock.git
 cd world-clock
-open index.html
 ```
 
-`index.html` is a version picker. Open `world-clock.html` directly to use the active build.
+Open `index.html` in a browser, then choose a model. On macOS, `open index.html` does this from the terminal. To go directly to Astra, open `versions/astra.html`.
 
-## Repository layout
+Each model app is a standalone HTML file whose clocks work offline. The index uses local fonts in `assets/fonts/`; keep that directory alongside it for the intended typography. No font service is contacted by the index. A static server or GitHub Pages works too.
 
-```
-world-clock.html            active working build
-index.html                  version picker (also the GitHub Pages entry point)
-versions/                   standalone model checkpoints, each self-contained
-docs/                       contributor, versioning, workflow and release guides
-scripts/validate.js         dependency-free validation used by CI
-```
+## Repository map
 
-## Model versions
+| Path | Purpose |
+| --- | --- |
+| [index.html](index.html) | Project introduction and model directory; GitHub Pages entry point |
+| [versions/](versions/) | Standalone model renditions |
+| [versions.json](versions.json) | Snapshot manifest and active-build pointer |
+| [world-clock.html](world-clock.html) | Separate active working build |
+| [docs/](docs/README.md) | Catalog, references, contribution and release guides |
+| [assets/fonts/](assets/fonts/README.md) | Index fonts, licenses, and provenance |
+| [scripts/validate.js](scripts/validate.js) | Dependency-free repository validation |
 
-This project doubles as a benchmark of AI-model output. Each model's work is preserved as its own
-standalone page and frozen once that model's cycle ends, so results can be compared side by side.
+## Validate and contribute
 
-| Version | Page | Snapshot | State |
-|---|---|---|---|
-| Active build | [world-clock.html](world-clock.html) | — | In development |
-| Codex Astra | [versions/astra.html](versions/astra.html) | 2026-09-05 | Current checkpoint |
-| Grok 4.5 | [versions/grok-4.5.html](versions/grok-4.5.html) | 2026-09-03 | Current checkpoint |
-| Gemini 3.8 Flash | [versions/gemini-3.8-flash.html](versions/gemini-3.8-flash.html) | 2026-09-03 | Frozen |
-| Claude Fable 5.1 | [versions/fable-5.1.html](versions/fable-5.1.html) | 2026-09-02 | Frozen |
-| Codex 5.6 Sol | [versions/codex-5.6-sol.html](versions/codex-5.6-sol.html) | 2026-07-28 | Frozen |
-| Claude Opus 5 | [versions/claude-opus-5.html](versions/claude-opus-5.html) | 2026-07-28 | Frozen |
-| Claude Fable 5 | [versions/fable-5.html](versions/fable-5.html) | 2026-07-17 | Frozen |
-| Codex 5.6 Terra | [versions/codex-5.6.html](versions/codex-5.6.html) | 2026-07-09 | Frozen |
-| Codex 5.5 | [versions/codex-5.5.html](versions/codex-5.5.html) | 2026-07-09 | Frozen |
-| Claude Opus 4.8 | [versions/claude-opus-4.8.html](versions/claude-opus-4.8.html) | 2026-06-30 | Frozen |
-
-A model may either improve an existing page or write a new one from scratch. See
-**[docs/model-versioning.md](docs/model-versioning.md)** for the workflow.
-
-## Validation
+With Node.js 20 or later:
 
 ```sh
 npm test
 ```
 
-Runs `scripts/validate.js`, which has no dependencies of its own. It parses every inline script,
-checks for merge-conflict markers and required document structure, verifies the version manifest
-against the files on disk, confirms the required face keys are present on every app page, checks
-that the watch-face catalog matches the faces the active build actually exposes, and resolves every
-relative link in the Markdown. The same check runs in CI on every push and pull request.
+No `npm install` is needed. Validation checks HTML structure, inline JavaScript syntax, manifest targets, five required face keys on every app page, the complete active-build catalog, and local Markdown link targets. CI runs on pull requests targeting `main` and on pushes to `main`.
 
-## Contributing
+These checks do not establish visual fidelity or exercise browser interactions. For edited pages, also check desktop and phone layouts, keyboard navigation, the console, offline behavior, and the affected time/date interactions.
 
-Faces are judged against reference photographs, not from memory — a face is not finished until it
-has been compared to the real object at high zoom, and checked at several times of day for hand
-collisions, aperture overflow, and single- versus double-digit dates.
+Start with [CONTRIBUTING.md](CONTRIBUTING.md). The [model and contributor guide](docs/model-and-contributor-guide.md) covers reference-driven face work; the [GitHub workflow](docs/github-workflow.md) covers checkpoints, review, and merging. The [documentation index](docs/README.md) links all guides.
 
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** — contributor expectations
-- **[docs/model-and-contributor-guide.md](docs/model-and-contributor-guide.md)** — fidelity standards, SVG guidance, QA checklists
-- **[docs/github-workflow.md](docs/github-workflow.md)** — branch, PR, CI and merge flow
-- **[docs/public-release-checklist.md](docs/public-release-checklist.md)** — checks before a visibility or release change
-- **[docs/README.md](docs/README.md)** — full documentation index
+## License and attribution
 
-Every meaningful change goes through a branch and a pull request.
+Original code and documentation use the [MIT License](LICENSE). The bundled index fonts use the SIL Open Font License; their notices and source information are in [assets/fonts/](assets/fonts/README.md).
 
-## License and notices
-
-Source code and documentation are released under the [MIT License](LICENSE).
-
-This is an independent, non-commercial project. Brand, product, clock, watch and character names
-are used descriptively, to identify the objects depicted. No affiliation with or endorsement by any
-manufacturer is claimed or implied. See [NOTICE.md](NOTICE.md).
+World Clock is independent and non-commercial. Brand, product, and character names identify the objects depicted; they do not imply affiliation or endorsement. See [NOTICE.md](NOTICE.md).

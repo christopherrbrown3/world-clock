@@ -113,7 +113,7 @@ Integration: Digital roots use `data-lcd="hms"`, six `data-digit-index` groups a
 
 ## Astra dress, integrated, and shaped watch studies
 
-All 19 renderers in `dress.js` are new SVG drawings. No other model's HTML, renderer, or page code was read or reused. The repository catalog supplied the face keys, full names, and cadences. Shared low-level primitives are private to this new module, and every paint/clip ID is prefixed with the draw instance ID plus `-dr-`.
+All 19 dress, integrated, and shaped renderers embedded in `versions/astra.html` are new SVG drawings. No other model's HTML, renderer, or page code was read or reused. The repository catalog supplied the face keys, full names, and cadences. Shared low-level primitives are private to this new module, and every paint/clip ID is prefixed with the draw instance ID plus `-dr-`.
 
 ### Reference decisions
 
@@ -160,7 +160,7 @@ Text fields are `date`, `day`, `month`, `datetens`, `dateones`. `day` and `month
 
 These are vector interpretations, with shared metal/strap rendering primitives and individually constructed cases/dials. They are not photographs, replicas for manufacture, or measured CAD drawings. Dial lettering uses browser fonts; engravings, surface reflections, and textures are approximations. Moonphase is an animated mechanical-style display driven by the application's lunar-age calculation. Power-reserve indications are a browser-session simulation driven by the application's Wind control, not actual stored mechanical energy. The Patek auxiliary apertures show a day/night approximation and the selected calendar year's position in the leap-year cycle.
 
-All 19 SVGs were generated, parsed as XML, checked for duplicate IDs/undefined/NaN values, and rendered in a contact sheet for visual inspection. Corrections after inspection included a softer Snowflake texture, proper wide Big Pilot hour markers, rounded Nautilus case transitions, rectangular Cartier radial numerals, adjusted Tank/Reverso case proportions, extended baton-hand lume, and clipped date apertures. Final closeup QA also checked moving lunar discs, power pointers, correct 10/20/30 register labels, the Marine round date aperture, and softened brushed-metal bracelet reflections. `node --check dress.js` passes.
+All 19 SVGs were generated, parsed as XML, checked for duplicate IDs/undefined/NaN values, and rendered in a contact sheet for visual inspection. Corrections after inspection included a softer Snowflake texture, proper wide Big Pilot hour markers, rounded Nautilus case transitions, rectangular Cartier radial numerals, adjusted Tank/Reverso case proportions, extended baton-hand lume, and clipped date apertures. Final closeup QA also checked moving lunar discs, power pointers, correct 10/20/30 register labels, the Marine round date aperture, and softened brushed-metal bracelet reflections. The renderer section passes inline JavaScript syntax validation through `npm test`.
 
 ## Application validation
 

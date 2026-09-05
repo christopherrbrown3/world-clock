@@ -2,16 +2,12 @@
 
 Notable project changes will be tracked here.
 
-## 0.1.0
-
-- Initial public-release candidate for the standalone world clock.
-- Added GitHub workflow documentation, issue templates, pull request template, CI validation, Dependabot, and public-release checklist.
-- Added MIT license and third-party brand/reference notices.
-
 ## Unreleased
 
-- Added Codex Astra as an independent standalone rendition of all 62 watches and clocks, authored from scratch with reference-based SVG geometry, an offline city view, a searchable collection, enlarged inspection, and interactive chronographs. Previous model pages and the active build are preserved.
+- Rebuilt the index as a project introduction and release-ordered directory of ten model renditions, with responsive editorial typography and locally hosted OFL fonts. It contains no specific watch previews; model pages are unchanged by the index redesign.
+- Refreshed the README with the current index and Astra screenshots, clarified release versus snapshot dates and offline behavior, and updated contributor, versioning, attribution, and release documentation.
 
+- Added Codex Astra as an independent standalone rendition of all 62 watches and clocks, authored from scratch with reference-based SVG geometry, an offline city view, a searchable collection, enlarged inspection, and interactive chronographs. Previous model pages and the active build are preserved.
 - Added the Grok 4.5 standalone checkpoint, written from scratch with its own interface, time engine, and all 62 watch and clock faces. Added it to the version picker and manifest, and froze Gemini 3.8 Flash as the preceding benchmark snapshot.
 - Added the Gemini 3.8 Flash standalone checkpoint, written from scratch with its own interface, time engine, and all 62 watch and clock faces. Added it to the version picker and manifest, and froze Claude Fable 5.1 as the preceding benchmark snapshot.
 - Promoted the Claude Fable 5.1 page to the active working build (`world-clock.html`) and pointed the version picker's lead card at the Fable 5.1 cycle. The Fable 5 page remains preserved unchanged in `versions/fable-5.html`. Aligned the Swatch face name with the catalog.
@@ -54,3 +50,9 @@ Notable project changes will be tracked here.
 - Added model and contributor guidance for future AI model runs and reference-driven SVG face work.
 - Added a validated watch and clock face catalog.
 - Organized project documentation to reduce duplication and clarify guide ownership.
+
+## 0.1.0
+
+- Initial public-release candidate for the standalone world clock.
+- Added GitHub workflow documentation, issue templates, pull request template, CI validation, Dependabot, and public-release checklist.
+- Added MIT license and third-party brand/reference notices.
