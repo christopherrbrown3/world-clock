@@ -46,7 +46,7 @@ When a new model version is ready:
    git push origin model/<model-id>
    ```
 
-The index and README use model release dates recorded in the index’s `data-release-date` attributes. The manifest uses `snapshotDate`, which is the project checkpoint date. Do not sort the index by manifest snapshot dates or assume those dates are model release dates. Confirm the release date when adding an entry.
+The index and README use model release dates verified against the vendor sources in [Model Release Dates](model-release-dates.md), and the index records them in `data-release-date` attributes. The manifest uses `snapshotDate`, which is the project checkpoint date. Do not sort the index by manifest snapshot dates or assume those dates are model release dates. Confirm the release date when adding an entry.
 
 Promoting a rendition to the active build is a separate, explicit operation. A new model entry does not require copying it into `world-clock.html`.
 

@@ -26,20 +26,20 @@ The faces themselves are client-side SVG, built against reference photographs ra
 
 ## Explore the renditions
 
-Listed in the same newest-release-first order as the index. **Model release** is the repository’s recorded release date; **snapshot** is the date this project captured the rendition. They are different chronologies.
+Listed in the same newest-release-first order as the index. **Model release** links to the vendor’s release source; **snapshot** is the date this project captured the rendition. They are different chronologies. See the [release-date verification notes](docs/model-release-dates.md) for rollout distinctions and sources checked on September 5, 2026.
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
-| [Codex Astra](versions/astra.html) | 2026-09-05 | 2026-09-05 |
-| [Gemini 3.8 Flash](versions/gemini-3.8-flash.html) | 2026-09-02 | 2026-09-03 |
-| [Claude Fable 5.1](versions/fable-5.1.html) | 2026-08-02 | 2026-09-02 |
-| [Claude Opus 5](versions/claude-opus-5.html) | 2026-07-24 | 2026-07-28 |
-| [Codex 5.6 Sol](versions/codex-5.6-sol.html) | 2026-07-09 | 2026-07-28 |
-| [Codex 5.6 Terra](versions/codex-5.6.html) | 2026-07-09 | 2026-07-09 |
-| [Grok 4.5](versions/grok-4.5.html) | 2026-07-08 | 2026-09-03 |
-| [Claude Fable 5](versions/fable-5.html) | 2026-06-09 | 2026-07-17 |
-| [Claude Opus 4.8](versions/claude-opus-4.8.html) | 2026-05-28 | 2026-06-30 |
-| [Codex 5.5](versions/codex-5.5.html) | 2026-04-23 | 2026-07-09 |
+| [Codex Astra](versions/astra.html) | [2026-09-03](https://openai.com/index/safety-overview-gpt-6-astra/) | 2026-09-05 |
+| [Gemini 3.8 Flash](versions/gemini-3.8-flash.html) | [2026-09-02](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) | 2026-09-03 |
+| [Claude Fable 5.1](versions/fable-5.1.html) | [2026-09-01](https://support.claude.com/en/articles/12138966-release-notes) | 2026-09-02 |
+| [Claude Opus 5](versions/claude-opus-5.html) | [2026-07-24](https://www.anthropic.com/news/claude-opus-5) | 2026-07-28 |
+| [Codex 5.6 Sol](versions/codex-5.6-sol.html) | [2026-07-09](https://openai.com/index/gpt-5-6/) | 2026-07-28 |
+| [Codex 5.6 Terra](versions/codex-5.6.html) | [2026-07-09](https://openai.com/index/gpt-5-6/) | 2026-07-09 |
+| [Grok 4.5](versions/grok-4.5.html) | [2026-07-08](https://docs.x.ai/developers/release-notes) | 2026-09-03 |
+| [Claude Fable 5](versions/fable-5.html) | [2026-06-09](https://www.anthropic.com/news/claude-fable-5-mythos-5) | 2026-07-17 |
+| [Claude Opus 4.8](versions/claude-opus-4.8.html) | [2026-05-28](https://www.anthropic.com/news/claude-opus-4-8) | 2026-06-30 |
+| [Codex 5.5](versions/codex-5.5.html) | [2026-04-23](https://openai.com/index/introducing-gpt-5-5/) | 2026-07-09 |
 
 The [active development build](world-clock.html) remains available separately. It is not automatically replaced by the newest model entry. [versions.json](versions.json) records the available snapshots.
 
