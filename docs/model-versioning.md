@@ -15,7 +15,9 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
-- `versions/grok-4.5.html`: current Grok 4.5 checkpoint, authored from scratch against this specification.
+- `versions/astra.html`: current Codex Astra checkpoint, authored from scratch with its own interface, time engine and all 62 faces.
+
+- `versions/grok-4.5.html`: finalized Grok 4.5 checkpoint, authored from scratch against this specification.
 - `versions/gemini-3.8-flash.html`: finalized Gemini 3.8 Flash checkpoint, authored from scratch against this specification.
 - `versions/fable-5.1.html`: finalized Claude Fable 5.1 checkpoint, authored from scratch against this specification.
 - `versions/codex-5.6-sol.html`: finalized Codex 5.6 Sol checkpoint, authored from scratch against this specification.
