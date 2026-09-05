@@ -3,155 +3,85 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>World Clock — One brief. Ten visions.</title>
-  <meta name="description" content="One world clock, interpreted by ten AI models. Learn about the project and explore independent renditions, listed by model release date.">
-  <meta name="theme-color" content="#f3efe6">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23782c35'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%23f3efe6'/%3E%3Cpath d='M32 15V32L44 39' fill='none' stroke='%23f3efe6' stroke-width='3'/%3E%3C/svg%3E">
+  <title>World Clock — Explore the renditions</title>
+  <meta name="description" content="Ten AI models. One shared brief. Explore independent World Clock renditions, each with 62 SVG timepieces, in model release order.">
+  <meta name="theme-color" content="#111517">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23111517'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%23c5e994' stroke-width='3'/%3E%3Cpath d='M32 17V32L43 39' fill='none' stroke='%23c5e994' stroke-width='3'/%3E%3C/svg%3E">
   <style>
-    @font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:500;font-display:swap;src:url("assets/fonts/bodoni-moda-latin-500-opsz72.woff2") format("woff2")}
-    @font-face{font-family:Manrope;font-style:normal;font-weight:400 700;font-display:swap;src:url("assets/fonts/manrope-latin-variable-400-700.woff2") format("woff2")}
-    :root{color-scheme:light;--paper:#f3efe6;--ink:#282721;--quiet:#666156;--rule:#cec7ba;--accent:#782c35;--serif:"Bodoni Moda",Baskerville,Georgia,serif;--sans:Manrope,"Helvetica Neue",Arial,sans-serif;--ease:cubic-bezier(.16,1,.3,1)}
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth;scrollbar-color:#938574 var(--paper);scroll-padding-top:32px}
-    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
-    ::selection{background:var(--accent);color:#fff9ef}
-    a{color:inherit;text-decoration-thickness:1px;text-underline-offset:5px}
-    button,select{font:inherit;color:inherit}
-    button,a,select{-webkit-tap-highlight-color:transparent}
-    button{cursor:pointer}
-    button:disabled{cursor:default;opacity:.5}
-    button:focus-visible,a:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:5px}
-    [hidden]{display:none!important}
-    svg{display:block}
-    .icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
-    .skip{position:fixed;z-index:20;left:24px;top:12px;background:var(--paper);padding:14px;transform:translateY(-150%)}
-    .skip:focus{transform:none}
-    .frame{width:min(1440px,100%);padding-inline:clamp(22px,4.5vw,80px);margin-inline:auto}
-    .masthead{height:104px;display:flex;align-items:center;justify-content:space-between;gap:32px;border-bottom:1px solid var(--rule)}
-    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-size:19px;font-weight:600;letter-spacing:-.03em;white-space:nowrap}
-    .brand svg{width:35px;height:35px;color:var(--accent)}
-    .masthead nav{display:flex;gap:32px;margin-left:auto;align-items:center;font-size:12px;font-weight:600}
-    .masthead nav a{display:flex;align-items:center;gap:7px;min-height:44px;text-decoration:none}
-    .masthead nav a:hover{color:var(--accent);text-decoration:underline}
-    .masthead nav .icon{width:14px;height:14px}
-    .local-clock{border-left:1px solid var(--rule);padding-left:32px;font-size:11px;color:var(--quiet);min-width:135px}
-    .local-clock time{display:block;color:var(--ink);font-size:16px;line-height:1.6;font-variant-numeric:tabular-nums;letter-spacing:.025em}
-    .hero{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(45px,8vw,140px);padding-block:76px 74px;align-items:end}
-    h1,h2,h3,p{margin:0}
-    h1{font-family:var(--serif);font-size:clamp(64px,7.2vw,96px);font-weight:500;line-height:1.04;letter-spacing:-.035em}
-    h1 span{display:block}
-    h1 .last-line{color:var(--accent)}
-    .hero-caption{margin-top:30px;color:var(--quiet);font-size:11px;line-height:1.7}
-    .project-intro{padding-bottom:5px;max-width:43ch}
-    .project-intro h2{font:500 clamp(26px,2.4vw,34px)/1.25 var(--serif);letter-spacing:-.02em;margin-bottom:21px;max-width:21ch}
-    .project-intro p{font-size:14px;line-height:1.85;color:var(--quiet);text-wrap:pretty}
-    .project-intro p+p{margin-top:14px}
-    .directory-link{display:inline-flex;align-items:center;justify-content:space-between;gap:30px;min-height:48px;margin-top:22px;color:var(--accent);font-size:11px;font-weight:700;text-decoration:none;border-bottom:1px solid #b8918f}
-    .directory-link:hover{border-color:var(--accent)}
-    .project-principles{display:flex;justify-content:space-between;gap:22px;padding-block:20px;border-block:1px solid var(--rule);color:var(--quiet);font-size:10px;line-height:1.7}
-    .project-principles span{display:flex;align-items:center;gap:10px}
-    .project-principles span::before{content:"";width:4px;height:4px;flex:none;border-radius:50%;background:var(--accent)}
-    .archive{padding-top:48px;scroll-margin-top:22px}
-    .archive-heading{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:end;padding-bottom:35px}
-    .archive-heading h2{font:500 clamp(42px,4.3vw,62px)/1.05 var(--serif);letter-spacing:-.03em}
-    .archive-heading p{justify-self:end;max-width:37ch;color:var(--quiet);font-size:12px;line-height:1.8}
-    .archive-labels{display:grid;grid-template-columns:160px 1fr 135px 28px;gap:20px;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);padding:15px 0;font-size:10px;color:var(--quiet)}
-    .archive-labels span:nth-child(2){text-align:right;padding-right:20px;grid-column:2/5}
-    .directory{padding:0;margin:0;list-style:none}
-    .model-link{display:grid;grid-template-columns:160px 1fr 135px 28px;gap:20px;align-items:center;min-height:110px;border-bottom:1px solid var(--rule);text-decoration:none;position:relative;transition:color .25s,background .25s;padding-block:22px}
-    .model-link:hover{color:var(--accent);background:#e8e0d54d}
-    .model-link time{font-size:11px;font-variant-numeric:tabular-nums;color:var(--quiet)}
-    .model-title{display:flex;align-items:center;flex-wrap:wrap;gap:10px 18px}
-    .model-title h3{font:500 clamp(26px,3.3vw,45px)/1.2 var(--serif);letter-spacing:-.025em}
-    .provider{font-size:11px;color:var(--quiet)}
-    .model-link .icon{width:24px;height:24px;transition:transform .35s var(--ease)}
-    .model-link:hover .icon{transform:translate(3px,-3px)}
-    .latest .model-link{color:var(--accent);min-height:130px}
-    .latest .model-title h3{font-size:clamp(35px,4vw,54px)}
-    .latest-mark{font-size:9px;font-weight:600;border:1px solid #b8918f;padding:4px 7px;white-space:nowrap}
-    .closing{display:grid;grid-template-columns:1fr 1fr;gap:60px;padding-block:75px 68px}
-    .closing h2{font:500 clamp(35px,3.6vw,52px)/1.15 var(--serif);letter-spacing:-.025em;max-width:13ch}
-    .closing-copy{max-width:48ch;justify-self:end}
-    .closing-copy p{font-size:12px;line-height:1.9;color:var(--quiet);text-wrap:pretty}
-    .closing-links{display:flex;flex-wrap:wrap;gap:12px 27px;margin-top:20px}
-    .closing-links a{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--accent);min-height:44px;text-decoration:none}
-    .closing-links a:hover{text-decoration:underline}
-    .closing-links .icon{width:14px;height:14px}
-    .footer{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:22px 28px;border-top:1px solid var(--rule);font-size:10px;line-height:1.7;color:var(--quiet)}
-    .footer a{text-decoration:none;min-height:44px;display:flex;align-items:center}
-    .footer a:hover{text-decoration:underline}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    @media(max-width:1100px){.local-clock{display:none}.hero{gap:55px;grid-template-columns:1.1fr 1fr}h1{font-size:clamp(60px,7.5vw,82px)}.archive-labels,.model-link{grid-template-columns:120px 1fr 105px 24px}}
-    @media(max-width:800px){.masthead{height:82px}.masthead nav{gap:22px}.hero{gap:34px;padding-block:52px 46px}h1{font-size:62px}.hero-caption{max-width:26ch;font-size:10px}.project-intro h2{font-size:27px}.project-intro p{font-size:11px}.directory-link{font-size:10px;gap:18px}.project-principles{font-size:9px;gap:18px}.archive{padding-top:52px}.archive-heading{grid-template-columns:1fr;gap:20px}.archive-heading p{justify-self:start;max-width:50ch}.model-link,.archive-labels{grid-template-columns:98px 1fr 80px 24px;gap:16px}.model-title h3{font-size:31px}.closing{gap:40px}}
-    @media(max-width:540px){.frame{padding-inline:22px}.brand{font-size:16px;gap:9px}.brand svg{width:29px;height:29px}.masthead{gap:14px}.masthead nav{gap:15px;font-size:10px}.masthead nav{gap:12px}.masthead nav .source-text{display:inline}.masthead nav a[aria-label="Source on GitHub"]{min-width:44px;justify-content:center}.masthead nav a[aria-label="Source on GitHub"] .icon{display:none}.hero{display:block;padding-block:35px 32px}h1{font-size:clamp(61px,16.2vw,82px);line-height:1.04}.hero-caption{margin-top:22px;font-size:10px;max-width:none}.project-intro{margin-top:35px;padding:0;max-width:40ch}.project-intro h2{font-size:29px;margin-bottom:15px;max-width:22ch}.project-intro p{font-size:13px;line-height:1.85}.project-intro p+p{margin-top:12px}.directory-link{margin-top:15px;font-size:10px;min-height:44px}.project-principles{flex-wrap:wrap;gap:8px 24px;padding-block:16px;font-size:9px}.archive{padding-top:43px}.archive-heading h2{font-size:43px}.archive-heading{padding-bottom:25px;gap:17px}.archive-heading p{font-size:11px;max-width:39ch}.archive-labels{display:flex;justify-content:space-between;font-size:9px}.archive-labels span:nth-child(2){padding:0}.model-link{grid-template-columns:1fr 24px;gap:7px 16px;padding-block:21px;min-height:124px}.model-link time{grid-column:1;grid-row:1;font-size:10px}.model-title{grid-column:1;grid-row:2;gap:10px}.model-title h3{font-size:30px}.model-link>.icon{grid-column:2;grid-row:1/4;width:21px}.provider{grid-column:1;grid-row:3;font-size:10px;margin-top:1px}.latest .model-link{min-height:136px}.latest .model-title h3{font-size:39px}.latest-mark{font-size:8px;padding:3px 5px}.closing{grid-template-columns:1fr;gap:24px;padding-block:49px 37px}.closing h2{font-size:42px;max-width:15ch}.closing-copy{justify-self:start}.closing-copy p{font-size:11px;line-height:1.9;max-width:45ch}.closing-links{margin-top:14px;gap:8px 23px}.closing-links a{font-size:10px}.footer{font-size:9px;gap:15px}.footer span{max-width:22ch}}
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+    @font-face{font-family:Manrope;src:url("assets/fonts/manrope-latin-variable-400-700.woff2") format("woff2");font-weight:400 700;font-style:normal;font-display:swap}
+    :root{color-scheme:dark;--bg:#111517;--panel:#191e21;--line:#30383d;--text:#edf0ed;--muted:#a0adb3;--accent:#c5e994;--font:Manrope,"Helvetica Neue",Arial,sans-serif}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scrollbar-color:#52605d var(--bg);scroll-padding-top:20px}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased}::selection{background:var(--accent);color:var(--bg)}a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}a,button{-webkit-tap-highlight-color:transparent}a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}[hidden]{display:none!important}h1,h2,p{margin:0}svg{display:block}.icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}.shell{max-width:1320px;margin:auto;padding:0 36px}.skip{position:fixed;top:8px;left:16px;background:var(--accent);color:var(--bg);padding:12px 16px;z-index:10;transform:translateY(-150%)}.skip:focus{transform:none}
+    .header{display:flex;align-items:center;gap:28px;min-height:86px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:12px;font-size:20px;font-weight:700;letter-spacing:-.04em}.brand-symbol{width:34px;height:34px;color:var(--accent)}.header-note{font-size:11px;color:var(--muted);border-left:1px solid var(--line);padding-left:25px}.header nav{display:flex;gap:25px;align-items:center;margin-left:auto}.header nav a{display:flex;gap:8px;align-items:center;font-size:12px;min-height:44px}.header nav a:hover{color:var(--accent)}.header nav .icon{width:15px;height:15px}.live-clock{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}.live-clock::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent)}.live-clock time{color:var(--text)}
+    main{display:grid;grid-template-columns:294px minmax(0,1fr);gap:38px;padding:30px 0 24px;align-items:start}.brief{padding-top:7px}h1{font-size:43px;line-height:1.08;letter-spacing:-.045em;font-weight:600}h1 span{display:block;color:var(--accent)}.intro{font-size:13px;line-height:1.85;color:var(--muted);margin-top:22px;max-width:35ch}.project-numbers{display:grid;grid-template-columns:1fr 1fr;padding:23px 0 21px;margin:0;margin-top:8px;border-bottom:1px solid var(--line);gap:20px}.project-numbers div{display:flex;flex-direction:column-reverse;gap:3px}.project-numbers dt{color:var(--muted);font-size:11px}.project-numbers dd{font-size:32px;letter-spacing:-.04em;font-weight:500;margin:0;font-variant-numeric:tabular-nums}.project-details{padding-top:22px}.project-details summary{font-size:12px;font-weight:700;list-style:none;pointer-events:none}.project-details summary::-webkit-details-marker{display:none}.project-details p{font-size:12px;line-height:1.8;color:var(--muted);margin-top:10px}.project-details a{color:var(--text);text-decoration:underline;text-underline-offset:4px}.project-details a:hover{color:var(--accent)}.local-first{display:flex;gap:12px;align-items:flex-start;margin-top:23px;padding:16px;border:1px solid var(--line);border-radius:10px}.local-first .icon{color:var(--accent);width:20px;height:20px;margin-top:2px}.local-first h2{font-size:12px;font-weight:600}.local-first p{font-size:11px;line-height:1.7;color:var(--muted);margin-top:5px}.active-link{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:12px;min-height:48px;margin-top:13px;color:var(--muted)}.active-link:hover{color:var(--accent)}
+    .directory-head{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px}.directory-head h2{font-size:23px;letter-spacing:-.03em;font-weight:600}.release-order{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:7px}.release-order .icon{width:14px;height:14px}.filter-bar{display:flex;align-items:center;gap:6px;margin:15px 0 16px;flex-wrap:wrap}.filter-bar button{min-height:36px;padding:7px 12px;background:transparent;color:var(--muted);border:1px solid transparent;border-radius:6px;font-size:11px;transition:background .18s,color .18s,border-color .18s}.filter-bar button span{font-size:10px;opacity:.75;margin-left:5px;font-variant-numeric:tabular-nums}.filter-bar button:hover{background:#262e31;color:var(--text)}.filter-bar button[aria-pressed="true"]{background:#29362b;border-color:#516445;color:var(--accent)}.table{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}.table-header{display:flex;justify-content:space-between;align-items:center;padding:11px 18px;color:var(--muted);font-size:10px;border-bottom:1px solid var(--line);min-height:36px}.table-header span:last-child{padding-right:62px}.directory{padding:0;margin:0;list-style:none}.model-link{display:grid;grid-template-columns:32px minmax(0,1fr) auto 90px 28px 16px;align-items:center;gap:12px;padding:11px 17px;min-height:60px;border-bottom:1px solid #30383d;transition:background .2s}.directory li:last-child .model-link{border-bottom:none}.model-link:hover{background:#232c30}.model-link:focus-visible{outline-offset:-3px;border-radius:3px}.provider-mark{width:31px;height:31px;display:grid;place-items:center;border:1px solid #435056;border-radius:8px;color:#cad4d6;font-size:13px;font-weight:700}.model-info{display:flex;flex-direction:column;gap:3px;min-width:0}.model-name{font-size:14px;font-weight:600;letter-spacing:-.015em}.provider{font-size:10px;color:var(--muted)}.model-link time{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}.open-label{font-size:10px;color:var(--muted);opacity:0;transition:opacity .2s}.model-link .icon{width:16px;height:16px;color:#adbac0;transition:transform .2s}.model-link:hover .icon{transform:translate(2px,-2px);color:var(--accent)}.model-link:hover .open-label,.model-link:focus-visible .open-label{opacity:1}.latest .model-link{background:#253229}.latest .model-link:hover{background:#30402f}.latest .provider-mark{color:var(--accent);border-color:#61774e;background:#30402a}.latest .model-name{color:#d6efb5}.latest .icon{color:var(--accent)}.latest-badge{border:1px solid #586f44;color:var(--accent);border-radius:4px;padding:3px 5px;font-size:9px;font-weight:600}.directory-note{display:flex;justify-content:space-between;gap:15px;align-items:center;color:var(--muted);font-size:10px;line-height:1.7;margin-top:12px}.directory-note a{min-height:30px;display:flex;align-items:center;gap:6px}.directory-note a:hover{color:var(--accent)}.directory-note .icon{width:13px;height:13px}
+    .footer{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--line);padding:14px 0 19px;font-size:10px;line-height:1.7;color:var(--muted)}.footer a{min-height:32px;display:flex;align-items:center}.footer a:hover{color:var(--accent)}
+    @media(min-width:1500px){.shell{padding:0 32px}main{gap:52px;padding-top:38px}}
+    @media(max-width:1100px){.shell{padding:0 26px}.header-note{display:none}main{grid-template-columns:248px minmax(0,1fr);gap:26px}h1{font-size:37px}.model-link{grid-template-columns:28px minmax(0,1fr) auto 73px 16px;gap:10px;padding-inline:13px}.open-label{display:none}.table-header span:last-child{padding-right:26px}.model-link time span{display:none}.model-name{font-size:13px}.latest-badge{font-size:8px}.provider-mark{width:28px;height:28px}.filter-bar button{padding-inline:10px}}
+    @media(max-width:820px){.header{min-height:74px}.live-clock{display:none}main{grid-template-columns:1fr;gap:24px;padding-top:25px}.brief{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;padding:0}.brief h1{font-size:38px;grid-row:1/3}.intro{margin:0;max-width:43ch;font-size:12px}.project-numbers{padding:15px 0 0;margin:0;border:0;display:flex;gap:28px}.project-numbers div{flex-direction:row-reverse;align-items:center;gap:8px}.project-numbers dd{font-size:24px}.project-numbers dt{font-size:10px}.project-details,.local-first,.active-link{display:none}.directory-head h2{font-size:23px}.filter-bar{margin-top:10px}.filter-bar button{min-height:40px}.model-link{min-height:65px;grid-template-columns:31px minmax(0,1fr) auto 90px 16px;gap:13px;padding-inline:18px}.model-name{font-size:15px}.model-link time span{display:inline}.latest-badge{font-size:9px}.provider-mark{width:31px;height:31px}.table-header span:last-child{padding-right:27px}}
+    @media(max-width:540px){.shell{padding:0 18px}.header{min-height:68px;gap:14px}.brand{font-size:18px;gap:9px}.brand-symbol{width:29px;height:29px}.header nav{gap:16px}.header nav a{font-size:11px;min-width:44px;justify-content:center}.header nav .docs-link{display:none}.header nav .icon{width:13px;height:13px}main{padding-top:23px;gap:24px}.brief{display:block}h1,.brief h1{font-size:36px;line-height:1.1;letter-spacing:-.04em}.brief h1 span{display:inline}.intro{margin-top:13px;font-size:12px;max-width:48ch;line-height:1.8}.project-numbers{padding-top:13px;gap:25px}.project-numbers dd{font-size:22px}.project-numbers dt{font-size:10px}.directory-head{min-height:35px;gap:9px}.directory-head h2{font-size:20px}.release-order{font-size:9px;gap:4px}.release-order .icon{width:12px;height:12px}.filter-bar{gap:2px;margin:9px 0 12px;justify-content:space-between}.filter-bar button{padding:8px 9px;min-height:44px;font-size:10px}.filter-bar button span{display:none}.model-link{min-height:68px;grid-template-columns:27px minmax(0,1fr) auto 42px 14px;gap:9px;padding:11px 12px}.model-name{font-size:12px}.provider{font-size:10px}.provider-mark{width:27px;height:27px;font-size:11px;border-radius:7px}.model-link time{font-size:9px}.model-link time span{display:none}.latest-badge{font-size:8px;padding:3px 4px}.model-link .icon{width:14px;height:14px}.table-header{padding:10px 13px;font-size:9px}.table-header span:last-child{padding-right:20px}.directory-note{font-size:9px;align-items:flex-start}.directory-note a{white-space:nowrap;min-height:36px}.directory-note>span{max-width:23ch;padding-top:8px}.footer{font-size:9px;gap:15px;align-items:center}.footer span{max-width:23ch}.footer a{min-height:44px;text-align:right}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
   </style>
 </head>
 <body>
-  <a class="skip" href="#renditions">Skip to the renditions</a>
-  <div class="frame">
-    <header class="masthead">
-      <a href="./" class="brand" aria-label="World Clock home">
-        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="20" cy="20" r="18"/><circle cx="20" cy="20" r="14"/><path d="M20 4v4m16 12h-4M20 36v-4M4 20h4M20 11v9l8 5"/><circle cx="20" cy="20" r="1.5" fill="currentColor"/></svg>
-        <span>World Clock</span>
-      </a>
-      <nav aria-label="Main navigation">
-        <a href="#renditions">The renditions</a>
-        <a href="https://github.com/christopherrbrown3/world-clock" aria-label="Source on GitHub"><span class="source-text">Source</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a>
-      </nav>
-      <div class="local-clock"><span>Your local time</span><time id="header-time">—</time></div>
-    </header>
-    <main>
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <h1 id="hero-title"><span>One brief.</span><span class="last-line">Ten visions.</span></h1>
-          <p class="hero-caption">An ongoing experiment in digital craftsmanship.</p>
-        </div>
-        <div class="project-intro">
-          <h2>The same time.<br>A different eye for detail.</h2>
-          <p>World Clock asks successive AI models to build the same thing: a complete world clock, with 62 watch and clock faces drawn in SVG.</p>
-          <p>Compare how each model interprets proportion, materials, typography, and motion. Every rendition is its own collection, built from the same specification.</p>
-          <a class="directory-link" href="#renditions">Browse the renditions <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
-        </div>
-      </section>
-      <div class="project-principles" aria-label="Project principles"><span>One shared specification</span><span>Independent model renditions</span><span>Working clocks, drawn in code</span></div>
-      <section class="archive" id="renditions" aria-labelledby="archive-title">
-        <div class="archive-heading"><h2 id="archive-title">The renditions.</h2><p>One brief, interpreted independently.<br>Open a model’s collection and see what it notices.</p></div>
-        <div class="archive-labels" aria-hidden="true"><span>Model release</span><span>Newest first · 10 renditions</span></div>
-        <ol class="directory" reversed aria-label="Model renditions, newest release first">
-          <li data-release-date="2026-09-05" class="latest"><a class="model-link" href="versions/astra.html"><time datetime="2026-09-05">05 Sep 2026</time><div class="model-title"><h3>Codex Astra</h3><span class="latest-mark">Latest release</span></div><span class="provider">OpenAI</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
-          <li data-release-date="2026-09-02"><a class="model-link" href="versions/gemini-3.8-flash.html"><time datetime="2026-09-02">02 Sep 2026</time><div class="model-title"><h3>Gemini 3.8 Flash</h3></div><span class="provider">Google</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
-          <li data-release-date="2026-08-02"><a class="model-link" href="versions/fable-5.1.html"><time datetime="2026-08-02">02 Aug 2026</time><div class="model-title"><h3>Claude Fable 5.1</h3></div><span class="provider">Anthropic</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
-          <li data-release-date="2026-07-24"><a class="model-link" href="versions/claude-opus-5.html"><time datetime="2026-07-24">24 Jul 2026</time><div class="model-title"><h3>Claude Opus 5</h3></div><span class="provider">Anthropic</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
-          <li data-release-date="2026-07-09"><a class="model-link" href="versions/codex-5.6-sol.html"><time datetime="2026-07-09">09 Jul 2026</time><div class="model-title"><h3>Codex 5.6 Sol</h3></div><span class="provider">OpenAI</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
-          <li data-release-date="2026-07-09"><a class="model-link" href="versions/codex-5.6.html"><time datetime="2026-07-09">09 Jul 2026</time><div class="model-title"><h3>Codex 5.6 Terra</h3></div><span class="provider">OpenAI</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
-          <li data-release-date="2026-07-08"><a class="model-link" href="versions/grok-4.5.html"><time datetime="2026-07-08">08 Jul 2026</time><div class="model-title"><h3>Grok 4.5</h3></div><span class="provider">xAI</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
-          <li data-release-date="2026-06-09"><a class="model-link" href="versions/fable-5.html"><time datetime="2026-06-09">09 Jun 2026</time><div class="model-title"><h3>Claude Fable 5</h3></div><span class="provider">Anthropic</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
-          <li data-release-date="2026-05-28"><a class="model-link" href="versions/claude-opus-4.8.html"><time datetime="2026-05-28">28 May 2026</time><div class="model-title"><h3>Claude Opus 4.8</h3></div><span class="provider">Anthropic</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
-          <li data-release-date="2026-04-23"><a class="model-link" href="versions/codex-5.5.html"><time datetime="2026-04-23">23 Apr 2026</time><div class="model-title"><h3>Codex 5.5</h3></div><span class="provider">OpenAI</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li></ol>
-      </section>
-      <section class="closing" aria-labelledby="closing-title">
-        <h2 id="closing-title">Made of code.<br>Made to keep time.</h2>
-        <div class="closing-copy"><p>The brief is simple: turn real timepieces into working world clocks. Each rendition is a standalone HTML page. Save a collection, open it offline, and keep the world close.</p><div class="closing-links"><a href="world-clock.html">Active development build <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a><a href="https://github.com/christopherrbrown3/world-clock">Explore the source <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div></div>
-      </section>
-    </main>
-    <footer class="footer"><span>World Clock · An ongoing study in time.</span><a href="#hero-title">Index designed &amp; built by Astra</a></footer>
-  </div>
-  <script>
-    (() => {
-      'use strict';
-      const display = document.getElementById('header-time');
-      const formatter = new Intl.DateTimeFormat('en-GB', {hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'});
-      const update = () => {
-        const now = new Date();
-        display.textContent = formatter.format(now);
-        display.dateTime = now.toISOString();
-      };
-      let timer;
-      const start = () => { update(); timer = setInterval(update, 1000); };
-      document.addEventListener('visibilitychange', () => { clearInterval(timer); if (!document.hidden) start(); });
-      start();
-    })();
-  </script>
+<a class="skip" href="#renditions">Skip to model renditions</a>
+<div class="shell">
+  <header class="header">
+    <a class="brand" href="./" aria-label="World Clock home"><svg class="brand-symbol" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="20" cy="20" r="17"/><ellipse cx="20" cy="20" rx="7.5" ry="17"/><path d="M3 20h34M6 11h28M6 29h28"/></svg>World Clock</a>
+    <span class="header-note">A study in code &amp; craftsmanship</span>
+    <nav aria-label="Project navigation"><a class="docs-link" href="docs/README.md">Documentation</a><a href="https://github.com/christopherrbrown3/world-clock">GitHub <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></nav>
+    <div class="live-clock"><span>UTC</span><time id="header-time">—</time></div>
+  </header>
+  <main>
+    <aside class="brief" aria-labelledby="project-title">
+      <h1 id="project-title">One brief.<br><span>Ten perspectives.</span></h1>
+      <p class="intro">The same world clock, interpreted by different AI models. Compare the details each model brings to life—from proportion and materials to typography and motion.</p>
+      <dl class="project-numbers"><div><dt>timepieces per model</dt><dd>62</dd></div><div><dt>model renditions</dt><dd>10</dd></div></dl>
+      <details class="project-details" open><summary>The experiment</summary><p>Every rendition starts with the same <a href="docs/model-and-contributor-guide.md">specification</a>: turn a catalog of real timepieces into working SVG world clocks. Each model has its own page, preserved for comparison.</p></details>
+      <div class="local-first"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4m-5-9 3 3 6-6"/></svg><div><h2>Open it. Keep it.</h2><p>Each collection is a standalone HTML app. Save one and it keeps time offline.</p></div></div>
+      <a class="active-link" href="world-clock.html">Active development build <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a>
+    </aside>
+    <section id="renditions" aria-labelledby="directory-title">
+      <div class="directory-head"><h2 id="directory-title">Choose a rendition</h2><span class="release-order"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 3v14m-3-3 3 3 3-3M11 4h7m-7 5h5m-5 5h3"/></svg>Newest release first</span></div>
+      <div class="filter-bar" role="group" aria-label="Filter models by provider" hidden><button type="button" data-filter="all" aria-pressed="true">All models <span>10</span></button><button type="button" data-filter="OpenAI" aria-pressed="false">OpenAI <span>4</span></button><button type="button" data-filter="Anthropic" aria-pressed="false">Anthropic <span>4</span></button><button type="button" data-filter="Google" aria-pressed="false">Google <span>1</span></button><button type="button" data-filter="xAI" aria-pressed="false">xAI <span>1</span></button></div>
+      <div class="table"><div class="table-header" aria-hidden="true"><span>Model / provider</span><span>Released in 2026</span></div><ol class="directory" reversed aria-label="Model renditions, newest release first">
+<li data-release-date="2026-09-05" data-provider="OpenAI" class="latest"><a class="model-link" href="versions/astra.html"><span class="provider-mark" aria-hidden="true">O</span><span class="model-info"><span class="model-name">Codex Astra</span><span class="provider">OpenAI</span></span><span class="latest-badge">Latest</span><time datetime="2026-09-05">05 Sep<span> 2026</span></time><span class="open-label">Open</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+<li data-release-date="2026-09-02" data-provider="Google"><a class="model-link" href="versions/gemini-3.8-flash.html"><span class="provider-mark" aria-hidden="true">G</span><span class="model-info"><span class="model-name">Gemini 3.8 Flash</span><span class="provider">Google</span></span><span class="row-spacer" aria-hidden="true"></span><time datetime="2026-09-02">02 Sep<span> 2026</span></time><span class="open-label">Open</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+<li data-release-date="2026-08-02" data-provider="Anthropic"><a class="model-link" href="versions/fable-5.1.html"><span class="provider-mark" aria-hidden="true">A</span><span class="model-info"><span class="model-name">Claude Fable 5.1</span><span class="provider">Anthropic</span></span><span class="row-spacer" aria-hidden="true"></span><time datetime="2026-08-02">02 Aug<span> 2026</span></time><span class="open-label">Open</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+<li data-release-date="2026-07-24" data-provider="Anthropic"><a class="model-link" href="versions/claude-opus-5.html"><span class="provider-mark" aria-hidden="true">A</span><span class="model-info"><span class="model-name">Claude Opus 5</span><span class="provider">Anthropic</span></span><span class="row-spacer" aria-hidden="true"></span><time datetime="2026-07-24">24 Jul<span> 2026</span></time><span class="open-label">Open</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+<li data-release-date="2026-07-09" data-provider="OpenAI"><a class="model-link" href="versions/codex-5.6-sol.html"><span class="provider-mark" aria-hidden="true">O</span><span class="model-info"><span class="model-name">Codex 5.6 Sol</span><span class="provider">OpenAI</span></span><span class="row-spacer" aria-hidden="true"></span><time datetime="2026-07-09">09 Jul<span> 2026</span></time><span class="open-label">Open</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+<li data-release-date="2026-07-09" data-provider="OpenAI"><a class="model-link" href="versions/codex-5.6.html"><span class="provider-mark" aria-hidden="true">O</span><span class="model-info"><span class="model-name">Codex 5.6 Terra</span><span class="provider">OpenAI</span></span><span class="row-spacer" aria-hidden="true"></span><time datetime="2026-07-09">09 Jul<span> 2026</span></time><span class="open-label">Open</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+<li data-release-date="2026-07-08" data-provider="xAI"><a class="model-link" href="versions/grok-4.5.html"><span class="provider-mark" aria-hidden="true">x</span><span class="model-info"><span class="model-name">Grok 4.5</span><span class="provider">xAI</span></span><span class="row-spacer" aria-hidden="true"></span><time datetime="2026-07-08">08 Jul<span> 2026</span></time><span class="open-label">Open</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+<li data-release-date="2026-06-09" data-provider="Anthropic"><a class="model-link" href="versions/fable-5.html"><span class="provider-mark" aria-hidden="true">A</span><span class="model-info"><span class="model-name">Claude Fable 5</span><span class="provider">Anthropic</span></span><span class="row-spacer" aria-hidden="true"></span><time datetime="2026-06-09">09 Jun<span> 2026</span></time><span class="open-label">Open</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+<li data-release-date="2026-05-28" data-provider="Anthropic"><a class="model-link" href="versions/claude-opus-4.8.html"><span class="provider-mark" aria-hidden="true">A</span><span class="model-info"><span class="model-name">Claude Opus 4.8</span><span class="provider">Anthropic</span></span><span class="row-spacer" aria-hidden="true"></span><time datetime="2026-05-28">28 May<span> 2026</span></time><span class="open-label">Open</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+<li data-release-date="2026-04-23" data-provider="OpenAI"><a class="model-link" href="versions/codex-5.5.html"><span class="provider-mark" aria-hidden="true">O</span><span class="model-info"><span class="model-name">Codex 5.5</span><span class="provider">OpenAI</span></span><span class="row-spacer" aria-hidden="true"></span><time datetime="2026-04-23">23 Apr<span> 2026</span></time><span class="open-label">Open</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+</ol></div>
+      <div class="directory-note"><span id="result-count" role="status" aria-live="polite">10 renditions · one shared specification</span><a href="world-clock.html">Active build <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div>
+    </section>
+  </main>
+  <footer class="footer"><span>Drawn in SVG. Driven by your browser’s clock.</span><a href="docs/README.md">About the project &amp; documentation <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></footer>
+</div>
+<script>
+(() => {
+  'use strict';
+  const rows = [...document.querySelectorAll('.directory li')];
+  const buttons = [...document.querySelectorAll('[data-filter]')];
+  const count = document.getElementById('result-count');
+  for (const button of buttons) button.addEventListener('click', () => {
+    const provider = button.dataset.filter;
+    let visible = 0;
+    for (const row of rows) {row.hidden = provider !== 'all' && row.dataset.provider !== provider; if(!row.hidden) visible++;}
+    buttons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+    count.textContent = `${visible} ${visible === 1 ? 'rendition' : 'renditions'}${provider === 'all' ? ' · one shared specification' : ` by ${provider} · newest first`}`;
+  });
+  document.querySelector('.filter-bar').hidden = false;
+  const display = document.getElementById('header-time');
+  const formatter = new Intl.DateTimeFormat('en-GB', {timeZone:'UTC',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'});
+  const update = () => {const now = new Date();display.textContent = formatter.format(now);display.dateTime = now.toISOString();};
+  let timer;
+  const start = () => {update();timer = setInterval(update,1000);};
+  document.addEventListener('visibilitychange',()=>{clearInterval(timer);if(!document.hidden)start();});
+  start();
+})();
+</script>
 </body>
 </html>
