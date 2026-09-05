@@ -7,7 +7,6 @@
   <meta name="description" content="One world clock, interpreted by ten AI models. Learn about the project and explore independent renditions, listed by model release date.">
   <meta name="theme-color" content="#f3efe6">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23782c35'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%23f3efe6'/%3E%3Cpath d='M32 15V32L44 39' fill='none' stroke='%23f3efe6' stroke-width='3'/%3E%3C/svg%3E">
-  <link rel="preload" href="assets/fonts/bodoni-moda-latin-500-opsz72.woff2" as="font" type="font/woff2" crossorigin>
   <style>
     @font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:500;font-display:swap;src:url("assets/fonts/bodoni-moda-latin-500-opsz72.woff2") format("woff2")}
     @font-face{font-family:Manrope;font-style:normal;font-weight:400 700;font-display:swap;src:url("assets/fonts/manrope-latin-variable-400-700.woff2") format("woff2")}
@@ -45,7 +44,7 @@
     .hero-caption{margin-top:30px;color:var(--quiet);font-size:11px;line-height:1.7}
     .project-intro{padding-bottom:5px;max-width:43ch}
     .project-intro h2{font:500 clamp(26px,2.4vw,34px)/1.25 var(--serif);letter-spacing:-.02em;margin-bottom:21px;max-width:21ch}
-    .project-intro p{font-size:13px;line-height:1.85;color:var(--quiet);text-wrap:pretty}
+    .project-intro p{font-size:14px;line-height:1.85;color:var(--quiet);text-wrap:pretty}
     .project-intro p+p{margin-top:14px}
     .directory-link{display:inline-flex;align-items:center;justify-content:space-between;gap:30px;min-height:48px;margin-top:22px;color:var(--accent);font-size:11px;font-weight:700;text-decoration:none;border-bottom:1px solid #b8918f}
     .directory-link:hover{border-color:var(--accent)}
@@ -78,13 +77,13 @@
     .closing-links a{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--accent);min-height:44px;text-decoration:none}
     .closing-links a:hover{text-decoration:underline}
     .closing-links .icon{width:14px;height:14px}
-    .footer{display:flex;justify-content:space-between;gap:20px;padding-block:22px 28px;border-top:1px solid var(--rule);font-size:10px;line-height:1.7;color:var(--quiet)}
-    .footer a{text-decoration:none}
+    .footer{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:22px 28px;border-top:1px solid var(--rule);font-size:10px;line-height:1.7;color:var(--quiet)}
+    .footer a{text-decoration:none;min-height:44px;display:flex;align-items:center}
     .footer a:hover{text-decoration:underline}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     @media(max-width:1100px){.local-clock{display:none}.hero{gap:55px;grid-template-columns:1.1fr 1fr}h1{font-size:clamp(60px,7.5vw,82px)}.archive-labels,.model-link{grid-template-columns:120px 1fr 105px 24px}}
     @media(max-width:800px){.masthead{height:82px}.masthead nav{gap:22px}.hero{gap:34px;padding-block:52px 46px}h1{font-size:62px}.hero-caption{max-width:26ch;font-size:10px}.project-intro h2{font-size:27px}.project-intro p{font-size:11px}.directory-link{font-size:10px;gap:18px}.project-principles{font-size:9px;gap:18px}.archive{padding-top:52px}.archive-heading{grid-template-columns:1fr;gap:20px}.archive-heading p{justify-self:start;max-width:50ch}.model-link,.archive-labels{grid-template-columns:98px 1fr 80px 24px;gap:16px}.model-title h3{font-size:31px}.closing{gap:40px}}
-    @media(max-width:540px){.frame{padding-inline:22px}.brand{font-size:16px;gap:9px}.brand svg{width:29px;height:29px}.masthead{gap:14px}.masthead nav{gap:15px;font-size:10px}.masthead nav .source-text{display:none}.hero{display:block;padding-block:35px 32px}h1{font-size:clamp(61px,16.2vw,82px);line-height:1.04}.hero-caption{margin-top:22px;font-size:10px;max-width:none}.project-intro{margin-top:35px;padding:0;max-width:40ch}.project-intro h2{font-size:29px;margin-bottom:15px;max-width:22ch}.project-intro p{font-size:12px;line-height:1.85}.project-intro p+p{margin-top:12px}.directory-link{margin-top:15px;font-size:10px;min-height:44px}.project-principles{flex-wrap:wrap;gap:8px 24px;padding-block:16px;font-size:9px}.archive{padding-top:43px}.archive-heading h2{font-size:43px}.archive-heading{padding-bottom:25px;gap:17px}.archive-heading p{font-size:11px;max-width:39ch}.archive-labels{display:flex;justify-content:space-between;font-size:9px}.archive-labels span:nth-child(2){padding:0}.model-link{grid-template-columns:1fr 24px;gap:7px 16px;padding-block:21px;min-height:124px}.model-link time{grid-column:1;grid-row:1;font-size:9px}.model-title{grid-column:1;grid-row:2;gap:10px}.model-title h3{font-size:30px}.model-link>.icon{grid-column:2;grid-row:1/4;width:21px}.provider{grid-column:1;grid-row:3;font-size:9px;margin-top:1px}.latest .model-link{min-height:136px}.latest .model-title h3{font-size:39px}.latest-mark{font-size:8px;padding:3px 5px}.closing{grid-template-columns:1fr;gap:24px;padding-block:49px 37px}.closing h2{font-size:42px;max-width:15ch}.closing-copy{justify-self:start}.closing-copy p{font-size:11px;line-height:1.9;max-width:45ch}.closing-links{margin-top:14px;gap:8px 23px}.closing-links a{font-size:10px}.footer{font-size:9px;gap:15px}.footer span{max-width:22ch}}
+    @media(max-width:540px){.frame{padding-inline:22px}.brand{font-size:16px;gap:9px}.brand svg{width:29px;height:29px}.masthead{gap:14px}.masthead nav{gap:15px;font-size:10px}.masthead nav{gap:12px}.masthead nav .source-text{display:inline}.masthead nav a[aria-label="Source on GitHub"]{min-width:44px;justify-content:center}.masthead nav a[aria-label="Source on GitHub"] .icon{display:none}.hero{display:block;padding-block:35px 32px}h1{font-size:clamp(61px,16.2vw,82px);line-height:1.04}.hero-caption{margin-top:22px;font-size:10px;max-width:none}.project-intro{margin-top:35px;padding:0;max-width:40ch}.project-intro h2{font-size:29px;margin-bottom:15px;max-width:22ch}.project-intro p{font-size:13px;line-height:1.85}.project-intro p+p{margin-top:12px}.directory-link{margin-top:15px;font-size:10px;min-height:44px}.project-principles{flex-wrap:wrap;gap:8px 24px;padding-block:16px;font-size:9px}.archive{padding-top:43px}.archive-heading h2{font-size:43px}.archive-heading{padding-bottom:25px;gap:17px}.archive-heading p{font-size:11px;max-width:39ch}.archive-labels{display:flex;justify-content:space-between;font-size:9px}.archive-labels span:nth-child(2){padding:0}.model-link{grid-template-columns:1fr 24px;gap:7px 16px;padding-block:21px;min-height:124px}.model-link time{grid-column:1;grid-row:1;font-size:10px}.model-title{grid-column:1;grid-row:2;gap:10px}.model-title h3{font-size:30px}.model-link>.icon{grid-column:2;grid-row:1/4;width:21px}.provider{grid-column:1;grid-row:3;font-size:10px;margin-top:1px}.latest .model-link{min-height:136px}.latest .model-title h3{font-size:39px}.latest-mark{font-size:8px;padding:3px 5px}.closing{grid-template-columns:1fr;gap:24px;padding-block:49px 37px}.closing h2{font-size:42px;max-width:15ch}.closing-copy{justify-self:start}.closing-copy p{font-size:11px;line-height:1.9;max-width:45ch}.closing-links{margin-top:14px;gap:8px 23px}.closing-links a{font-size:10px}.footer{font-size:9px;gap:15px}.footer span{max-width:22ch}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
   </style>
 </head>
@@ -100,7 +99,7 @@
         <a href="#renditions">The renditions</a>
         <a href="https://github.com/christopherrbrown3/world-clock" aria-label="Source on GitHub"><span class="source-text">Source</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a>
       </nav>
-      <div class="local-clock"><span>Your local time</span><time id="header-time">Live world clocks</time></div>
+      <div class="local-clock"><span>Your local time</span><time id="header-time">—</time></div>
     </header>
     <main>
       <section class="hero" aria-labelledby="hero-title">
@@ -112,7 +111,7 @@
           <h2>The same time.<br>A different eye for detail.</h2>
           <p>World Clock asks successive AI models to build the same thing: a complete world clock, with 62 watch and clock faces drawn in SVG.</p>
           <p>Compare how each model interprets proportion, materials, typography, and motion. Every rendition is its own collection, built from the same specification.</p>
-          <a class="directory-link" href="#renditions">Find your perspective <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
+          <a class="directory-link" href="#renditions">Browse the renditions <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
         </div>
       </section>
       <div class="project-principles" aria-label="Project principles"><span>One shared specification</span><span>Independent model renditions</span><span>Working clocks, drawn in code</span></div>
