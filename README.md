@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Ten visions.**
+**One brief. Ten perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -20,7 +20,7 @@
 
 Give different AI models the same specification: build a complete world clock with 62 recognizable timepieces. Compare what each model notices—case proportions, dial textures, typography, hand geometry, and motion—and how it turns those details into code.
 
-The [project index](index.html) introduces the experiment and links to each model’s collection. It contains no specific watch previews. Each rendition has its own interface and implementation, preserved for comparison. Earlier work includes both inherited and independently authored implementations; the [versioning guide](docs/model-versioning.md) explains the two paths.
+The [project index](index.html) puts the model directory beside a compact introduction. Filter by provider or browse all ten models in release order, then open a collection. It contains no specific watch previews. Each rendition has its own interface and implementation, preserved for comparison. Earlier work includes both inherited and independently authored implementations; the [versioning guide](docs/model-versioning.md) explains the two paths.
 
 The faces themselves are client-side SVG, built against reference photographs rather than embedded watch images. Documentation screenshots show the rendered results. Detail, behavior, and fidelity vary between renditions; these differences are part of the experiment.
 
@@ -66,7 +66,7 @@ cd world-clock
 
 Open `index.html` in a browser, then choose a model. On macOS, `open index.html` does this from the terminal. To go directly to Astra, open `versions/astra.html`.
 
-Each model app is a standalone HTML file whose clocks work offline. The index uses local fonts in `assets/fonts/`; keep that directory alongside it for the intended typography. No font service is contacted by the index. A static server or GitHub Pages works too.
+Each model app is a standalone HTML file whose clocks work offline. The index uses the local Manrope font in `assets/fonts/`; keep that directory alongside it for the intended typography. No font service is contacted by the index. A static server or GitHub Pages works too.
 
 ## Repository map
 
@@ -96,6 +96,6 @@ Start with [CONTRIBUTING.md](CONTRIBUTING.md). The [model and contributor guide]
 
 ## License and attribution
 
-Original code and documentation use the [MIT License](LICENSE). The bundled index fonts use the SIL Open Font License; their notices and source information are in [assets/fonts/](assets/fonts/README.md).
+Original code and documentation use the [MIT License](LICENSE). The bundled index font uses the SIL Open Font License; its notice and source information are in [assets/fonts/](assets/fonts/README.md).
 
 World Clock is independent and non-commercial. Brand, product, and character names identify the objects depicted; they do not imply affiliation or endorsement. See [NOTICE.md](NOTICE.md).
