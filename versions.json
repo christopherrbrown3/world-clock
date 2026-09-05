@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "astra",
+      "label": "Codex Astra",
+      "file": "versions/astra.html",
+      "snapshotDate": "2026-09-04",
+      "notes": "Independent Astra rendition, authored from scratch against the 62-piece catalog and photographic references, with its own SVG geometry, time engine, city view and searchable collection."
+    },
+    {
       "id": "grok-4.5",
       "label": "Grok 4.5",
       "file": "versions/grok-4.5.html",
