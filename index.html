@@ -1,325 +1,158 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>World Clock — Renditions</title>
-    <meta name="description" content="A directory of World Clock renditions: the same 62-face specification, drawn from scratch by successive AI models. Every page is a standalone HTML/SVG world clock.">
-    <meta name="theme-color" content="#0d1018">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%230d1018' stroke='%23e3b661' stroke-width='6'/%3E%3Cpath d='M50 50 L50 24 M50 50 L68 60' stroke='%23f4f1ea' stroke-width='7' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%23e3b661'/%3E%3C/svg%3E">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&display=swap" rel="stylesheet">
-    <style>
-      :root {
-        color-scheme: dark;
-        --wall: #0d1018;
-        --wall-2: #161b28;
-        --line: rgba(255, 255, 255, 0.09);
-        --line-strong: rgba(227, 182, 97, 0.5);
-        --ink: #f4f1ea;
-        --muted: #aab2b6;
-        --gold: #e3b661;
-        --focus: #ffe9bd;
-      }
-
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-
-      body {
-        min-height: 100vh;
-        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background:
-          radial-gradient(70% 44% at 12% -6%, rgba(227, 182, 97, 0.10), transparent 70%),
-          radial-gradient(56% 40% at 94% 0%, rgba(120, 138, 220, 0.08), transparent 72%),
-          radial-gradient(120% 90% at 50% -10%, #222941 0%, var(--wall-2) 44%, var(--wall) 100%);
-        color: var(--ink);
-        padding: 0 20px;
-      }
-
-      main {
-        width: min(720px, 100%);
-        margin: 0 auto;
-        padding: clamp(48px, 9vh, 96px) 0 72px;
-      }
-
-      h1 {
-        font-family: "Fraunces", Georgia, serif;
-        font-size: clamp(2.4rem, 6vw, 3.6rem);
-        font-weight: 650;
-        line-height: 1.02;
-        letter-spacing: -0.01em;
-        text-wrap: balance;
-      }
-
-      .lede {
-        margin-top: 14px;
-        max-width: 56ch;
-        color: var(--muted);
-        font-size: 0.95rem;
-        line-height: 1.65;
-        text-wrap: pretty;
-      }
-
-      .lede a { color: var(--gold); text-decoration: none; }
-      .lede a:hover, .colophon a:hover { text-decoration: underline; }
-
-      /* ---- The directory ---- */
-      .directory {
-        margin-top: clamp(36px, 6vh, 60px);
-        list-style: none;
-        border-top: 1px solid var(--line);
-      }
-
-      .row {
-        display: grid;
-        grid-template-columns: 84px minmax(0, 1fr) auto;
-        align-items: center;
-        gap: 24px;
-        padding: 20px 10px;
-        border-bottom: 1px solid var(--line);
-        text-decoration: none;
-        color: inherit;
-        transition: background-color 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-      }
-
-      .row:hover { background: rgba(227, 182, 97, 0.055); }
-
-      .row h2 {
-        font-family: "Fraunces", Georgia, serif;
-        font-size: clamp(1.3rem, 3.4vw, 1.7rem);
-        font-weight: 650;
-        letter-spacing: 0.005em;
-        line-height: 1.1;
-        transition: color 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-      }
-
-      .row:hover h2 { color: var(--gold); }
-
-      .row .meta {
-        margin-top: 5px;
-        color: var(--muted);
-        font-size: 0.8rem;
-        font-variant-numeric: tabular-nums;
-      }
-
-      .go {
-        color: var(--gold);
-        font-size: 1.2rem;
-        line-height: 1;
-        opacity: 0;
-        transform: translateX(-6px);
-        transition: opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1), transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-      }
-
-      .row:hover .go, .row:focus-visible .go { opacity: 1; transform: none; }
-
-      .dial { display: block; width: 100%; height: auto; }
-
-      .row:focus-visible {
-        outline: 2px solid var(--focus);
-        outline-offset: -2px;
-        border-radius: 6px;
-      }
-
-      /* Entrance: rows are visible by default; motion only adds the drift. */
-      @media (prefers-reduced-motion: no-preference) {
-        .directory .row { animation: settle 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
-        .directory li:nth-child(1) .row { animation-delay: 0.04s; }
-        .directory li:nth-child(2) .row { animation-delay: 0.1s; }
-        .directory li:nth-child(3) .row { animation-delay: 0.16s; }
-        .directory li:nth-child(4) .row { animation-delay: 0.22s; }
-        .directory li:nth-child(5) .row { animation-delay: 0.28s; }
-        .directory li:nth-child(6) .row { animation-delay: 0.34s; }
-        .directory li:nth-child(7) .row { animation-delay: 0.4s; }
-        .directory li:nth-child(8) .row { animation-delay: 0.46s; }
-        .directory li:nth-child(9) .row { animation-delay: 0.52s; }
-        @keyframes settle {
-          from { opacity: 0; transform: translateY(14px); }
-          to { opacity: 1; transform: none; }
-        }
-      }
-
-      .colophon {
-        margin-top: 44px;
-        color: color-mix(in srgb, var(--muted) 68%, transparent);
-        font-size: 0.78rem;
-        line-height: 1.65;
-        max-width: 60ch;
-        text-wrap: pretty;
-      }
-
-      .colophon a { color: var(--gold); text-decoration: none; }
-
-      @media (max-width: 540px) {
-        .row { grid-template-columns: 64px minmax(0, 1fr); gap: 16px; padding: 16px 6px; }
-        .go { display: none; }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .row, .row h2, .go { transition: none; }
-      }
-    </style>
-  </head>
-  <body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Clock — One brief. Ten visions.</title>
+  <meta name="description" content="One world clock, interpreted by ten AI models. Learn about the project and explore independent renditions, listed by model release date.">
+  <meta name="theme-color" content="#f3efe6">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23782c35'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%23f3efe6'/%3E%3Cpath d='M32 15V32L44 39' fill='none' stroke='%23f3efe6' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="preload" href="assets/fonts/bodoni-moda-latin-500-opsz72.woff2" as="font" type="font/woff2" crossorigin>
+  <style>
+    @font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:500;font-display:swap;src:url("assets/fonts/bodoni-moda-latin-500-opsz72.woff2") format("woff2")}
+    @font-face{font-family:Manrope;font-style:normal;font-weight:400 700;font-display:swap;src:url("assets/fonts/manrope-latin-variable-400-700.woff2") format("woff2")}
+    :root{color-scheme:light;--paper:#f3efe6;--ink:#282721;--quiet:#666156;--rule:#cec7ba;--accent:#782c35;--serif:"Bodoni Moda",Baskerville,Georgia,serif;--sans:Manrope,"Helvetica Neue",Arial,sans-serif;--ease:cubic-bezier(.16,1,.3,1)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scrollbar-color:#938574 var(--paper);scroll-padding-top:32px}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+    ::selection{background:var(--accent);color:#fff9ef}
+    a{color:inherit;text-decoration-thickness:1px;text-underline-offset:5px}
+    button,select{font:inherit;color:inherit}
+    button,a,select{-webkit-tap-highlight-color:transparent}
+    button{cursor:pointer}
+    button:disabled{cursor:default;opacity:.5}
+    button:focus-visible,a:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:5px}
+    [hidden]{display:none!important}
+    svg{display:block}
+    .icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+    .skip{position:fixed;z-index:20;left:24px;top:12px;background:var(--paper);padding:14px;transform:translateY(-150%)}
+    .skip:focus{transform:none}
+    .frame{width:min(1440px,100%);padding-inline:clamp(22px,4.5vw,80px);margin-inline:auto}
+    .masthead{height:104px;display:flex;align-items:center;justify-content:space-between;gap:32px;border-bottom:1px solid var(--rule)}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-size:19px;font-weight:600;letter-spacing:-.03em;white-space:nowrap}
+    .brand svg{width:35px;height:35px;color:var(--accent)}
+    .masthead nav{display:flex;gap:32px;margin-left:auto;align-items:center;font-size:12px;font-weight:600}
+    .masthead nav a{display:flex;align-items:center;gap:7px;min-height:44px;text-decoration:none}
+    .masthead nav a:hover{color:var(--accent);text-decoration:underline}
+    .masthead nav .icon{width:14px;height:14px}
+    .local-clock{border-left:1px solid var(--rule);padding-left:32px;font-size:11px;color:var(--quiet);min-width:135px}
+    .local-clock time{display:block;color:var(--ink);font-size:16px;line-height:1.6;font-variant-numeric:tabular-nums;letter-spacing:.025em}
+    .hero{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(45px,8vw,140px);padding-block:76px 74px;align-items:end}
+    h1,h2,h3,p{margin:0}
+    h1{font-family:var(--serif);font-size:clamp(64px,7.2vw,96px);font-weight:500;line-height:1.04;letter-spacing:-.035em}
+    h1 span{display:block}
+    h1 .last-line{color:var(--accent)}
+    .hero-caption{margin-top:30px;color:var(--quiet);font-size:11px;line-height:1.7}
+    .project-intro{padding-bottom:5px;max-width:43ch}
+    .project-intro h2{font:500 clamp(26px,2.4vw,34px)/1.25 var(--serif);letter-spacing:-.02em;margin-bottom:21px;max-width:21ch}
+    .project-intro p{font-size:13px;line-height:1.85;color:var(--quiet);text-wrap:pretty}
+    .project-intro p+p{margin-top:14px}
+    .directory-link{display:inline-flex;align-items:center;justify-content:space-between;gap:30px;min-height:48px;margin-top:22px;color:var(--accent);font-size:11px;font-weight:700;text-decoration:none;border-bottom:1px solid #b8918f}
+    .directory-link:hover{border-color:var(--accent)}
+    .project-principles{display:flex;justify-content:space-between;gap:22px;padding-block:20px;border-block:1px solid var(--rule);color:var(--quiet);font-size:10px;line-height:1.7}
+    .project-principles span{display:flex;align-items:center;gap:10px}
+    .project-principles span::before{content:"";width:4px;height:4px;flex:none;border-radius:50%;background:var(--accent)}
+    .archive{padding-top:48px;scroll-margin-top:22px}
+    .archive-heading{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:end;padding-bottom:35px}
+    .archive-heading h2{font:500 clamp(42px,4.3vw,62px)/1.05 var(--serif);letter-spacing:-.03em}
+    .archive-heading p{justify-self:end;max-width:37ch;color:var(--quiet);font-size:12px;line-height:1.8}
+    .archive-labels{display:grid;grid-template-columns:160px 1fr 135px 28px;gap:20px;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);padding:15px 0;font-size:10px;color:var(--quiet)}
+    .archive-labels span:nth-child(2){text-align:right;padding-right:20px;grid-column:2/5}
+    .directory{padding:0;margin:0;list-style:none}
+    .model-link{display:grid;grid-template-columns:160px 1fr 135px 28px;gap:20px;align-items:center;min-height:110px;border-bottom:1px solid var(--rule);text-decoration:none;position:relative;transition:color .25s,background .25s;padding-block:22px}
+    .model-link:hover{color:var(--accent);background:#e8e0d54d}
+    .model-link time{font-size:11px;font-variant-numeric:tabular-nums;color:var(--quiet)}
+    .model-title{display:flex;align-items:center;flex-wrap:wrap;gap:10px 18px}
+    .model-title h3{font:500 clamp(26px,3.3vw,45px)/1.2 var(--serif);letter-spacing:-.025em}
+    .provider{font-size:11px;color:var(--quiet)}
+    .model-link .icon{width:24px;height:24px;transition:transform .35s var(--ease)}
+    .model-link:hover .icon{transform:translate(3px,-3px)}
+    .latest .model-link{color:var(--accent);min-height:130px}
+    .latest .model-title h3{font-size:clamp(35px,4vw,54px)}
+    .latest-mark{font-size:9px;font-weight:600;border:1px solid #b8918f;padding:4px 7px;white-space:nowrap}
+    .closing{display:grid;grid-template-columns:1fr 1fr;gap:60px;padding-block:75px 68px}
+    .closing h2{font:500 clamp(35px,3.6vw,52px)/1.15 var(--serif);letter-spacing:-.025em;max-width:13ch}
+    .closing-copy{max-width:48ch;justify-self:end}
+    .closing-copy p{font-size:12px;line-height:1.9;color:var(--quiet);text-wrap:pretty}
+    .closing-links{display:flex;flex-wrap:wrap;gap:12px 27px;margin-top:20px}
+    .closing-links a{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--accent);min-height:44px;text-decoration:none}
+    .closing-links a:hover{text-decoration:underline}
+    .closing-links .icon{width:14px;height:14px}
+    .footer{display:flex;justify-content:space-between;gap:20px;padding-block:22px 28px;border-top:1px solid var(--rule);font-size:10px;line-height:1.7;color:var(--quiet)}
+    .footer a{text-decoration:none}
+    .footer a:hover{text-decoration:underline}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:1100px){.local-clock{display:none}.hero{gap:55px;grid-template-columns:1.1fr 1fr}h1{font-size:clamp(60px,7.5vw,82px)}.archive-labels,.model-link{grid-template-columns:120px 1fr 105px 24px}}
+    @media(max-width:800px){.masthead{height:82px}.masthead nav{gap:22px}.hero{gap:34px;padding-block:52px 46px}h1{font-size:62px}.hero-caption{max-width:26ch;font-size:10px}.project-intro h2{font-size:27px}.project-intro p{font-size:11px}.directory-link{font-size:10px;gap:18px}.project-principles{font-size:9px;gap:18px}.archive{padding-top:52px}.archive-heading{grid-template-columns:1fr;gap:20px}.archive-heading p{justify-self:start;max-width:50ch}.model-link,.archive-labels{grid-template-columns:98px 1fr 80px 24px;gap:16px}.model-title h3{font-size:31px}.closing{gap:40px}}
+    @media(max-width:540px){.frame{padding-inline:22px}.brand{font-size:16px;gap:9px}.brand svg{width:29px;height:29px}.masthead{gap:14px}.masthead nav{gap:15px;font-size:10px}.masthead nav .source-text{display:none}.hero{display:block;padding-block:35px 32px}h1{font-size:clamp(61px,16.2vw,82px);line-height:1.04}.hero-caption{margin-top:22px;font-size:10px;max-width:none}.project-intro{margin-top:35px;padding:0;max-width:40ch}.project-intro h2{font-size:29px;margin-bottom:15px;max-width:22ch}.project-intro p{font-size:12px;line-height:1.85}.project-intro p+p{margin-top:12px}.directory-link{margin-top:15px;font-size:10px;min-height:44px}.project-principles{flex-wrap:wrap;gap:8px 24px;padding-block:16px;font-size:9px}.archive{padding-top:43px}.archive-heading h2{font-size:43px}.archive-heading{padding-bottom:25px;gap:17px}.archive-heading p{font-size:11px;max-width:39ch}.archive-labels{display:flex;justify-content:space-between;font-size:9px}.archive-labels span:nth-child(2){padding:0}.model-link{grid-template-columns:1fr 24px;gap:7px 16px;padding-block:21px;min-height:124px}.model-link time{grid-column:1;grid-row:1;font-size:9px}.model-title{grid-column:1;grid-row:2;gap:10px}.model-title h3{font-size:30px}.model-link>.icon{grid-column:2;grid-row:1/4;width:21px}.provider{grid-column:1;grid-row:3;font-size:9px;margin-top:1px}.latest .model-link{min-height:136px}.latest .model-title h3{font-size:39px}.latest-mark{font-size:8px;padding:3px 5px}.closing{grid-template-columns:1fr;gap:24px;padding-block:49px 37px}.closing h2{font-size:42px;max-width:15ch}.closing-copy{justify-self:start}.closing-copy p{font-size:11px;line-height:1.9;max-width:45ch}.closing-links{margin-top:14px;gap:8px 23px}.closing-links a{font-size:10px}.footer{font-size:9px;gap:15px}.footer span{max-width:22ch}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#renditions">Skip to the renditions</a>
+  <div class="frame">
+    <header class="masthead">
+      <a href="./" class="brand" aria-label="World Clock home">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="20" cy="20" r="18"/><circle cx="20" cy="20" r="14"/><path d="M20 4v4m16 12h-4M20 36v-4M4 20h4M20 11v9l8 5"/><circle cx="20" cy="20" r="1.5" fill="currentColor"/></svg>
+        <span>World Clock</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#renditions">The renditions</a>
+        <a href="https://github.com/christopherrbrown3/world-clock" aria-label="Source on GitHub"><span class="source-text">Source</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a>
+      </nav>
+      <div class="local-clock"><span>Your local time</span><time id="header-time">Live world clocks</time></div>
+    </header>
     <main>
-      <header>
-        <h1>One clock, ten watchmakers.</h1>
-        <p class="lede">
-          World Clock renders 62 real watch and clock faces as live inline SVG, from the Submariner
-          to Big Ben. Each page below is the same specification drawn from scratch by a different
-          AI model — a complete, standalone world clock, running now. Open any of them and compare
-          the hands.
-        </p>
-      </header>
-
-      <ol class="directory" reversed aria-label="Model renditions, newest release first">
-        <li data-release-date="2026-09-05">
-          <a class="row" href="versions/astra.html">
-            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
-            <div>
-              <h2>Codex Astra</h2>
-              <p class="meta">OpenAI</p>
-            </div>
-            <span class="go" aria-hidden="true">→</span>
-          </a>
-        </li>
-        <li data-release-date="2026-09-02">
-          <a class="row" href="versions/gemini-3.8-flash.html">
-            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
-            <div>
-              <h2>Gemini 3.8 Flash</h2>
-              <p class="meta">Google</p>
-            </div>
-            <span class="go" aria-hidden="true">→</span>
-          </a>
-        </li>
-        <li data-release-date="2026-08-02">
-          <a class="row" href="versions/fable-5.1.html">
-            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
-            <div>
-              <h2>Claude Fable 5.1</h2>
-              <p class="meta">Anthropic</p>
-            </div>
-            <span class="go" aria-hidden="true">→</span>
-          </a>
-        </li>
-        <li data-release-date="2026-07-24">
-          <a class="row" href="versions/claude-opus-5.html">
-            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
-            <div>
-              <h2>Claude Opus 5</h2>
-              <p class="meta">Anthropic</p>
-            </div>
-            <span class="go" aria-hidden="true">→</span>
-          </a>
-        </li>
-        <li data-release-date="2026-07-09">
-          <a class="row" href="versions/codex-5.6-sol.html">
-            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
-            <div>
-              <h2>Codex 5.6 Sol</h2>
-              <p class="meta">OpenAI</p>
-            </div>
-            <span class="go" aria-hidden="true">→</span>
-          </a>
-        </li>
-        <li data-release-date="2026-07-09">
-          <a class="row" href="versions/codex-5.6.html">
-            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
-            <div>
-              <h2>Codex 5.6 Terra</h2>
-              <p class="meta">OpenAI</p>
-            </div>
-            <span class="go" aria-hidden="true">→</span>
-          </a>
-        </li>
-        <li data-release-date="2026-07-08">
-          <a class="row" href="versions/grok-4.5.html">
-            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
-            <div>
-              <h2>Grok 4.5</h2>
-              <p class="meta">xAI</p>
-            </div>
-            <span class="go" aria-hidden="true">→</span>
-          </a>
-        </li>
-        <li data-release-date="2026-06-09">
-          <a class="row" href="versions/fable-5.html">
-            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
-            <div>
-              <h2>Claude Fable 5</h2>
-              <p class="meta">Anthropic</p>
-            </div>
-            <span class="go" aria-hidden="true">→</span>
-          </a>
-        </li>
-        <li data-release-date="2026-05-28">
-          <a class="row" href="versions/claude-opus-4.8.html">
-            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
-            <div>
-              <h2>Claude Opus 4.8</h2>
-              <p class="meta">Anthropic</p>
-            </div>
-            <span class="go" aria-hidden="true">→</span>
-          </a>
-        </li>
-        <li data-release-date="2026-04-23">
-          <a class="row" href="versions/codex-5.5.html">
-            <svg class="dial" viewBox="0 0 100 100" aria-hidden="true"></svg>
-            <div>
-              <h2>Codex 5.5</h2>
-              <p class="meta">OpenAI</p>
-            </div>
-            <span class="go" aria-hidden="true">→</span>
-          </a>
-        </li>
-      </ol>
-
-      <p class="colophon">
-        Every page is a single HTML file with no dependencies: save one, open it offline, and it
-        keeps time. Faces are drawn from reference photographs of the real objects — no raster
-        images anywhere. The <a href="world-clock.html">active development build</a> remains available alongside the
-        independent renditions. Source on
-        <a href="https://github.com/christopherrbrown3/world-clock">GitHub</a>.
-      </p>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <h1 id="hero-title"><span>One brief.</span><span class="last-line">Ten visions.</span></h1>
+          <p class="hero-caption">An ongoing experiment in digital craftsmanship.</p>
+        </div>
+        <div class="project-intro">
+          <h2>The same time.<br>A different eye for detail.</h2>
+          <p>World Clock asks successive AI models to build the same thing: a complete world clock, with 62 watch and clock faces drawn in SVG.</p>
+          <p>Compare how each model interprets proportion, materials, typography, and motion. Every rendition is its own collection, built from the same specification.</p>
+          <a class="directory-link" href="#renditions">Find your perspective <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
+        </div>
+      </section>
+      <div class="project-principles" aria-label="Project principles"><span>One shared specification</span><span>Independent model renditions</span><span>Working clocks, drawn in code</span></div>
+      <section class="archive" id="renditions" aria-labelledby="archive-title">
+        <div class="archive-heading"><h2 id="archive-title">The renditions.</h2><p>One brief, interpreted independently.<br>Open a model’s collection and see what it notices.</p></div>
+        <div class="archive-labels" aria-hidden="true"><span>Model release</span><span>Newest first · 10 renditions</span></div>
+        <ol class="directory" reversed aria-label="Model renditions, newest release first">
+          <li data-release-date="2026-09-05" class="latest"><a class="model-link" href="versions/astra.html"><time datetime="2026-09-05">05 Sep 2026</time><div class="model-title"><h3>Codex Astra</h3><span class="latest-mark">Latest release</span></div><span class="provider">OpenAI</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+          <li data-release-date="2026-09-02"><a class="model-link" href="versions/gemini-3.8-flash.html"><time datetime="2026-09-02">02 Sep 2026</time><div class="model-title"><h3>Gemini 3.8 Flash</h3></div><span class="provider">Google</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+          <li data-release-date="2026-08-02"><a class="model-link" href="versions/fable-5.1.html"><time datetime="2026-08-02">02 Aug 2026</time><div class="model-title"><h3>Claude Fable 5.1</h3></div><span class="provider">Anthropic</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+          <li data-release-date="2026-07-24"><a class="model-link" href="versions/claude-opus-5.html"><time datetime="2026-07-24">24 Jul 2026</time><div class="model-title"><h3>Claude Opus 5</h3></div><span class="provider">Anthropic</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+          <li data-release-date="2026-07-09"><a class="model-link" href="versions/codex-5.6-sol.html"><time datetime="2026-07-09">09 Jul 2026</time><div class="model-title"><h3>Codex 5.6 Sol</h3></div><span class="provider">OpenAI</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+          <li data-release-date="2026-07-09"><a class="model-link" href="versions/codex-5.6.html"><time datetime="2026-07-09">09 Jul 2026</time><div class="model-title"><h3>Codex 5.6 Terra</h3></div><span class="provider">OpenAI</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+          <li data-release-date="2026-07-08"><a class="model-link" href="versions/grok-4.5.html"><time datetime="2026-07-08">08 Jul 2026</time><div class="model-title"><h3>Grok 4.5</h3></div><span class="provider">xAI</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+          <li data-release-date="2026-06-09"><a class="model-link" href="versions/fable-5.html"><time datetime="2026-06-09">09 Jun 2026</time><div class="model-title"><h3>Claude Fable 5</h3></div><span class="provider">Anthropic</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+          <li data-release-date="2026-05-28"><a class="model-link" href="versions/claude-opus-4.8.html"><time datetime="2026-05-28">28 May 2026</time><div class="model-title"><h3>Claude Opus 4.8</h3></div><span class="provider">Anthropic</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li>
+          <li data-release-date="2026-04-23"><a class="model-link" href="versions/codex-5.5.html"><time datetime="2026-04-23">23 Apr 2026</time><div class="model-title"><h3>Codex 5.5</h3></div><span class="provider">OpenAI</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></li></ol>
+      </section>
+      <section class="closing" aria-labelledby="closing-title">
+        <h2 id="closing-title">Made of code.<br>Made to keep time.</h2>
+        <div class="closing-copy"><p>The brief is simple: turn real timepieces into working world clocks. Each rendition is a standalone HTML page. Save a collection, open it offline, and keep the world close.</p><div class="closing-links"><a href="world-clock.html">Active development build <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a><a href="https://github.com/christopherrbrown3/world-clock">Explore the source <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div></div>
+      </section>
     </main>
-
-    <script>
-      // Every dial runs live: a directory of working clocks, not frozen exhibits.
-      function drawDial(svg) {
-        svg.innerHTML = `
-          <circle cx="50" cy="50" r="47" fill="#11141d" stroke="#3a4152" stroke-width="1.6"/>
-          <circle cx="50" cy="50" r="43.5" fill="none" stroke="rgba(227,182,97,0.35)" stroke-width="0.6"/>
-          ${Array.from({ length: 12 }, (_, i) => {
-            const a = i * Math.PI / 6;
-            const x1 = 50 + Math.sin(a) * 40, y1 = 50 - Math.cos(a) * 40;
-            const x2 = 50 + Math.sin(a) * (i % 3 === 0 ? 34 : 36.5), y2 = 50 - Math.cos(a) * (i % 3 === 0 ? 34 : 36.5);
-            return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i % 3 === 0 ? "#e3b661" : "#6b7280"}" stroke-width="${i % 3 === 0 ? 2 : 1}" stroke-linecap="round"/>`;
-          }).join("")}
-          <line class="h-hr"  x1="50" y1="54" x2="50" y2="28" stroke="#f4f1ea" stroke-width="3" stroke-linecap="round"/>
-          <line class="h-min" x1="50" y1="56" x2="50" y2="17" stroke="#f4f1ea" stroke-width="2" stroke-linecap="round"/>
-          <line class="h-sec" x1="50" y1="58" x2="50" y2="14" stroke="#e3b661" stroke-width="1" stroke-linecap="round"/>
-          <circle cx="50" cy="50" r="2.4" fill="#e3b661"/>`;
-      }
-
-      const dials = document.querySelectorAll(".dial");
-      dials.forEach(drawDial);
-
-      const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      function setHands(svg, h, m, s) {
-        const rot = (cls, deg) => svg.querySelector(cls).setAttribute("transform", `rotate(${deg} 50 50)`);
-        rot(".h-hr", ((h % 12) + m / 60) * 30);
-        rot(".h-min", (m + s / 60) * 6);
-        rot(".h-sec", s * 6);
-      }
-      const tick = () => {
+    <footer class="footer"><span>World Clock · An ongoing study in time.</span><a href="#hero-title">Index designed &amp; built by Astra</a></footer>
+  </div>
+  <script>
+    (() => {
+      'use strict';
+      const display = document.getElementById('header-time');
+      const formatter = new Intl.DateTimeFormat('en-GB', {hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'});
+      const update = () => {
         const now = new Date();
-        const s = now.getSeconds() + (reduced ? 0 : now.getMilliseconds() / 1000);
-        dials.forEach((d) => setHands(d, now.getHours(), now.getMinutes(), s));
+        display.textContent = formatter.format(now);
+        display.dateTime = now.toISOString();
       };
-      tick();
-      if (reduced) setInterval(tick, 1000);
-      else (function loop() { tick(); requestAnimationFrame(loop); })();
-    </script>
-  </body>
+      let timer;
+      const start = () => { update(); timer = setInterval(update, 1000); };
+      document.addEventListener('visibilitychange', () => { clearInterval(timer); if (!document.hidden) start(); });
+      start();
+    })();
+  </script>
+</body>
 </html>
