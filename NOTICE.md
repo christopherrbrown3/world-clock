@@ -8,4 +8,4 @@ The MIT license applies to this repository's original source code and documentat
 
 ## Bundled fonts
 
-The index uses Bodoni Moda and Manrope under the SIL Open Font License 1.1. Their original copyright notices, licenses, and download provenance are preserved in [assets/fonts/](assets/fonts/README.md). These third-party fonts are not relicensed under the MIT License.
+The index uses Manrope under the SIL Open Font License 1.1. Its original copyright notice, license, and download provenance are preserved in [assets/fonts/](assets/fonts/README.md). This third-party font is not relicensed under the MIT License.
