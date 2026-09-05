@@ -90,7 +90,7 @@ standalone page and frozen once that model's cycle ends, so results can be compa
 | Version | Page | Snapshot | State |
 |---|---|---|---|
 | Active build | [world-clock.html](world-clock.html) | — | In development |
-| Codex Astra | [versions/astra.html](versions/astra.html) | 2026-09-04 | Current checkpoint |
+| Codex Astra | [versions/astra.html](versions/astra.html) | 2026-09-05 | Current checkpoint |
 | Grok 4.5 | [versions/grok-4.5.html](versions/grok-4.5.html) | 2026-09-03 | Current checkpoint |
 | Gemini 3.8 Flash | [versions/gemini-3.8-flash.html](versions/gemini-3.8-flash.html) | 2026-09-03 | Frozen |
 | Claude Fable 5.1 | [versions/fable-5.1.html](versions/fable-5.1.html) | 2026-09-02 | Frozen |

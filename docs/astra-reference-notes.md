@@ -22,7 +22,7 @@ The drawings approximate reflected light, brushing, engraving and dial textures 
 Primary product sources: [Swatch](https://www.swatch.com/en-gb/once-again-gb743-s26/GB743-S26.html), [Braun](https://braun-clocks.com/products/gents-bn0021-classic-watch-white-dial-and-black-leather-strap), [Mondaine](https://mondaine.com/products/stop2go-watch-stainless-steel-4101b-sj-2se), [Hamilton Mechanical](https://www.hamiltonwatch.com/en-us/h69439931-khaki-field-mechanical.html), [Hamilton King](https://www.hamiltonwatch.com/en-us/h64455533-khaki-field-kingauto.html), [Casio](https://www.casio.com/us/watches/casio/product.MQ-24-7B2LL/p/), [Timex](https://timex.com/products/easy-reader-day-date-35mm-leather-strap-watch-t20041).
 
 
-# Astra sport and chronograph reference notes
+## Sport and chronograph references
 
 All 18 renderers were authored independently for Astra using the new shared SVG toolkit. No existing model implementation page was read or copied. The renderers contain vector geometry and dial lettering; the supplied photographs are reference material only.
 
@@ -64,7 +64,7 @@ Sapphire reflections, brushed metal, leather, sunray surfaces and gem facets are
 - An isolated Chromium gallery rendered all 18 with no runtime errors and no duplicate SVG IDs.
 - A full gallery capture was visually inspected at 10:10 with seconds and GMT hands away from twelve.
 - Main and register hands use explicit pivots; all date apertures have unique clip paths.
-- Parent integration owns live time, timezone/date boundary checks, chronograph controls and full interaction/mobile QA.
+- The assembled application is checked for live time, timezone and date boundaries, chronograph controls, interactions, and mobile layout.
 
 ## Binding details
 
@@ -92,7 +92,7 @@ All seventeen drawings were authored as SVG geometry for Astra. No other model�
 | `freak` | Local black Freak X front image with Carb case material interpreted from catalog: textured dark case, raised indices, rotating skeleton minute carousel, balance wheel, open bridge and separate short hour pointer. | Decorative gears do not simulate an escapement; the full carousel rotates once per hour. |
 | `railroad` | Auction photograph of a Norfolk Southern gold hunter pocket watch: black logo dial, speed lines and thoroughbred mark, gold case, opening cover and pendant bow. | The local folder was empty. Auction photo identifies the Norfolk Southern design, but the exact 1994 variant was not independently verified. |
 | `grandcentral` | Local 1913 information-booth clock photographs: warm opal dial, partial neighboring dials, cast brass globe, acorn finial, beaded collar and fluted pedestal. | Side-dial geometry is a perspective interpretation. Main opal face shows live time. |
-| `mickey` | Local 1933-style Ingersoll front close-up: aged enamel, wire lugs, black leather, red shorts, yellow gloves/shoes and three-Mickey seconds disc. The character’s arms are the live hour/minute hands. | Character details are custom vector paths at watch scale. The small seconds disc rotates; no copyrighted raster is embedded. |
+| `mickey` | Local 1933-style Ingersoll front close-up: aged enamel, wire lugs, black leather, red shorts, yellow gloves/shoes and three-Mickey seconds disc. The character’s arms are the live hour/minute hands. | Character details are custom vector paths at watch scale. The small seconds disc rotates; no raster image is embedded. |
 | `bigtic` | JR-7845 resale photograph: broad steel bracelet and case, domed dark blue dial, large pale digital seconds beneath two plain analog hands. | Local reference folder was empty. Large seconds are browser-rendered numerals; animation is one numerical change per second. |
 
 External reference pages used where local images were absent:
@@ -110,3 +110,60 @@ Verification: JavaScript syntax checked; all 17 render functions executed withou
 
 Integration: Digital roots use `data-lcd="hms"`, six `data-digit-index` groups and `data-segment="a"` through `g`. DW-5600 additionally uses `data-field="monthdate"` (M-DD). Mechanical hands specify their own `data-pivot`; `pendulum`, `solar` and `lunar` are explicit animation hooks.
 
+
+## Astra dress, integrated, and shaped watch studies
+
+All 19 renderers in `dress.js` are new SVG drawings. No other model's HTML, renderer, or page code was read or reused. The repository catalog supplied the face keys, full names, and cadences. Shared low-level primitives are private to this new module, and every paint/clip ID is prefixed with the draw instance ID plus `-dr-`.
+
+### Reference decisions
+
+| Face | Visual reference and specific treatment |
+| --- | --- |
+| Nautilus | Local Nautilus photos supplied porthole/ear geometry and the integrated bracelet. Those photos show Tiffany 5711 variants; the drawing instead follows the catalog's [5811/1G-001](https://www.patek.com/en/collection/nautilus/5811-1g-001): blue embossed dial with a dark rim, white-metal case, framed date, luminous rounded baton hands. |
+| Royal Oak | Local blue three-hand Royal Oak and black-dial case closeups supplied octagonal bezel, eight screws, Grande Tapisserie relief, paired 12 marker, and articulated bracelet geometry. The catalog reference is the blue 15510ST.OO.1320ST.06. |
+| Calatrava | [Official 5227G-015](https://www.patek.com/en/collection/calatrava/5227g-015): rose-gilt opaline dial, charcoal obus indices and dauphine hands, white-gold case, chocolate alligator strap. No matching local image folder was available. |
+| Tank | [Official WGTA0342](https://www.cartier.com/en-ca/watches/collections/tank/tank-louis-cartier-watch-CRWGTA0342.html): small yellow-gold quartz Tank Louis, silver dial, gold brancards, sapphire cabochon, blued sword hands; correctly has no seconds hand. Case aspect is based on 29.5 × 22 mm. |
+| Reverso | The catalog does not identify a reference. The drawing selects a silver Classic Small Seconds interpretation, informed by the [official Q3858524 description](https://www.jaeger-lecoultre.com/us-en/watches/reverso/reverso-classic/reverso-classic-monoface-small-seconds-q3858524): rectangular case, triple gadroons, Arabic numerals, central guilloché, blue hands, rectangular small-seconds track, brown strap. |
+| Lange 1 | The catalog leaves the reference unspecified. The selected interpretation is [pink-gold 191.032](https://www.alange-soehne.com/sg-en/timepieces/lange-1/lange-1/lange-1-in-750-pink-gold-191-032), with offset hour/minute dial, separate running seconds, twin-window date, and AUF/AB reserve sector. |
+| Portugieser | The catalog leaves the reference unspecified. The selected interpretation is [IW371605](https://www.iwc.com/eu-en/watches/portugieser/iw371605-portugieser-chronograph): silver dial, blue applied Arabic numerals/leaf hands, vertical recessed chronograph registers, blue leather. |
+| Snowflake | Local `SBGA211_dial.jpg`, `SBGA211.png.webp`, and macro photos: pale textured dial, faceted markers, blue sweep seconds, date at 3, reserve sector at approximately 8, titanium-colored case/bracelet. The Snowflake texture is drawn and intentionally subdued. |
+| Monaco | [Official CAW211P.FC6356](https://www.tagheuer.com/us/en/timepieces/collections/tag-heuer-monaco/39-mm-calibre-11-automatic/CAW211P.FC6356.html): square blue dial, left crown, right chronograph pushers, white square registers, red chronograph hand, horizontal indices, perforated black leather. |
+| Luminor | [Official PAM03312](https://www.panerai.com/en/collections/watch-collection/luminor/pam03312-luminor-marina.html): cushion case and crown bridge, black sandwich-style dial, only LUMINOR MARINA dial signature, silver small seconds at 9, enlarged black date at 3, black leather. |
+| Villeret | The catalog leaves the reference unspecified. A traditional rose-gold/white complete-calendar interpretation follows Blancpain's [documented collection](https://www.blancpain.com/sites/default/files/documents/2020-05/Villeret%20Quantie%CC%80me%20Complet_6264_EN.pdf): stepped bezel, Roman indices, day/month windows, serpentine blue date pointer, moon aperture. |
+| Overseas | Local Overseas photos supplied bracelet and bezel details. [Official 4520V/210A-B128](https://www.vacheron-constantin.com/ae/en/collections/overseas/4520v-210a-b128.html) confirms the blue sunburst dial, Maltese-cross-shaped bezel/bracelet motifs, applied luminous indices and date at 3. |
+| PRX | [Official T137.407.11.041.00](https://www.tissotwatches.com/en-sg/T1374071104100.html): blue waffle dial, broad integrated bracelet, brushed tonneau body, round polished bezel, white date. |
+| Marine Torpilleur | Local Marine Chronometer/Torpilleur photos supplied dial layout; [official 1182-310/42](https://www.ulysse-nardin.com/en-eu/watches/marine/1182-310-42) supplied catalog-specific rose gold/leather configuration. Fluted bezel, Roman dial, 12-o'clock reserve, 6-o'clock seconds/date, blue leaf hands. |
+| Patek perpetual chronograph | Local Patek complication photographs supplied general register and case detail; the catalog's [official 5270J-001](https://www.patek.com/en/collection/grand-complications/5270j-001) specifies yellow gold, opaline dial, applied gold batons, day/month at 12, lateral chronograph registers, date and moon at 6, auxiliary round calendar apertures. |
+| Santos | Local modern Santos images: rounded square steel case, eight bezel screws, screwed bracelet links, silver Roman dial, blued hands, sapphire crown and large-model date at 6. |
+| Big Pilot | Exact local `iw329301-iwc-schaffhausen-big-pilot's-watch-43-iwc0143026.png.webp`: black dial, no date or reserve subdial, luminous numeral/triangle/railway minute track, large conical crown, riveted brown calfskin. |
+| Radiomir | [Official PAM00754 description](https://www.panerai.com.mx/radiomir-black-seal-logo-45mm-caja-acero-caratula-negra/p): polished cushion case, wire lugs, black dial, small seconds at 9, luminous numerals/markers, logo and black calfskin. |
+| NOMOS Metro | Local `1101_metro_d_g-2d-front-masked.jpg` and closeups: narrow wire lugs, pale dial, mint quarter-hour dots, mint/red reserve aperture, eccentric dial signature, fine black hands, red small seconds, tall date at 6. |
+
+### Runtime integration
+
+The module calls `Object.assign(FACES, ...)` and requires only the parent `FACES` object. It does not depend on `Q` or `commonDefs`; its own material and construction primitives are enclosed in an IIFE. All renderers return SVG inner markup for a 400 × 440 viewBox.
+
+Moving elements use `data-hand` and `data-pivot="x y"`:
+
+- `hour`, `minute`: all 19 faces. Honor their pivots; Lange is `(160, 211)` and Luminor is `(196, 220)`.
+- `second`: 18 faces. Running seconds are in a subdial on Reverso `(200,287)`, Lange `(249,290)`, Portugieser `(200,286)`, Monaco `(139,230)`, Luminor `(116,220)`, Marine `(200,286)`, Patek `(132,221)`, Radiomir `(118,220)`, and Metro `(200,272)`.
+- `chrono`: centered chronograph seconds on Portugieser, Monaco, Patek. These can remain at zero until the app's chronograph is running.
+- `subminute`: elapsed 30-minute registers on Portugieser `(200,155)`, Monaco `(261,230)`, Patek `(268,221)`. Use a 30-minute revolution, not a 60-minute clock revolution.
+- `datepointer`: Villeret `(200,220)` and Patek `(200,285)`. Both carry `data-offset="11.612903225806452"` (360/31), to add to the parent engine's `(dayOfMonth - 1) * 360 / 31`; the printed 31 aligns to 12 o'clock and 1 is one step clockwise.
+
+- `moonphase`: clipped moving twin-moon discs on Villeret `(200,305)` and Patek `(200,303)`. Apply `moonAge / 29.53059 * 180`: angle 0/180 is new moon, 90 is full moon. Villeret has its characteristic moon face; Patek uses a smooth moon.
+- `power`: four indicators with upward base geometry, `data-full-angle` / `data-empty-angle` / `data-reserve-hours`. Interpolate `fullAngle + (1 - fractionRemaining) * (emptyAngle - fullAngle)`. Lange `(286,243)` uses 55→125°, 72 h; Snowflake `(176,262)` uses 215→280°, 72 h; Marine `(200,155)` uses -120→120°, 60 h; NOMOS `(217,174)` rotates the reserve aperture sector 0→270°, 42 h. The NOMOS rotating sector is an illustrative visual, not an exact reconstruction of its proprietary reserve mechanism. Nominal reserve figures follow the official [Metro 1101](https://nomos-glashuette.com/en/metro/metro-date-power-reserve-1101), [SBGA211](https://www.grand-seiko.com/us-en/collections/sbga211g), Lange and Marine sources.
+
+Text fields are `date`, `day`, `month`, `datetens`, `dateones`. `day` and `month` expect short uppercase labels, e.g. FRI and SEP. Lange expects one character per `datetens`/`dateones` slot, normally using a blank or zero for the leading digit as desired. Date windows are clipped with instance-specific IDs. The Tank has only hours/minutes and cadence `tick`; Snowflake cadence is `glide`; other entries are `sweep` per the catalog.
+
+### Limits and verification
+
+These are vector interpretations, with shared metal/strap rendering primitives and individually constructed cases/dials. They are not photographs, replicas for manufacture, or measured CAD drawings. Dial lettering uses browser fonts; engravings, surface reflections, and textures are approximations. Moonphase is an animated mechanical-style display driven by the application's lunar-age calculation. Power-reserve indications are a browser-session simulation driven by the application's Wind control, not actual stored mechanical energy. The Patek auxiliary apertures show a day/night approximation and the selected calendar year's position in the leap-year cycle.
+
+All 19 SVGs were generated, parsed as XML, checked for duplicate IDs/undefined/NaN values, and rendered in a contact sheet for visual inspection. Corrections after inspection included a softer Snowflake texture, proper wide Big Pilot hour markers, rounded Nautilus case transitions, rectangular Cartier radial numerals, adjusted Tank/Reverso case proportions, extended baton-hand lume, and clipped date apertures. Final closeup QA also checked moving lunar discs, power pointers, correct 10/20/30 register labels, the Marine round date aperture, and softened brushed-metal bracelet reflections. `node --check dress.js` passes.
+
+## Application validation
+
+The final standalone page passed repository validation and a Chromium interaction check: all 62 SVGs render with unique IDs, resolved gradients and clips, finite geometry, and no runtime errors. City addition/removal, persistent settings, individual/all shuffle, collection search, detail focus, chronograph start/stop/reset and offline file access were exercised. All faces were updated at 10:10, 12:00, 03:15, 06:30 and 23:59, including single-digit, month-end and year-end dates. Phone controls meet the 44-pixel target and the layout has no horizontal overflow.
+
+Rendered previews: [desktop](assets/astra-desktop.png), [phone](assets/astra-mobile.png).
