@@ -4,6 +4,8 @@ Use this index to find the right project guide.
 
 ## Project Guides
 
+- [Model Release Dates](model-release-dates.md): verified vendor launch dates, source links, and rollout distinctions.
+
 - [Astra Reference Notes](astra-reference-notes.md): sources, intentional approximations, renderer bindings, and validation for the Astra rendition.
 - [Index Font Assets](../assets/fonts/README.md): bundled Manrope font, OFL license, and provenance.
 - [Watch Face Catalog](watch-face-catalog.md): the validated list of active watch and clock faces.

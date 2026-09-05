@@ -4,6 +4,8 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Verified all ten model release dates against vendor sources. Corrected Astra to September 3 and Fable 5.1 to September 1, 2026; documented rollout distinctions and Grok’s differing API/blog dates. Snapshot dates and model pages are unchanged.
+
 - Replaced the spacious editorial index with a compact dark project directory, clearer model links, provider filters, and responsive layouts. Preserved model release ordering and all model pages; removed the unused display font and refreshed index screenshots.
 
 - Rebuilt the index as a project introduction and release-ordered directory of ten model renditions, with responsive editorial typography and locally hosted OFL fonts. It contains no specific watch previews; model pages are unchanged by the index redesign.
