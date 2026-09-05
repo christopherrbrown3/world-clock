@@ -14,7 +14,7 @@
 
 </div>
 
-![The project index introduces World Clock and lists model renditions by release date](docs/assets/index-desktop.png)
+![The project index introduces World Clock and lists model renditions by release date](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/index-desktop.png)
 
 ## The experiment
 
@@ -49,9 +49,9 @@ The shared brief covers city search, adding and removing cities, individual and 
 
 Astra implements all 62 faces with its own SVG toolkit and time engine, 176 selectable cities, saved city settings, a searchable collection, enlarged inspection, and chronograph controls.
 
-![Astra’s independently drawn collection of working timepieces](docs/assets/astra-desktop.png)
+![Astra’s independently drawn collection of working timepieces](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/astra-desktop.png)
 
-[See Astra at phone width](docs/assets/astra-mobile.png) · [Browse the 62-object catalog](docs/watch-face-catalog.md) · [Read Astra’s reference and approximation notes](docs/astra-reference-notes.md)
+[See Astra at phone width](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/astra-mobile.png) · [Browse the 62-object catalog](docs/watch-face-catalog.md) · [Read Astra’s reference and approximation notes](docs/astra-reference-notes.md)
 
 Time comes from the browser clock and its `Intl` time-zone data, including daylight-saving rules available in that browser. Moon phases, power reserve, and other mechanical or astronomical displays can be simulations; a rendition’s notes explain its approximations. Keeping the browser and operating system current helps keep time-zone rules current.
 
