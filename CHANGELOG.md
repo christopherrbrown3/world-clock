@@ -4,6 +4,7 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added the Muse Spark 1.3 standalone checkpoint, authored from scratch against the project specification with its own interface, time engine, SVG drawing kit, and all 62 watch and clock faces. Added it to the snapshot manifest, the index directory (including a Meta provider filter), the README model table, and the release-date verification notes.
 - Verified all ten model release dates against vendor sources. Corrected Astra to September 3 and Fable 5.1 to September 1, 2026; documented rollout distinctions and Grok’s differing API/blog dates. Snapshot dates and model pages are unchanged.
 
 - Replaced the spacious editorial index with a compact dark project directory, clearer model links, provider filters, and responsive layouts. Preserved model release ordering and all model pages; removed the unused display font and refreshed index screenshots.

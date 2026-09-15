@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "muse-spark-1.3",
+      "label": "Muse Spark 1.3",
+      "file": "versions/muse-spark-1.3.html",
+      "snapshotDate": "2026-09-14",
+      "notes": "Muse Spark 1.3 checkpoint, authored from scratch against the project specification with its own interface, time engine, SVG drawing kit, and all 62 watch and clock faces."
+    },
+    {
       "id": "astra",
       "label": "Codex Astra",
       "file": "versions/astra.html",
