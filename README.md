@@ -20,7 +20,7 @@
 
 Give different AI models the same specification: build a complete world clock with 62 recognizable timepieces. Compare what each model notices—case proportions, dial textures, typography, hand geometry, and motion—and how it turns those details into code.
 
-The [project index](index.html) puts the model directory beside a compact introduction. Filter by provider or browse all ten models in release order, then open a collection. It contains no specific watch previews. Each rendition has its own interface and implementation, preserved for comparison. Earlier work includes both inherited and independently authored implementations; the [versioning guide](docs/model-versioning.md) explains the two paths.
+The [project index](index.html) puts the model directory beside a compact introduction. Filter by provider or browse all eleven models in release order, then open a collection. It contains no specific watch previews. Each rendition has its own interface and implementation, preserved for comparison. Earlier work includes both inherited and independently authored implementations; the [versioning guide](docs/model-versioning.md) explains the two paths.
 
 The faces themselves are client-side SVG, built against reference photographs rather than embedded watch images. Documentation screenshots show the rendered results. Detail, behavior, and fidelity vary between renditions; these differences are part of the experiment.
 
@@ -32,6 +32,7 @@ Listed in the same newest-release-first order as the index. **Model release** li
 | --- | --- | --- |
 | [Codex Astra](versions/astra.html) | [2026-09-03](https://openai.com/index/safety-overview-gpt-6-astra/) | 2026-09-05 |
 | [Gemini 3.8 Flash](versions/gemini-3.8-flash.html) | [2026-09-02](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) | 2026-09-03 |
+| [Muse Spark 1.3](versions/muse-spark-1.3.html) | [2026-09-02](https://en.wikipedia.org/wiki/Muse_Spark) | 2026-09-14 |
 | [Claude Fable 5.1](versions/fable-5.1.html) | [2026-09-01](https://support.claude.com/en/articles/12138966-release-notes) | 2026-09-02 |
 | [Claude Opus 5](versions/claude-opus-5.html) | [2026-07-24](https://www.anthropic.com/news/claude-opus-5) | 2026-07-28 |
 | [Codex 5.6 Sol](versions/codex-5.6-sol.html) | [2026-07-09](https://openai.com/index/gpt-5-6/) | 2026-07-28 |
