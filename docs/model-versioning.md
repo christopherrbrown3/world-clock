@@ -16,6 +16,7 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 ## Current Model Pages
 
 - `versions/gpt-6-sol.html`: current GPT 6 Sol checkpoint, authored independently from the catalog and reference material with all 62 faces.
+- `versions/muse-spark-1.3.html`: Muse Spark 1.3 checkpoint, authored from scratch with its own interface, time engine and all 62 faces.
 - `versions/astra.html`: Codex Astra checkpoint, authored from scratch with its own interface, time engine and all 62 faces.
 - `versions/grok-4.5.html`: finalized Grok 4.5 checkpoint, authored from scratch against this specification.
 - `versions/gemini-3.8-flash.html`: finalized Gemini 3.8 Flash checkpoint, authored from scratch against this specification.

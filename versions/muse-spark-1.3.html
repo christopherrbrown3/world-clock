@@ -1,0 +1,2758 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Clock · Muse Spark 1.3</title>
+<meta name="description" content="Sixty-two watch and clock faces rendered as live SVG world clocks. A from-scratch entry by Muse.">
+<style>
+  :root{
+    --bg:#0e0f13; --panel:#17181e; --panel2:#1e2028; --line:#2a2d36;
+    --ink:#ece9e2; --muted:#a7a49b; --gold:#c9a227; --gold-dim:#8a6f1c;
+    --accent:#7fb0ff; --danger:#ff7a7a; --radius:14px;
+    --tap:44px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:Manrope, "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    line-height:1.45;
+  }
+  a{color:var(--accent)}
+  .wrap{max-width:1280px; margin:0 auto; padding:0 18px}
+  header.top{
+    position:sticky; top:0; z-index:20;
+    background:rgba(14,15,19,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .top-inner{display:flex; align-items:center; gap:14px; padding:12px 18px; max-width:1280px; margin:0 auto; flex-wrap:wrap}
+  .brand{display:flex; align-items:center; gap:12px; margin-right:auto}
+  .brand-mark{width:38px; height:38px; border-radius:50%; border:2px solid var(--gold);
+    display:grid; place-items:center; font-size:20px; color:var(--gold); flex:none}
+  .brand h1{font-size:1.15rem; margin:0; letter-spacing:.02em}
+  .brand p{margin:0; font-size:.78rem; color:var(--muted)}
+  .controls{display:flex; gap:10px; flex-wrap:wrap}
+  button{
+    font:inherit; color:var(--ink); background:var(--panel2);
+    border:1px solid var(--line); border-radius:10px;
+    min-height:var(--tap); padding:0 16px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:8px; justify-content:center;
+  }
+  button:hover{border-color:var(--gold-dim)}
+  button:focus-visible, input:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
+  button.primary{background:var(--gold); border-color:var(--gold); color:#141414; font-weight:700}
+  button.primary:hover{background:#d8b63a}
+  button.ghost{background:transparent}
+  main{padding:26px 0 60px}
+  .lede{color:var(--muted); max-width:70ch; margin:0 0 6px}
+  .stats{display:flex; gap:18px; flex-wrap:wrap; color:var(--muted); font-size:.85rem; margin:10px 0 22px}
+  .stats b{color:var(--ink)}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px; display:flex; flex-direction:column; gap:10px; min-width:0;
+  }
+  .face{width:100%; aspect-ratio:1/1; display:block; border-radius:10px; background:radial-gradient(circle at 50% 38%, #23252e, #14151a 72%)}
+  .face svg{width:100%; height:100%; display:block}
+  .meta{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap}
+  .meta h2{font-size:1.05rem; margin:0; letter-spacing:.01em}
+  .meta .cc{color:var(--muted); font-size:.8rem}
+  .offset{margin-left:auto; font-size:.78rem; color:var(--gold); font-variant-numeric:tabular-nums; white-space:nowrap}
+  .readout{font-variant-numeric:tabular-nums; font-size:.92rem; color:var(--ink); background:#101116;
+    border:1px solid var(--line); border-radius:8px; padding:8px 10px; display:flex; justify-content:space-between; gap:8px}
+  .readout .d{color:var(--muted)}
+  .fname{font-size:.78rem; color:var(--muted)}
+  .fname b{color:var(--ink); font-weight:600}
+  .actions{display:flex; gap:10px}
+  .actions button{flex:1}
+  .iconbtn{flex:0 0 var(--tap); width:var(--tap); padding:0; font-size:1.15rem}
+  footer{border-top:1px solid var(--line); padding:26px 0 60px; color:var(--muted); font-size:.85rem}
+  footer p{max-width:78ch}
+  /* modal */
+  .overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; z-index:40; padding:18px}
+  .overlay.open{display:flex; align-items:flex-start; justify-content:center}
+  .dialog{background:var(--panel); border:1px solid var(--line); border-radius:16px; width:min(560px,100%);
+    margin-top:8vh; max-height:76vh; display:flex; flex-direction:column; overflow:hidden}
+  .dialog header{padding:16px 18px 8px}
+  .dialog h2{margin:0 0 8px; font-size:1.1rem}
+  .dialog .searchrow{padding:0 18px 12px}
+  .dialog input{
+    width:100%; min-height:var(--tap); font:inherit; color:var(--ink);
+    background:#101116; border:1px solid var(--line); border-radius:10px; padding:0 14px;
+  }
+  .results{overflow:auto; padding:0 10px 14px; margin:0; list-style:none}
+  .results li{margin:2px 0}
+  .results button{width:100%; justify-content:space-between; background:transparent; border-color:transparent; text-align:left}
+  .results button:hover{background:var(--panel2); border-color:var(--line)}
+  .results .lt{color:var(--muted); font-size:.82rem; font-variant-numeric:tabular-nums}
+  .dialog .close-row{padding:0 18px 16px}
+  .empty{color:var(--muted); text-align:center; padding:40px 10px; border:1px dashed var(--line); border-radius:var(--radius)}
+  @media (max-width:560px){
+    .top-inner{padding:10px 12px}
+    .brand p{display:none}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important; transition:none !important}
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">◷</div>
+      <div>
+        <h1>World Clock · Muse Spark 1.3</h1>
+        <p>62 faces · live SVG · from-scratch entry</p>
+      </div>
+    </div>
+    <div class="controls" role="toolbar" aria-label="Clock controls">
+      <button id="addCity" class="primary" type="button">＋ Add city</button>
+      <button id="shuffleAll" type="button" title="Assign new faces to every city">⟳ Shuffle all faces</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <p class="lede">Every face below is drawn in code as inline SVG — no images — and keeps live time for its
+    city using your browser's clock and time-zone data. Add cities, shuffle faces, and watch the
+    collection re-sort itself west to east.</p>
+    <div class="stats" aria-live="polite">
+      <span><b id="statCities">0</b> cities</span>
+      <span><b>62</b> faces in the pool</span>
+      <span>Sorted by UTC offset, west → east</span>
+    </div>
+    <div id="grid" class="grid" aria-label="City clocks"></div>
+    <div id="emptyState" class="empty" hidden>
+      <p>No cities yet. Add one to start the collection.</p>
+      <button id="addCity2" class="primary" type="button">＋ Add city</button>
+    </div>
+  </div>
+</main>
+
+<div class="overlay" id="overlay">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
+    <header><h2 id="dlgTitle">Add a city</h2></header>
+    <div class="searchrow">
+      <label for="citySearch" class="fname" style="display:block;margin-bottom:6px">Search cities</label>
+      <input id="citySearch" type="search" placeholder="Type a city name…" autocomplete="off"
+             role="combobox" aria-expanded="true" aria-controls="cityResults" aria-autocomplete="list">
+    </div>
+    <ul class="results" id="cityResults" role="listbox" aria-label="Matching cities"></ul>
+    <div class="close-row"><button id="dlgClose" type="button" class="ghost" style="width:100%">Close</button></div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p><b style="color:var(--ink)">About this entry.</b> Authored from scratch by Muse Spark 1.3 for the World Clock
+    benchmark. Every dial, hand, bezel, and complication is original SVG drawn against the public
+    62-face catalog — no code, geometry, or styling was reused from any other model's page.
+    Faces are interpretive approximations of the real objects; moonphase, power-reserve, and some
+    mechanical displays are simulations. Time comes from your browser clock and its
+    <code>Intl</code> time-zone data, including daylight-saving rules. Brand and product names
+    identify the objects depicted and imply no affiliation.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+/* ============================================================
+   World Clock · Muse — from-scratch entry
+   Single-file client-side app. All faces inline SVG, no images.
+   ============================================================ */
+
+const FACE_COUNT = 62;
+const STORE_KEY = "muse-worldclock-v1";
+const REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------------- City directory ----------------
+   [name, country/region, IANA time zone] */
+const CITIES = [
+["Pago Pago","American Samoa","Pacific/Pago_Pago"],
+["Honolulu","United States","Pacific/Honolulu"],
+["Papeete","French Polynesia","Pacific/Tahiti"],
+["Anchorage","United States","America/Anchorage"],
+["Midway","US Minor Outlying Islands","Pacific/Midway"],
+["Los Angeles","United States","America/Los_Angeles"],
+["Vancouver","Canada","America/Vancouver"],
+["San Francisco","United States","America/Los_Angeles"],
+["Tijuana","Mexico","America/Tijuana"],
+["Denver","United States","America/Denver"],
+["Phoenix","United States","America/Phoenix"],
+["Mexico City","Mexico","America/Mexico_City"],
+["Chicago","United States","America/Chicago"],
+["Guatemala City","Guatemala","America/Guatemala"],
+["San José","Costa Rica","America/Costa_Rica"],
+["New York","United States","America/New_York"],
+["Toronto","Canada","America/Toronto"],
+["Havana","Cuba","America/Havana"],
+["Lima","Peru","America/Lima"],
+["Bogotá","Colombia","America/Bogota"],
+["Panama City","Panama","America/Panama"],
+["Kingston","Jamaica","America/Jamaica"],
+["San Juan","Puerto Rico","America/Puerto_Rico"],
+["Santo Domingo","Dominican Republic","America/Santo_Domingo"],
+["Caracas","Venezuela","America/Caracas"],
+["La Paz","Bolivia","America/La_Paz"],
+["Halifax","Canada","America/Halifax"],
+["Santiago","Chile","America/Santiago"],
+["St. John's","Canada","America/St_Johns"],
+["São Paulo","Brazil","America/Sao_Paulo"],
+["Buenos Aires","Argentina","America/Argentina/Buenos_Aires"],
+["Montevideo","Uruguay","America/Montevideo"],
+["Asunción","Paraguay","America/Asuncion"],
+["Georgetown","Guyana","America/Guyana"],
+["Paramaribo","Suriname","America/Paramaribo"],
+["Cayenne","French Guiana","America/Cayenne"],
+["Nuuk","Greenland","America/Nuuk"],
+["Reykjavik","Iceland","Atlantic/Reykjavik"],
+["Dublin","Ireland","Europe/Dublin"],
+["London","United Kingdom","Europe/London"],
+["Lisbon","Portugal","Europe/Lisbon"],
+["Casablanca","Morocco","Africa/Casablanca"],
+["Algiers","Algeria","Africa/Algiers"],
+["Tunis","Tunisia","Africa/Tunis"],
+["Paris","France","Europe/Paris"],
+["Berlin","Germany","Europe/Berlin"],
+["Madrid","Spain","Europe/Madrid"],
+["Rome","Italy","Europe/Rome"],
+["Amsterdam","Netherlands","Europe/Amsterdam"],
+["Brussels","Belgium","Europe/Brussels"],
+["Zurich","Switzerland","Europe/Zurich"],
+["Vienna","Austria","Europe/Vienna"],
+["Prague","Czechia","Europe/Prague"],
+["Warsaw","Poland","Europe/Warsaw"],
+["Stockholm","Sweden","Europe/Stockholm"],
+["Oslo","Norway","Europe/Oslo"],
+["Copenhagen","Denmark","Europe/Copenhagen"],
+["Lagos","Nigeria","Africa/Lagos"],
+["Accra","Ghana","Africa/Accra"],
+["Dakar","Senegal","Africa/Dakar"],
+["Helsinki","Finland","Europe/Helsinki"],
+["Athens","Greece","Europe/Athens"],
+["Istanbul","Türkiye","Europe/Istanbul"],
+["Kyiv","Ukraine","Europe/Kyiv"],
+["Bucharest","Romania","Europe/Bucharest"],
+["Sofia","Bulgaria","Europe/Sofia"],
+["Minsk","Belarus","Europe/Minsk"],
+["Moscow","Russia","Europe/Moscow"],
+["Cairo","Egypt","Africa/Cairo"],
+["Johannesburg","South Africa","Africa/Johannesburg"],
+["Nairobi","Kenya","Africa/Nairobi"],
+["Addis Ababa","Ethiopia","Africa/Addis_Ababa"],
+["Khartoum","Sudan","Africa/Khartoum"],
+["Doha","Qatar","Asia/Qatar"],
+["Riyadh","Saudi Arabia","Asia/Riyadh"],
+["Kuwait City","Kuwait","Asia/Kuwait"],
+["Baghdad","Iraq","Asia/Baghdad"],
+["Dubai","United Arab Emirates","Asia/Dubai"],
+["Muscat","Oman","Asia/Muscat"],
+["Tehran","Iran","Asia/Tehran"],
+["Baku","Azerbaijan","Asia/Baku"],
+["Tbilisi","Georgia","Asia/Tbilisi"],
+["Yerevan","Armenia","Asia/Yerevan"],
+["Karachi","Pakistan","Asia/Karachi"],
+["Tashkent","Uzbekistan","Asia/Tashkent"],
+["Mumbai","India","Asia/Kolkata"],
+["Kolkata","India","Asia/Kolkata"],
+["Colombo","Sri Lanka","Asia/Colombo"],
+["Dhaka","Bangladesh","Asia/Dhaka"],
+["Kathmandu","Nepal","Asia/Kathmandu"],
+["Almaty","Kazakhstan","Asia/Almaty"],
+["Bangkok","Thailand","Asia/Bangkok"],
+["Jakarta","Indonesia","Asia/Jakarta"],
+["Ho Chi Minh City","Vietnam","Asia/Ho_Chi_Minh"],
+["Singapore","Singapore","Asia/Singapore"],
+["Kuala Lumpur","Malaysia","Asia/Kuala_Lumpur"],
+["Manila","Philippines","Asia/Manila"],
+["Hong Kong","China","Asia/Hong_Kong"],
+["Shanghai","China","Asia/Shanghai"],
+["Taipei","Taiwan","Asia/Taipei"],
+["Seoul","South Korea","Asia/Seoul"],
+["Tokyo","Japan","Asia/Tokyo"],
+["Perth","Australia","Australia/Perth"],
+["Adelaide","Australia","Australia/Adelaide"],
+["Brisbane","Australia","Australia/Brisbane"],
+["Sydney","Australia","Australia/Sydney"],
+["Port Moresby","Papua New Guinea","Pacific/Port_Moresby"],
+["Auckland","New Zealand","Pacific/Auckland"],
+["Suva","Fiji","Pacific/Fiji"],
+["Apia","Samoa","Pacific/Apia"],
+["Nuku'alofa","Tonga","Pacific/Tongatapu"],
+["Kiritimati","Kiribati","Pacific/Kiritimati"]
+];
+
+/* ============================================================
+   SVG drawing kit — original geometry helpers for this entry
+   Coordinate system: viewBox 0 0 320 320, dial center (160,160).
+   0° = 12 o'clock, clockwise positive.
+   ============================================================ */
+const CX = 160, CY = 160;
+let __uid = 0;
+const uid = () => "m" + (++__uid);
+const F1 = n => (+n).toFixed(1);
+
+function pol(r, deg, cx, cy){
+  const a = (deg - 90) * Math.PI / 180;
+  return [(cx === undefined ? CX : cx) + r * Math.cos(a),
+          (cy === undefined ? CY : cy) + r * Math.sin(a)];
+}
+function pt(r, deg, cx, cy){ const p = pol(r, deg, cx, cy); return F1(p[0]) + "," + F1(p[1]); }
+
+function txt(x, y, str, o){
+  o = o || {};
+  const size = o.size || 13, fill = o.fill || "#111",
+        anchor = o.anchor || "middle", weight = o.weight || 400;
+  return '<text x="' + x + '" y="' + y + '" text-anchor="' + anchor + '"' +
+    ' font-size="' + size + '" fill="' + fill + '" font-weight="' + weight + '"' +
+    (o.spacing ? ' letter-spacing="' + o.spacing + '"' : "") +
+    (o.italic ? ' font-style="italic"' : "") +
+    (o.font ? ' font-family="' + o.font + '"' : "") +
+    (o.opacity !== undefined ? ' opacity="' + o.opacity + '"' : "") +
+    (o.rotate ? ' transform="rotate(' + o.rotate + " " + x + " " + y + ')"' : "") +
+    '>' + str + "</text>";
+}
+
+/* minute/hour track */
+function ticks(r, o){
+  o = o || {};
+  const n = o.n || 60, major = o.major || 5,
+        inner = o.inner === undefined ? 7 : o.inner,
+        mw = o.mw || 3, lw = o.lw || 1.1,
+        color = o.color || "#151515", mcolor = o.mcolor || color;
+  let s = "";
+  for (let i = 0; i < n; i++){
+    const deg = i * (360 / n), maj = (i % major === 0);
+    const len = maj ? inner + 7 : inner;
+    const p1 = pol(r, deg), p2 = pol(r - len, deg);
+    s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) +
+         '" stroke="' + (maj ? mcolor : color) + '" stroke-width="' + (maj ? mw : lw) + '"/>';
+  }
+  return s;
+}
+
+/* small ticks for subdials */
+function subTicks(cx, cy, r, n, color){
+  n = n || 12; color = color || "#333";
+  let s = "";
+  for (let i = 0; i < n; i++){
+    const deg = i * (360 / n);
+    const p1 = pol(r, deg, cx, cy), p2 = pol(r - r * 0.18, deg, cx, cy);
+    s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) +
+         '" stroke="' + color + '" stroke-width="1"/>';
+  }
+  return s;
+}
+
+const ROMAN = ["XII","I","II","III","IIII","V","VI","VII","VIII","IX","X","XI"];
+
+function numerals(r, kind, o){
+  o = o || {};
+  const size = o.size || 24, color = o.color || "#151515", weight = o.weight || 600;
+  let s = "";
+  const put = (deg, str, sz, upright) => {
+    const p = pol(r, deg);
+    s += '<text x="' + F1(p[0]) + '" y="' + F1(p[1]) + '" text-anchor="middle" dominant-baseline="central"' +
+         ' font-size="' + (sz || size) + '" fill="' + color + '" font-weight="' + weight + '"' +
+         (o.font ? ' font-family="' + o.font + '"' : "") +
+         (upright === false ? "" : ' transform="rotate(' + deg + " " + F1(p[0]) + " " + F1(p[1]) + ')"') +
+         ">" + str + "</text>";
+  };
+  if (kind === "roman"){ ROMAN.forEach((t, i) => put(i * 30, t)); }
+  else if (kind === "arabic12"){ for (let i = 1; i <= 12; i++) put(i * 30, String(i), size, false); }
+  else if (kind === "arabic60"){ for (let i = 5; i <= 60; i += 5) put(i * 6, String(i), size * 0.66, false); }
+  else if (kind === "arabic24"){ for (let i = 1; i <= 24; i++) put(i * 15, String(i), size * 0.55, false); }
+  else if (kind === "explorer"){ put(90, "3", size, false); put(180, "6", size, false); put(270, "9", size, false); }
+  else if (kind === "california"){
+    put(0, "XII"); put(30, "I"); put(60, "II"); put(90, "III");
+    put(120, "4", size, false); put(150, "5", size, false); put(180, "6", size, false);
+    put(210, "7", size, false); put(240, "8", size, false);
+    put(300, "10", size, false); put(330, "11", size, false);
+  }
+  else if (kind === "br03"){
+    const t = ["12","1","2","3","4","5","6","7","8","9","10","11"];
+    t.forEach((x, i) => put(i * 30, x, size, false));
+  }
+  return s;
+}
+
+/* applied hour markers */
+function markersAt(r, kind, o){
+  o = o || {};
+  const c = o.color || "#f2f2f2", w = o.w || 6, len = o.len || 17;
+  let s = "";
+  const bar = deg => {
+    const p1 = pol(r, deg), p2 = pol(r - len, deg);
+    return '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) +
+           '" stroke="' + c + '" stroke-width="' + w + '" stroke-linecap="butt"/>';
+  };
+  const dot = deg => {
+    const p = pol(r - len / 2, deg);
+    return '<circle cx="' + F1(p[0]) + '" cy="' + F1(p[1]) + '" r="' + (w * 0.72) + '" fill="' + c + '"/>';
+  };
+  const tri = deg => {
+    const p = pol(r, deg), a = pol(r - len - 4, deg - 7), b = pol(r - len - 4, deg + 7);
+    return '<polygon points="' + F1(p[0]) + "," + F1(p[1]) + " " + F1(a[0]) + "," + F1(a[1]) +
+           " " + F1(b[0]) + "," + F1(b[1]) + '" fill="' + c + '"/>';
+  };
+  if (kind === "baton"){ for (let i = 0; i < 12; i++) s += bar(i * 30); }
+  else if (kind === "baton12x2"){ for (let i = 0; i < 12; i++) s += (i === 0 ? bar(0).replace('stroke-width="' + w + '"', 'stroke-width="' + (w * 1.9) + '"') : bar(i * 30)); }
+  else if (kind === "circle"){ for (let i = 0; i < 12; i++) s += dot(i * 30); }
+  else if (kind === "pill"){
+    for (let i = 0; i < 12; i++){
+      const deg = i * 30, p = pol(r - len / 2, deg);
+      s += '<rect x="' + F1(p[0] - w / 2) + '" y="' + F1(p[1] - len / 2) + '" width="' + w +
+           '" height="' + len + '" rx="' + (w / 2) + '" fill="' + c +
+           '" transform="rotate(' + deg + " " + F1(p[0]) + " " + F1(p[1]) + ')"/>';
+    }
+  }
+  else if (kind === "diver"){ /* submariner: triangle 12, bars 6/9, dots rest */
+    s += tri(0); s += bar(180); s += bar(270);
+    for (let i = 1; i < 12; i++){ if (i === 6 || i === 9) continue; s += dot(i * 30); }
+  }
+  else if (kind === "explorerMix"){ s += bar(0); for (let i = 1; i < 12; i++){ if (i % 3 === 0) continue; s += bar(i * 30); } }
+  else if (kind === "sword"){ for (let i = 0; i < 12; i++){ const deg = i * 30, p = pol(r - len / 2, deg);
+    s += '<polygon points="' + pt(r, deg) + " " + pt(r - len, deg - 4.5) + " " + pt(r - len, deg + 4.5) +
+         '" fill="' + c + '"/>'; } }
+  return s;
+}
+
+/* ---------------- hands ----------------
+   All hand shapes point at 12 o'clock; the updater rotates the
+   wrapping <g data-part>. cx/cy default to dial center. */
+function handG(part, inner, cx, cy){
+  cx = (cx === undefined ? CX : cx); cy = (cy === undefined ? CY : cy);
+  return '<g data-part="' + part + '" data-cx="' + cx + '" data-cy="' + cy + '">' + inner + "</g>";
+}
+
+/* hand shape path, pointing up, length L, width W */
+function handShape(style, L, W, o){
+  o = o || {};
+  const tail = o.tail === undefined ? Math.round(L * 0.22) : o.tail;
+  const c = o.color || "#141414", lume = o.lume;
+  const lumeFill = lume ? '<rect x="' + (-W * 0.28) + '" y="' + (-L * 0.92) + '" width="' + (W * 0.56) +
+    '" height="' + (L * 0.8) + '" fill="#e8f3d8" opacity="0.85"/>' : "";
+  let body = "";
+  if (style === "dauphine"){
+    body = '<polygon points="0,' + (-L) + " " + (-W / 2) + "," + tail + " " + (W / 2) + "," + tail + '" fill="' + c + '"/>' +
+           '<line x1="0" y1="' + (-L) + '" x2="0" y2="' + tail + '" stroke="#ffffff" stroke-width="1" opacity="0.5"/>';
+  } else if (style === "baton"){
+    body = '<rect x="' + (-W / 2) + '" y="' + (-L) + '" width="' + W + '" height="' + (L + tail) +
+           '" fill="' + c + '"/>' + lumeFill;
+  } else if (style === "sword"){
+    body = '<polygon points="0,' + (-L) + " " + (-W / 2) + "," + (tail * 0.5) + " 0," + tail + " " + (W / 2) + "," + (tail * 0.5) +
+           '" fill="' + c + '"/>' + lumeFill;
+  } else if (style === "alpha" || style === "leaf"){
+    body = '<path d="M0,' + (-L) + " C" + (W / 2) + "," + (-L * 0.7) + " " + (W / 2) + "," + (-L * 0.3) +
+           " 0," + tail + " C" + (-W / 2) + "," + (-L * 0.3) + " " + (-W / 2) + "," + (-L * 0.7) + " 0," + (-L) +
+           ' Z" fill="' + c + '"/>';
+  } else if (style === "mercedes"){
+    const ringR = W * 1.05, ringY = -L * 0.74;
+    body = '<polygon points="0,' + (-L) + " " + (-W / 2) + ",0 " + (-W / 2) + "," + tail + " " + (W / 2) + "," + tail + " " + (W / 2) + ',0" fill="' + c + '"/>' +
+      '<circle cx="0" cy="' + F1(ringY) + '" r="' + F1(ringR) + '" fill="none" stroke="' + c + '" stroke-width="' + F1(W * 0.34) + '"/>' +
+      '<line x1="0" y1="' + F1(ringY - ringR) + '" x2="0" y2="' + F1(ringY + ringR) + '" stroke="' + c + '" stroke-width="' + F1(W * 0.3) + '"/>' +
+      '<line x1="' + F1(-ringR * 0.87) + '" y1="' + F1(ringY + ringR * 0.5) + '" x2="' + F1(ringR * 0.87) + '" y2="' + F1(ringY + ringR * 0.5) + '" stroke="' + c + '" stroke-width="' + F1(W * 0.3) + '"/>';
+  } else if (style === "snowflake"){
+    body = '<rect x="' + (-W / 2) + '" y="' + (-L) + '" width="' + W + '" height="' + (L + tail) + '" fill="' + c + '"/>' +
+      '<rect x="' + (-W * 1.1) + '" y="' + (-L * 0.86) + '" width="' + (W * 2.2) + '" height="' + (W * 2.2) + '" fill="#e8f3d8" opacity="0.92"/>' +
+      '<rect x="' + (-W * 1.1) + '" y="' + (-L * 0.86) + '" width="' + (W * 2.2) + '" height="' + (W * 2.2) + '" fill="none" stroke="' + c + '" stroke-width="1.4"/>';
+  } else if (style === "cathedral"){
+    body = '<path d="M0,' + (-L) + " C" + (W * 0.9) + "," + (-L * 0.75) + " " + (W * 0.9) + "," + (-L * 0.45) +
+      " " + (W * 0.42) + "," + (-L * 0.3) + " L" + (W * 0.42) + "," + tail + " L" + (-W * 0.42) + "," + tail +
+      " L" + (-W * 0.42) + "," + (-L * 0.3) + " C" + (-W * 0.9) + "," + (-L * 0.45) + " " + (-W * 0.9) + "," + (-L * 0.75) +
+      " 0," + (-L) + ' Z" fill="' + c + '"/>' + lumeFill;
+  } else if (style === "syringe"){
+    body = '<rect x="' + (-W / 2) + '" y="' + (-L) + '" width="' + W + '" height="' + (L + tail) + '" fill="' + c + '"/>' +
+      '<circle cx="0" cy="' + (-L * 0.72) + '" r="' + (W * 0.85) + '" fill="#e8f3d8" opacity="0.9"/>' +
+      '<circle cx="0" cy="' + (-L * 0.72) + '" r="' + (W * 0.85) + '" fill="none" stroke="' + c + '" stroke-width="1.2"/>';
+  } else if (style === "lollipop"){
+    body = '<rect x="' + (-W / 2) + '" y="' + (-L) + '" width="' + W + '" height="' + (L + tail) + '" fill="' + c + '"/>' +
+      '<circle cx="0" cy="' + (-L * 0.8) + '" r="' + (W * 2.1) + '" fill="' + c + '"/>';
+  } else if (style === "spade"){
+    body = '<path d="M0,' + (-L) + " C" + (W) + "," + (-L * 0.7) + " " + (W) + "," + (-L * 0.4) + " 0," + (-L * 0.25) +
+      " C" + (-W) + "," + (-L * 0.4) + " " + (-W) + "," + (-L * 0.7) + " 0," + (-L) + ' Z" fill="' + c + '"/>' +
+      '<rect x="' + (-W * 0.28) + '" y="' + (-L * 0.25) + '" width="' + (W * 0.56) + '" height="' + (L * 0.25 + tail) + '" fill="' + c + '"/>';
+  } else if (style === "stick"){
+    body = '<rect x="' + (-W / 2) + '" y="' + (-L) + '" width="' + W + '" height="' + (L + tail) + '" fill="' + c + '"/>';
+  }
+  return body;
+}
+
+function secondHand(o){
+  o = o || {};
+  const L = o.len || 96, c = o.color || "#c22", w = o.w || 3;
+  const tail = o.tail === undefined ? 26 : o.tail;
+  let tip = "";
+  if (o.tip === "lollipop") tip = '<circle cx="0" cy="' + (-L * 0.82) + '" r="7" fill="' + c + '"/>';
+  else if (o.tip === "arrow") tip = '<polygon points="0,' + (-L - 8) + " -5," + (-L + 6) + " 5," + (-L + 6) + '" fill="' + c + '"/>';
+  else if (o.tip === "bolt") tip = '<polygon points="2,' + (-L) + " -4," + (-L * 0.72) + " 1," + (-L * 0.72) + " -2," + (-L * 0.5) + " 4," + (-L * 0.78) + " -1," + (-L * 0.78) + '" fill="' + c + '"/>';
+  return '<rect x="' + (-w / 2) + '" y="' + (-L) + '" width="' + w + '" height="' + (L + tail) + '" fill="' + c + '"/>' +
+    tip + '<circle cx="0" cy="' + (tail * 0.7) + '" r="' + (w * 2.2) + '" fill="' + c + '"/>';
+}
+
+function gmtHand(L, color){
+  color = color || "#2a6fd6";
+  return '<polygon points="0,' + (-L) + " -6," + (-L + 16) + " -2.5," + (-L + 16) + ' -2.5,26 2.5,26 2.5,' + (-L + 16) + " 6," + (-L + 16) + '" fill="' + color + '"/>';
+}
+
+function centerCap(r, c1, c2){
+  r = r || 7;
+  return '<circle cx="' + CX + '" cy="' + CY + '" r="' + r + '" fill="' + (c1 || "#222") + '" stroke="' + (c2 || "#888") + '" stroke-width="1.5"/>';
+}
+
+/* ---------------- case & bezel ---------------- */
+function strapRects(w, top, h, fill){
+  return '<rect x="' + (CX - w / 2) + '" y="' + top + '" width="' + w + '" height="' + h + '" rx="10" fill="' + fill + '"/>';
+}
+function lugs(r, lugC, spread){
+  spread = spread || 46;
+  let s = "";
+  const off = r * 0.88;
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sy]) => {
+    const x = CX + sx * spread, y = CY + sy * off;
+    s += '<rect x="' + (x - 11) + '" y="' + (y - 15) + '" width="22" height="32" rx="7" fill="' + lugC +
+         '" transform="rotate(' + (sx * 16) + " " + x + " " + y + ')"/>';
+  });
+  return s;
+}
+function crownAt(x, y, w, h, fill){
+  fill = fill || "#c9cbcf";
+  let s = '<rect x="' + (x - w / 2) + '" y="' + (y - h / 2) + '" width="' + w + '" height="' + h + '" rx="4" fill="' + fill + '" stroke="#7d7f84" stroke-width="1"/>';
+  for (let i = -1; i <= 1; i++) s += '<line x1="' + (x + i * w * 0.28) + '" y1="' + (y - h / 2) + '" x2="' + (x + i * w * 0.28) + '" y2="' + (y + h / 2) + '" stroke="#7d7f84" stroke-width="1"/>';
+  return s;
+}
+/* round wristwatch case; returns {svg} — caller draws dial on top */
+function watchCase(o){
+  o = o || {};
+  const r = o.r || 104, caseC = o.caseC || "#c9cbcf", lugC = o.lugC || "#a9abb0";
+  let s = "";
+  if (o.strap !== null) s += strapRects(66, CY - r - 62, 64, o.strap || "#26262b") + strapRects(66, CY + r - 2, 64, o.strap || "#26262b");
+  if (o.lugs !== false) s += lugs(r, lugC, o.spread);
+  s += '<circle cx="' + CX + '" cy="' + CY + '" r="' + r + '" fill="' + caseC + '"/>';
+  s += '<circle cx="' + CX + '" cy="' + CY + '" r="' + r + '" fill="none" stroke="#00000055" stroke-width="2"/>';
+  if (o.bezel){
+    const b = o.bezel;
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="' + (r - 3) + '" fill="none" stroke="' + b.color +
+         '" stroke-width="' + (b.w || 12) + '"/>';
+    if (b.inner) s += '<circle cx="' + CX + '" cy="' + CY + '" r="' + (r - 3 - (b.w || 12) / 2) + '" fill="none" stroke="#00000066" stroke-width="1.5"/>';
+  }
+  if (o.crown !== false) s += crownAt(CX + r + 8, CY, 15, 20, o.crownC);
+  if (o.pushers) { s += crownAt(CX + r + 4, CY - 44, 12, 16, o.crownC); s += crownAt(CX + r + 4, CY + 44, 12, 16, o.crownC); }
+  if (o.heValve) s += crownAt(CX - r - 6, CY - 52, 10, 14, o.crownC);
+  return s;
+}
+
+/* ---------------- dial furniture ---------------- */
+function dateWin(x, y, o){
+  o = o || {};
+  const w = o.w || 30, h = o.h || 24, fs = o.fs || 15, bg = o.bg || "#f2efe4";
+  return '<rect x="' + (x - w / 2) + '" y="' + (y - h / 2) + '" width="' + w + '" height="' + h +
+    '" fill="' + bg + '" stroke="#8a8a8a" stroke-width="1.2"/>' +
+    '<text data-part="date" x="' + x + '" y="' + (y + 1) + '" text-anchor="middle" dominant-baseline="central"' +
+    ' font-size="' + fs + '" font-family="ui-monospace, Menlo, monospace" fill="#141414">--</text>';
+}
+function dayDateWin(x, y){
+  return '<rect x="' + (x - 46) + '" y="' + (y - 11) + '" width="92" height="22" fill="#f2efe4" stroke="#8a8a8a" stroke-width="1.2"/>' +
+    '<text data-part="day" x="' + (x - 23) + '" y="' + (y + 1) + '" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="ui-monospace, Menlo, monospace" fill="#141414">---</text>' +
+    '<text data-part="date" x="' + (x + 23) + '" y="' + (y + 1) + '" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="ui-monospace, Menlo, monospace" fill="#141414">--</text>';
+}
+function bigDateWin(x, y){
+  return '<rect x="' + (x - 34) + '" y="' + (y - 13) + '" width="68" height="26" fill="#101418" stroke="#c9a227" stroke-width="1.5"/>' +
+    '<line x1="' + x + '" y1="' + (y - 13) + '" x2="' + x + '" y2="' + (y + 13) + '" stroke="#c9a227" stroke-width="1"/>' +
+    '<text data-part="date-tens" x="' + (x - 17) + '" y="' + (y + 1) + '" text-anchor="middle" dominant-baseline="central" font-size="19" font-family="ui-monospace, Menlo, monospace" fill="#f2efe4">-</text>' +
+    '<text data-part="date-ones" x="' + (x + 17) + '" y="' + (y + 1) + '" text-anchor="middle" dominant-baseline="central" font-size="19" font-family="ui-monospace, Menlo, monospace" fill="#f2efe4">-</text>';
+}
+function apertureWin(x, y, w, part, o){
+  o = o || {};
+  const h = o.h || 20, fs = o.fs || 12, bg = o.bg || "#0d1117", fg = o.fg || "#f2efe4";
+  return '<rect x="' + (x - w / 2) + '" y="' + (y - h / 2) + '" width="' + w + '" height="' + h +
+    '" fill="' + bg + '" stroke="#c9a227" stroke-width="1"/>' +
+    '<text data-part="' + part + '" x="' + x + '" y="' + (y + 1) + '" text-anchor="middle" dominant-baseline="central"' +
+    ' font-size="' + fs + '" fill="' + fg + '" font-weight="600" letter-spacing="1">---</text>';
+}
+function moonphase(cx, cy, r){
+  const u = uid();
+  let stars = "";
+  const seed = [12, 47, 93, 140, 200, 255, 310];
+  seed.forEach(a => { const p = pol(r * 0.8, a, cx, cy);
+    stars += '<circle cx="' + F1(p[0]) + '" cy="' + F1(p[1]) + '" r="1.4" fill="#cfe0ff" opacity="0.9"/>'; });
+  const moon = (mx) =>
+    '<g><circle cx="' + F1(mx) + '" cy="' + cy + '" r="' + F1(r * 0.44) + '" fill="#e9dfc2"/>' +
+    '<circle cx="' + F1(mx - r * 0.12) + '" cy="' + (cy - r * 0.08) + '" r="' + F1(r * 0.09) + '" fill="#c9bd97" opacity="0.8"/>' +
+    '<circle cx="' + F1(mx + r * 0.1) + '" cy="' + (cy + r * 0.12) + '" r="' + F1(r * 0.07) + '" fill="#c9bd97" opacity="0.8"/></g>';
+  return '<defs><clipPath id="' + u + '"><circle cx="' + cx + '" cy="' + cy + '" r="' + r + '"/></clipPath></defs>' +
+    '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="#0b1c38"/>' +
+    '<g clip-path="url(#' + u + ')">' + stars +
+    '<g data-part="moon" data-cx="' + cx + '" data-cy="' + cy + '">' +
+    moon(cx - r * 0.62) + moon(cx + r * 0.62) + "</g></g>" +
+    '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#c9a227" stroke-width="2"/>';
+}
+function subdial(id, cx, cy, r, o){
+  o = o || {};
+  const color = o.color || "#d8d8d8", hand = o.hand || "stick", handC = o.handColor || color;
+  let s = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="#00000022" stroke="' + color + '" stroke-width="1.4"/>' +
+    subTicks(cx, cy, r - 3, o.ticks || 12, color);
+  if (o.numerals) s += numeralsMini(cx, cy, r - 9, o.numerals, color);
+  if (o.label) s += txt(cx, cy + r * 0.52, o.label, {size: 8.5, fill: color, weight: 600, spacing: 1});
+  s += handG("sub-" + id, handShape(hand, r * 0.82, 2.6, {tail: r * 0.3, color: handC}), cx, cy);
+  s += '<circle cx="' + cx + '" cy="' + cy + '" r="2.6" fill="' + handC + '"/>';
+  return s;
+}
+function numeralsMini(cx, cy, r, arr, color){
+  let s = "";
+  arr.forEach(([deg, str]) => { const p = pol(r, deg, cx, cy);
+    s += '<text x="' + F1(p[0]) + '" y="' + F1(p[1]) + '" text-anchor="middle" dominant-baseline="central" font-size="8" fill="' + color + '">' + str + "</text>"; });
+  return s;
+}
+function powerReserve(cx, cy, r){
+  let s = '<path d="M ' + pt(r, 200, cx, cy) + " A " + r + " " + r + " 0 0 1 " + pt(r, 340, cx, cy) +
+    '" fill="none" stroke="#d8d8d8" stroke-width="1.6"/>';
+  for (let i = 0; i <= 4; i++){ const a = 200 + i * 35, p1 = pol(r, a, cx, cy), p2 = pol(r - 6, a, cx, cy);
+    s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#d8d8d8" stroke-width="1.4"/>'; }
+  s += txt(cx - r * 0.42, cy - r * 0.52, "AUF", {size: 8, fill: "#d8d8d8", weight: 700}) +
+       txt(cx + r * 0.42, cy - r * 0.52, "AB", {size: 8, fill: "#d8d8d8", weight: 700});
+  s += '<g transform="rotate(-32 ' + cx + " " + cy + ')"><rect x="' + (cx - 1.6) + '" y="' + (cy - r + 4) +
+    '" width="3.2" height="' + (r - 8) + '" fill="#b3402e"/></g>';
+  return s;
+}
+function glassSheen(r, opacity){
+  const p1 = pol(r, 205), p2 = pol(r, 335);
+  return '<path d="M ' + F1(p1[0]) + " " + F1(p1[1]) + " A " + r + " " + r + " 0 0 1 " + F1(p2[0]) + " " + F1(p2[1]) +
+    '" fill="none" stroke="#ffffff" stroke-width="' + Math.round(r * 0.14) + '" opacity="' + (opacity || 0.08) + '" stroke-linecap="round"/>';
+}
+/* LCD block for digital faces */
+function lcd(x, y, w, h, o){
+  o = o || {};
+  const bg = o.bg || "#9aa38b", fg = o.fg || "#20241c";
+  return '<rect x="' + (x - w / 2) + '" y="' + (y - h / 2) + '" width="' + w + '" height="' + h + '" rx="4" fill="' + bg +
+    '" stroke="#00000088" stroke-width="2"/>' +
+    '<rect x="' + (x - w / 2 + 4) + '" y="' + (y - h / 2 + 4) + '" width="' + (w - 8) + '" height="' + (h - 8) + '" rx="2" fill="none" stroke="#00000033" stroke-width="1"/>' +
+    '<text data-part="' + (o.part || "digital") + '" x="' + x + '" y="' + (y + 2) + '" text-anchor="middle" dominant-baseline="central"' +
+    ' font-size="' + (o.fs || 34) + '" font-family="ui-monospace, Menlo, Consolas, monospace" font-weight="700" letter-spacing="2" fill="' + fg + '">--:--:--</text>';
+}
+
+/* ============================================================
+   Time engine — browser clock + Intl time-zone data.
+   ============================================================ */
+const __fmt = {};
+function tzFmt(tz){
+  if (!__fmt[tz]){
+    __fmt[tz] = {
+      t: new Intl.DateTimeFormat("en-US", {timeZone: tz, hour: "2-digit", minute: "2-digit", second: "2-digit", fractionalSecondDigits: 3, hourCycle: "h23"}),
+      d: new Intl.DateTimeFormat("en-US", {timeZone: tz, weekday: "short", day: "numeric", month: "short"})
+    };
+  }
+  return __fmt[tz];
+}
+/* local time parts for a zone */
+function tzParts(tz, now){
+  const f = tzFmt(tz);
+  const tp = {};
+  f.t.formatToParts(now).forEach(p => { tp[p.type] = p.value; });
+  const dp = {};
+  f.d.formatToParts(now).forEach(p => { dp[p.type] = p.value; });
+  return {
+    h: (+tp.hour) % 24, m: +tp.minute, s: +tp.second, ms: +tp.fractionalSecond,
+    day: +dp.day, wd: dp.weekday, mon: dp.month
+  };
+}
+/* current UTC offset in minutes, for west->east sorting */
+function tzOffset(tz, now){
+  try{
+    const p = new Intl.DateTimeFormat("en-US", {timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23"})
+      .formatToParts(now).reduce((a, x) => (a[x.type] = x.value, a), {});
+    const asUTC = Date.UTC(+p.year, +p.month - 1, +p.day, (+p.hour) % 24, +p.minute, +p.second);
+    return Math.round((asUTC - now.getTime()) / 60000);
+  }catch(e){ return 0; }
+}
+function fmtOffset(min){
+  const sign = min < 0 ? "−" : "+";
+  const a = Math.abs(min), h = Math.floor(a / 60), m = a % 60;
+  return "UTC" + sign + h + (m ? ":" + String(m).padStart(2, "0") : "");
+}
+const pad2 = n => String(n).padStart(2, "0");
+
+/* angles/text for every data-part, given face cadence */
+function partValue(part, P, cadence, now){
+  const sCont = P.s + P.ms / 1000;
+  const secDeg = cadence === "tick" ? Math.floor(P.s) * 6
+    : cadence === "mondaine" ? (P.s < 58 ? sCont * (360 / 58) : 0)
+    : sCont * 6;
+  const minDeg = (P.m + P.s / 60) * 6;
+  const hourDeg = ((P.h % 12) + P.m / 60 + P.s / 3600) * 30;
+  switch (part){
+    case "hour": return {t: hourDeg};
+    case "min": return {t: minDeg};
+    case "sec": return {t: secDeg};
+    case "gmt": return {t: ((now.getUTCHours() + now.getUTCMinutes() / 60) / 24) * 360};
+    case "sub-sec": return {t: secDeg};
+    case "sub-min": return {t: minDeg};
+    case "sub-hour": return {t: hourDeg};
+    case "sub-24": return {t: ((P.h + P.m / 60) / 24) * 360};
+    case "moon": return {t: ((P.day - 1) / 29.530588853) * 360};
+    case "pendulum": return {t: Math.sin(now.getTime() / 1000 * Math.PI * 2) * 7};
+    case "sun24": return {t: ((P.h + P.m / 60) / 24) * 360};
+    case "rotor": return {t: minDeg};
+    case "date": return {x: String(P.day)};
+    case "day": return {x: P.wd.toUpperCase()};
+    case "month": return {x: P.mon.toUpperCase()};
+    case "date-tens": return {x: String(Math.floor(P.day / 10))};
+    case "date-ones": return {x: String(P.day % 10)};
+    case "digital": return {x: pad2(P.h) + ":" + pad2(P.m) + ":" + pad2(P.s)};
+    case "digital-hm": return {x: pad2(P.h) + ":" + pad2(P.m)};
+    case "digital12": { let h = P.h % 12; if (h === 0) h = 12; return {x: h + ":" + pad2(P.m) + ":" + pad2(P.s)}; }
+    case "ampm": return {x: P.h < 12 ? "AM" : "PM"};
+    default: return null;
+  }
+}
+function applyPart(el, v){
+  if (!v) return;
+  if (v.t !== undefined){
+    const key = v.t.toFixed(2);
+    if (el._v !== key){
+      el._v = key;
+      el.setAttribute("transform", "rotate(" + key + " " + el.dataset.cx + " " + el.dataset.cy + ")");
+    }
+  } else if (v.x !== undefined){
+    if (el._v !== v.x){ el._v = v.x; el.textContent = v.x; }
+  }
+}
+
+/* ============================================================
+   THE 62 FACES — original SVG interpretations, drawn from scratch
+   against the public catalog. No geometry reused from other entries.
+   ============================================================ */
+function svgWrap(inner, label){
+  return '<svg viewBox="0 0 320 320" role="img" aria-label="' + label + '"><title>' + label + "</title>" + inner + "</svg>";
+}
+function arcPath(u, r, a0, a1, cx, cy){
+  cx = cx || CX; cy = cy || CY;
+  const p0 = pol(r, a0, cx, cy), p1 = pol(r, a1, cx, cy);
+  return '<path id="' + u + '" d="M ' + F1(p0[0]) + " " + F1(p0[1]) + " A " + r + " " + r +
+    " 0 0 1 " + F1(p1[0]) + " " + F1(p1[1]) + '" fill="none"/>';
+}
+function arcText(u, r, a0, a1, str, o){
+  o = o || {};
+  return arcPath(u, r, a0, a1) +
+    '<text font-size="' + (o.size || 11) + '" fill="' + (o.fill || "#eee") + '" font-weight="' + (o.weight || 600) + '"' +
+    (o.spacing ? ' letter-spacing="' + o.spacing + '"' : "") + '>' +
+    '<textPath href="#' + u + '" startOffset="50%" text-anchor="middle">' + str + "</textPath></text>";
+}
+
+const FACES = {
+
+/* ============ 1. Rolex Submariner Date 126610LN ============ */
+submariner: {
+  name: "Rolex Submariner Date 126610LN", cadence: "sweep",
+  render(){
+    const u = uid();
+    let s = watchCase({r: 106, caseC: "#c9cbcf", bezel: {color: "#15161a", w: 15, inner: true}, strap: "#3a3d42", lugC: "#b7b9be"});
+    /* bezel graduations */
+    for (let i = 0; i < 60; i++){
+      const deg = i * 6, maj = i % 5 === 0;
+      const p1 = pol(99, deg), p2 = pol(maj ? 90 : 94, deg);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) +
+        '" stroke="#e8e8e8" stroke-width="' + (maj ? 2.4 : 1.1) + '"/>';
+    }
+    const bp = pol(99, 0);
+    s += '<polygon points="' + F1(bp[0]) + "," + (F1(bp[1]) - 2) + " " + F1(bp[0] - 5) + "," + F1(bp[1] + 8) + " " + F1(bp[0] + 5) + "," + F1(bp[1] + 8) + '" fill="#e8e8e8"/>' +
+         '<circle cx="' + F1(bp[0]) + '" cy="' + F1(bp[1] + 3) + '" r="2.4" fill="#7fd4a8"/>';
+    [10, 20, 30, 40, 50].forEach(n => { const p = pol(94, n * 6);
+      s += '<text x="' + F1(p[0]) + '" y="' + F1(p[1]) + '" text-anchor="middle" dominant-baseline="central" font-size="10" fill="#e8e8e8" font-weight="600">' + n + "</text>"; });
+    /* dial */
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#0c0d10"/>' +
+         '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="url(#' + u + ')"/>' +
+         '<defs><radialGradient id="' + u + '" cx="42%" cy="36%" r="75%">' +
+         '<stop offset="0%" stop-color="#2a2d33"/><stop offset="55%" stop-color="#141519"/><stop offset="100%" stop-color="#08090b"/>' +
+         "</radialGradient></defs>";
+    s += markersAt(80, "diver", {color: "#eef2e8", w: 7});
+    s += ticks(80, {n: 60, major: 5, inner: 5, mw: 0, lw: 1, color: "#eef2e8"});
+    /* crown logo + text */
+    const cp = [CX, CY - 52];
+    s += '<circle cx="' + cp[0] + '" cy="' + cp[1] + '" r="6" fill="none" stroke="#e8e8e8" stroke-width="1.6"/>' +
+         '<path d="M ' + cp[0] + ' ' + (cp[1] - 9) + ' l2.5,5 3.5,-3.5 -1,5.5 4,1 -4,1 1,5.5 -3.5,-3.5 -2.5,5 -2.5,-5 -3.5,3.5 1,-5.5 -4,-1 4,-1 -1,-5.5 3.5,3.5 Z" fill="#e8e8e8"/>';
+    s += txt(CX, CY - 30, "ROLEX", {size: 12, fill: "#e8e8e8", weight: 700, spacing: 3});
+    s += txt(CX, CY + 40, "SUBMARINER", {size: 10, fill: "#e8e8e8", weight: 600, spacing: 2});
+    s += txt(CX, CY + 54, "1000ft = 300m", {size: 8.5, fill: "#e8e8e8", spacing: 1});
+    s += txt(CX, CY + 65, "SUPERLATIVE CHRONOMETER", {size: 7, fill: "#e8e8e8", spacing: 1});
+    s += dateWin(CX + 62, CY);
+    /* cyclops bump */
+    s += '<ellipse cx="' + (CX + 62) + '" cy="' + CY + '" rx="17" ry="13" fill="#ffffff" opacity="0.10"/>';
+    /* hands */
+    s += handG("hour", handShape("mercedes", 52, 11, {color: "#e8e8e8"}));
+    s += handG("min", handShape("mercedes", 78, 9, {color: "#e8e8e8"}));
+    s += handG("sec", secondHand({len: 84, color: "#e8e8e8", w: 2.6, tip: "lollipop"}));
+    s += centerCap(7, "#e8e8e8", "#999");
+    s += glassSheen(86);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 2. Omega Speedmaster Moonwatch ============ */
+speedmaster: {
+  name: "Omega Speedmaster Moonwatch Professional 310.30.42.50.01.001", cadence: "sweep",
+  render(){
+    const u = uid();
+    let s = watchCase({r: 106, caseC: "#c2c4c8", bezel: {color: "#101114", w: 14, inner: true}, strap: "#2e2e33", pushers: true});
+    s += arcText(u, 97, 200, 340, "TACHYMETRE", {size: 10, fill: "#eee", spacing: 3});
+    for (let i = 0; i < 12; i++){ const deg = i * 30, p1 = pol(97, deg), p2 = pol(90, deg);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#eee" stroke-width="1.6"/>'; }
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="84" fill="#101114"/>';
+    s += markersAt(78, "baton", {color: "#f0f0f0", w: 6});
+    s += ticks(78, {inner: 5, color: "#f0f0f0", mw: 0, lw: 1});
+    s += txt(CX, CY - 46, "Ω", {size: 20, fill: "#f0f0f0"});
+    s += txt(CX, CY - 28, "OMEGA", {size: 11, fill: "#f0f0f0", weight: 700, spacing: 2});
+    s += txt(CX, CY - 16, "Speedmaster", {size: 9, fill: "#f0f0f0", italic: true});
+    s += txt(CX, CY + 58, "PROFESSIONAL", {size: 8, fill: "#f0f0f0", spacing: 1.5});
+    /* subdials: 3 = 30-min, 6 = 12-hour, 9 = small seconds */
+    s += subdial("min", CX + 44, CY, 21, {label: "30", handColor: "#f0f0f0"});
+    s += subdial("hour", CX, CY + 44, 21, {label: "12", handColor: "#f0f0f0"});
+    s += subdial("sec", CX - 44, CY, 21, {label: "60", handColor: "#f0f0f0"});
+    s += handG("hour", handShape("alpha", 50, 12, {color: "#f0f0f0"}));
+    s += handG("min", handShape("alpha", 74, 10, {color: "#f0f0f0"}));
+    s += handG("sec", '<polygon points="0,-88 -3.4,-60 0,26 3.4,-60" fill="#d8d8d8"/><circle cx="0" cy="-64" r="4" fill="#d8d8d8"/>');
+    s += centerCap(6, "#d8d8d8", "#666");
+    s += glassSheen(84);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 3. Patek Philippe Nautilus 5811/1G ============ */
+nautilus: {
+  name: "Patek Philippe Nautilus 5811/1G-001", cadence: "sweep",
+  render(){
+    const u = uid();
+    let s = strapRects(58, CY - 168, 66, "#2b2b30") + strapRects(58, CY + 102, 66, "#2b2b30");
+    s += lugs(100, "#cfc9b8", 40);
+    /* porthole octagon */
+    const oct = []; for (let i = 0; i < 8; i++){ const p = pol(104, i * 45 + 22.5); oct.push(F1(p[0]) + "," + F1(p[1])); }
+    s += '<polygon points="' + oct.join(" ") + '" fill="#d6d0bd" stroke="#00000044" stroke-width="2"/>';
+    const oct2 = []; for (let i = 0; i < 8; i++){ const p = pol(88, i * 45 + 22.5); oct2.push(F1(p[0]) + "," + F1(p[1])); }
+    s += '<polygon points="' + oct2.join(" ") + '" fill="#0e1420"/>';
+    /* gradient dial + horizontal grooves */
+    s += '<defs><linearGradient id="' + u + '" x1="0" y1="0" x2="0" y2="1">' +
+         '<stop offset="0%" stop-color="#1c2c4a"/><stop offset="55%" stop-color="#101b31"/><stop offset="100%" stop-color="#070d1a"/>' +
+         "</linearGradient></defs>";
+    const oct3 = []; for (let i = 0; i < 8; i++){ const p = pol(82, i * 45 + 22.5); oct3.push(F1(p[0]) + "," + F1(p[1])); }
+    s += '<polygon points="' + oct3.join(" ") + '" fill="url(#' + u + ')"/>';
+    for (let y = -76; y <= 76; y += 7)
+      s += '<line x1="' + (CX - 80) + '" y1="' + (CY + y) + '" x2="' + (CX + 80) + '" y2="' + (CY + y) + '" stroke="#00000055" stroke-width="1.6"/>';
+    s += markersAt(74, "baton", {color: "#e8e4d4", w: 6});
+    s += txt(CX, CY - 34, "PATEK PHILIPPE", {size: 10, fill: "#e8e4d4", weight: 600, spacing: 2});
+    s += txt(CX, CY - 22, "GENEVE", {size: 7.5, fill: "#e8e4d4", spacing: 3});
+    s += dateWin(CX + 58, CY, {bg: "#0e1420"});
+    s += handG("hour", handShape("baton", 50, 10, {color: "#e8e4d4", lume: true}));
+    s += handG("min", handShape("baton", 72, 8, {color: "#e8e4d4", lume: true}));
+    s += handG("sec", secondHand({len: 78, color: "#e8e4d4", w: 2.4}));
+    s += centerCap(6, "#e8e4d4", "#887");
+    s += glassSheen(82);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 4. Audemars Piguet Royal Oak 15510ST ============ */
+royaloak: {
+  name: "Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06", cadence: "sweep",
+  render(){
+    const u = uid();
+    let s = strapRects(64, CY - 170, 68, "#3c3e44") + strapRects(64, CY + 102, 68, "#3c3e44");
+    const oct = [], octI = [];
+    for (let i = 0; i < 8; i++){ const p = pol(106, i * 45 + 22.5); oct.push(F1(p[0]) + "," + F1(p[1])); }
+    for (let i = 0; i < 8; i++){ const p = pol(90, i * 45 + 22.5); octI.push(F1(p[0]) + "," + F1(p[1])); }
+    s += '<polygon points="' + oct.join(" ") + '" fill="#c6c8cc" stroke="#00000055" stroke-width="2"/>';
+    /* 8 bezel screws */
+    for (let i = 0; i < 8; i++){ const p = pol(98, i * 45 + 22.5), hex = [];
+      for (let k = 0; k < 6; k++){ const q = pol(5.5, i * 45 + 22.5 + k * 60, p[0], p[1]); hex.push(F1(q[0]) + "," + F1(q[1])); }
+      s += '<polygon points="' + hex.join(" ") + '" fill="#8f9196" stroke="#55565a" stroke-width="1"/>' +
+           '<line x1="' + F1(p[0] - 3.4) + '" y1="' + F1(p[1]) + '" x2="' + F1(p[0] + 3.4) + '" y2="' + F1(p[1]) +
+           '" stroke="#55565a" stroke-width="1.2" transform="rotate(' + (i * 45 + 22.5) + " " + F1(p[0]) + " " + F1(p[1]) + ')"/>';
+    }
+    s += '<polygon points="' + octI.join(" ") + '" fill="#1b2f57"/>';
+    /* grande tapisserie: fine grid */
+    s += '<defs><pattern id="' + u + '" width="9" height="9" patternUnits="userSpaceOnUse">' +
+         '<rect width="9" height="9" fill="#1e3560"/><rect x="1" y="1" width="7" height="7" fill="#24406f"/>' +
+         "</pattern></defs>";
+    const octD = []; for (let i = 0; i < 8; i++){ const p = pol(82, i * 45 + 22.5); octD.push(F1(p[0]) + "," + F1(p[1])); }
+    s += '<polygon points="' + octD.join(" ") + '" fill="url(#' + u + ')"/>';
+    s += markersAt(74, "baton", {color: "#eef", w: 6});
+    s += txt(CX, CY - 30, "AP", {size: 13, fill: "#eef", weight: 800, spacing: 1});
+    s += txt(CX, CY - 18, "AUDEMARS PIGUET", {size: 8, fill: "#eef", spacing: 1.5});
+    s += dateWin(CX + 56, CY, {bg: "#1e3560"});
+    s += handG("hour", handShape("baton", 50, 11, {color: "#eef", lume: true}));
+    s += handG("min", handShape("baton", 72, 9, {color: "#eef", lume: true}));
+    s += handG("sec", secondHand({len: 78, color: "#eef", w: 2.4}));
+    s += centerCap(6, "#eef", "#889");
+    s += glassSheen(82);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 5. Patek Philippe Calatrava 5227G ============ */
+calatrava: {
+  name: "Patek Philippe Calatrava 5227G-015", cadence: "sweep",
+  render(){
+    let s = strapRects(52, CY - 164, 62, "#3a2c20") + strapRects(52, CY + 102, 62, "#3a2c20");
+    s += lugs(98, "#d8b96a", 36);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="100" fill="#d8b96a"/>';
+    /* hobnail bezel dots */
+    for (let i = 0; i < 48; i++){ const p = pol(95, i * 7.5);
+      s += '<circle cx="' + F1(p[0]) + '" cy="' + F1(p[1]) + '" r="2.1" fill="#b8944e"/>'; }
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#f3ecd9"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="none" stroke="#8a6f3c" stroke-width="1.5"/>';
+    s += markersAt(80, "baton", {color: "#1c1a16", w: 4, len: 15});
+    s += ticks(80, {inner: 4, mw: 0, lw: 1, color: "#1c1a16"});
+    s += txt(CX, CY - 34, "PATEK PHILIPPE", {size: 10.5, fill: "#1c1a16", weight: 600, spacing: 2});
+    s += txt(CX, CY - 22, "GENEVE", {size: 7.5, fill: "#1c1a16", spacing: 3});
+    s += handG("hour", handShape("dauphine", 50, 11, {color: "#8a6f3c"}));
+    s += handG("min", handShape("dauphine", 74, 9, {color: "#8a6f3c"}));
+    s += handG("sec", secondHand({len: 80, color: "#8a6f3c", w: 2.2}));
+    s += centerCap(6, "#8a6f3c", "#5e4c28");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 6. Cartier Tank Louis Cartier ============ */
+tank: {
+  name: "Cartier Tank Louis Cartier WGTA0342", cadence: "tick",
+  render(){
+    let s = strapRects(56, CY - 176, 78, "#2c1f16") + strapRects(56, CY + 98, 78, "#2c1f16");
+    /* rectangular white-gold case */
+    s += '<rect x="' + (CX - 78) + '" y="' + (CY - 104) + '" width="156" height="208" rx="14" fill="#d9d4c6"/>';
+    s += '<rect x="' + (CX - 78) + '" y="' + (CY - 104) + '" width="156" height="208" rx="14" fill="none" stroke="#00000044" stroke-width="2"/>';
+    s += '<rect x="' + (CX - 66) + '" y="' + (CY - 92) + '" width="132" height="184" rx="8" fill="#f6f1e3"/>';
+    /* chemin de fer minute track */
+    s += '<rect x="' + (CX - 58) + '" y="' + (CY - 84) + '" width="116" height="168" rx="4" fill="none" stroke="#1c1a16" stroke-width="1.6"/>';
+    for (let i = 0; i < 60; i++){
+      const deg = i * 6, maj = i % 5 === 0;
+      const p1 = pol(66, deg, CX, CY), p2 = pol(maj ? 56 : 60, deg, CX, CY);
+      if (Math.abs(p1[0] - CX) < 58 && Math.abs(p1[1] - CY) < 84)
+        s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#1c1a16" stroke-width="' + (maj ? 2 : 1) + '"/>';
+    }
+    s += numerals(52, "roman", {size: 17, color: "#1c1a16"});
+    s += txt(CX, CY - 30, "Cartier", {size: 13, fill: "#1c1a16", italic: true, weight: 600});
+    /* secret signature at 7 */
+    s += txt(CX - 30, CY + 58, "Cartier", {size: 5.5, fill: "#1c1a16", italic: true, opacity: 0.85});
+    /* blued sword hands */
+    s += handG("hour", handShape("sword", 44, 10, {color: "#1e3f8f", tail: 12}));
+    s += handG("min", handShape("sword", 64, 8, {color: "#1e3f8f", tail: 12}));
+    s += handG("sec", secondHand({len: 66, color: "#1e3f8f", w: 2, tail: 14}));
+    s += centerCap(5, "#1e3f8f", "#0f2560");
+    /* sapphire cabochon crown */
+    s += '<rect x="' + (CX + 78) + '" y="' + (CY - 8) + '" width="12" height="16" rx="3" fill="#d9d4c6"/>' +
+         '<circle cx="' + (CX + 94) + '" cy="' + CY + '" r="7" fill="#1e4fb0"/>' +
+         '<circle cx="' + (CX + 92) + '" cy="' + (CY - 2) + '" r="2.2" fill="#9db9ec" opacity="0.8"/>';
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 7. Jaeger-LeCoultre Reverso ============ */
+reverso: {
+  name: "Jaeger-LeCoultre Reverso", cadence: "sweep",
+  render(){
+    let s = strapRects(54, CY - 172, 74, "#33241a") + strapRects(54, CY + 98, 74, "#33241a");
+    /* sliding outer frame */
+    s += '<rect x="' + (CX - 80) + '" y="' + (CY - 106) + '" width="160" height="212" rx="6" fill="#b9bcc1"/>';
+    s += '<rect x="' + (CX - 72) + '" y="' + (CY - 98) + '" width="144" height="196" rx="4" fill="#8f9298"/>';
+    s += '<rect x="' + (CX - 64) + '" y="' + (CY - 90) + '" width="128" height="180" rx="3" fill="#c9cbcf"/>';
+    s += '<rect x="' + (CX - 56) + '" y="' + (CY - 82) + '" width="112" height="164" rx="2" fill="#ece7d8"/>';
+    /* art-deco corner ticks */
+    for (let i = 0; i < 12; i++){
+      const deg = i * 30, p1 = pol(64, deg, CX, CY), p2 = pol(56, deg, CX, CY);
+      if (Math.abs(p1[0] - CX) < 56 && Math.abs(p1[1] - CY) < 82)
+        s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#1c1a16" stroke-width="2.4"/>';
+    }
+    s += txt(CX, CY - 44, "JAEGER-LECOULTRE", {size: 9, fill: "#1c1a16", weight: 600, spacing: 1.5});
+    s += txt(CX, CY + 52, "REVERSO", {size: 9, fill: "#1c1a16", spacing: 3});
+    s += handG("hour", handShape("dauphine", 44, 10, {color: "#2b2b30"}));
+    s += handG("min", handShape("dauphine", 64, 8, {color: "#2b2b30"}));
+    s += handG("sec", secondHand({len: 68, color: "#8a1f1f", w: 2}));
+    s += centerCap(5, "#2b2b30", "#777");
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 8. Omega Seamaster Diver 300M ============ */
+seamaster: {
+  name: "Omega Seamaster Diver 300M", cadence: "sweep",
+  render(){
+    const u = uid();
+    let s = watchCase({r: 106, caseC: "#c2c4c8", bezel: {color: "#0f2a52", w: 15, inner: true}, strap: "#2e4a72", heValve: true});
+    for (let i = 0; i < 12; i++){ const deg = i * 30, p = pol(98, deg);
+      s += '<text x="' + F1(p[0]) + '" y="' + F1(p[1]) + '" text-anchor="middle" dominant-baseline="central" font-size="9" fill="#eee" font-weight="700">' + (i * 5 || "60") + "</text>"; }
+    const bp = pol(98, 0);
+    s += '<circle cx="' + F1(bp[0]) + '" cy="' + F1(bp[1]) + '" r="3" fill="#cfe6ff"/>';
+    /* wave dial */
+    s += '<defs><pattern id="' + u + '" width="26" height="12" patternUnits="userSpaceOnUse">' +
+         '<rect width="26" height="12" fill="#123a75"/><path d="M0,7 Q6.5,2 13,7 T26,7" fill="none" stroke="#1d4d99" stroke-width="2"/>' +
+         "</pattern></defs>";
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="url(#' + u + ')"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="none" stroke="#00000066" stroke-width="2"/>';
+    s += markersAt(78, "baton", {color: "#eef4ff", w: 6});
+    s += ticks(78, {inner: 5, color: "#eef4ff", mw: 0, lw: 1});
+    s += txt(CX, CY - 46, "Ω", {size: 19, fill: "#eef4ff"});
+    s += txt(CX, CY - 28, "OMEGA", {size: 10.5, fill: "#eef4ff", weight: 700, spacing: 2});
+    s += txt(CX, CY + 34, "Seamaster", {size: 9, fill: "#eef4ff", italic: true});
+    s += txt(CX, CY + 46, "PROFESSIONAL", {size: 7.5, fill: "#eef4ff", spacing: 1.5});
+    s += dateWin(CX, CY + 62, {bg: "#0f2a52"});
+    /* skeleton hands: outline only */
+    const skel = (L, W) => '<polygon points="0,' + (-L) + " " + (-W / 2) + ",20 " + (W / 2) + ',20" fill="none" stroke="#eef4ff" stroke-width="2.4"/>' +
+      '<polygon points="0,' + (-L * 0.8) + " " + (-W * 0.24) + ",12 " + (W * 0.24) + ',12" fill="#eef4ff" opacity="0.9"/>';
+    s += handG("hour", skel(52, 13));
+    s += handG("min", skel(76, 11));
+    s += handG("sec", secondHand({len: 82, color: "#e8734a", w: 2.6, tip: "lollipop"}));
+    s += centerCap(6, "#eef4ff", "#889");
+    s += glassSheen(86);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 9. A. Lange & Söhne Lange 1 ============ */
+lange1: {
+  name: "A. Lange & Söhne Lange 1", cadence: "sweep",
+  render(){
+    let s = strapRects(50, CY - 162, 60, "#2e1f14") + strapRects(50, CY + 102, 60, "#2e1f14");
+    s += lugs(98, "#d8b96a", 34);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="100" fill="#d8b96a"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="90" fill="#e9e2cf"/>';
+    const dx = CX - 38, dy = CY - 6; /* off-centre time dial */
+    s += '<circle cx="' + dx + '" cy="' + dy + '" r="58" fill="#efe8d3" stroke="#b89b5e" stroke-width="1.4"/>';
+    s += markersAt(50, "baton", {color: "#8a6f3c", w: 4, len: 12});
+    /* small seconds overlapping */
+    const sx = dx - 8, sy = dy + 44;
+    s += '<circle cx="' + sx + '" cy="' + sy + '" r="26" fill="#efe8d3" stroke="#b89b5e" stroke-width="1.2"/>' +
+         subTicks(sx, sy, 22, 12, "#8a6f3c");
+    s += handG("sub-sec", handShape("stick", 19, 2.2, {tail: 5, color: "#1e3f8f"}), sx, sy);
+    s += '<circle cx="' + sx + '" cy="' + sy + '" r="2.4" fill="#1e3f8f"/>';
+    /* power reserve */
+    s += '<g>' + powerReserve(CX + 44, CY - 34, 30).replace(/AUF|AB/g, m => m) + "</g>";
+    s += txt(CX + 44, CY - 72, "GANGRESERVE", {size: 6.5, fill: "#8a6f3c", spacing: 1});
+    /* big date */
+    s += bigDateWin(CX + 42, CY + 34);
+    s += txt(CX - 38, CY - 52, "A. LANGE & SÖHNE", {size: 8, fill: "#4a3d28", weight: 600, spacing: 1});
+    s += txt(CX - 38, CY - 42, "GLASHÜTTE I/SA", {size: 6.5, fill: "#4a3d28", spacing: 1.5});
+    /* blued alpha hands on the off-centre dial */
+    s += handG("hour", handShape("alpha", 34, 9, {color: "#1e3f8f"}), dx, dy);
+    s += handG("min", handShape("alpha", 50, 7, {color: "#1e3f8f"}), dx, dy);
+    s += '<circle cx="' + dx + '" cy="' + dy + '" r="4" fill="#1e3f8f"/>';
+    s += glassSheen(90);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 10. IWC Portugieser ============ */
+portugieser: {
+  name: "IWC Portugieser", cadence: "sweep",
+  render(){
+    let s = strapRects(48, CY - 162, 60, "#241a12") + strapRects(48, CY + 102, 60, "#241a12");
+    s += lugs(98, "#c9cbcf", 32);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="100" fill="#c9cbcf"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="90" fill="#f1ece0"/>';
+    /* railroad minute track */
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="82" fill="none" stroke="#1c1a16" stroke-width="1.4"/>' +
+         '<circle cx="' + CX + '" cy="' + CY + '" r="74" fill="none" stroke="#1c1a16" stroke-width="1.4"/>';
+    for (let i = 0; i < 60; i++){ const p1 = pol(82, i * 6), p2 = pol(74, i * 6);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#1c1a16" stroke-width="' + (i % 5 === 0 ? 2 : 1) + '"/>'; }
+    s += numerals(62, "arabic12", {size: 20, color: "#1c1a16"});
+    s += txt(CX, CY - 30, "International", {size: 9, fill: "#1c1a16", italic: true});
+    s += txt(CX, CY - 19, "Watch Co.", {size: 9, fill: "#1c1a16", italic: true});
+    s += txt(CX, CY + 30, "PORTUGIESER", {size: 8.5, fill: "#1c1a16", spacing: 2});
+    /* small seconds at 6 */
+    s += '<circle cx="' + CX + '" cy="' + (CY + 48) + '" r="20" fill="none" stroke="#1c1a16" stroke-width="1.2"/>' +
+         subTicks(CX, CY + 48, 17, 12, "#1c1a16");
+    s += handG("sub-sec", handShape("stick", 15, 2, {tail: 4, color: "#1e3f8f"}), CX, CY + 48);
+    s += handG("hour", handShape("leaf", 48, 13, {color: "#1e3f8f"}));
+    s += handG("min", handShape("leaf", 72, 11, {color: "#1e3f8f"}));
+    s += handG("sec", secondHand({len: 78, color: "#1e3f8f", w: 2}));
+    s += centerCap(5, "#1e3f8f", "#0f2560");
+    s += glassSheen(90);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 11. Rolex Daytona ============ */
+daytona: {
+  name: "Rolex Daytona", cadence: "sweep",
+  render(){
+    const u = uid();
+    let s = watchCase({r: 106, caseC: "#c9cbcf", bezel: {color: "#1a1b1e", w: 13, inner: true}, strap: "#3a3d42", pushers: true});
+    s += arcText(u, 97, 195, 345, "TACHYMETRE", {size: 9.5, fill: "#eee", spacing: 4});
+    for (let i = 0; i <= 12; i++){ const deg = 240 + i * 20, p1 = pol(97, deg % 360), p2 = pol(91, deg % 360);
+      if (i % 3 === 0) s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#eee" stroke-width="1.6"/>'; }
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="85" fill="#0d0e11"/>';
+    s += markersAt(78, "baton", {color: "#eef2e8", w: 6});
+    /* subdials with thin rings */
+    s += subdial("min", CX + 42, CY, 20, {handColor: "#eef2e8", label: "30"});
+    s += subdial("hour", CX - 42, CY, 20, {handColor: "#eef2e8", label: "12"});
+    s += subdial("sec", CX, CY + 44, 20, {handColor: "#eef2e8", label: "60"});
+    s += txt(CX, CY - 46, "ROLEX", {size: 10.5, fill: "#eef2e8", weight: 700, spacing: 2.5});
+    s += txt(CX, CY - 34, "OYSTER PERPETUAL", {size: 7, fill: "#eef2e8", spacing: 1});
+    const u2 = uid();
+    s += arcText(u2, 62, 55, 125, "DAYTONA", {size: 9, fill: "#c22", spacing: 3, weight: 700});
+    s += txt(CX, CY + 66, "COSMOGRAPH", {size: 7.5, fill: "#eef2e8", spacing: 1.5});
+    s += handG("hour", handShape("baton", 48, 11, {color: "#eef2e8", lume: true}));
+    s += handG("min", handShape("baton", 72, 9, {color: "#eef2e8", lume: true}));
+    s += handG("sec", '<rect x="-1.6" y="-84" width="3.2" height="110" fill="#c22"/><circle cx="0" cy="18" r="4.5" fill="#c22"/>');
+    s += centerCap(6, "#c9cbcf", "#777");
+    s += glassSheen(85);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 12. Rolex GMT-Master II ============ */
+gmt: {
+  name: "Rolex GMT-Master II", cadence: "sweep",
+  render(){
+    const u = uid();
+    let s = watchCase({r: 106, caseC: "#c9cbcf", strap: "#3a3d42"});
+    /* two-tone bezel: blue top, black bottom */
+    s += '<path d="M ' + pt(103, 270) + " A 103 103 0 0 1 " + pt(103, 90) + " L " + pt(88, 90) + " A 88 88 0 0 0 " + pt(88, 270) + ' Z" fill="#1d3f8f"/>';
+    s += '<path d="M ' + pt(103, 90) + " A 103 103 0 0 1 " + pt(103, 270) + " L " + pt(88, 270) + " A 88 88 0 0 0 " + pt(88, 90) + ' Z" fill="#17181c"/>';
+    for (let i = 0; i < 24; i++){ const deg = i * 15, p1 = pol(103, deg), p2 = pol(i % 2 ? 97 : 93, deg);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#e8e8e8" stroke-width="' + (i % 2 ? 1.2 : 2.2) + '"/>'; }
+    [2,4,6,8,10,12,14,16,18,20,22,24].forEach(n => { const p = pol(95, (n / 24) * 360);
+      s += '<text x="' + F1(p[0]) + '" y="' + F1(p[1]) + '" text-anchor="middle" dominant-baseline="central" font-size="8.5" fill="#e8e8e8" font-weight="700">' + n + "</text>"; });
+    const bp = pol(103, 0);
+    s += '<polygon points="' + F1(bp[0]) + "," + F1(bp[1] - 3) + " " + F1(bp[0] - 4.5) + "," + F1(bp[1] + 6) + " " + F1(bp[0] + 4.5) + "," + F1(bp[1] + 6) + '" fill="#e8e8e8"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#0b0c0e"/>';
+    s += markersAt(79, "diver", {color: "#eef2e8", w: 7});
+    s += txt(CX, CY - 48, "ROLEX", {size: 10.5, fill: "#eef2e8", weight: 700, spacing: 2.5});
+    s += txt(CX, CY + 38, "GMT-MASTER II", {size: 9, fill: "#4d9de0", weight: 600, spacing: 1.5});
+    s += txt(CX, CY + 51, "SUPERLATIVE CHRONOMETER", {size: 7, fill: "#eef2e8", spacing: 1});
+    s += dateWin(CX + 60, CY);
+    s += '<ellipse cx="' + (CX + 60) + '" cy="' + CY + '" rx="16" ry="12.5" fill="#ffffff" opacity="0.10"/>';
+    /* 24h GMT hand (blue arrow) under main hands */
+    s += handG("gmt", gmtHand(80, "#2f7fd0"));
+    s += handG("hour", handShape("mercedes", 50, 11, {color: "#eef2e8"}));
+    s += handG("min", handShape("mercedes", 76, 9, {color: "#eef2e8"}));
+    s += handG("sec", secondHand({len: 82, color: "#eef2e8", w: 2.4, tip: "lollipop"}));
+    s += centerCap(7, "#2f7fd0", "#174a80");
+    s += glassSheen(86);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 13. Rolex Datejust ============ */
+datejust: {
+  name: "Rolex Datejust", cadence: "sweep",
+  render(){
+    let s = "";
+    /* jubilee bracelet hint */
+    for (let li = 0; li < 3; li++){
+      s += '<rect x="' + (CX - 33) + '" y="' + (CY - 170 + li * 22) + '" width="66" height="20" rx="6" fill="#c9cbcf" stroke="#8a8c90" stroke-width="1"/>';
+      s += '<rect x="' + (CX - 33) + '" y="' + (CY + 104 + li * 22) + '" width="66" height="20" rx="6" fill="#c9cbcf" stroke="#8a8c90" stroke-width="1"/>';
+    }
+    s += lugs(102, "#c9cbcf", 40);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="102" fill="#c9cbcf"/>';
+    /* fluted bezel */
+    for (let i = 0; i < 60; i++){ const p1 = pol(100, i * 6), p2 = pol(88, i * 6);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#d8b96a" stroke-width="2.6"/>'; }
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#e9e6da"/>';
+    s += markersAt(78, "baton", {color: "#2b2b30", w: 6});
+    s += ticks(78, {inner: 5, color: "#2b2b30", mw: 0, lw: 1});
+    s += txt(CX, CY - 46, "ROLEX", {size: 10.5, fill: "#2b2b30", weight: 700, spacing: 2.5});
+    s += txt(CX, CY - 34, "OYSTER PERPETUAL", {size: 7, fill: "#2b2b30", spacing: 1});
+    s += txt(CX, CY + 38, "DATEJUST", {size: 9.5, fill: "#2b2b30", weight: 600, spacing: 2});
+    s += dateWin(CX + 58, CY);
+    s += '<ellipse cx="' + (CX + 58) + '" cy="' + CY + '" rx="16" ry="12.5" fill="#ffffff" opacity="0.12"/>';
+    s += handG("hour", handShape("baton", 50, 11, {color: "#2b2b30", lume: true}));
+    s += handG("min", handShape("baton", 74, 9, {color: "#2b2b30", lume: true}));
+    s += handG("sec", secondHand({len: 80, color: "#2b2b30", w: 2.4}));
+    s += centerCap(6, "#d8b96a", "#8a6f3c");
+    s += glassSheen(86);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 14. Grand Seiko Snowflake SBGA211 ============ */
+snowflake: {
+  name: "Grand Seiko Snowflake", cadence: "glide",
+  render(){
+    const u = uid();
+    let s = watchCase({r: 104, caseC: "#cfd2d6", strap: "#4a4c52", crown: true});
+    /* snow texture */
+    s += '<defs><pattern id="' + u + '" width="14" height="14" patternUnits="userSpaceOnUse">' +
+         '<rect width="14" height="14" fill="#f4f5f7"/>' +
+         '<circle cx="3" cy="4" r="1.6" fill="#dfe3e8"/><circle cx="10" cy="11" r="1.3" fill="#e8ebef"/>' +
+         '<circle cx="8" cy="3" r="1" fill="#d4d9df"/><circle cx="12" cy="7" r="1.8" fill="#eef1f4"/>' +
+         "</pattern></defs>";
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="url(#' + u + ')"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="none" stroke="#00000033" stroke-width="2"/>';
+    s += markersAt(80, "baton12x2", {color: "#3a3d42", w: 5});
+    s += txt(CX, CY - 48, "GS", {size: 16, fill: "#3a3d42", weight: 800, spacing: 1});
+    s += txt(CX, CY - 32, "Grand Seiko", {size: 10, fill: "#3a3d42", weight: 600, spacing: 1.5});
+    s += txt(CX, CY + 44, "SPRING DRIVE", {size: 8, fill: "#3a3d42", spacing: 2});
+    /* power reserve at 3 */
+    s += powerReserve(CX + 52, CY, 26).replace(/#d8d8d8/g, "#3a3d42");
+    s += dateWin(CX - 56, CY, {bg: "#f4f5f7"});
+    s += handG("hour", handShape("dauphine", 50, 12, {color: "#3a3d42"}));
+    s += handG("min", handShape("dauphine", 74, 10, {color: "#3a3d42"}));
+    s += handG("sec", secondHand({len: 80, color: "#1e4f9e", w: 2.4}));
+    s += centerCap(6, "#3a3d42", "#888");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 15. Casio G-Shock DW-5600UE ============ */
+gshock: {
+  name: "Casio G-Shock DW-5600UE-1", cadence: "digital",
+  render(){
+    let s = "";
+    /* resin case: rounded square with bezel screws */
+    s += '<rect x="' + (CX - 104) + '" y="' + (CY - 108) + '" width="208" height="216" rx="34" fill="#1b1c1f"/>';
+    s += '<rect x="' + (CX - 104) + '" y="' + (CY - 108) + '" width="208" height="216" rx="34" fill="none" stroke="#33353a" stroke-width="2"/>';
+    [[-88, -92], [88, -92], [-88, 92], [88, 92]].forEach(([dx, dy]) => {
+      s += '<circle cx="' + (CX + dx) + '" cy="' + (CY + dy) + '" r="6" fill="#0c0d0f" stroke="#3a3d42" stroke-width="1.5"/>'; });
+    s += strapRects(120, CY - 172, 66, "#1b1c1f") + strapRects(120, CY + 106, 66, "#1b1c1f");
+    for (let i = 0; i < 5; i++){ s += '<line x1="' + (CX - 60) + '" y1="' + (CY - 160 + i * 14) + '" x2="' + (CX + 60) + '" y2="' + (CY - 160 + i * 14) + '" stroke="#2c2e33" stroke-width="3"/>'; }
+    s += txt(CX, CY - 88, "G-SHOCK", {size: 15, fill: "#c22", weight: 800, spacing: 2});
+    s += txt(CX - 62, CY - 88, "SHOCK", {size: 8, fill: "#888", spacing: 1});
+    s += txt(CX + 62, CY - 88, "RESIST", {size: 8, fill: "#888", spacing: 1});
+    /* LCD stack */
+    s += lcd(CX, CY - 30, 150, 52, {fs: 30, part: "digital-hm"});
+    s += lcd(CX, CY + 24, 150, 40, {fs: 24});
+    s += txt(CX, CY + 62, "CASIO", {size: 13, fill: "#bbb", weight: 700, spacing: 4});
+    s += txt(CX, CY + 78, "WATER 200M RESIST", {size: 8, fill: "#777", spacing: 1.5});
+    s += txt(CX - 70, CY + 24, "ALM", {size: 7, fill: "#777"});
+    s += txt(CX + 70, CY + 24, "SIG", {size: 7, fill: "#777"});
+    /* buttons */
+    [[-108, -30], [108, -30], [-108, 40], [108, 40]].forEach(([dx, dy]) => {
+      s += '<rect x="' + (CX + dx - 8) + '" y="' + (CY + dy - 12) + '" width="16" height="24" rx="5" fill="#2c2e33" stroke="#101114" stroke-width="1"/>'; });
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 16. Casio F-91W ============ */
+f91w: {
+  name: "Casio F-91W", cadence: "digital",
+  render(){
+    let s = strapRects(88, CY - 168, 64, "#191a1d") + strapRects(88, CY + 104, 64, "#191a1d");
+    for (let i = 0; i < 4; i++){ s += '<line x1="' + (CX - 44) + '" y1="' + (CY - 156 + i * 15) + '" x2="' + (CX + 44) + '" y2="' + (CY - 156 + i * 15) + '" stroke="#2b2c30" stroke-width="2.5"/>'; }
+    s += '<rect x="' + (CX - 96) + '" y="' + (CY - 100) + '" width="192" height="200" rx="22" fill="#1e1f23"/>';
+    s += '<rect x="' + (CX - 96) + '" y="' + (CY - 100) + '" width="192" height="200" rx="22" fill="none" stroke="#3a3c41" stroke-width="2"/>';
+    s += txt(CX, CY - 80, "CASIO", {size: 14, fill: "#cfd2d6", weight: 700, spacing: 3});
+    s += lcd(CX, CY - 34, 150, 50, {fs: 29, bg: "#a8ad96", part: "digital"});
+    s += txt(CX - 52, CY + 2, "ALARM", {size: 7, fill: "#8a8d92"});
+    s += txt(CX + 52, CY + 2, "CHRONO", {size: 7, fill: "#8a8d92"});
+    s += '<text data-part="digital-hm" x="' + CX + '" y="' + (CY + 34) + '" text-anchor="middle" font-size="15" font-family="ui-monospace, Menlo, monospace" fill="#8f959c">--:--</text>';
+    s += txt(CX, CY + 58, "WATER RESIST", {size: 9, fill: "#c22", weight: 700, spacing: 1.5});
+    s += txt(CX, CY + 74, "F-91W", {size: 8, fill: "#6d7075", spacing: 2});
+    s += '<rect x="' + (CX - 100) + '" y="' + (CY - 14) + '" width="8" height="26" rx="3" fill="#33353a"/>';
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 17. Apple Watch ============ */
+apple: {
+  name: "Apple Watch", cadence: "digital",
+  render(){
+    let s = strapRects(76, CY - 176, 72, "#2a2c31") + strapRects(76, CY + 104, 72, "#2a2c31");
+    /* digital crown + side button */
+    s += '<rect x="' + (CX + 92) + '" y="' + (CY - 52) + '" width="14" height="30" rx="7" fill="#3a3d44" stroke="#202227" stroke-width="1.5"/>';
+    s += '<rect x="' + (CX + 94) + '" y="' + (CY + 6) + '" width="10" height="44" rx="5" fill="#3a3d44"/>';
+    s += '<rect x="' + (CX - 96) + '" y="' + (CY - 116) + '" width="192" height="232" rx="52" fill="#050607"/>';
+    s += '<rect x="' + (CX - 96) + '" y="' + (CY - 116) + '" width="192" height="232" rx="52" fill="none" stroke="#3f434b" stroke-width="3"/>';
+    s += '<text data-part="digital-hm" x="' + CX + '" y="' + (CY - 48) + '" text-anchor="middle" font-size="52" font-weight="200" fill="#f2f2f2" font-family="system-ui">--:--</text>';
+    s += '<text data-part="day" x="' + (CX - 34) + '" y="' + (CY - 16) + '" text-anchor="middle" font-size="13" fill="#ff9f0a" font-weight="600">---</text>';
+    s += '<text data-part="date" x="' + (CX + 34) + '" y="' + (CY - 16) + '" text-anchor="middle" font-size="13" fill="#f2f2f2">--</text>';
+    /* activity rings */
+    const rr = (r, c, frac) => { const p0 = pol(r, -90, CX, CY + 44), p1 = pol(r, -90 + 360 * frac, CX, CY + 44);
+      return '<path d="M ' + F1(p0[0]) + " " + F1(p0[1]) + " A " + r + " " + r + " 0 " + (frac > 0.5 ? 1 : 0) + " 1 " + F1(p1[0]) + " " + F1(p1[1]) +
+        '" fill="none" stroke="' + c + '" stroke-width="7" stroke-linecap="round"/>'; };
+    [34, 26, 18].forEach(r => { s += '<circle cx="' + CX + '" cy="' + (CY + 44) + '" r="' + r + '" fill="none" stroke="#ffffff18" stroke-width="7"/>'; });
+    s += rr(34, "#fa114f", 0.72) + rr(26, "#a6ff00", 0.45) + rr(18, "#04c7dd", 0.88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 18. Swatch Once Again ============ */
+swatch: {
+  name: "Swatch Once Again", cadence: "tick",
+  render(){
+    let s = strapRects(64, CY - 168, 66, "#d8b13a") + strapRects(64, CY + 102, 66, "#d8b13a");
+    /* transparent plastic case */
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="104" fill="#bcd6e8" opacity="0.45"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="104" fill="none" stroke="#e8f2fa" stroke-width="3" opacity="0.8"/>';
+    /* visible movement gears */
+    const gear = (gx, gy, gr, teeth, c) => {
+      let g = "";
+      for (let i = 0; i < teeth; i++){ const p1 = pol(gr, i * (360 / teeth), gx, gy), p2 = pol(gr + 5, i * (360 / teeth), gx, gy);
+        g += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="' + c + '" stroke-width="3"/>'; }
+      return g + '<circle cx="' + gx + '" cy="' + gy + '" r="' + gr + '" fill="none" stroke="' + c + '" stroke-width="2.5"/>' +
+        '<circle cx="' + gx + '" cy="' + gy + '" r="3" fill="' + c + '"/>';
+    };
+    s += gear(CX - 40, CY + 34, 22, 12, "#7a5c1e") + gear(CX + 36, CY - 28, 17, 10, "#8a8a8a") + gear(CX + 44, CY + 44, 13, 9, "#a03a2e");
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#f4f1e6" opacity="0.96"/>';
+    s += markersAt(80, "baton", {color: "#1c1a16", w: 5});
+    s += ticks(80, {inner: 5, color: "#1c1a16", mw: 0, lw: 1});
+    s += txt(CX, CY + 40, "swatch", {size: 13, fill: "#1c1a16", weight: 700});
+    s += txt(CX, CY + 54, "SWISS", {size: 8, fill: "#1c1a16", spacing: 2});
+    s += handG("hour", handShape("baton", 50, 10, {color: "#1c1a16"}));
+    s += handG("min", handShape("baton", 72, 8, {color: "#1c1a16"}));
+    s += handG("sec", secondHand({len: 78, color: "#c22", w: 2.4}));
+    s += centerCap(6, "#1c1a16", "#555");
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 19. Braun BN0021 ============ */
+braun: {
+  name: "Braun BN0021", cadence: "tick",
+  render(){
+    let s = strapRects(58, CY - 164, 62, "#1d1d1f") + strapRects(58, CY + 102, 62, "#1d1d1f");
+    s += lugs(100, "#2a2a2c", 38);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="102" fill="#232325"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#f2f0ea"/>';
+    s += markersAt(80, "baton", {color: "#1c1a16", w: 5, len: 14});
+    s += ticks(80, {inner: 4, color: "#1c1a16", mw: 0, lw: 1});
+    s += txt(CX, CY - 34, "BRAUN", {size: 12, fill: "#1c1a16", weight: 700, spacing: 3});
+    s += dateWin(CX, CY + 52);
+    s += handG("hour", handShape("baton", 50, 10, {color: "#1c1a16"}));
+    s += handG("min", handShape("baton", 72, 8, {color: "#1c1a16"}));
+    s += handG("sec", secondHand({len: 80, color: "#e8b400", w: 2.6}));
+    s += centerCap(6, "#1c1a16", "#555");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 20. Mondaine Swiss Railway ============ */
+mondaine: {
+  name: "Mondaine Swiss Railway", cadence: "mondaine",
+  render(){
+    let s = strapRects(56, CY - 164, 62, "#202226") + strapRects(56, CY + 102, 62, "#202226");
+    s += lugs(100, "#c9cbcf", 36);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="102" fill="#c9cbcf"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#faf8f2"/>';
+    s += markersAt(80, "baton", {color: "#1c1a16", w: 6, len: 15});
+    s += ticks(80, {inner: 4, color: "#1c1a16", mw: 0, lw: 1});
+    /* SBB disc at 12 */
+    s += '<circle cx="' + CX + '" cy="' + (CY - 62) + '" r="10" fill="#d42a1e"/>' +
+         '<path d="M ' + (CX - 10) + ' ' + (CY - 62) + ' h13 l-4,-3.4 4,3.4 -4,3.4 Z" fill="#fff"/>';
+    s += txt(CX, CY + 44, "MONDAINE", {size: 10.5, fill: "#1c1a16", weight: 600, spacing: 2});
+    s += txt(CX, CY + 57, "SWISS RAILWAYS", {size: 7, fill: "#1c1a16", spacing: 1.5});
+    s += handG("hour", handShape("baton", 50, 11, {color: "#1c1a16"}));
+    s += handG("min", handShape("baton", 72, 9, {color: "#1c1a16"}));
+    s += handG("sec", secondHand({len: 82, color: "#d42a1e", w: 2.6, tip: "lollipop"}));
+    s += centerCap(6, "#1c1a16", "#555");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 21. TAG Heuer Monaco Calibre 11 ============ */
+monaco: {
+  name: "TAG Heuer Monaco Calibre 11", cadence: "sweep",
+  render(){
+    let s = strapRects(62, CY - 172, 70, "#1f2a44") + strapRects(62, CY + 102, 70, "#1f2a44");
+    /* square case */
+    s += '<rect x="' + (CX - 100) + '" y="' + (CY - 104) + '" width="200" height="208" rx="18" fill="#c2c4c8"/>';
+    s += '<rect x="' + (CX - 100) + '" y="' + (CY - 104) + '" width="200" height="208" rx="18" fill="none" stroke="#00000055" stroke-width="2"/>';
+    /* crown LEFT, pushers right */
+    s += crownAt(CX - 108, CY, 15, 20);
+    s += crownAt(CX + 104, CY - 44, 12, 15) + crownAt(CX + 104, CY + 44, 12, 15);
+    s += '<rect x="' + (CX - 86) + '" y="' + (CY - 90) + '" width="172" height="180" rx="10" fill="#12306e"/>';
+    /* sunburst hint */
+    for (let i = 0; i < 24; i++){ const p1 = pol(84, i * 15), p2 = pol(40, i * 15);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#ffffff10" stroke-width="4"/>'; }
+    s += markersAt(78, "baton", {color: "#f0f4ff", w: 6});
+    s += txt(CX, CY - 40, "MONACO", {size: 12, fill: "#f0f4ff", weight: 700, spacing: 2});
+    s += txt(CX, CY - 27, "HEUER", {size: 9, fill: "#f0f4ff", spacing: 3});
+    /* white subdials at 3 and 9, date at 6 */
+    s += '<circle cx="' + (CX + 44) + '" cy="' + CY + '" r="21" fill="#eef1f6"/>' + subTicks(CX + 44, CY, 18, 12, "#12306e");
+    s += handG("sub-min", handShape("stick", 16, 2.4, {tail: 4, color: "#c22"}), CX + 44, CY);
+    s += '<circle cx="' + (CX - 44) + '" cy="' + CY + '" r="21" fill="#eef1f6"/>' + subTicks(CX - 44, CY, 18, 12, "#12306e");
+    s += handG("sub-hour", handShape("stick", 16, 2.4, {tail: 4, color: "#c22"}), CX - 44, CY);
+    s += dateWin(CX, CY + 58, {bg: "#eef1f6"});
+    s += handG("hour", handShape("baton", 46, 12, {color: "#f0f4ff", lume: true}));
+    s += handG("min", handShape("baton", 68, 10, {color: "#f0f4ff", lume: true}));
+    s += handG("sec", '<rect x="-1.6" y="-76" width="3.2" height="102" fill="#e0402e"/><polygon points="0,-84 -4,-72 4,-72" fill="#e0402e"/>');
+    s += centerCap(6, "#f0f4ff", "#889");
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 22. Panerai Luminor Marina PAM03312 ============ */
+panerai: {
+  name: "Panerai Luminor Marina PAM03312", cadence: "sweep",
+  render(){
+    let s = strapRects(64, CY - 170, 68, "#3a2a1c") + strapRects(64, CY + 102, 68, "#3a2a1c");
+    /* cushion case */
+    s += '<rect x="' + (CX - 100) + '" y="' + (CY - 104) + '" width="200" height="208" rx="52" fill="#c2c4c8"/>';
+    s += '<rect x="' + (CX - 100) + '" y="' + (CY - 104) + '" width="200" height="208" rx="52" fill="none" stroke="#00000055" stroke-width="2"/>';
+    /* crown guard */
+    s += '<rect x="' + (CX + 96) + '" y="' + (CY - 26) + '" width="26" height="52" rx="8" fill="#a9abb0" stroke="#7d7f84" stroke-width="1.5"/>';
+    s += '<rect x="' + (CX + 108) + '" y="' + (CY - 8) + '" width="8" height="16" rx="3" fill="#7d7f84"/>';
+    s += crownAt(CX + 100, CY, 13, 18);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#101114"/>';
+    /* sandwich dial: lume layer + dark top with cutouts */
+    const lumeMark = (deg, big) => {
+      const p = pol(76, deg);
+      if (big) return '<rect x="' + F1(p[0] - 6) + '" y="' + F1(p[1] - 11) + '" width="12" height="22" fill="#d9e6c8" transform="rotate(' + deg + " " + F1(p[0]) + " " + F1(p[1]) + ')"/>';
+      return '<circle cx="' + F1(p[0]) + '" cy="' + F1(p[1]) + '" r="5.5" fill="#d9e6c8"/>';
+    };
+    for (let i = 0; i < 12; i++) s += lumeMark(i * 30, i % 3 === 0);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#101114" opacity="0.25"/>';
+    s += numerals(60, "arabic12", {size: 19, color: "#d9e6c8"});
+    s += txt(CX, CY - 34, "LUMINOR MARINA", {size: 10, fill: "#d9e6c8", weight: 600, spacing: 1.5});
+    s += txt(CX, CY + 44, "PANERAI", {size: 11, fill: "#d9e6c8", weight: 700, spacing: 2});
+    /* small seconds at 9 */
+    s += '<circle cx="' + (CX - 44) + '" cy="' + CY + '" r="20" fill="none" stroke="#d9e6c8" stroke-width="1.2"/>' +
+         subTicks(CX - 44, CY, 17, 12, "#d9e6c8");
+    s += handG("sub-sec", handShape("stick", 15, 2.2, {tail: 4, color: "#d9e6c8"}), CX - 44, CY);
+    s += handG("hour", handShape("baton", 50, 12, {color: "#d9e6c8"}));
+    s += handG("min", handShape("baton", 74, 10, {color: "#d9e6c8"}));
+    s += handG("sec", secondHand({len: 80, color: "#d9e6c8", w: 2.6}));
+    s += centerCap(6, "#d9e6c8", "#889");
+    s += glassSheen(86);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 23. Rolex Trackside Clock ============ */
+f1: {
+  name: "Rolex Trackside Clock", cadence: "sweep",
+  render(){
+    let s = "";
+    /* wall-clock case, no strap */
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="118" fill="#2a2c30"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="118" fill="none" stroke="#101114" stroke-width="3"/>';
+    for (let i = 0; i < 60; i++){ const p1 = pol(112, i * 6), p2 = pol(104, i * 6);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#3f434b" stroke-width="2"/>'; }
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="100" fill="#f4f2ec"/>';
+    s += markersAt(90, "baton", {color: "#1c1a16", w: 7, len: 18});
+    s += ticks(90, {inner: 6, color: "#1c1a16", mw: 0, lw: 1.2});
+    /* green crown */
+    const cp = [CX, CY - 56];
+    s += '<circle cx="' + cp[0] + '" cy="' + cp[1] + '" r="7" fill="none" stroke="#0a7a3d" stroke-width="2"/>' +
+         '<path d="M ' + cp[0] + ' ' + (cp[1] - 10) + ' l3,5.6 4,-4 -1.2,6.2 4.6,1.2 -4.6,1.2 1.2,6.2 -4,-4 -3,5.6 -3,-5.6 -4,4 1.2,-6.2 -4.6,-1.2 4.6,-1.2 -1.2,-6.2 4,4 Z" fill="#0a7a3d"/>';
+    s += txt(CX, CY - 32, "ROLEX", {size: 13, fill: "#1c1a16", weight: 700, spacing: 4});
+    s += txt(CX, CY + 48, "OYSTER", {size: 9, fill: "#1c1a16", spacing: 3});
+    s += handG("hour", handShape("baton", 56, 13, {color: "#1c1a16"}));
+    s += handG("min", handShape("baton", 84, 11, {color: "#1c1a16"}));
+    s += handG("sec", secondHand({len: 90, color: "#0a7a3d", w: 3.4, tip: "lollipop"}));
+    s += centerCap(8, "#0a7a3d", "#065c2d");
+    s += glassSheen(100);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 24. Big Ben (Elizabeth Tower) ============ */
+bigben: {
+  name: "Big Ben (Elizabeth Tower)", cadence: "tick",
+  render(){
+    let s = "";
+    /* sky + tower */
+    s += '<rect x="0" y="0" width="320" height="320" fill="#1a2233"/>';
+    for (let i = 0; i < 40; i++){ const x = (i * 47) % 320, y = (i * 89) % 200;
+      s += '<circle cx="' + x + '" cy="' + y + '" r="1.1" fill="#ffffff" opacity="0.5"/>'; }
+    /* tower body */
+    s += '<rect x="118" y="120" width="84" height="200" fill="#6b5a43"/>';
+    s += '<rect x="118" y="120" width="84" height="200" fill="none" stroke="#3d3325" stroke-width="3"/>';
+    for (let yy = 140; yy < 300; yy += 26){
+      s += '<rect x="126" y="' + yy + '" width="20" height="12" fill="#2c2530" opacity="0.85"/>' +
+           '<rect x="174" y="' + yy + '" width="20" height="12" fill="#2c2530" opacity="0.85"/>';
+    }
+    /* spire */
+    s += '<polygon points="110,120 210,120 160,44" fill="#4a3f2e"/>' +
+         '<polygon points="152,58 168,58 160,30" fill="#3d3325"/>' +
+         '<circle cx="160" cy="26" r="4" fill="#c9a227"/>';
+    /* clock face */
+    s += '<circle cx="160" cy="150" r="46" fill="#141414"/>';
+    s += '<circle cx="160" cy="150" r="40" fill="#f2ecdc"/>';
+    s += numeralsMini(160, 150, 32, [[0,"XII"],[90,"III"],[180,"VI"],[270,"IX"]], "#1c1a16");
+    for (let i = 0; i < 60; i++){ const p1 = pol(40, i * 6, 160, 150), p2 = pol(i % 5 ? 37 : 34, i * 6, 160, 150);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#1c1a16" stroke-width="' + (i % 5 ? 1 : 2) + '"/>'; }
+    s += handG("hour", handShape("baton", 20, 7, {color: "#1c1a16"}), 160, 150);
+    s += handG("min", handShape("baton", 32, 5, {color: "#1c1a16"}), 160, 150);
+    s += '<circle cx="160" cy="150" r="3.4" fill="#1c1a16"/>';
+    /* base + caption */
+    s += '<rect x="100" y="300" width="120" height="20" fill="#3d3325"/>';
+    s += txt(160, 44, "BIG BEN · LONDON", {size: 12, fill: "#e8e2d2", weight: 700, spacing: 2});
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 25. Seiko 5 Sports SRPD51 ============ */
+seiko5: {
+  name: "Seiko 5 Sports SRPD51", cadence: "sweep",
+  render(){
+    let s = watchCase({r: 104, caseC: "#c2c4c8", bezel: {color: "#17181c", w: 12, inner: true}, strap: "#33353a"});
+    for (let i = 0; i < 60; i++){ const p1 = pol(98, i * 6), p2 = pol(i % 5 ? 94 : 90, i * 6);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#d8d8d8" stroke-width="' + (i % 5 ? 1 : 2) + '"/>'; }
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#0e0f12"/>';
+    s += markersAt(78, "baton", {color: "#eef2e8", w: 6});
+    s += txt(CX, CY - 46, "SEIKO", {size: 12, fill: "#eef2e8", weight: 700, spacing: 2});
+    s += txt(CX, CY + 44, "5", {size: 15, fill: "#eef2e8", weight: 800});
+    s += txt(CX, CY + 58, "SPORTS", {size: 8.5, fill: "#eef2e8", spacing: 2});
+    s += dayDateWin(CX + 52, CY);
+    s += handG("hour", handShape("baton", 50, 11, {color: "#eef2e8", lume: true}));
+    s += handG("min", handShape("baton", 74, 9, {color: "#eef2e8", lume: true}));
+    s += handG("sec", secondHand({len: 80, color: "#e8734a", w: 2.4}));
+    s += centerCap(6, "#eef2e8", "#889");
+    s += glassSheen(86);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 26. Blancpain Villeret Quantième Complet ============ */
+moonphase: {
+  name: "Blancpain Villeret Quantième Complet", cadence: "sweep",
+  render(){
+    let s = strapRects(48, CY - 162, 60, "#2e1f14") + strapRects(48, CY + 102, 60, "#2e1f14");
+    s += lugs(98, "#c9cbcf", 32);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="100" fill="#c9cbcf"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="90" fill="#f4f0e2"/>';
+    s += markersAt(80, "baton", {color: "#1c1a16", w: 4.5, len: 14});
+    /* day + month apertures */
+    s += apertureWin(CX - 34, CY - 52, 56, "day", {bg: "#1c1a16"});
+    s += apertureWin(CX + 34, CY - 52, 56, "month", {bg: "#1c1a16"});
+    s += txt(CX, CY - 30, "BLANCPAIN", {size: 10, fill: "#1c1a16", weight: 600, spacing: 2});
+    s += txt(CX, CY + 26, "Villeret", {size: 9, fill: "#1c1a16", italic: true});
+    /* moonphase at 6 */
+    s += moonphase(CX, CY + 52, 26);
+    s += handG("hour", handShape("leaf", 46, 12, {color: "#1c1a16"}));
+    s += handG("min", handShape("leaf", 70, 10, {color: "#1c1a16"}));
+    s += handG("sec", secondHand({len: 76, color: "#1e3f8f", w: 2}));
+    s += centerCap(5, "#1c1a16", "#555");
+    s += glassSheen(90);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 27. Richard Mille RM 011 Felipe Massa ============ */
+richardmille: {
+  name: "Richard Mille RM 011 Felipe Massa", cadence: "sweep",
+  render(){
+    const u = uid();
+    let s = strapRects(72, CY - 170, 68, "#1e1e22") + strapRects(72, CY + 102, 68, "#1e1e22");
+    /* tonneau case */
+    s += '<path d="M ' + (CX - 78) + " " + (CY - 104) + " C " + (CX - 104) + " " + (CY - 60) + " " + (CX - 104) + " " + (CY + 60) + " " + (CX - 78) + " " + (CY + 104) +
+      " L " + (CX + 78) + " " + (CY + 104) + " C " + (CX + 104) + " " + (CY + 60) + " " + (CX + 104) + " " + (CY - 60) + " " + (CX + 78) + " " + (CY - 104) + ' Z" fill="#26262b"/>';
+    s += '<path d="M ' + (CX - 78) + " " + (CY - 104) + " C " + (CX - 104) + " " + (CY - 60) + " " + (CX - 104) + " " + (CY + 60) + " " + (CX - 78) + " " + (CY + 104) +
+      " L " + (CX + 78) + " " + (CY + 104) + " C " + (CX + 104) + " " + (CY + 60) + " " + (CX + 104) + " " + (CY - 60) + " " + (CX + 78) + " " + (CY - 104) +
+      ' Z" fill="none" stroke="#e8641e" stroke-width="2" opacity="0.7"/>';
+    /* bezel screws */
+    [[-78, -92], [78, -92], [-96, 0], [96, 0], [-78, 92], [78, 92]].forEach(([dx, dy]) => {
+      s += '<circle cx="' + (CX + dx) + '" cy="' + (CY + dy) + '" r="4.5" fill="#101114" stroke="#e8641e" stroke-width="1.2"/>'; });
+    /* skeleton dial */
+    s += '<ellipse cx="' + CX + '" cy="' + CY + '" rx="70" ry="86" fill="#0c0d10"/>';
+    s += '<defs><pattern id="' + u + '" width="18" height="18" patternUnits="userSpaceOnUse">' +
+         '<path d="M0,9 h18 M9,0 v18" stroke="#2c2e33" stroke-width="1.4"/></pattern></defs>';
+    s += '<ellipse cx="' + CX + '" cy="' + CY + '" rx="70" ry="86" fill="url(#' + u + ')" opacity="0.55"/>';
+    /* gears */
+    s += '<circle cx="' + (CX - 26) + '" cy="' + (CY + 30) + '" r="16" fill="none" stroke="#4a4d55" stroke-width="3"/>' +
+         '<circle cx="' + (CX + 30) + '" cy="' + (CY - 34) + '" r="12" fill="none" stroke="#4a4d55" stroke-width="3"/>';
+    s += markersAt(74, "baton", {color: "#e8641e", w: 6});
+    s += txt(CX, CY - 52, "RICHARD MILLE", {size: 9, fill: "#e8e8e8", weight: 700, spacing: 1.5});
+    /* subdials */
+    s += subdial("min", CX + 36, CY - 6, 18, {handColor: "#e8641e", label: "30"});
+    s += subdial("hour", CX - 36, CY - 6, 18, {handColor: "#e8641e", label: "12"});
+    s += subdial("sec", CX, CY + 52, 18, {handColor: "#e8e8e8", label: "60"});
+    s += handG("hour", handShape("baton", 44, 10, {color: "#e8641e"}));
+    s += handG("min", handShape("baton", 66, 8, {color: "#e8641e"}));
+    s += handG("sec", secondHand({len: 76, color: "#e8e8e8", w: 2.4, tip: "arrow"}));
+    s += centerCap(6, "#e8641e", "#8a3c0e");
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 28. TUDOR Black Bay Fifty-Eight ============ */
+blackbay58: {
+  name: "TUDOR Black Bay Fifty-Eight M79030N", cadence: "sweep",
+  render(){
+    let s = watchCase({r: 104, caseC: "#c2c4c8", bezel: {color: "#141518", w: 14, inner: true}, strap: "#33353a"});
+    for (let i = 0; i < 60; i++){ const p1 = pol(97, i * 6), p2 = pol(i % 5 ? 93 : 89, i * 6);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#c9a86a" stroke-width="' + (i % 5 ? 1.1 : 2.2) + '"/>'; }
+    const bp = pol(97, 0);
+    s += '<polygon points="' + F1(bp[0]) + "," + F1(bp[1] - 2) + " " + F1(bp[0] - 5) + "," + F1(bp[1] + 8) + " " + F1(bp[0] + 5) + "," + F1(bp[1] + 8) + '" fill="#c9a86a"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#101114"/>';
+    s += markersAt(78, "diver", {color: "#c9a86a", w: 7});
+    /* shield logo */
+    s += '<path d="M ' + CX + ' ' + (CY - 58) + ' l10,-4 v10 c0,7 -4.5,11 -10,13 c-5.5,-2 -10,-6 -10,-13 v-10 Z" fill="#c9a86a"/>';
+    s += txt(CX, CY - 30, "TUDOR", {size: 10.5, fill: "#c9a86a", weight: 700, spacing: 2.5});
+    s += txt(CX, CY - 19, "GENEVE", {size: 7, fill: "#c9a86a", spacing: 2});
+    s += txt(CX, CY + 44, "200m = 660ft", {size: 8, fill: "#c9a86a", spacing: 1});
+    s += txt(CX, CY + 56, "CHRONOMETER", {size: 7.5, fill: "#c9a86a", spacing: 1.5});
+    s += handG("hour", handShape("snowflake", 50, 11, {color: "#c9a86a"}));
+    s += handG("min", handShape("snowflake", 74, 9, {color: "#c9a86a"}));
+    s += handG("sec", secondHand({len: 80, color: "#c9a86a", w: 2.4, tip: "lollipop"}));
+    s += centerCap(6, "#c9a86a", "#8a6f3c");
+    s += glassSheen(86);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 29. Breitling Navitimer B01 43 ============ */
+navitimer: {
+  name: "Breitling Navitimer B01 Chronograph 43", cadence: "sweep",
+  render(){
+    let s = watchCase({r: 106, caseC: "#c2c4c8", bezel: {color: "#101114", w: 16, inner: true}, strap: "#2e2e33", pushers: true});
+    /* slide rule scale */
+    for (let i = 0; i < 60; i++){ const p1 = pol(98, i * 6), p2 = pol(92, i * 6);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#eee" stroke-width="1.2"/>'; }
+    [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60].forEach(n => { const p = pol(94, (n / 60) * 360);
+      s += '<text x="' + F1(p[0]) + '" y="' + F1(p[1]) + '" text-anchor="middle" dominant-baseline="central" font-size="7.5" fill="#eee" font-weight="600">' + n + "</text>"; });
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="84" fill="#101114"/>';
+    s += markersAt(76, "baton", {color: "#f0f0f0", w: 6});
+    s += ticks(76, {inner: 5, color: "#f0f0f0", mw: 0, lw: 1});
+    s += txt(CX, CY - 46, "BREITLING", {size: 10.5, fill: "#f0f0f0", weight: 700, spacing: 1.5});
+    s += txt(CX, CY + 58, "NAVITIMER", {size: 8.5, fill: "#f0f0f0", spacing: 2});
+    s += subdial("min", CX + 42, CY, 20, {handColor: "#f0f0f0", label: "30"});
+    s += subdial("hour", CX - 42, CY, 20, {handColor: "#f0f0f0", label: "12"});
+    s += subdial("sec", CX, CY + 44, 20, {handColor: "#f0f0f0", label: "60"});
+    s += handG("hour", handShape("baton", 48, 11, {color: "#f0f0f0", lume: true}));
+    s += handG("min", handShape("baton", 70, 9, {color: "#f0f0f0", lume: true}));
+    s += handG("sec", '<rect x="-1.4" y="-80" width="2.8" height="106" fill="#e0402e"/><polygon points="0,-88 -4,-76 4,-76" fill="#e0402e"/>');
+    s += centerCap(6, "#f0f0f0", "#777");
+    s += glassSheen(84);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 30. Zenith Chronomaster Sport ============ */
+elprimero: {
+  name: "Zenith Chronomaster Sport 03.3100.3600/69.M3100", cadence: "sweep",
+  render(){
+    let s = watchCase({r: 106, caseC: "#c2c4c8", bezel: {color: "#141518", w: 13, inner: true}, strap: "#33353a", pushers: true});
+    for (let i = 0; i < 100; i++){ const p1 = pol(99, i * 3.6), p2 = pol(i % 10 ? 95 : 91, i * 3.6);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#eee" stroke-width="' + (i % 10 ? 1 : 2) + '"/>'; }
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="85" fill="#eef0f2"/>';
+    s += markersAt(77, "baton", {color: "#1c1a16", w: 6});
+    s += ticks(77, {inner: 5, color: "#1c1a16", mw: 0, lw: 1});
+    s += txt(CX, CY - 46, "ZENITH", {size: 11, fill: "#1c1a16", weight: 700, spacing: 2});
+    s += txt(CX, CY + 60, "EL PRIMERO", {size: 8, fill: "#1c1a16", spacing: 1.5});
+    /* tri-color subdials */
+    const tri = (id, sx, fill, label) =>
+      '<circle cx="' + sx + '" cy="' + CY + '" r="20" fill="' + fill + '"/>' + subTicks(sx, CY, 17, 12, "#1c1a16") +
+      handG("sub-" + id, handShape("stick", 15, 2.4, {tail: 4, color: "#c22"}), sx, CY) +
+      '<circle cx="' + sx + '" cy="' + CY + '" r="2.4" fill="#c22"/>';
+    s += tri("min", CX + 42, "#c8ccd1", "30") + tri("hour", CX, "#5a5e64", "12") + tri("sec", CX - 42, "#1d3f8f", "60");
+    s += dateWin(CX, CY + 44, {bg: "#eef0f2", w: 26});
+    s += handG("hour", handShape("baton", 46, 11, {color: "#1c1a16", lume: true}));
+    s += handG("min", handShape("baton", 70, 9, {color: "#1c1a16", lume: true}));
+    s += handG("sec", secondHand({len: 80, color: "#c22", w: 2.6, tip: "arrow"}));
+    s += centerCap(6, "#1c1a16", "#555");
+    s += glassSheen(85);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 31. Vacheron Constantin Overseas ============ */
+overseas: {
+  name: "Vacheron Constantin Overseas Self-Winding 4520V/210A-B128", cadence: "sweep",
+  render(){
+    let s = strapRects(64, CY - 170, 68, "#2b2e35") + strapRects(64, CY + 102, 68, "#2b2e35");
+    s += lugs(102, "#c2c4c8", 40);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="104" fill="#c2c4c8"/>';
+    /* maltese-cross bezel: six polished lobes */
+    for (let i = 0; i < 6; i++){ const p = pol(96, i * 60);
+      s += '<circle cx="' + F1(p[0]) + '" cy="' + F1(p[1]) + '" r="9" fill="#dfe1e5" stroke="#8a8c90" stroke-width="1"/>'; }
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#16305e"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="none" stroke="#00000055" stroke-width="2"/>';
+    /* lacquer radial lines */
+    for (let i = 0; i < 72; i++){ const p1 = pol(86, i * 5), p2 = pol(30, i * 5);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#ffffff08" stroke-width="3"/>'; }
+    s += markersAt(78, "baton", {color: "#eef2fa", w: 6});
+    /* maltese cross logo */
+    s += '<path d="M ' + CX + ' ' + (CY - 62) + ' l4,8 8,4 -8,4 -4,8 -4,-8 -8,-4 8,-4 Z" fill="#eef2fa"/>';
+    s += txt(CX, CY - 32, "VACHERON CONSTANTIN", {size: 8.5, fill: "#eef2fa", weight: 600, spacing: 1.5});
+    s += txt(CX, CY - 21, "GENEVE", {size: 7, fill: "#eef2fa", spacing: 3});
+    s += dateWin(CX + 58, CY, {bg: "#16305e"});
+    s += handG("hour", handShape("baton", 50, 11, {color: "#eef2fa", lume: true}));
+    s += handG("min", handShape("baton", 72, 9, {color: "#eef2fa", lume: true}));
+    s += handG("sec", secondHand({len: 78, color: "#eef2fa", w: 2.4}));
+    s += centerCap(6, "#eef2fa", "#889");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 32. Hublot Big Bang Unico Red Magic ============ */
+bigbang: {
+  name: "Hublot Big Bang Unico Red Magic 42", cadence: "sweep",
+  render(){
+    let s = strapRects(70, CY - 172, 70, "#151517") + strapRects(70, CY + 102, 70, "#151517");
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="106" fill="#a02318"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="106" fill="none" stroke="#5e130c" stroke-width="2"/>';
+    /* 6 H-screws */
+    for (let i = 0; i < 6; i++){ const p = pol(97, i * 60 + 30);
+      s += '<rect x="' + F1(p[0] - 2.4) + '" y="' + F1(p[1] - 7) + '" width="4.8" height="14" fill="#3a0d08" transform="rotate(' + (i * 60 + 30) + " " + F1(p[0]) + " " + F1(p[1]) + ')"/>' +
+           '<rect x="' + F1(p[0] - 7) + '" y="' + F1(p[1] - 2.4) + '" width="14" height="4.8" fill="#3a0d08" transform="rotate(' + (i * 60 + 30) + " " + F1(p[0]) + " " + F1(p[1]) + ')"/>';
+    }
+    /* skeleton */
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#0c0d10"/>';
+    s += '<circle cx="' + (CX - 24) + '" cy="' + (CY + 26) + '" r="20" fill="none" stroke="#3f434b" stroke-width="4"/>' +
+         '<circle cx="' + (CX + 26) + '" cy="' + (CY - 30) + '" r="15" fill="none" stroke="#3f434b" stroke-width="4"/>' +
+         '<circle cx="' + (CX + 8) + '" cy="' + (CY + 44) + '" r="10" fill="none" stroke="#3f434b" stroke-width="3"/>';
+    s += markersAt(78, "baton", {color: "#e8e8e8", w: 6});
+    s += txt(CX, CY - 40, "HUBLOT", {size: 11, fill: "#e8e8e8", weight: 700, spacing: 2});
+    s += subdial("min", CX + 40, CY + 4, 19, {handColor: "#e0402e"});
+    s += subdial("sec", CX - 40, CY + 4, 19, {handColor: "#e0402e"});
+    s += handG("hour", handShape("baton", 46, 12, {color: "#e0402e"}));
+    s += handG("min", handShape("baton", 70, 10, {color: "#e0402e"}));
+    s += handG("sec", secondHand({len: 78, color: "#e8e8e8", w: 2.4, tip: "arrow"}));
+    s += centerCap(6, "#e0402e", "#7a1e12");
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 33. Tissot PRX 40 ============ */
+prx: {
+  name: "Tissot PRX 40mm Powermatic 80 T137.407.11.041.00", cadence: "sweep",
+  render(){
+    const u = uid();
+    let s = "";
+    /* integrated bracelet: wide flat links */
+    for (let li = 0; li < 3; li++){
+      s += '<rect x="' + (CX - 44) + '" y="' + (CY - 176 + li * 24) + '" width="88" height="22" rx="4" fill="#c2c4c8" stroke="#8a8c90" stroke-width="1"/>';
+      s += '<rect x="' + (CX - 44) + '" y="' + (CY + 106 + li * 24) + '" width="88" height="22" rx="4" fill="#c2c4c8" stroke="#8a8c90" stroke-width="1"/>';
+    }
+    /* tonneau-ish case */
+    s += '<path d="M ' + (CX - 88) + " " + (CY - 100) + " Q " + CX + " " + (CY - 116) + " " + (CX + 88) + " " + (CY - 100) +
+      " L " + (CX + 88) + " " + (CY + 100) + " Q " + CX + " " + (CY + 116) + " " + (CX - 88) + " " + (CY + 100) + ' Z" fill="#c2c4c8"/>';
+    /* waffle dial */
+    s += '<defs><pattern id="' + u + '" width="11" height="11" patternUnits="userSpaceOnUse">' +
+         '<rect width="11" height="11" fill="#14335f"/><rect x="1.5" y="1.5" width="8" height="8" fill="#1a4176"/>' +
+         "</pattern></defs>";
+    s += '<path d="M ' + (CX - 76) + " " + (CY - 88) + " Q " + CX + " " + (CY - 102) + " " + (CX + 76) + " " + (CY - 88) +
+      " L " + (CX + 76) + " " + (CY + 88) + " Q " + CX + " " + (CY + 102) + " " + (CX - 76) + " " + (CY + 88) +
+      '" fill="url(#' + u + ')"/>';
+    s += markersAt(70, "baton", {color: "#eef2fa", w: 6});
+    s += txt(CX, CY - 36, "TISSOT", {size: 11, fill: "#eef2fa", weight: 700, spacing: 2});
+    s += txt(CX, CY + 42, "PRX", {size: 10, fill: "#eef2fa", weight: 700, spacing: 3});
+    s += txt(CX, CY + 55, "POWERMATIC 80", {size: 7, fill: "#eef2fa", spacing: 1.5});
+    s += dateWin(CX + 52, CY, {bg: "#14335f"});
+    s += handG("hour", handShape("baton", 44, 11, {color: "#eef2fa", lume: true}));
+    s += handG("min", handShape("baton", 66, 9, {color: "#eef2fa", lume: true}));
+    s += handG("sec", secondHand({len: 72, color: "#eef2fa", w: 2.4}));
+    s += centerCap(6, "#eef2fa", "#889");
+    s += glassSheen(76);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 34. Hamilton Khaki Field Mechanical ============ */
+khaki: {
+  name: "Hamilton Khaki Field Mechanical 38mm H69439931", cadence: "sweep",
+  render(){
+    let s = strapRects(56, CY - 164, 62, "#4a4438") + strapRects(56, CY + 102, 62, "#4a4438");
+    s += lugs(100, "#b9babd", 36);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="102" fill="#b9babd"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#141416"/>';
+    s += numerals(76, "arabic12", {size: 19, color: "#e8e6dc"});
+    s += numerals(58, "arabic24", {size: 10.5, color: "#e8e6dc"});
+    s += ticks(84, {inner: 4, color: "#e8e6dc", mw: 0, lw: 1});
+    s += txt(CX, CY - 32, "HAMILTON", {size: 10, fill: "#e8e6dc", weight: 700, spacing: 2});
+    s += txt(CX, CY + 40, "KHAKI", {size: 8.5, fill: "#e8e6dc", spacing: 2.5});
+    s += handG("hour", handShape("syringe", 46, 9, {color: "#e8e6dc"}));
+    s += handG("min", handShape("syringe", 70, 7, {color: "#e8e6dc"}));
+    s += handG("sec", secondHand({len: 76, color: "#e8e6dc", w: 2.2}));
+    s += centerCap(5, "#e8e6dc", "#889");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 35. Bell & Ross BR-03 Black Matte ============ */
+br03: {
+  name: "Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB", cadence: "sweep",
+  render(){
+    let s = strapRects(72, CY - 172, 70, "#1d1d1f") + strapRects(72, CY + 102, 70, "#1d1d1f");
+    /* square instrument case + round dial */
+    s += '<rect x="' + (CX - 100) + '" y="' + (CY - 104) + '" width="200" height="208" rx="16" fill="#232326"/>';
+    s += '<rect x="' + (CX - 100) + '" y="' + (CY - 104) + '" width="200" height="208" rx="16" fill="none" stroke="#101114" stroke-width="2"/>';
+    [[-92, -96], [92, -96], [-92, 96], [92, 96]].forEach(([dx, dy]) => {
+      s += '<circle cx="' + (CX + dx) + '" cy="' + (CY + dy) + '" r="5" fill="#101114" stroke="#3a3d42" stroke-width="1.5"/>'; });
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#0d0d0f"/>';
+    s += numerals(72, "br03", {size: 24, color: "#f0f0f0"});
+    s += ticks(84, {inner: 4, color: "#f0f0f0", mw: 0, lw: 1});
+    s += txt(CX, CY - 34, "Bell & Ross", {size: 10, fill: "#f0f0f0", weight: 600});
+    s += dateWin(CX + 56, CY, {bg: "#0d0d0f", w: 28});
+    s += handG("hour", handShape("sword", 46, 13, {color: "#f0f0f0", lume: true}));
+    s += handG("min", handShape("sword", 68, 11, {color: "#f0f0f0", lume: true}));
+    s += handG("sec", secondHand({len: 76, color: "#e8641e", w: 2.6}));
+    s += centerCap(6, "#f0f0f0", "#888");
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 36. Westclox Twin Bell Alarm 70010A ============ */
+twinbell: {
+  name: "Westclox Twin Bell Alarm Clock 70010A", cadence: "tick",
+  render(){
+    let s = "";
+    /* bells + handle + legs */
+    s += '<path d="M ' + (CX - 92) + ' ' + (CY - 108) + ' Q ' + (CX - 104) + ' ' + (CY - 150) + ' ' + (CX - 64) + ' ' + (CY - 152) + ' L ' + (CX - 60) + ' ' + (CY - 108) + ' Z" fill="#c9cbcf" stroke="#7d7f84" stroke-width="2"/>';
+    s += '<path d="M ' + (CX + 92) + ' ' + (CY - 108) + ' Q ' + (CX + 104) + ' ' + (CY - 150) + ' ' + (CX + 64) + ' ' + (CY - 152) + ' L ' + (CX + 60) + ' ' + (CY - 108) + ' Z" fill="#c9cbcf" stroke="#7d7f84" stroke-width="2"/>';
+    s += '<circle cx="' + (CX - 64) + '" cy="' + (CY - 152) + '" r="5" fill="#7d7f84"/>' +
+         '<circle cx="' + (CX + 64) + '" cy="' + (CY - 152) + '" r="5" fill="#7d7f84"/>';
+    s += '<path d="M ' + (CX - 44) + " " + (CY - 116) + " Q " + CX + " " + (CY - 152) + " " + (CX + 44) + " " + (CY - 116) + '" fill="none" stroke="#8f9196" stroke-width="6"/>';
+    s += '<line x1="' + (CX - 60) + '" y1="' + (CY + 108) + '" x2="' + (CX - 78) + '" y2="' + (CY + 148) + '" stroke="#8f9196" stroke-width="9" stroke-linecap="round"/>';
+    s += '<line x1="' + (CX + 60) + '" y1="' + (CY + 108) + '" x2="' + (CX + 78) + '" y2="' + (CY + 148) + '" stroke="#8f9196" stroke-width="9" stroke-linecap="round"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="112" fill="#3a3d42"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="100" fill="#f0ead8"/>';
+    s += numerals(84, "arabic12", {size: 22, color: "#1c1a16"});
+    s += ticks(96, {inner: 5, color: "#1c1a16", mw: 0, lw: 1.2});
+    s += txt(CX, CY - 40, "Westclox", {size: 13, fill: "#1c1a16", italic: true, weight: 600});
+    s += txt(CX, CY + 52, "ALARM", {size: 9, fill: "#8a1f1f", spacing: 3});
+    /* alarm 4th hand (static at 7) */
+    s += '<g transform="rotate(210 ' + CX + " " + CY + ')"><polygon points="0,-78 -4,-60 4,-60" fill="#8a1f1f"/><rect x="-1.5" y="-60" width="3" height="86" fill="#8a1f1f"/></g>';
+    s += handG("hour", handShape("spade", 52, 13, {color: "#1c1a16"}));
+    s += handG("min", handShape("spade", 80, 11, {color: "#1c1a16"}));
+    s += handG("sec", secondHand({len: 86, color: "#8a1f1f", w: 2.6}));
+    s += centerCap(7, "#1c1a16", "#555");
+    s += glassSheen(100);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 37. Comtoise Longcase Clock, c. 1850 ============ */
+grandfather: {
+  name: "Comtoise Longcase Clock — Musée du Temps, c. 1850", cadence: "tick",
+  render(){
+    let s = "";
+    /* wooden trunk */
+    s += '<rect x="104" y="30" width="112" height="262" rx="6" fill="#4a2f1c"/>';
+    s += '<rect x="104" y="30" width="112" height="262" rx="6" fill="none" stroke="#241608" stroke-width="3"/>';
+    s += '<rect x="112" y="38" width="96" height="246" rx="4" fill="#5d3d24"/>';
+    /* hood + dial */
+    s += '<rect x="96" y="22" width="128" height="118" rx="8" fill="#3a2412" stroke="#1c0f04" stroke-width="3"/>';
+    s += '<circle cx="160" cy="82" r="46" fill="#efe6cf"/>';
+    s += '<circle cx="160" cy="82" r="46" fill="none" stroke="#8a6f3c" stroke-width="2.5"/>';
+    /* floral spandrels */
+    [[118, 44], [202, 44], [118, 120], [202, 120]].forEach(([x, y]) => {
+      s += '<circle cx="' + x + '" cy="' + y + '" r="7" fill="#a03a2e" opacity="0.75"/>' +
+           '<circle cx="' + x + '" cy="' + y + '" r="3" fill="#d8b13a" opacity="0.8"/>'; });
+    s += numeralsMini(160, 82, 36, [[0,"XII"],[30,"I"],[60,"II"],[90,"III"],[120,"IIII"],[150,"V"],[180,"VI"],[210,"VII"],[240,"VIII"],[270,"IX"],[300,"X"],[330,"XI"]], "#1c1a16");
+    for (let i = 0; i < 60; i++){ const p1 = pol(46, i * 6, 160, 82), p2 = pol(i % 5 ? 43 : 40, i * 6, 160, 82);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#1c1a16" stroke-width="' + (i % 5 ? 1 : 2) + '"/>'; }
+    s += txt(160, 62, "COMTOISE", {size: 8, fill: "#1c1a16", spacing: 2});
+    s += handG("hour", handShape("spade", 22, 8, {color: "#1c1a16"}), 160, 82);
+    s += handG("min", handShape("spade", 36, 6, {color: "#1c1a16"}), 160, 82);
+    s += '<circle cx="160" cy="82" r="3" fill="#1c1a16"/>';
+    /* trunk window: pendulum + weights */
+    s += '<rect x="126" y="150" width="68" height="128" rx="4" fill="#120b04"/>';
+    s += '<line x1="126" y1="150" x2="194" y2="150" stroke="#8a6f3c" stroke-width="3"/>';
+    /* swinging pendulum */
+    s += '<g data-part="pendulum" data-cx="160" data-cy="150">' +
+         '<rect x="158.5" y="150" width="3" height="96" fill="#c9a227"/>' +
+         '<circle cx="160" cy="252" r="13" fill="#c9a227" stroke="#8a6f1c" stroke-width="2"/>' +
+         '<circle cx="160" cy="252" r="5" fill="#8a6f1c"/></g>';
+    s += '<rect x="132" y="170" width="10" height="60" rx="4" fill="#6e5a2e"/>' +
+         '<rect x="178" y="170" width="10" height="60" rx="4" fill="#6e5a2e"/>';
+    s += '<rect x="92" y="292" width="136" height="16" rx="4" fill="#3a2412"/>';
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 38. Prague Astronomical Clock (Orloj) ============ */
+orloj: {
+  name: "Prague Old Town Astronomical Clock (2018-restored astrolabe)", cadence: "tick",
+  render(){
+    const u = uid();
+    let s = "";
+    /* stone frame */
+    s += '<rect x="52" y="30" width="216" height="262" rx="10" fill="#5a5148"/>';
+    s += '<rect x="52" y="30" width="216" height="262" rx="10" fill="none" stroke="#2e2a24" stroke-width="4"/>';
+    /* astrolabe dial */
+    s += '<circle cx="160" cy="130" r="92" fill="#0e2a52"/>';
+    s += '<defs><radialGradient id="' + u + '" cx="50%" cy="50%" r="50%">' +
+         '<stop offset="0%" stop-color="#12335f"/><stop offset="100%" stop-color="#081a38"/></radialGradient></defs>';
+    s += '<circle cx="160" cy="130" r="92" fill="url(#' + u + ')"/>';
+    /* zodiac ring */
+    for (let i = 0; i < 24; i++){ const p = pol(84, i * 15, 160, 130);
+      s += '<circle cx="' + F1(p[0]) + '" cy="' + F1(p[1]) + '" r="2.6" fill="#c9a227"/>'; }
+    s += '<circle cx="160" cy="130" r="76" fill="none" stroke="#c9a227" stroke-width="2"/>';
+    for (let i = 0; i < 12; i++){ const p1 = pol(76, i * 30, 160, 130), p2 = pol(68, i * 30, 160, 130);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#c9a227" stroke-width="2"/>'; }
+    s += numeralsMini(160, 130, 60, [[0,"XII"],[90,"III"],[180,"VI"],[270,"IX"]], "#e8d9a8");
+    /* earth at center */
+    s += '<circle cx="160" cy="130" r="14" fill="#1d4d2a" stroke="#c9a227" stroke-width="1.5"/>';
+    s += '<path d="M148,126 q8,-6 16,0 q6,6 -2,10 q-12,4 -18,-2 q-2,-5 4,-8 Z" fill="#2a6e3f"/>';
+    /* rotating rete: sun pointer (24h) + moon ball */
+    s += '<g data-part="sun24" data-cx="160" data-cy="130">' +
+         '<line x1="160" y1="130" x2="160" y2="52" stroke="#e8b13a" stroke-width="3"/>' +
+         '<circle cx="160" cy="52" r="9" fill="#e8b13a"/>' +
+         '<circle cx="157" cy="49" r="3" fill="#f6d878"/></g>';
+    s += '<g data-part="moon" data-cx="160" data-cy="130">' +
+         '<circle cx="160" cy="196" r="7" fill="#cfd6dd"/>' +
+         '<circle cx="160" cy="64" r="7" fill="#cfd6dd" opacity="0.35"/></g>';
+    /* gothic tracery below */
+    s += '<circle cx="160" cy="248" r="30" fill="#0e2a52" stroke="#c9a227" stroke-width="2"/>';
+    for (let i = 0; i < 12; i++){ const p = pol(22, i * 30, 160, 248);
+      s += '<circle cx="' + F1(p[0]) + '" cy="' + F1(p[1]) + '" r="3" fill="#c9a227" opacity="0.7"/>'; }
+    s += txt(160, 20, "PRAŽSKÝ ORLOJ · 1410", {size: 11, fill: "#e8dcc2", weight: 700, spacing: 2});
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 39. Ulysse Nardin Marine Torpilleur ============ */
+marine: {
+  name: "Ulysse Nardin Marine Torpilleur 1182-310/42", cadence: "sweep",
+  render(){
+    let s = strapRects(50, CY - 162, 60, "#1f2a44") + strapRects(50, CY + 102, 60, "#1f2a44");
+    s += lugs(98, "#c9cbcf", 34);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="100" fill="#c9cbcf"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="90" fill="#f2eee1"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="90" fill="none" stroke="#8a8c90" stroke-width="1.5"/>';
+    s += numerals(78, "roman", {size: 20, color: "#1c1a16"});
+    s += ticks(86, {inner: 4, color: "#1c1a16", mw: 0, lw: 1});
+    /* power reserve at 12 */
+    s += powerReserve(CX, CY - 44, 24).replace(/#d8d8d8/g, "#1c1a16");
+    s += txt(CX, CY - 18, "ULYSSE NARDIN", {size: 9, fill: "#1c1a16", weight: 600, spacing: 1.5});
+    /* small seconds at 6 */
+    s += '<circle cx="' + CX + '" cy="' + (CY + 48) + '" r="19" fill="none" stroke="#1c1a16" stroke-width="1.2"/>' +
+         subTicks(CX, CY + 48, 16, 12, "#1c1a16");
+    s += handG("sub-sec", handShape("stick", 14, 2, {tail: 4, color: "#1e3f8f"}), CX, CY + 48);
+    s += handG("hour", handShape("leaf", 46, 12, {color: "#1e3f8f"}));
+    s += handG("min", handShape("leaf", 70, 10, {color: "#1e3f8f"}));
+    s += handG("sec", secondHand({len: 76, color: "#1e3f8f", w: 2}));
+    s += centerCap(5, "#1e3f8f", "#0f2560");
+    s += glassSheen(90);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 40. Ulysse Nardin Freak X Carbon ============ */
+freak: {
+  name: "Ulysse Nardin Freak X Carb 2303-270/CARB", cadence: "sweep",
+  render(){
+    const u = uid();
+    let s = strapRects(64, CY - 170, 68, "#151517") + strapRects(64, CY + 102, 68, "#151517");
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="106" fill="#1a1b1e"/>';
+    /* carbon texture */
+    s += '<defs><pattern id="' + u + '" width="12" height="12" patternUnits="userSpaceOnUse">' +
+         '<rect width="12" height="12" fill="#1a1b1e"/><rect x="0" y="0" width="6" height="6" fill="#22242a"/>' +
+         '<rect x="6" y="6" width="6" height="6" fill="#22242a"/></pattern></defs>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="106" fill="url(#' + u + ')"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#0c0d10"/>';
+    /* gears */
+    const gear = (gx, gy, gr, c) => '<circle cx="' + gx + '" cy="' + gy + '" r="' + gr + '" fill="none" stroke="' + c + '" stroke-width="3"/>' +
+      '<circle cx="' + gx + '" cy="' + gy + '" r="' + (gr * 0.3) + '" fill="' + c + '"/>';
+    s += gear(CX - 40, CY - 30, 22, "#3f434b") + gear(CX + 44, CY + 34, 17, "#3f434b") + gear(CX + 10, CY - 52, 12, "#4a4e57");
+    s += markersAt(80, "baton", {color: "#e8e8e8", w: 5});
+    s += txt(CX, CY + 58, "ULYSSE NARDIN", {size: 9, fill: "#e8e8e8", weight: 600, spacing: 1.5});
+    s += txt(CX, CY + 70, "FREAK X", {size: 8, fill: "#e8e8e8", spacing: 3});
+    /* rotating carousel = minute hand */
+    s += '<g data-part="rotor" data-cx="' + CX + '" data-cy="' + CY + '">' +
+         '<rect x="' + (CX - 7) + '" y="' + (CY - 84) + '" width="14" height="120" rx="7" fill="#2c2e34" stroke="#e8e8e8" stroke-width="1.4"/>' +
+         '<circle cx="' + CX + '" cy="' + (CY - 72) + '" r="6" fill="#e8e8e8"/>' +
+         '<circle cx="' + CX + '" cy="' + (CY - 40) + '" r="4" fill="none" stroke="#e8e8e8" stroke-width="1.6"/></g>';
+    /* hour pointer */
+    s += handG("hour", '<polygon points="0,-52 -8,10 8,10" fill="#e0402e"/>');
+    s += centerCap(9, "#2c2e34", "#e8e8e8");
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 41. Patek Philippe 5270J Perpetual Calendar Chronograph ============ */
+patek: {
+  name: "Patek Philippe Perpetual Calendar Chronograph 5270J-001", cadence: "sweep",
+  render(){
+    let s = strapRects(50, CY - 162, 60, "#2e1f14") + strapRects(50, CY + 102, 60, "#2e1f14");
+    s += lugs(98, "#d8b96a", 34);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="100" fill="#d8b96a"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="90" fill="#e7d9b4"/>';
+    s += markersAt(80, "baton", {color: "#4a3d28", w: 4.5, len: 14});
+    /* day / month apertures */
+    s += apertureWin(CX - 34, CY - 54, 54, "day", {bg: "#2b2113"});
+    s += apertureWin(CX + 34, CY - 54, 54, "month", {bg: "#2b2113"});
+    s += txt(CX, CY - 30, "PATEK PHILIPPE", {size: 9.5, fill: "#4a3d28", weight: 600, spacing: 1.5});
+    s += txt(CX, CY - 20, "GENEVE", {size: 7, fill: "#4a3d28", spacing: 2.5});
+    /* subdials at 3 and 9 */
+    s += subdial("min", CX + 44, CY + 2, 20, {color: "#4a3d28", handColor: "#4a3d28", label: "30"});
+    s += subdial("sec", CX - 44, CY + 2, 20, {color: "#4a3d28", handColor: "#4a3d28", label: "60"});
+    /* moonphase at 6 */
+    s += moonphase(CX, CY + 52, 24);
+    s += handG("hour", handShape("dauphine", 46, 11, {color: "#4a3d28"}));
+    s += handG("min", handShape("dauphine", 70, 9, {color: "#4a3d28"}));
+    s += handG("sec", secondHand({len: 76, color: "#4a3d28", w: 2.2}));
+    s += centerCap(6, "#d8b96a", "#8a6f3c");
+    s += glassSheen(90);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 42. Rolex Explorer 36 ============ */
+explorer: {
+  name: "Rolex Explorer 36 124270", cadence: "sweep",
+  render(){
+    let s = watchCase({r: 102, caseC: "#c9cbcf", strap: "#3a3d42"});
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#0b0c0e"/>';
+    s += numerals(76, "explorer", {size: 22, color: "#eef2e8"});
+    s += markersAt(78, "explorerMix", {color: "#eef2e8", w: 6});
+    s += ticks(78, {inner: 5, color: "#eef2e8", mw: 0, lw: 1});
+    s += txt(CX, CY - 46, "ROLEX", {size: 10.5, fill: "#eef2e8", weight: 700, spacing: 2.5});
+    s += txt(CX, CY + 40, "EXPLORER", {size: 9.5, fill: "#eef2e8", weight: 600, spacing: 2});
+    s += txt(CX, CY + 53, "SUPERLATIVE CHRONOMETER", {size: 7, fill: "#eef2e8", spacing: 1});
+    s += handG("hour", handShape("mercedes", 50, 11, {color: "#eef2e8"}));
+    s += handG("min", handShape("mercedes", 74, 9, {color: "#eef2e8"}));
+    s += handG("sec", secondHand({len: 80, color: "#eef2e8", w: 2.4, tip: "lollipop"}));
+    s += centerCap(6, "#eef2e8", "#999");
+    s += glassSheen(86);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 43. Cartier Santos de Cartier Large ============ */
+santos: {
+  name: "Cartier Santos de Cartier Large WSSA0018", cadence: "sweep",
+  render(){
+    let s = strapRects(62, CY - 172, 70, "#3a3d42") + strapRects(62, CY + 102, 70, "#3a3d42");
+    /* square steel case */
+    s += '<rect x="' + (CX - 100) + '" y="' + (CY - 104) + '" width="200" height="208" rx="14" fill="#c2c4c8"/>';
+    s += '<rect x="' + (CX - 100) + '" y="' + (CY - 104) + '" width="200" height="208" rx="14" fill="none" stroke="#00000055" stroke-width="2"/>';
+    /* 8 bezel screws */
+    [[-88, -92], [88, -92], [-88, 92], [88, 92], [-96, 0], [96, 0], [0, -96], [0, 96]].forEach(([dx, dy]) => {
+      s += '<circle cx="' + (CX + dx) + '" cy="' + (CY + dy) + '" r="6" fill="#8f9196" stroke="#55565a" stroke-width="1.2"/>' +
+           '<line x1="' + (CX + dx - 3.6) + '" y1="' + (CY + dy) + '" x2="' + (CX + dx + 3.6) + '" y2="' + (CY + dy) + '" stroke="#55565a" stroke-width="1.4"/>'; });
+    s += '<rect x="' + (CX - 78) + '" y="' + (CY - 82) + '" width="156" height="164" rx="8" fill="#f4f1e6"/>';
+    s += numerals(64, "roman", {size: 18, color: "#1c1a16"});
+    s += txt(CX, CY - 26, "Cartier", {size: 12, fill: "#1c1a16", italic: true, weight: 600});
+    s += txt(CX - 34, CY + 54, "Cartier", {size: 5.5, fill: "#1c1a16", italic: true, opacity: 0.85});
+    s += dateWin(CX, CY + 56, {w: 28});
+    s += handG("hour", handShape("sword", 44, 11, {color: "#1e3f8f", tail: 12}));
+    s += handG("min", handShape("sword", 64, 9, {color: "#1e3f8f", tail: 12}));
+    s += handG("sec", secondHand({len: 68, color: "#1e3f8f", w: 2.2, tail: 14}));
+    s += centerCap(5, "#1e3f8f", "#0f2560");
+    s += crownAt(CX + 106, CY, 14, 18);
+    s += '<circle cx="' + (CX + 106) + '" cy="' + CY + '" r="4" fill="#1e4fb0"/>';
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 44. IWC Big Pilot's Watch 43 ============ */
+bigpilot: {
+  name: "IWC Big Pilot's Watch 43 IW329301", cadence: "sweep",
+  render(){
+    let s = strapRects(58, CY - 166, 64, "#2c2318") + strapRects(58, CY + 102, 64, "#2c2318");
+    s += lugs(102, "#b9babd", 38);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="104" fill="#b9babd"/>';
+    /* big cone crown */
+    s += '<polygon points="' + (CX + 104) + "," + (CY - 14) + " " + (CX + 126) + "," + (CY - 8) + " " + (CX + 126) + "," + (CY + 8) + " " + (CX + 104) + "," + (CY + 14) + '" fill="#a9abb0" stroke="#7d7f84" stroke-width="1.5"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#101114"/>';
+    /* triangle at 12 */
+    const tp = pol(80, 0), ta = pol(64, -8), tb = pol(64, 8);
+    s += '<polygon points="' + F1(tp[0]) + "," + F1(tp[1]) + " " + F1(ta[0]) + "," + F1(ta[1]) + " " + F1(tb[0]) + "," + F1(tb[1]) + '" fill="#eef2e8"/>';
+    for (let i = 1; i < 12; i++){ const p1 = pol(80, i * 30), p2 = pol(66, i * 30);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#eef2e8" stroke-width="5"/>'; }
+    s += ticks(80, {inner: 6, color: "#eef2e8", mw: 0, lw: 1.2});
+    s += txt(CX, CY - 36, "IWC", {size: 13, fill: "#eef2e8", weight: 700, spacing: 3});
+    s += txt(CX, CY - 24, "SCHAFFHAUSEN", {size: 7.5, fill: "#eef2e8", spacing: 2});
+    s += dateWin(CX + 58, CY, {bg: "#101114"});
+    s += handG("hour", handShape("sword", 50, 13, {color: "#eef2e8", lume: true}));
+    s += handG("min", handShape("sword", 74, 11, {color: "#eef2e8", lume: true}));
+    s += handG("sec", secondHand({len: 80, color: "#eef2e8", w: 2.6}));
+    s += centerCap(6, "#eef2e8", "#889");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 45. Blancpain Fifty Fathoms Automatique ============ */
+fiftyfathoms: {
+  name: "Blancpain Fifty Fathoms Automatique 5015 1130 71S", cadence: "sweep",
+  render(){
+    let s = strapRects(62, CY - 168, 66, "#2c2f36") + strapRects(62, CY + 102, 66, "#2c2f36");
+    for (let i = 0; i < 4; i++){ s += '<line x1="' + (CX - 31) + '" y1="' + (CY - 156 + i * 16) + '" x2="' + (CX + 31) + '" y2="' + (CY - 156 + i * 16) + '" stroke="#3f434b" stroke-width="2.5"/>'; }
+    s += lugs(104, "#c2c4c8", 40);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="106" fill="#c2c4c8"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="103" fill="none" stroke="#141518" stroke-width="12"/>';
+    for (let i = 0; i < 60; i++){ const p1 = pol(103, i * 6), p2 = pol(i % 5 ? 99 : 95, i * 6);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#d8d8d8" stroke-width="' + (i % 5 ? 1.2 : 2.4) + '"/>'; }
+    const bp = pol(103, 0);
+    s += '<circle cx="' + F1(bp[0]) + '" cy="' + F1(bp[1]) + '" r="3" fill="#d8d8d8"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#0c0d10"/>';
+    /* big applied markers */
+    for (let i = 0; i < 12; i++){ const deg = i * 30, p = pol(74, deg);
+      if (i % 3 === 0) s += '<rect x="' + F1(p[0] - 5) + '" y="' + F1(p[1] - 10) + '" width="10" height="20" fill="#eef2e8" transform="rotate(' + deg + " " + F1(p[0]) + " " + F1(p[1]) + ')"/>';
+      else s += '<circle cx="' + F1(p[0]) + '" cy="' + F1(p[1]) + '" r="5" fill="#eef2e8"/>'; }
+    s += txt(CX, CY - 44, "BLANCPAIN", {size: 10, fill: "#eef2e8", weight: 600, spacing: 1.5});
+    s += txt(CX, CY - 32, "Fifty Fathoms", {size: 9.5, fill: "#eef2e8", italic: true});
+    s += dateWin(CX + 58, CY, {bg: "#0c0d10"});
+    s += handG("hour", handShape("baton", 50, 12, {color: "#eef2e8", lume: true}));
+    s += handG("min", handShape("baton", 74, 10, {color: "#eef2e8", lume: true}));
+    s += handG("sec", secondHand({len: 80, color: "#eef2e8", w: 2.6, tip: "lollipop"}));
+    s += centerCap(6, "#eef2e8", "#889");
+    s += glassSheen(86);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 46. Breguet Type XX Chronographe 2067 ============ */
+typexx: {
+  name: "Breguet Type XX Chronographe 2067 2067ST/92/3WU", cadence: "sweep",
+  render(){
+    let s = watchCase({r: 104, caseC: "#c2c4c8", strap: "#2e2e33", pushers: true});
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#0e0f12"/>';
+    /* big lume arabics */
+    const big = [[0, "12"], [90, "3"], [180, "6"], [270, "9"]];
+    big.forEach(([deg, t]) => { const p = pol(70, deg);
+      s += '<text x="' + F1(p[0]) + '" y="' + F1(p[1]) + '" text-anchor="middle" dominant-baseline="central" font-size="24" fill="#e8f3d8" font-weight="700">' + t + "</text>"; });
+    for (let i = 0; i < 12; i++){ if (i % 3 === 0) continue; const p1 = pol(80, i * 30), p2 = pol(68, i * 30);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#e8f3d8" stroke-width="4"/>'; }
+    s += ticks(84, {inner: 4, color: "#e8f3d8", mw: 0, lw: 1});
+    s += txt(CX, CY - 40, "BREGUET", {size: 10.5, fill: "#e8f3d8", weight: 600, spacing: 2});
+    s += txt(CX, CY + 56, "Type XX", {size: 9, fill: "#e8f3d8", italic: true});
+    s += subdial("min", CX + 42, CY, 19, {handColor: "#e8f3d8", label: "30"});
+    s += subdial("hour", CX - 42, CY, 19, {handColor: "#e8f3d8", label: "12"});
+    s += subdial("sec", CX, CY + 44, 19, {handColor: "#e8f3d8", label: "60"});
+    s += handG("hour", handShape("syringe", 44, 10, {color: "#e8f3d8"}));
+    s += handG("min", handShape("syringe", 66, 8, {color: "#e8f3d8"}));
+    s += handG("sec", secondHand({len: 76, color: "#e8f3d8", w: 2.4}));
+    s += centerCap(6, "#e8f3d8", "#889");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 47. Panerai Radiomir Black Seal PAM00754 ============ */
+radiomir: {
+  name: "Panerai Radiomir Black Seal Logo PAM00754", cadence: "sweep",
+  render(){
+    let s = strapRects(60, CY - 168, 66, "#3a2a1c") + strapRects(60, CY + 102, 66, "#3a2a1c");
+    /* cushion case + wire lugs */
+    s += '<rect x="' + (CX - 98) + '" y="' + (CY - 102) + '" width="196" height="204" rx="56" fill="#c2c4c8"/>';
+    [[-70, -108], [70, -108], [-70, 108], [70, 108]].forEach(([dx, dy]) => {
+      s += '<path d="M ' + (CX + dx) + " " + (CY + dy * 0.82) + " q " + (dx > 0 ? 16 : -16) + " " + (dy > 0 ? 22 : -22) + " " + (dx > 0 ? 8 : -8) + " " + (dy > 0 ? 34 : -34) +
+        '" fill="none" stroke="#8f9196" stroke-width="5"/>'; });
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#0d0e11"/>';
+    s += numerals(72, "california", {size: 21, color: "#d9e6c8"});
+    /* 3 and 9 bars */
+    [[90], [270]].forEach(([deg]) => { const p1 = pol(76, deg), p2 = pol(60, deg);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#d9e6c8" stroke-width="6"/>'; });
+    s += txt(CX, CY - 30, "RADIOMIR", {size: 10, fill: "#d9e6c8", weight: 600, spacing: 2});
+    s += txt(CX, CY + 42, "PANERAI", {size: 11, fill: "#d9e6c8", weight: 700, spacing: 2});
+    s += handG("hour", handShape("alpha", 48, 13, {color: "#d8b96a"}));
+    s += handG("min", handShape("alpha", 72, 11, {color: "#d8b96a"}));
+    s += handG("sec", secondHand({len: 78, color: "#d8b96a", w: 2.4}));
+    s += centerCap(6, "#d8b96a", "#8a6f3c");
+    s += glassSheen(86);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 48. TAG Heuer Carrera CBN2011 ============ */
+carrera: {
+  name: "TAG Heuer Carrera Chronograph CBN2011.BA0642", cadence: "sweep",
+  render(){
+    let s = watchCase({r: 104, caseC: "#c2c4c8", bezel: {color: "#0f2a52", w: 10}, strap: "#1f2a44", pushers: true});
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#123a75"/>';
+    /* sunburst */
+    for (let i = 0; i < 36; i++){ const p1 = pol(86, i * 10), p2 = pol(30, i * 10);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#ffffff0d" stroke-width="5"/>'; }
+    s += markersAt(78, "baton", {color: "#f0f4ff", w: 6});
+    s += ticks(78, {inner: 5, color: "#f0f4ff", mw: 0, lw: 1});
+    s += txt(CX, CY - 46, "TAG HEUER", {size: 10, fill: "#f0f4ff", weight: 700, spacing: 1.5});
+    s += txt(CX, CY - 34, "CARRERA", {size: 9, fill: "#e0402e", weight: 700, spacing: 2});
+    /* azurage subdials at 3/6/9 */
+    const az = (id, sx, sy, label) =>
+      '<circle cx="' + sx + '" cy="' + sy + '" r="20" fill="#0e2f63" stroke="#f0f4ff" stroke-width="1.2"/>' +
+      subTicks(sx, sy, 17, 12, "#f0f4ff") +
+      handG("sub-" + id, handShape("stick", 15, 2.4, {tail: 4, color: "#e0402e"}), sx, sy) +
+      '<circle cx="' + sx + '" cy="' + sy + '" r="2.4" fill="#e0402e"/>';
+    s += az("min", CX + 42, CY, "30") + az("hour", CX - 42, CY, "12") + az("sec", CX, CY + 44, "60");
+    s += dateWin(CX, CY + 60, {bg: "#123a75", w: 26});
+    s += handG("hour", handShape("baton", 46, 11, {color: "#f0f4ff", lume: true}));
+    s += handG("min", handShape("baton", 70, 9, {color: "#f0f4ff", lume: true}));
+    s += handG("sec", secondHand({len: 78, color: "#e0402e", w: 2.6, tip: "arrow"}));
+    s += centerCap(6, "#f0f4ff", "#889");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 49. Omega Speedmaster Silver Snoopy 50th ============ */
+snoopy: {
+  name: "Omega Speedmaster \"Silver Snoopy Award\" 50th Anniversary 310.32.42.50.02.001", cadence: "sweep",
+  render(){
+    const u = uid();
+    let s = watchCase({r: 106, caseC: "#c2c4c8", bezel: {color: "#0f2a52", w: 13, inner: true}, strap: "#1f2a44", pushers: true});
+    s += arcText(u, 97, 195, 345, "TACHYMETRE", {size: 9.5, fill: "#eee", spacing: 4});
+    /* blue starfield dial */
+    s += '<defs><radialGradient id="' + u + 's" cx="45%" cy="40%" r="75%">' +
+         '<stop offset="0%" stop-color="#1d4d99"/><stop offset="100%" stop-color="#0b1f44"/></radialGradient></defs>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="85" fill="url(#' + u + 's)"/>';
+    for (let i = 0; i < 26; i++){ const a = i * 137.5, rr = 20 + (i * 53) % 60, p = pol(rr, a);
+      s += '<circle cx="' + F1(p[0]) + '" cy="' + F1(p[1]) + '" r="' + (1 + (i % 3) * 0.6) + '" fill="#ffffff" opacity="0.8"/>'; }
+    s += markersAt(76, "baton", {color: "#f0f4ff", w: 6});
+    /* Snoopy lying on the dial */
+    s += '<g transform="rotate(-14 ' + (CX + 8) + " " + (CY + 6) + ')">' +
+         '<ellipse cx="' + (CX + 8) + '" cy="' + (CY + 10) + '" rx="26" ry="13" fill="#f4f4f4"/>' +
+         '<circle cx="' + (CX + 30) + '" cy="' + (CY - 2) + '" r="11" fill="#f4f4f4"/>' +
+         '<ellipse cx="' + (CX + 38) + '" cy="' + (CY - 4) + '" rx="4" ry="9" fill="#1c1a16"/>' +
+         '<circle cx="' + (CX + 33) + '" cy="' + (CY - 5) + '" r="1.8" fill="#1c1a16"/>' +
+         '<ellipse cx="' + (CX - 16) + '" cy="' + (CY + 4) + '" rx="9" ry="5" fill="#f4f4f4"/>' +
+         '<path d="M ' + (CX - 12) + ' ' + (CY + 16) + ' l-6,10 M ' + (CX + 4) + ' ' + (CY + 20) + ' l-2,10" stroke="#f4f4f4" stroke-width="5" stroke-linecap="round"/></g>';
+    s += txt(CX, CY - 48, "Ω", {size: 18, fill: "#f0f4ff"});
+    s += txt(CX, CY - 32, "OMEGA", {size: 10, fill: "#f0f4ff", weight: 700, spacing: 2});
+    s += txt(CX, CY + 58, "50th ANNIVERSARY", {size: 8, fill: "#f0f4ff", spacing: 1.5});
+    s += subdial("min", CX + 42, CY - 8, 19, {handColor: "#f0f4ff"});
+    s += subdial("hour", CX - 42, CY - 8, 19, {handColor: "#f0f4ff"});
+    s += handG("hour", handShape("alpha", 46, 12, {color: "#f0f4ff"}));
+    s += handG("min", handShape("alpha", 70, 10, {color: "#f0f4ff"}));
+    s += handG("sec", secondHand({len: 78, color: "#f0f4ff", w: 2.6, tip: "arrow"}));
+    s += centerCap(6, "#f0f4ff", "#889");
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 50. Rolex Milgauss Z-Blue ============ */
+milgauss: {
+  name: "Rolex Milgauss 116400GV-0002 \"Z-Blue\"", cadence: "sweep",
+  render(){
+    const u = uid();
+    let s = watchCase({r: 104, caseC: "#c9cbcf", strap: "#3a3d42"});
+    /* green sapphire crystal edge */
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="101" fill="none" stroke="#1fae6e" stroke-width="5" opacity="0.75"/>';
+    s += '<defs><radialGradient id="' + u + '" cx="42%" cy="36%" r="78%">' +
+         '<stop offset="0%" stop-color="#2a6fd0"/><stop offset="60%" stop-color="#174a94"/><stop offset="100%" stop-color="#0d2c5e"/>' +
+         "</radialGradient></defs>";
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="url(#' + u + ')"/>';
+    for (let i = 0; i < 60; i++){ const p1 = pol(86, i * 6), p2 = pol(40, i * 6);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#ffffff10" stroke-width="4"/>'; }
+    s += markersAt(78, "baton", {color: "#eef4ff", w: 6});
+    s += ticks(78, {inner: 5, color: "#eef4ff", mw: 0, lw: 1});
+    s += txt(CX, CY - 46, "ROLEX", {size: 10.5, fill: "#eef4ff", weight: 700, spacing: 2.5});
+    s += txt(CX, CY + 40, "MILGAUSS", {size: 10, fill: "#e8641e", weight: 700, spacing: 2});
+    s += handG("hour", handShape("baton", 50, 12, {color: "#eef4ff", lume: true}));
+    s += handG("min", handShape("baton", 74, 10, {color: "#eef4ff", lume: true}));
+    s += handG("sec", secondHand({len: 82, color: "#e8641e", w: 3, tip: "bolt", tail: 24}));
+    s += centerCap(6, "#eef4ff", "#889");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 51. Rolex Yacht-Master II ============ */
+yachtmaster2: {
+  name: "Rolex Yacht-Master II 126680", cadence: "sweep",
+  render(){
+    let s = watchCase({r: 106, caseC: "#c9cbcf", bezel: {color: "#1d3f8f", w: 14, inner: true}, strap: "#3a3d42", pushers: true});
+    /* countdown bezel numerals */
+    [10, 20, 30, 40, 50, 60].forEach(n => { const p = pol(97, (n / 60) * 360);
+      s += '<text x="' + F1(p[0]) + '" y="' + F1(p[1]) + '" text-anchor="middle" dominant-baseline="central" font-size="10" fill="#fff" font-weight="700">' + n + "</text>"; });
+    const bp = pol(97, 0);
+    s += '<polygon points="' + F1(bp[0]) + "," + F1(bp[1] - 2) + " " + F1(bp[0] - 5) + "," + F1(bp[1] + 8) + " " + F1(bp[0] + 5) + "," + F1(bp[1] + 8) + '" fill="#fff"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="85" fill="#f2f3f5"/>';
+    s += markersAt(77, "baton", {color: "#1d3f8f", w: 6});
+    s += ticks(77, {inner: 5, color: "#1d3f8f", mw: 0, lw: 1});
+    s += txt(CX, CY - 46, "ROLEX", {size: 10.5, fill: "#1d3f8f", weight: 700, spacing: 2.5});
+    s += txt(CX, CY - 34, "OYSTER PERPETUAL", {size: 7, fill: "#1d3f8f", spacing: 1});
+    s += txt(CX, CY + 40, "YACHT-MASTER II", {size: 9.5, fill: "#c22", weight: 700, spacing: 1.5});
+    s += subdial("min", CX + 42, CY, 20, {color: "#1d3f8f", handColor: "#c22", label: "10"});
+    s += subdial("sec", CX - 42, CY, 20, {color: "#1d3f8f", handColor: "#1d3f8f", label: "60"});
+    s += handG("hour", handShape("mercedes", 48, 12, {color: "#1d3f8f"}));
+    s += handG("min", handShape("mercedes", 72, 10, {color: "#1d3f8f"}));
+    s += handG("sec", secondHand({len: 80, color: "#1d3f8f", w: 2.6, tip: "arrow"}));
+    s += centerCap(6, "#1d3f8f", "#0f2560");
+    s += glassSheen(85);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 52. Jorg Gray Secret Service Edition ============ */
+jorggray: {
+  name: "Jorg Gray JGC6500 Secret Service Edition", cadence: "tick",
+  render(){
+    let s = strapRects(58, CY - 164, 62, "#1d1d1f") + strapRects(58, CY + 102, 62, "#1d1d1f");
+    s += lugs(100, "#3a3d42", 36);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="102" fill="#3a3d42"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#101114"/>';
+    s += markersAt(78, "baton", {color: "#d8d8d8", w: 5});
+    s += ticks(78, {inner: 5, color: "#d8d8d8", mw: 0, lw: 1});
+    /* seal emblem */
+    s += '<circle cx="' + CX + '" cy="' + (CY - 44) + '" r="15" fill="none" stroke="#c9a227" stroke-width="1.8"/>' +
+         '<path d="M ' + CX + ' ' + (CY - 56) + ' l3.5,7 7.5,1 -5.5,5.2 1.4,7.4 -6.9,-3.7 -6.9,3.7 1.4,-7.4 -5.5,-5.2 7.5,-1 Z" fill="#c9a227"/>';
+    s += txt(CX, CY - 20, "JORG GRAY", {size: 10.5, fill: "#d8d8d8", weight: 700, spacing: 1.5});
+    s += txt(CX, CY + 44, "SECRET SERVICE", {size: 8, fill: "#c9a227", spacing: 2});
+    s += dayDateWin(CX + 48, CY);
+    s += handG("hour", handShape("sword", 48, 12, {color: "#d8d8d8", lume: true}));
+    s += handG("min", handShape("sword", 72, 10, {color: "#d8d8d8", lume: true}));
+    s += handG("sec", secondHand({len: 78, color: "#c22", w: 2.4}));
+    s += centerCap(6, "#d8d8d8", "#777");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 53. Rolex Daytona Rainbow ============ */
+rainbow: {
+  name: "Rolex Cosmograph Daytona 116595RBOW-0001", cadence: "sweep",
+  render(){
+    let s = watchCase({r: 106, caseC: "#d8b96a", strap: "#3a3d42", pushers: true, crownC: "#d8b96a"});
+    /* rainbow sapphire bezel */
+    const cols = ["#e0402e", "#e8641e", "#e8b400", "#7ac74f", "#2a9fd8", "#4a5fd0", "#9a4fd0", "#e0402e", "#e8641e", "#e8b400", "#7ac74f", "#2a9fd8"];
+    for (let i = 0; i < 36; i++){
+      const a0 = i * 10 - 5, a1 = i * 10 + 5;
+      const p0 = pol(103, a0), p1 = pol(103, a1), p2 = pol(90, a1), p3 = pol(90, a0);
+      s += '<polygon points="' + F1(p0[0]) + "," + F1(p0[1]) + " " + F1(p1[0]) + "," + F1(p1[1]) +
+           " " + F1(p2[0]) + "," + F1(p2[1]) + " " + F1(p3[0]) + "," + F1(p3[1]) +
+           '" fill="' + cols[i % 12] + '" stroke="#00000066" stroke-width="0.8"/>';
+    }
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="86" fill="#0a0a0c"/>';
+    /* diamond markers */
+    for (let i = 0; i < 12; i++){ const p = pol(76, i * 30);
+      s += '<polygon points="' + F1(p[0]) + "," + F1(p[1] - 6) + " " + F1(p[0] + 4.5) + "," + F1(p[1]) + " " + F1(p[0]) + "," + F1(p[1] + 6) + " " + F1(p[0] - 4.5) + "," + F1(p[1]) +
+           '" fill="#eef4ff" stroke="#9aa4b5" stroke-width="0.8"/>'; }
+    s += txt(CX, CY - 46, "ROLEX", {size: 10.5, fill: "#eef2e8", weight: 700, spacing: 2.5});
+    s += txt(CX, CY - 34, "OYSTER PERPETUAL", {size: 7, fill: "#eef2e8", spacing: 1});
+    s += txt(CX, CY + 58, "COSMOGRAPH", {size: 8, fill: "#eef2e8", spacing: 2});
+    s += subdial("min", CX + 42, CY, 20, {handColor: "#eef2e8"});
+    s += subdial("hour", CX - 42, CY, 20, {handColor: "#eef2e8"});
+    s += subdial("sec", CX, CY + 44, 20, {handColor: "#eef2e8"});
+    s += handG("hour", handShape("baton", 46, 11, {color: "#d8b96a", lume: true}));
+    s += handG("min", handShape("baton", 70, 9, {color: "#d8b96a", lume: true}));
+    s += handG("sec", secondHand({len: 78, color: "#d8b96a", w: 2.4}));
+    s += centerCap(6, "#d8b96a", "#8a6f3c");
+    s += glassSheen(86);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 54. Norfolk Southern Railroad Pocket Watch ============ */
+railroad: {
+  name: "Norfolk Southern Railroad Pocket Watch (1994)", cadence: "tick",
+  render(){
+    let s = "";
+    /* bow + crown at 12 */
+    s += '<circle cx="' + CX + '" cy="' + (CY - 138) + '" r="20" fill="none" stroke="#c9cbcf" stroke-width="9"/>';
+    s += '<rect x="' + (CX - 12) + '" y="' + (CY - 122) + '" width="24" height="18" rx="4" fill="#c9cbcf" stroke="#7d7f84" stroke-width="1.5"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="112" fill="#c9cbcf"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="112" fill="none" stroke="#7d7f84" stroke-width="2"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="98" fill="#f6f2e6"/>';
+    /* montgomery dial: minute numerals */
+    for (let i = 1; i <= 60; i++){ const p = pol(88, i * 6);
+      s += '<text x="' + F1(p[0]) + '" y="' + F1(p[1]) + '" text-anchor="middle" dominant-baseline="central" font-size="8.5" fill="#1c1a16" font-weight="' + (i % 5 === 0 ? 700 : 400) + '">' + i + "</text>"; }
+    s += numerals(68, "arabic12", {size: 20, color: "#1c1a16"});
+    s += txt(CX, CY - 36, "NORFOLK SOUTHERN", {size: 9.5, fill: "#1c1a16", weight: 700, spacing: 1});
+    s += txt(CX, CY + 44, "1994", {size: 9, fill: "#1c1a16", spacing: 3});
+    s += handG("hour", handShape("spade", 48, 12, {color: "#1c1a16"}));
+    s += handG("min", handShape("spade", 74, 10, {color: "#1c1a16"}));
+    s += handG("sec", secondHand({len: 84, color: "#8a1f1f", w: 2.4}));
+    s += centerCap(6, "#1c1a16", "#555");
+    s += glassSheen(98);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 55. NOMOS Metro date power reserve ============ */
+nomosmetro: {
+  name: "NOMOS Glashütte Metro date power reserve 1101", cadence: "sweep",
+  render(){
+    let s = strapRects(44, CY - 160, 58, "#2e1f14") + strapRects(44, CY + 102, 58, "#2e1f14");
+    s += lugs(96, "#c9cbcf", 30);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="98" fill="#c9cbcf"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#f7f4ea"/>';
+    /* dot markers */
+    for (let i = 0; i < 12; i++){ if (i === 0 || i === 3) continue; const p = pol(78, i * 30);
+      s += '<circle cx="' + F1(p[0]) + '" cy="' + F1(p[1]) + '" r="2.6" fill="#1c1a16"/>'; }
+    /* power reserve at 12 with red zone */
+    s += '<path d="M ' + pt(56, 215, CX, CY - 6) + " A 56 56 0 0 1 " + pt(56, 325, CX, CY - 6) + '" fill="none" stroke="#c22" stroke-width="5"/>';
+    s += '<path d="M ' + pt(56, 230, CX, CY - 6) + " A 56 56 0 0 1 " + pt(56, 310, CX, CY - 6) + '" fill="none" stroke="#1c1a16" stroke-width="2"/>';
+    s += '<g transform="rotate(38 ' + CX + " " + (CY - 6) + ')"><rect x="' + (CX - 1.4) + '" y="' + (CY - 58) + '" width="2.8" height="50" fill="#1c1a16"/></g>';
+    s += txt(CX, CY - 26, "NOMOS", {size: 10.5, fill: "#1c1a16", weight: 600, spacing: 2.5});
+    s += txt(CX, CY - 15, "GLASHÜTTE", {size: 7, fill: "#1c1a16", spacing: 2});
+    s += '<rect x="' + (CX + 44) + '" y="' + (CY - 11) + '" width="28" height="22" fill="none" stroke="#c22" stroke-width="2"/>' +
+         '<text data-part="date" x="' + (CX + 58) + '" y="' + CY + '" text-anchor="middle" dominant-baseline="central" font-size="15" font-family="ui-monospace, Menlo, monospace" fill="#c22">--</text>';
+    s += handG("hour", handShape("stick", 46, 5, {color: "#1e3f8f", tail: 12}));
+    s += handG("min", handShape("stick", 70, 4, {color: "#1e3f8f", tail: 12}));
+    s += handG("sec", secondHand({len: 76, color: "#c22", w: 2}));
+    s += centerCap(5, "#1e3f8f", "#0f2560");
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 56. Grand Central Terminal Information Booth Clock ============ */
+grandcentral: {
+  name: "Grand Central Terminal Information Booth Clock (1913)", cadence: "tick",
+  render(){
+    let s = "";
+    s += '<rect x="0" y="0" width="320" height="320" fill="#14161c"/>';
+    /* pedestal */
+    s += '<rect x="128" y="238" width="64" height="82" fill="#6e5a2e"/>';
+    s += '<rect x="120" y="230" width="80" height="12" rx="3" fill="#8a6f3c"/>';
+    s += '<rect x="112" y="306" width="96" height="14" rx="3" fill="#4a3d28"/>';
+    /* bronze frame + opal dial */
+    s += '<circle cx="160" cy="150" r="92" fill="#6e5a2e"/>';
+    s += '<circle cx="160" cy="150" r="92" fill="none" stroke="#c9a227" stroke-width="3"/>';
+    s += '<circle cx="160" cy="150" r="78" fill="#e9e2cd"/>';
+    s += numerals(64, "roman", {size: 19, color: "#1c1a16"});
+    for (let i = 0; i < 60; i++){ const p1 = pol(78, i * 6, 160, 150), p2 = pol(i % 5 ? 74 : 70, i * 6, 160, 150);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#1c1a16" stroke-width="' + (i % 5 ? 1 : 2) + '"/>'; }
+    /* finial */
+    s += '<circle cx="160" cy="48" r="8" fill="#c9a227"/>' + '<rect x="157" y="52" width="6" height="12" fill="#8a6f3c"/>';
+    s += handG("hour", handShape("spade", 40, 11, {color: "#1c1a16"}), 160, 150);
+    s += handG("min", handShape("spade", 62, 9, {color: "#1c1a16"}), 160, 150);
+    s += '<circle cx="160" cy="150" r="5" fill="#1c1a16"/>';
+    s += txt(160, 26, "GRAND CENTRAL TERMINAL · 1913", {size: 10, fill: "#c9b98a", weight: 600, spacing: 1.5});
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 57. Howard Miller Chateau Grandfather ============ */
+howardmiller: {
+  name: "Howard Miller Chateau 610-520 Grandfather Clock", cadence: "tick",
+  render(){
+    let s = "";
+    s += '<rect x="98" y="16" width="124" height="290" rx="6" fill="#3d2a18"/>';
+    s += '<rect x="98" y="16" width="124" height="290" rx="6" fill="none" stroke="#1c0f04" stroke-width="3"/>';
+    s += '<rect x="106" y="24" width="108" height="274" rx="4" fill="#4e3620"/>';
+    /* moonphase arch */
+    s += '<path d="M 122,108 A 38 38 0 0 1 198,108 Z" fill="#0b1c38" stroke="#c9a227" stroke-width="2"/>';
+    s += '<circle cx="160" cy="96" r="11" fill="#e9dfc2"/>' +
+         '<circle cx="140" cy="88" r="1.6" fill="#cfe0ff"/><circle cx="182" cy="90" r="1.6" fill="#cfe0ff"/><circle cx="160" cy="76" r="1.4" fill="#cfe0ff"/>';
+    /* dial */
+    s += '<rect x="118" y="112" width="84" height="84" rx="4" fill="#efe6cf"/>';
+    s += numeralsMini(160, 154, 32, [[0,"XII"],[90,"III"],[180,"VI"],[270,"IX"]], "#1c1a16");
+    for (let i = 0; i < 60; i++){ const p1 = pol(40, i * 6, 160, 154), p2 = pol(i % 5 ? 37 : 34, i * 6, 160, 154);
+      s += '<line x1="' + F1(p1[0]) + '" y1="' + F1(p1[1]) + '" x2="' + F1(p2[0]) + '" y2="' + F1(p2[1]) + '" stroke="#1c1a16" stroke-width="' + (i % 5 ? 1 : 2) + '"/>'; }
+    s += txt(160, 140, "HOWARD MILLER", {size: 7.5, fill: "#1c1a16", weight: 600, spacing: 1});
+    s += handG("hour", handShape("spade", 20, 7, {color: "#1c1a16"}), 160, 154);
+    s += handG("min", handShape("spade", 32, 5, {color: "#1c1a16"}), 160, 154);
+    s += '<circle cx="160" cy="154" r="3" fill="#1c1a16"/>';
+    /* trunk: pendulum + weights + chime rods */
+    s += '<rect x="118" y="204" width="84" height="88" rx="4" fill="#120b04"/>';
+    s += '<g data-part="pendulum" data-cx="160" data-cy="204">' +
+         '<rect x="158.5" y="204" width="3" height="60" fill="#c9a227"/>' +
+         '<circle cx="160" cy="272" r="11" fill="#c9a227" stroke="#8a6f1c" stroke-width="2"/></g>';
+    [136, 184].forEach(x => { s += '<rect x="' + (x - 5) + '" y="214" width="10" height="52" rx="4" fill="#6e5a2e"/>'; });
+    s += '<rect x="88" y="306" width="144" height="14" rx="4" fill="#2c1c0c"/>';
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 58. Ingersoll Mickey Mouse (1933) ============ */
+mickey: {
+  name: "Ingersoll Mickey Mouse (1933)", cadence: "tick",
+  render(){
+    const glove = L =>
+      '<g fill="#f4f4f4" stroke="#1c1a16" stroke-width="2">' +
+      '<rect x="-6" y="' + (-L + 30) + '" width="12" height="26" rx="5"/>' +
+      '<ellipse cx="0" cy="' + (-L + 18) + '" rx="12" ry="11"/>' +
+      [-8.5, -2.8, 2.8, 8.5].map(fx => '<rect x="' + (fx - 3.6) + '" y="' + (-L + 2) + '" width="7.2" height="16" rx="3.6"/>').join("") +
+      '<rect x="9" y="' + (-L + 12) + '" width="6.5" height="13" rx="3.2" transform="rotate(32 12 ' + (-L + 18) + ')"/>' +
+      '<rect x="-15.5" y="' + (-L + 12) + '" width="6.5" height="13" rx="3.2" transform="rotate(-32 -12 ' + (-L + 18) + ')"/>' +
+      "</g>";
+    let s = strapRects(58, CY - 164, 62, "#1d1d1f") + strapRects(58, CY + 102, 62, "#1d1d1f");
+    s += lugs(100, "#c9a227", 36);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="102" fill="#c9a227"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#f2eee2"/>';
+    s += numerals(74, "arabic12", {size: 19, color: "#c22"});
+    /* Mickey figure */
+    s += '<circle cx="' + (CX - 26) + '" cy="' + (CY - 44) + '" r="17" fill="#1c1a16"/>' +
+         '<circle cx="' + (CX + 26) + '" cy="' + (CY - 44) + '" r="17" fill="#1c1a16"/>' +
+         '<circle cx="' + CX + '" cy="' + (CY - 24) + '" r="24" fill="#1c1a16"/>' +
+         '<ellipse cx="' + CX + '" cy="' + (CY - 20) + '" rx="15" ry="13" fill="#f2ddc4"/>' +
+         '<ellipse cx="' + (CX - 6) + '" cy="' + (CY - 24) + '" rx="4.5" ry="6" fill="#fff"/>' +
+         '<ellipse cx="' + (CX + 6) + '" cy="' + (CY - 24) + '" rx="4.5" ry="6" fill="#fff"/>' +
+         '<circle cx="' + (CX - 6) + '" cy="' + (CY - 23) + '" r="2" fill="#1c1a16"/>' +
+         '<circle cx="' + (CX + 6) + '" cy="' + (CY - 23) + '" r="2" fill="#1c1a16"/>' +
+         '<ellipse cx="' + CX + '" cy="' + (CY - 12) + '" rx="4" ry="3" fill="#1c1a16"/>';
+    s += txt(CX, CY + 44, "INGERSOLL", {size: 9, fill: "#1c1a16", weight: 600, spacing: 1.5});
+    s += txt(CX, CY + 56, "WALT DISNEY", {size: 7.5, fill: "#1c1a16", spacing: 1.5});
+    /* glove hands */
+    s += handG("hour", glove(46));
+    s += handG("min", glove(68));
+    s += centerCap(6, "#1c1a16", "#555");
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 59. Hamilton Khaki Field King Auto ============ */
+kingkhaki: {
+  name: "Hamilton Khaki Field King Auto H64455533", cadence: "sweep",
+  render(){
+    let s = strapRects(58, CY - 164, 62, "#2c2318") + strapRects(58, CY + 102, 62, "#2c2318");
+    s += lugs(100, "#b9babd", 36);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="102" fill="#b9babd"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#101114"/>';
+    s += numerals(74, "arabic12", {size: 19, color: "#e8e6dc"});
+    s += numerals(56, "arabic24", {size: 10.5, color: "#e8e6dc"});
+    /* day at 12, date at 3 */
+    s += apertureWin(CX, CY - 52, 52, "day", {bg: "#101114", fg: "#e8e6dc"});
+    s += dateWin(CX + 56, CY, {bg: "#101114"});
+    s += txt(CX, CY + 42, "HAMILTON", {size: 10, fill: "#e8e6dc", weight: 700, spacing: 2});
+    s += txt(CX, CY + 54, "KHAKI KING", {size: 8, fill: "#e8e6dc", spacing: 2});
+    s += handG("hour", handShape("syringe", 46, 9, {color: "#e8e6dc"}));
+    s += handG("min", handShape("syringe", 70, 7, {color: "#e8e6dc"}));
+    s += handG("sec", secondHand({len: 76, color: "#c22", w: 2.4}));
+    s += centerCap(5, "#e8e6dc", "#889");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 60. CASIO MQ-24 ============ */
+casiomq24: {
+  name: "CASIO MQ-24-7B2LL", cadence: "tick",
+  render(){
+    let s = strapRects(52, CY - 162, 60, "#1d1d1f") + strapRects(52, CY + 102, 60, "#1d1d1f");
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="100" fill="#26262a"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#f4f4f4"/>';
+    s += markersAt(78, "baton", {color: "#1c1a16", w: 5, len: 13});
+    s += ticks(78, {inner: 4, color: "#1c1a16", mw: 0, lw: 1});
+    s += txt(CX, CY - 34, "CASIO", {size: 12, fill: "#1c1a16", weight: 700, spacing: 2});
+    s += txt(CX, CY + 44, "QUARTZ", {size: 9, fill: "#1c1a16", spacing: 2.5});
+    s += handG("hour", handShape("baton", 48, 10, {color: "#1c1a16"}));
+    s += handG("min", handShape("baton", 70, 8, {color: "#1c1a16"}));
+    s += handG("sec", secondHand({len: 76, color: "#c22", w: 2.2}));
+    s += centerCap(5, "#1c1a16", "#555");
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 61. Fossil Big Tic JR-7845 ============ */
+bigtic: {
+  name: "Fossil Big Tic JR-7845", cadence: "tick",
+  render(){
+    let s = strapRects(56, CY - 164, 62, "#5a3a22") + strapRects(56, CY + 102, 62, "#5a3a22");
+    s += lugs(100, "#c9cbcf", 36);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="102" fill="#c9cbcf"/>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="#f6f3ea"/>';
+    s += numerals(74, "arabic12", {size: 20, color: "#1c1a16"});
+    s += ticks(84, {inner: 4, color: "#1c1a16", mw: 0, lw: 1});
+    /* big digital tic window at 3 */
+    s += lcd(CX + 44, CY, 62, 30, {fs: 17, part: "digital-hm", bg: "#b9bda4"});
+    s += txt(CX, CY - 36, "FOSSIL", {size: 11, fill: "#1c1a16", weight: 700, spacing: 2.5});
+    s += txt(CX, CY + 48, "BIG TIC", {size: 8.5, fill: "#1c1a16", spacing: 2});
+    s += handG("hour", handShape("alpha", 44, 11, {color: "#1c1a16"}));
+    s += handG("min", handShape("alpha", 64, 9, {color: "#1c1a16"}));
+    s += centerCap(5, "#1c1a16", "#555");
+    s += glassSheen(88);
+    return svgWrap(s, this.name);
+  }
+},
+
+/* ============ 62. Timex Easy Reader INDIGLO ============ */
+timexindiglo: {
+  name: "Timex Easy Reader Day Date T20041 (INDIGLO)", cadence: "tick",
+  render(){
+    const u = uid();
+    let s = strapRects(54, CY - 162, 60, "#3a3d42") + strapRects(54, CY + 102, 60, "#3a3d42");
+    s += lugs(100, "#c9cbcf", 34);
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="102" fill="#c9cbcf"/>';
+    /* indiglo glow dial */
+    s += '<defs><radialGradient id="' + u + '" cx="50%" cy="45%" r="65%">' +
+         '<stop offset="0%" stop-color="#bfe3f2"/><stop offset="100%" stop-color="#8fc3dd"/></radialGradient></defs>';
+    s += '<circle cx="' + CX + '" cy="' + CY + '" r="88" fill="url(#' + u + ')"/>';
+    s += markersAt(78, "baton", {color: "#1c1a16", w: 5, len: 13});
+    s += ticks(78, {inner: 4, color: "#1c1a16", mw: 0, lw: 1});
+    s += txt(CX, CY - 40, "TIMEX", {size: 12, fill: "#1c1a16", weight: 700, spacing: 2.5});
+    s += txt(CX, CY + 46, "INDIGLO", {size: 9, fill: "#0a5a8a", weight: 700, spacing: 2});
+    s += txt(CX, CY + 58, "WR 30M", {size: 7, fill: "#1c1a16", spacing: 1.5});
+    s += dayDateWin(CX + 50, CY);
+    s += handG("hour", handShape("baton", 48, 10, {color: "#1c1a16"}));
+    s += handG("min", handShape("baton", 70, 8, {color: "#1c1a16"}));
+    s += handG("sec", secondHand({len: 76, color: "#0a5a8a", w: 2.2}));
+    s += centerCap(5, "#1c1a16", "#555");
+    return svgWrap(s, this.name);
+  }
+}
+
+}; /* end FACES */
+
+const FACE_KEYS = Object.keys(FACES);
+
+/* ============================================================
+   App — city collection, rendering, live updates, controls
+   ============================================================ */
+const DEFAULT_CITIES = [
+  {name: "New York", cc: "United States", tz: "America/New_York", face: "grandcentral"},
+  {name: "London", cc: "United Kingdom", tz: "Europe/London", face: "bigben"},
+  {name: "Paris", cc: "France", tz: "Europe/Paris", face: "tank"},
+  {name: "Dubai", cc: "United Arab Emirates", tz: "Asia/Dubai", face: "daytona"},
+  {name: "Tokyo", cc: "Japan", tz: "Asia/Tokyo", face: "gshock"},
+  {name: "Sydney", cc: "Australia", tz: "Australia/Sydney", face: "seamaster"},
+  {name: "Los Angeles", cc: "United States", tz: "America/Los_Angeles", face: "mickey"},
+  {name: "Honolulu", cc: "United States", tz: "Pacific/Honolulu", face: "f91w"}
+];
+
+let cities = [];
+
+function save(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(cities)); }catch(e){}
+}
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return false;
+    const arr = JSON.parse(raw);
+    if (!Array.isArray(arr) || !arr.length) return false;
+    const ok = arr.filter(c => c && typeof c.name === "string" && typeof c.tz === "string" &&
+      FACES[c.face] && CITIES.some(x => x[2] === c.tz));
+    if (!ok.length) return false;
+    cities = ok.map(c => ({name: c.name, cc: c.cc || "", tz: c.tz, face: c.face}));
+    return true;
+  }catch(e){ return false; }
+}
+function shuffled(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function sortCities(){
+  const now = new Date();
+  cities.sort((a, b) => (tzOffset(a.tz, now) - tzOffset(b.tz, now)) || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+}
+/* pick a face: unused first, never the excluded one when avoidable */
+function pickFace(exclude){
+  const used = new Set(cities.map(c => c.face));
+  let pool = FACE_KEYS.filter(k => !used.has(k) && k !== exclude);
+  if (!pool.length) pool = FACE_KEYS.filter(k => k !== exclude);
+  if (!pool.length) pool = FACE_KEYS.slice();
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+const grid = document.getElementById("grid");
+const emptyState = document.getElementById("emptyState");
+const statCities = document.getElementById("statCities");
+
+function cardHTML(c){
+  const face = FACES[c.face];
+  const off = fmtOffset(tzOffset(c.tz, new Date()));
+  return '<article class="card" data-tz="' + c.tz + '" data-face="' + c.face + '">' +
+    '<div class="face">' + face.render() + "</div>" +
+    '<div class="meta"><h2>' + esc(c.name) + '</h2><span class="cc">' + esc(c.cc) + '</span>' +
+    '<span class="offset" data-off>' + off + "</span></div>" +
+    '<div class="readout"><span data-clock>--:--:--</span><span class="d" data-date>---</span></div>' +
+    '<div class="fname">Face · <b>' + esc(face.name) + "</b></div>" +
+    '<div class="actions">' +
+    '<button type="button" data-act="shuffle" aria-label="Shuffle face for ' + esc(c.name) + '">⟳ New face</button>' +
+    '<button type="button" class="iconbtn" data-act="remove" aria-label="Remove ' + esc(c.name) + '">×</button>' +
+    "</div></article>";
+}
+function esc(s){ return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); }
+
+function renderAll(){
+  sortCities();
+  grid.innerHTML = cities.map(cardHTML).join("");
+  emptyState.hidden = cities.length > 0;
+  statCities.textContent = cities.length;
+  save();
+}
+
+/* live update loop */
+let lastOffsetRefresh = 0;
+function tick(){
+  const now = new Date();
+  const refreshOff = now.getTime() - lastOffsetRefresh > 60000;
+  if (refreshOff) lastOffsetRefresh = now.getTime();
+  const cards = grid.children;
+  for (let i = 0; i < cards.length; i++){
+    const card = cards[i];
+    const tz = card.dataset.tz;
+    const face = FACES[card.dataset.face];
+    if (!face) continue;
+    const cadence = REDUCED ? "tick" : face.cadence;
+    let P;
+    try{ P = tzParts(tz, now); }catch(e){ continue; }
+    const clockEl = card.querySelector("[data-clock]");
+    const clockStr = pad2(P.h) + ":" + pad2(P.m) + ":" + pad2(P.s);
+    if (clockEl._v !== clockStr){ clockEl._v = clockStr; clockEl.textContent = clockStr; }
+    const dateEl = card.querySelector("[data-date]");
+    const dateStr = P.wd.toUpperCase() + " " + P.day + " " + P.mon.toUpperCase();
+    if (dateEl._v !== dateStr){ dateEl._v = dateStr; dateEl.textContent = dateStr; }
+    if (refreshOff){
+      const offEl = card.querySelector("[data-off]");
+      const offStr = fmtOffset(tzOffset(tz, now));
+      if (offEl._v !== offStr){ offEl._v = offStr; offEl.textContent = offStr; }
+    }
+    const parts = card.querySelectorAll("[data-part]");
+    for (let j = 0; j < parts.length; j++){
+      const el = parts[j];
+      applyPart(el, partValue(el.dataset.part, P, cadence, now));
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+/* card actions (event delegation) */
+grid.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-act]");
+  if (!btn) return;
+  const card = btn.closest(".card");
+  const idx = Array.prototype.indexOf.call(grid.children, card);
+  if (idx < 0) return;
+  if (btn.dataset.act === "remove"){
+    cities.splice(idx, 1);
+    renderAll();
+  } else if (btn.dataset.act === "shuffle"){
+    cities[idx].face = pickFace(cities[idx].face);
+    renderAll();
+  }
+});
+
+document.getElementById("shuffleAll").addEventListener("click", () => {
+  const pool = shuffled(FACE_KEYS);
+  cities.forEach((c, i) => { c.face = pool[i % pool.length]; });
+  renderAll();
+});
+
+/* ---------------- add-city dialog ---------------- */
+const overlay = document.getElementById("overlay");
+const citySearch = document.getElementById("citySearch");
+const cityResults = document.getElementById("cityResults");
+let lastFocus = null;
+
+function openDialog(){
+  lastFocus = document.activeElement;
+  overlay.classList.add("open");
+  citySearch.value = "";
+  renderResults("");
+  setTimeout(() => citySearch.focus(), 30);
+}
+function closeDialog(){
+  overlay.classList.remove("open");
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+function renderResults(q){
+  q = q.trim().toLowerCase();
+  const now = new Date();
+  const matches = CITIES
+    .filter(c => !cities.some(x => x.tz === c[2] && x.name === c[0]))
+    .filter(c => !q || c[0].toLowerCase().includes(q) || c[1].toLowerCase().includes(q))
+    .slice(0, 14);
+  if (!matches.length){
+    cityResults.innerHTML = '<li class="empty" style="border:none">No matching cities.</li>';
+    return;
+  }
+  cityResults.innerHTML = matches.map(c => {
+    let t = "";
+    try{ const P = tzParts(c[2], now); t = pad2(P.h) + ":" + pad2(P.m); }catch(e){}
+    return '<li role="option"><button type="button" data-tz="' + c[2] + '" data-name="' + esc(c[0]) + '" data-cc="' + esc(c[1]) + '">' +
+      "<span><b>" + esc(c[0]) + '</b><br><span class="cc">' + esc(c[1]) + "</span></span>" +
+      '<span class="lt">' + t + " local</span></button></li>";
+  }).join("");
+}
+citySearch.addEventListener("input", () => renderResults(citySearch.value));
+cityResults.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-tz]");
+  if (!btn) return;
+  cities.push({name: btn.dataset.name, cc: btn.dataset.cc, tz: btn.dataset.tz, face: pickFace()});
+  closeDialog();
+  renderAll();
+});
+document.getElementById("addCity").addEventListener("click", openDialog);
+document.getElementById("addCity2").addEventListener("click", openDialog);
+document.getElementById("dlgClose").addEventListener("click", closeDialog);
+overlay.addEventListener("click", e => { if (e.target === overlay) closeDialog(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && overlay.classList.contains("open")) closeDialog(); });
+
+/* ---------------- init ---------------- */
+if (!load()) cities = DEFAULT_CITIES.map(c => ({name: c.name, cc: c.cc, tz: c.tz, face: c.face}));
+renderAll();
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
