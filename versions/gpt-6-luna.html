@@ -292,10 +292,10 @@ addFace("timexindiglo","Timex Easy Reader Day Date T20041 INDIGLO","TIMEX","roun
 const FACE_BY_KEY=Object.fromEntries(FACES.map(face=>[face.key,face]));
 const CHRONO_COMPS=new Set(["chrono2","chrono3","chrono2-date","flyback","perpetual","snoopy"]);
 const SPECIAL_LAYOUTS={
-  gshock:"gshock",f91w:"f91w",apple:"apple",bigtic:"bigtic",bigben:"tower",
+  submariner:"watch",gshock:"gshock",f91w:"f91w",apple:"apple",bigtic:"bigtic",bigben:"tower",
   f1:"board",twinbell:"alarm",grandfather:"longcase",howardmiller:"howard",
   orloj:"orloj",grandcentral:"terminal",mickey:"character",railroad:"pocket",lange1:"lange",
-  "yachtmaster2":"regatta"
+  yachtmaster2:"regatta"
 };
 const pad=(n)=>String(n).padStart(2,"0");
 const escapeHtml=(value)=>String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
