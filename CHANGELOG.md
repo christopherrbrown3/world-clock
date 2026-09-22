@@ -4,7 +4,7 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
-- Added GPT 6 Sol as a standalone, independently authored rendition of all 62 watch and clock faces, with live time-zone clocks, reference-led SVG drawings, city controls, a searchable collection, inspection view, and chronograph controls. Added it to the directory and manifest without changing prior model pages.
+- Added GPT 6 Sol as a standalone, independently authored rendition of all 62 watch and clock faces, with live time-zone clocks, reference-led SVG drawings, city controls, a searchable collection, inspection view, and chronograph controls. Added it to the directory and manifest without changing prior model pages. The maintainer confirmed September 22, 2026 as its release date.
 
 - Verified all ten model release dates against vendor sources. Corrected Astra to September 3 and Fable 5.1 to September 1, 2026; documented rollout distinctions and Grok’s differing API/blog dates. Snapshot dates and model pages are unchanged.
 

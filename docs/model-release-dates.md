@@ -1,11 +1,12 @@
 # Model release dates
 
-The dates below were verified against vendor launch announcements and release notes on **September 5, 2026**. They describe model launch or public rollout, not the date a World Clock rendition was made. A rollout date does not imply that every account, region, or API had access that day.
+The older dates below were verified against vendor launch announcements and release notes on **September 5, 2026**. They describe model launch or public rollout, not the date a World Clock rendition was made. A rollout date does not imply that every account, region, or API had access that day.
 
-The GPT 6 Sol rendition was added to this project on **September 22, 2026**. Its public release date has not been independently verified, so the index identifies September 22 as an entry date and leaves `data-release-date` empty. Do not treat its snapshot as a vendor launch date.
+The maintainer confirmed **September 22, 2026** as GPT 6 Sol’s release date. The project snapshot was made the same day. An official OpenAI announcement URL was not located on September 22; add it here when available.
 
-| Repository model label | Release date | Official evidence |
+| Repository model label | Release date | Evidence |
 | --- | --- | --- |
+| GPT 6 Sol | 2026-09-22 | Maintainer confirmation on September 22, 2026; official announcement URL pending. |
 | Codex Astra | 2026-09-03 | [OpenAI’s launch safety overview](https://openai.com/index/safety-overview-gpt-6-astra/) is dated September 3 and states that GPT-6 Astra is being released that day. |
 | Gemini 3.8 Flash | 2026-09-02 | [Google’s launch announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) is dated September 2. |
 | Claude Fable 5.1 | 2026-09-01 | [Claude release notes](https://support.claude.com/en/articles/12138966-release-notes) explicitly place the Fable 5.1 launch under September 1. |
@@ -19,6 +20,7 @@ The GPT 6 Sol rendition was added to this project on **September 22, 2026**. Its
 
 ## Rollout and source distinctions
 
+- **GPT 6 Sol:** September 22 is the maintainer-confirmed release date and the project snapshot date. They are recorded separately despite matching.
 - **Astra:** September 3 is the launch/rollout date. The [launch post](https://openai.com/index/gpt-6-astra/) describes initial access for a limited set of organizations and broader availability over the following days. September 5 is this repository’s Astra snapshot date, not its model release date.
 - **Fable 5.1:** September 1 is explicit in the vendor’s release notes. The [announcement](https://www.anthropic.com/claude-fable-and-mythos-5-1) displays September 2026; its reference to August 2 concerns EU AI Act watermarking requirements, not this model’s launch. The previous directory incorrectly used August 2.
 - **Grok 4.5:** the [announcement page](https://x.ai/news/grok-4-5) currently carries July 16, while the official API release notes explicitly report availability on July 8 and EU API availability on July 17. The directory uses the earlier documented API release, July 8, rather than substituting the later blog date.

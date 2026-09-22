@@ -26,11 +26,11 @@ The faces themselves are client-side SVG, built against reference photographs ra
 
 ## Explore the renditions
 
-The new GPT 6 Sol entry appears first. The remaining models are listed in newest-release-first order. **Model release** links to the vendor’s release source where verified; **snapshot** is the date this project captured the rendition. They are different chronologies. See the [release-date verification notes](docs/model-release-dates.md).
+The models are listed in newest-release-first order. **Model release** links to the vendor’s release source where available; **snapshot** is the date this project captured the rendition. They are different chronologies, even when both dates happen to match. See the [release-date notes](docs/model-release-dates.md).
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
-| [GPT 6 Sol](versions/gpt-6-sol.html) | Not independently verified | 2026-09-22 |
+| [GPT 6 Sol](versions/gpt-6-sol.html) | 2026-09-22 (maintainer confirmed) | 2026-09-22 |
 | [Codex Astra](versions/astra.html) | [2026-09-03](https://openai.com/index/safety-overview-gpt-6-astra/) | 2026-09-05 |
 | [Gemini 3.8 Flash](versions/gemini-3.8-flash.html) | [2026-09-02](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) | 2026-09-03 |
 | [Claude Fable 5.1](versions/fable-5.1.html) | [2026-09-01](https://support.claude.com/en/articles/12138966-release-notes) | 2026-09-02 |
