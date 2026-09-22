@@ -15,7 +15,8 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
-- `versions/astra.html`: current Codex Astra checkpoint, authored from scratch with its own interface, time engine and all 62 faces.
+- `versions/gpt-6-sol.html`: current GPT 6 Sol checkpoint, authored independently from the catalog and reference material with all 62 faces.
+- `versions/astra.html`: Codex Astra checkpoint, authored from scratch with its own interface, time engine and all 62 faces.
 - `versions/grok-4.5.html`: finalized Grok 4.5 checkpoint, authored from scratch against this specification.
 - `versions/gemini-3.8-flash.html`: finalized Gemini 3.8 Flash checkpoint, authored from scratch against this specification.
 - `versions/fable-5.1.html`: finalized Claude Fable 5.1 checkpoint, authored from scratch against this specification.
@@ -36,7 +37,7 @@ When a new model version is ready:
 2. Preserve finalized model pages. Do not change `world-clock.html` unless the task explicitly includes the active build.
 3. Finish and validate the new standalone page against the catalog and required app behavior.
 4. Add its actual snapshot date and file to `versions.json`.
-5. Add a linked row to `index.html` in model release order, newest first. Preserve the order of existing tied dates. Update its visible rendition count and introduction when the count changes. Keep the index about the project and model links, without specific watch previews.
+5. Add a linked row to `index.html` in model release order, newest first when the release date is verified. Label an unverified new entry with its project snapshot date. Preserve the order of existing tied dates. Update the visible rendition count and introduction when the count changes. Keep the index about the project and model links, without specific watch previews.
 6. Update the README model table, this page’s current-model list, and the changelog. Include reference notes and rendered screenshots for the new rendition.
 7. Run `npm test` and the relevant browser checks, then commit and push checkpoints through a pull request.
 8. Merge after the checks pass and the maintainer authorizes it. Optionally tag the model checkpoint:
@@ -46,7 +47,7 @@ When a new model version is ready:
    git push origin model/<model-id>
    ```
 
-The index and README use model release dates verified against the vendor sources in [Model Release Dates](model-release-dates.md), and the index records them in `data-release-date` attributes. The manifest uses `snapshotDate`, which is the project checkpoint date. Do not sort the index by manifest snapshot dates or assume those dates are model release dates. Confirm the release date when adding an entry.
+The index and README use model release dates verified against vendor sources in [Model Release Dates](model-release-dates.md), and the index records them in `data-release-date` attributes. The manifest uses `snapshotDate`, which is the project checkpoint date. Do not sort the index by manifest snapshot dates or assume those dates are model release dates. GPT 6 Sol is shown as a new entry with its project snapshot date while its public model release date remains unverified.
 
 Promoting a rendition to the active build is a separate, explicit operation. A new model entry does not require copying it into `world-clock.html`.
 

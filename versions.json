@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "gpt-6-sol",
+      "label": "GPT 6 Sol",
+      "file": "versions/gpt-6-sol.html",
+      "snapshotDate": "2026-09-22",
+      "notes": "Independent GPT 6 Sol rendition, authored from scratch with 62 reference-led inline SVG watches and clocks, its own time engine, city controls, collection, and inspection view."
+    },
+    {
       "id": "astra",
       "label": "Codex Astra",
       "file": "versions/astra.html",

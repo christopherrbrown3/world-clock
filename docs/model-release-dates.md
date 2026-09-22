@@ -1,6 +1,8 @@
 # Model release dates
 
-Verified against vendor launch announcements and release notes on **September 5, 2026**. These dates describe the model launch or public rollout used for the directory, not the date a World Clock rendition was made. A rollout date does not imply that every account, region, or API had access that day.
+The dates below were verified against vendor launch announcements and release notes on **September 5, 2026**. They describe model launch or public rollout, not the date a World Clock rendition was made. A rollout date does not imply that every account, region, or API had access that day.
+
+The GPT 6 Sol rendition was added to this project on **September 22, 2026**. Its public release date has not been independently verified, so the index identifies September 22 as an entry date and leaves `data-release-date` empty. Do not treat its snapshot as a vendor launch date.
 
 | Repository model label | Release date | Official evidence |
 | --- | --- | --- |
