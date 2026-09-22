@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Ten perspectives.**
+**One brief. Twelve perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://christopherrbrown3.github.io/world-clock/) · [Open Astra](https://christopherrbrown3.github.io/world-clock/versions/astra.html)**
+**[Explore the project](https://christopherrbrown3.github.io/world-clock/) · [Open GPT 6 Sol](versions/gpt-6-sol.html)**
 
 </div>
 
@@ -20,16 +20,17 @@
 
 Give different AI models the same specification: build a complete world clock with 62 recognizable timepieces. Compare what each model notices—case proportions, dial textures, typography, hand geometry, and motion—and how it turns those details into code.
 
-The [project index](index.html) puts the model directory beside a compact introduction. Filter by provider or browse all eleven models in release order, then open a collection. It contains no specific watch previews. Each rendition has its own interface and implementation, preserved for comparison. Earlier work includes both inherited and independently authored implementations; the [versioning guide](docs/model-versioning.md) explains the two paths.
+The [project index](index.html) puts the model directory beside a compact introduction. Filter by provider or browse all twelve models in release order, then open a collection. It contains no specific watch previews. Each rendition has its own interface and implementation, preserved for comparison. Earlier work includes both inherited and independently authored implementations; the [versioning guide](docs/model-versioning.md) explains the two paths.
 
 The faces themselves are client-side SVG, built against reference photographs rather than embedded watch images. Documentation screenshots show the rendered results. Detail, behavior, and fidelity vary between renditions; these differences are part of the experiment.
 
 ## Explore the renditions
 
-Listed in the same newest-release-first order as the index. **Model release** links to the vendor’s release source; **snapshot** is the date this project captured the rendition. They are different chronologies. See the [release-date verification notes](docs/model-release-dates.md) for rollout distinctions and sources checked on September 5, 2026.
+The models are listed in newest-release-first order. **Model release** links to the vendor’s release source where available; **snapshot** is the date this project captured the rendition. They are different chronologies, even when both dates happen to match. See the [release-date notes](docs/model-release-dates.md).
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
+| [GPT 6 Sol](versions/gpt-6-sol.html) | 2026-09-22 (maintainer confirmed) | 2026-09-22 |
 | [Codex Astra](versions/astra.html) | [2026-09-03](https://openai.com/index/safety-overview-gpt-6-astra/) | 2026-09-05 |
 | [Gemini 3.8 Flash](versions/gemini-3.8-flash.html) | [2026-09-02](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) | 2026-09-03 |
 | [Muse Spark 1.3](versions/muse-spark-1.3.html) | [2026-09-02](https://en.wikipedia.org/wiki/Muse_Spark) | 2026-09-14 |
@@ -48,6 +49,10 @@ The [active development build](world-clock.html) remains available separately. I
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
 
+GPT 6 Sol implements all 62 faces in a new standalone page with individually authored SVG geometry, saved city settings, a searchable collection, enlarged inspection, and chronograph controls. [Read the reference and approximation notes](docs/gpt-6-sol-reference-notes.md).
+
+![GPT 6 Sol's 62 individually drawn SVG timepieces in catalog order](docs/assets/gpt-6-sol-faces.png)
+
 Astra implements all 62 faces with its own SVG toolkit and time engine, 176 selectable cities, saved city settings, a searchable collection, enlarged inspection, and chronograph controls.
 
 ![Astra’s independently drawn collection of working timepieces](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/astra-desktop.png)
@@ -65,7 +70,7 @@ git clone https://github.com/christopherrbrown3/world-clock.git
 cd world-clock
 ```
 
-Open `index.html` in a browser, then choose a model. On macOS, `open index.html` does this from the terminal. To go directly to Astra, open `versions/astra.html`.
+Open `index.html` in a browser, then choose a model. On macOS, `open index.html` does this from the terminal. To go directly to GPT 6 Sol, open `versions/gpt-6-sol.html`.
 
 Each model app is a standalone HTML file whose clocks work offline. The index uses the local Manrope font in `assets/fonts/`; keep that directory alongside it for the intended typography. No font service is contacted by the index. A static server or GitHub Pages works too.
 

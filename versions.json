@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "gpt-6-sol",
+      "label": "GPT 6 Sol",
+      "file": "versions/gpt-6-sol.html",
+      "snapshotDate": "2026-09-22",
+      "notes": "Independent GPT 6 Sol rendition, authored from scratch with 62 reference-led inline SVG watches and clocks, its own time engine, city controls, collection, and inspection view."
+    },
+    {
       "id": "muse-spark-1.3",
       "label": "Muse Spark 1.3",
       "file": "versions/muse-spark-1.3.html",
