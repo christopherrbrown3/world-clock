@@ -6,6 +6,7 @@ Use this index to find the right project guide.
 
 - [Model Release Dates](model-release-dates.md): verified vendor launch dates, source links, and rollout distinctions.
 
+- [GPT 6 Luna Reference Notes](gpt-6-luna-reference-notes.md): locally consulted photographs, face choices, and intentional approximations for the independent rendition.
 - [GPT 6 Sol Reference Notes](gpt-6-sol-reference-notes.md): sources, variant choices, and intentional approximations for the new rendition.
 - [Astra Reference Notes](astra-reference-notes.md): sources, intentional approximations, renderer bindings, and validation for the Astra rendition.
 - [Index Font Assets](../assets/fonts/README.md): bundled Manrope font, OFL license, and provenance.

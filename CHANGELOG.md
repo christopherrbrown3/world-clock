@@ -4,6 +4,7 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added GPT 6 Luna as a new standalone rendition, authored from scratch with 62 individually drawn SVG timepieces, its own time and city controls, a searchable collection, inspection view, and chronograph tools. Added it to the project index, README, and snapshot manifest; documented locally consulted references and approximations. Its model release date remains unverified.
 - Added GPT 6 Sol as a standalone, independently authored rendition of all 62 watch and clock faces, with live time-zone clocks, reference-led SVG drawings, city controls, a searchable collection, inspection view, and chronograph controls. Added it to the directory and manifest without changing prior model pages. The maintainer confirmed September 22, 2026 as its release date.
 
 - Added the Muse Spark 1.3 standalone checkpoint, authored from scratch against the project specification with its own interface, time engine, SVG drawing kit, and all 62 watch and clock faces. Added it to the snapshot manifest, the index directory (including a Meta provider filter), the README model table, and the release-date verification notes.
