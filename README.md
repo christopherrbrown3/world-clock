@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Thirteen perspectives.**
+**One brief. Fourteen perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://christopherrbrown3.github.io/world-clock/) · [Open GPT 6 Luna](versions/gpt-6-luna.html) · [Open GPT 6 Sol](versions/gpt-6-sol.html)**
+**[Explore the project](https://christopherrbrown3.github.io/world-clock/) · [Open Claude Opus 5.5](versions/claude-opus-5.5.html) · [Open GPT 6 Luna](versions/gpt-6-luna.html) · [Open GPT 6 Sol](versions/gpt-6-sol.html)**
 
 </div>
 
@@ -31,6 +31,7 @@ Models with verified release dates are listed newest first. **Model release** li
 | Model | Model release | Snapshot |
 | --- | --- | --- |
 | [GPT 6 Sol](versions/gpt-6-sol.html) | 2026-09-22 (maintainer confirmed) | 2026-09-22 |
+| [Claude Opus 5.5](versions/claude-opus-5.5.html) | [2026-09-22](https://www.anthropic.com/claude-opus-5-5) | 2026-09-24 |
 | [GPT 6 Luna](versions/gpt-6-luna.html) | Not verified | 2026-09-22 |
 | [Codex Astra](versions/astra.html) | [2026-09-03](https://openai.com/index/safety-overview-gpt-6-astra/) | 2026-09-05 |
 | [Gemini 3.8 Flash](versions/gemini-3.8-flash.html) | [2026-09-02](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) | 2026-09-03 |
@@ -49,6 +50,10 @@ The [active development build](world-clock.html) remains available separately. I
 ## Inside a collection
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
+
+Claude Opus 5.5 implements all 62 faces in a new standalone page, written from scratch with its own time engine and SVG drawing kit. Each face moves at its catalog cadence, from beat-rate sweeps to switched LCD segments. Every city card shows a daylight, dusk or night badge from the sun’s position, and pieces can be posed and inspected up close. [Read its reference and approximation notes](docs/claude-opus-5.5-reference-notes.md).
+
+![Claude Opus 5.5’s 62 SVG timepieces in catalog order](docs/assets/claude-opus-5.5-faces.png)
 
 GPT 6 Luna implements all 62 faces in a standalone page with an independent time engine, individually drawn SVGs, saved city settings, a searchable collection, enlarged inspection, and chronograph controls. [Read its reference and approximation notes](docs/gpt-6-luna-reference-notes.md).
 
@@ -73,7 +78,7 @@ git clone https://github.com/christopherrbrown3/world-clock.git
 cd world-clock
 ```
 
-Open `index.html` in a browser, then choose a model. On macOS, `open index.html` does this from the terminal. To go directly to GPT 6 Luna, open `versions/gpt-6-luna.html`.
+Open `index.html` in a browser, then choose a model. On macOS, `open index.html` does this from the terminal. To go directly to Claude Opus 5.5, open `versions/claude-opus-5.5.html`.
 
 Each model app is a standalone HTML file whose clocks work offline. The index uses the local Manrope font in `assets/fonts/`; keep that directory alongside it for the intended typography. No font service is contacted by the index. A static server or GitHub Pages works too.
 
