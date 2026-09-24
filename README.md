@@ -51,15 +51,15 @@ The [active development build](world-clock.html) remains available separately. I
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
 
-Claude Opus 5.5 implements all 62 faces in a new standalone page, written from scratch with its own time engine and SVG drawing kit. Each face moves at its catalog cadence, from beat-rate sweeps to switched LCD segments. Every city card shows a daylight, dusk or night badge from the sun’s position, and pieces can be posed and inspected up close. [Read its reference and approximation notes](docs/claude-opus-5.5-reference-notes.md).
+Claude Opus 5.5 implements all 62 faces in a new standalone page, written from scratch with its own time engine and SVG drawing kit. Each face moves at its catalog cadence, from beat-rate sweeps to switched LCD segments. Every city card shows a daylight, dawn, dusk or night badge from the sun’s position, and pieces can be posed and inspected up close. [Read its reference and approximation notes](docs/claude-opus-5.5-reference-notes.md).
 
-![Claude Opus 5.5’s 62 SVG timepieces in catalog order](docs/assets/claude-opus-5.5-faces.png)
+![Claude Opus 5.5’s 62 SVG timepieces in catalog order](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/claude-opus-5.5-faces.png)
 
 GPT 6 Luna implements all 62 faces in a standalone page with an independent time engine, individually drawn SVGs, saved city settings, a searchable collection, enlarged inspection, and chronograph controls. [Read its reference and approximation notes](docs/gpt-6-luna-reference-notes.md).
 
 GPT 6 Sol implements all 62 faces in a new standalone page with individually authored SVG geometry, saved city settings, a searchable collection, enlarged inspection, and chronograph controls. [Read the reference and approximation notes](docs/gpt-6-sol-reference-notes.md).
 
-![GPT 6 Sol's 62 individually drawn SVG timepieces in catalog order](docs/assets/gpt-6-sol-faces.png)
+![GPT 6 Sol's 62 individually drawn SVG timepieces in catalog order](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/gpt-6-sol-faces.png)
 
 Astra implements all 62 faces with its own SVG toolkit and time engine, 176 selectable cities, saved city settings, a searchable collection, enlarged inspection, and chronograph controls.
 
