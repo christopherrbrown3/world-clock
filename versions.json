@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "claude-opus-5.5",
+      "label": "Claude Opus 5.5",
+      "file": "versions/claude-opus-5.5.html",
+      "snapshotDate": "2026-09-24",
+      "notes": "Independent Claude Opus 5.5 rendition, authored from scratch with its own interface, time engine, SVG drawing kit, and 62 reference-led timepieces, with per-face movement cadences, sky-state city cards, a filterable collection, and a posable inspection view."
+    },
+    {
       "id": "gpt-6-luna",
       "label": "GPT 6 Luna",
       "file": "versions/gpt-6-luna.html",

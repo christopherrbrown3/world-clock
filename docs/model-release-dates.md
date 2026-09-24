@@ -6,9 +6,12 @@ The maintainer confirmed **September 22, 2026** as GPT 6 Sol’s release date. T
 
 The GPT 6 Luna rendition was captured on **September 22, 2026**. No official GPT-6 Luna release date was verified for this entry, so the snapshot date is not used as a substitute.
 
+Claude Opus 5.5’s release date, **September 22, 2026**, was verified against Anthropic’s announcement on September 24, 2026. The rendition was captured on **September 24, 2026**.
+
 | Repository model label | Release date | Evidence |
 | --- | --- | --- |
 | GPT 6 Sol | 2026-09-22 | Maintainer confirmation on September 22, 2026; official announcement URL pending. |
+| Claude Opus 5.5 | 2026-09-22 | [Anthropic’s announcement](https://www.anthropic.com/claude-opus-5-5) is dated September 22 and says the model is available that day. GPT 6 Sol stays ahead for this tied date. |
 | GPT 6 Luna | — | No official GPT-6 Luna release date was verified when this rendition was added; its snapshot date is recorded separately. |
 | Codex Astra | 2026-09-03 | [OpenAI’s launch safety overview](https://openai.com/index/safety-overview-gpt-6-astra/) is dated September 3 and states that GPT-6 Astra is being released that day. |
 | Gemini 3.8 Flash | 2026-09-02 | [Google’s launch announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) is dated September 2. |
@@ -25,6 +28,7 @@ The GPT 6 Luna rendition was captured on **September 22, 2026**. No official GPT
 ## Rollout and source distinctions
 
 - **GPT 6 Sol:** September 22 is the maintainer-confirmed release date and the project snapshot date. They are recorded separately despite matching.
+- **Claude Opus 5.5:** September 22 is the announcement and availability date; September 24 is this repository’s snapshot date. The `/news/claude-opus-5-5` address redirects to the announcement page linked above.
 - **GPT 6 Luna:** the September 22 date is this repository’s snapshot date only. Keep the model release date unlisted until an official source is verified.
 - **Muse Spark 1.3:** the September 2 date comes from the model’s release record (stable 1.3 release September 2, 2026) rather than a Meta launch post; Korean press coverage timestamps the API rollout to September 3 KST, i.e. September 2 in US time zones. The directory uses September 2. This row was verified on September 14, 2026, later than the rest of the table.
 - **Astra:** September 3 is the launch/rollout date. The [launch post](https://openai.com/index/gpt-6-astra/) describes initial access for a limited set of organizations and broader availability over the following days. September 5 is this repository’s Astra snapshot date, not its model release date.
