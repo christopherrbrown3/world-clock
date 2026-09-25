@@ -4,6 +4,7 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added Grok 4.7 as a new standalone rendition, authored from scratch with its own observatory interface, time engine, SVG drawing kit, and all 62 timepieces. Added it to the project index, README, snapshot manifest, and release-date notes, with reference and approximation notes. Its release date, September 21, 2026, is verified against xAI’s announcement. The earlier Grok 4.5 page is unchanged.
 - Refreshed the README for the fourteen-model directory: recaptured the index screenshots at desktop and phone widths, used direct image URLs for every embedded README screenshot, and corrected the Claude Opus 5.5 sky-state description.
 - Added Claude Opus 5.5 as a new standalone rendition, authored from scratch with its own interface, time engine, SVG drawing kit, and all 62 timepieces, each moving at its catalog cadence. Added it to the project index, README, snapshot manifest, and release-date notes, with reference and approximation notes and documentation screenshots. Its release date, September 22, 2026, is verified against Anthropic’s announcement.
 - Added GPT 6 Luna as a new standalone rendition, authored from scratch with 62 individually drawn SVG timepieces, its own time and city controls, a searchable collection, inspection view, and chronograph tools. Added it to the project index, README, and snapshot manifest; documented locally consulted references and approximations. Its model release date remains unverified.

@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Fourteen perspectives.**
+**One brief. Fifteen perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://christopherrbrown3.github.io/world-clock/) · [Open Claude Opus 5.5](versions/claude-opus-5.5.html) · [Open GPT 6 Luna](versions/gpt-6-luna.html) · [Open GPT 6 Sol](versions/gpt-6-sol.html)**
+**[Explore the project](https://christopherrbrown3.github.io/world-clock/) · [Open Grok 4.7](versions/grok-4.7.html) · [Open Claude Opus 5.5](versions/claude-opus-5.5.html) · [Open GPT 6 Sol](versions/gpt-6-sol.html)**
 
 </div>
 
@@ -33,6 +33,7 @@ Models with verified release dates are listed newest first. **Model release** li
 | [GPT 6 Sol](versions/gpt-6-sol.html) | 2026-09-22 (maintainer confirmed) | 2026-09-22 |
 | [Claude Opus 5.5](versions/claude-opus-5.5.html) | [2026-09-22](https://www.anthropic.com/claude-opus-5-5) | 2026-09-24 |
 | [GPT 6 Luna](versions/gpt-6-luna.html) | Not verified | 2026-09-22 |
+| [Grok 4.7](versions/grok-4.7.html) | [2026-09-21](https://x.ai/news/grok-4-7) | 2026-09-25 |
 | [Codex Astra](versions/astra.html) | [2026-09-03](https://openai.com/index/safety-overview-gpt-6-astra/) | 2026-09-05 |
 | [Gemini 3.8 Flash](versions/gemini-3.8-flash.html) | [2026-09-02](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) | 2026-09-03 |
 | [Muse Spark 1.3](versions/muse-spark-1.3.html) | [2026-09-02](https://en.wikipedia.org/wiki/Muse_Spark) | 2026-09-14 |
@@ -50,6 +51,10 @@ The [active development build](world-clock.html) remains available separately. I
 ## Inside a collection
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
+
+Grok 4.7 implements all 62 faces in a new standalone page, written from scratch with its own observatory interface, time engine, and SVG drawing kit. Each face moves at its catalog cadence. Cities can be added, removed, and shuffled, and pieces can be posed up close. [Read its reference and approximation notes](docs/grok-4.7-reference-notes.md).
+
+![Grok 4.7’s 62 SVG timepieces in catalog order](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/grok-4.7-faces.png)
 
 Claude Opus 5.5 implements all 62 faces in a new standalone page, written from scratch with its own time engine and SVG drawing kit. Each face moves at its catalog cadence, from beat-rate sweeps to switched LCD segments. Every city card shows a daylight, dawn, dusk or night badge from the sun’s position, and pieces can be posed and inspected up close. [Read its reference and approximation notes](docs/claude-opus-5.5-reference-notes.md).
 
