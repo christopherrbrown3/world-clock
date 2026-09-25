@@ -29,6 +29,13 @@
       "notes": "Independent GPT 6 Sol rendition, authored from scratch with 62 reference-led inline SVG watches and clocks, its own time engine, city controls, collection, and inspection view."
     },
     {
+      "id": "qwen-3.5-9b",
+      "label": "Qwen 3.5 9B",
+      "file": "versions/qwen-3.5-9b.html",
+      "snapshotDate": "2026-09-24",
+      "notes": "Independent Qwen 3.5 9B rendition, authored from scratch with 62 reference-led inline SVG watches and clocks, its own time engine, city controls, collection, and inspection view."
+    },
+    {
       "id": "muse-spark-1.3",
       "label": "Muse Spark 1.3",
       "file": "versions/muse-spark-1.3.html",

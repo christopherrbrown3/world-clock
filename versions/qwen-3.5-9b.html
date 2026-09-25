@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Clock — Qwen 3.5 9B</title>
+<meta name="description" content="Qwen 3.5 9B's World Clock: a standalone folio of 62 working SVG watches and clocks, keeping live time for the cities you choose.">
+<meta name="theme-color" content="#1a1f2e" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1f2e" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232a3a5a'/%3E%3Ccircle cx='32' cy='32' r='21' fill='none' stroke='%236c8cc8' stroke-width='3'/%3E%3Cpath d='M32 16v16l10 6' fill='none' stroke='%238caec8' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#1a1f2e;--paper-2:#161b26;--card:#202638;--ink:#e8eaf0;--ink-2:#c8ccd8;
+  --muted:#8a90a0;--line:#2a3245;--line-2:#353f55;
+  --accent:#6c8cc8;--accent-ink:#0f1621;--accent-soft:#2a3a5a;
+  --focus:#8caec8;
+  --tray-day:#2a3245;--tray-dusk:#2f364a;--tray-night:#121620;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --radius:14px;
+}
+@media (prefers-color-scheme:dark){
+  :root{--paper:#1a1f2e;--paper-2:#161b26;--card:#202638;--ink:#e8eaf0;--ink-2:#c8ccd8;
+  --muted:#8a90a0;--line:#2a3245;--line-2:#353f55;--accent:#6c8cc8;--accent-ink:#0f1621;--accent-soft:#2a3a5a;--focus:#8caec8;--tray-day:#2a3245;--tray-dusk:#2f364a;--tray-night:#121620}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:16px}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:6px}
+[hidden]{display:none!important}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:fixed;left:12px;top:10px;z-index:50;background:var(--ink);color:var(--paper);padding:10px 14px;border-radius:8px;transform:translateY(-160%);text-decoration:none}
+.skip:focus{transform:none}
+.wrap{max-width:1360px;margin:0 auto;padding:0 28px}
+svg{display:block}
+.ico{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* masthead */
+.mast{border-bottom:1px solid var(--line)}
+.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:68px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand svg{width:34px;height:34px}
+.brand b{font:600 19px/1 var(--serif);letter-spacing:-.01em}
+.brand small{display:block;font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-top:4px}
+.mast nav{display:flex;align-items:center;gap:6px}
+.mast nav a{display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 12px;border-radius:8px;text-decoration:none;font-size:13px;color:var(--ink-2)}
+.mast nav a:hover{background:var(--paper-2)}
+.here{font:500 12px/1.25 var(--mono);color:var(--muted);text-align:right;font-variant-numeric:tabular-nums;margin:0 0 0 10px}
+.here strong{display:block;color:var(--ink);font-size:15px}
+
+/* intro */
+.intro{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:40px;padding:38px 0 26px;align-items:end}
+.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:650;margin:0 0 12px}
+h1{font:500 clamp(34px,5.2vw,60px)/1.02 var(--serif);letter-spacing:-.025em;margin:0}
+h1 em{font-style:italic;color:var(--accent)}
+.lede{margin:0;color:var(--ink-2);font-size:15.5px;line-height:1.7;max-width:56ch}
+.facts{display:flex;gap:28px;margin:18px 0 0;padding:0}
+.facts div{display:flex;flex-direction:column-reverse}
+.facts dt{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.facts dd{margin:0;font:500 28px/1.1 var(--serif);font-variant-numeric:lining-nums tabular-nums}
+
+/* toolbar */
+.bar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:12px;padding-top:10px;padding-bottom:10px;flex-wrap:wrap}
+.search{position:relative;flex:1 1 320px;max-width:520px}
+.search input{width:100%;min-height:46px;border:1px solid var(--line-2);background:var(--card);border-radius:11px;padding:0 14px 0 42px;font-size:15px}
+.search input::placeholder{color:var(--muted)}
+.search input:focus{outline:2px solid var(--focus);outline-offset:1px}
+.search>.ico{position:absolute;left:14px;top:14px;color:var(--muted)}
+.list{position:absolute;left:0;right:0;top:calc(100% + 6px);margin:0;padding:6px;list-style:none;background:var(--card);border:1px solid var(--line-2);border-radius:12px;box-shadow:0 18px 40px rgba(30,20,10,.18);max-height:min(360px,60vh);overflow:auto;z-index:30}
+.list li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;min-height:44px}
+.list li[aria-selected="true"]{background:var(--accent-soft)}
+.list li[aria-disabled="true"]{opacity:.5;cursor:default}
+.list .c{font-weight:600}
+.list .c span{font-weight:400;color:var(--muted);margin-left:6px}
+.list .o{font:12px var(--mono);color:var(--muted);white-space:nowrap}
+.list .none{color:var(--muted);cursor:default}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 16px;border-radius:11px;border:1px solid var(--line-2);background:var(--card);font-size:14px;font-weight:550;white-space:nowrap}
+.btn:hover{border-color:var(--ink-2)}
+.btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.primary:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.count{margin-left:auto;font-size:12.5px;color:var(--muted)}
+
+/* city grid */
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:30px 0 14px}
+h2{font:500 26px/1.15 var(--serif);letter-spacing:-.015em;margin:0}
+.section-head p{margin:0;color:var(--muted);font-size:13px}
+.cities{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;height:100%;transition:border-color .2s}
+.card:hover{border-color:var(--line-2)}
+.card header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:14px 14px 10px 16px}
+.card h3{font:600 19px/1.15 var(--serif);margin:0;letter-spacing:-.01em;overflow-wrap:anywhere}
+.card .where{font-size:12px;color:var(--muted);margin-top:3px}
+.card .acts{display:flex;gap:2px;margin:-6px -6px 0 0}
+.iconbtn{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:10px;border:0;background:transparent;color:var(--ink-2)}
+.iconbtn:hover{background:var(--paper-2);color:var(--ink)}
+.iconbtn.warn:hover{color:#b3261e}
+.card .clock{display:flex;flex-direction:column;align-items:flex-end;text-align:right}
+.card .clock .hm{font-size:1.36rem;font-weight:500;color:var(--ink);font-family:var(--mono);font-variant-numeric:tabular-nums}
+.card .clock .sec{font-size:0.8rem;color:var(--steel);margin-left:3px;font-family:var(--mono)}
+.card .clock .ap{font-size:0.7rem;color:var(--muted);margin-left:4px;font-family:var(--mono)}
+.card .clock .day{display:block;margin-top:3px;color:var(--muted);font-size:0.7rem;font-family:var(--mono);letter-spacing:0.02em}
+.card footer{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:6px;padding:10px 10px 10px 16px}
+.card .facename{margin:0;color:var(--ink-2);font-size:0.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon{display:inline-grid;place-items:center;width:44px;height:44px;padding:0;background:transparent;border:1px solid transparent;border-radius:10px;color:var(--muted)}
+.icon:hover{color:var(--ink);border-color:var(--line-2);background:rgba(255,255,255,0.04)}
+.icon.danger:hover{color:#ff9c9c}
+.icon svg{width:18px;height:18px}
+.well{position:relative;aspect-ratio:1/1;margin:6px 16px 0;background:radial-gradient(60% 60% at 50% 45%,#2a3245 0%,#1a1f2e 100%);border-radius:12px;border:1px solid#2a3245}
+.well .face{position:absolute;inset:6%;width:88%;height:88%;display:block}
+.empty{grid-column:1/-1;padding:56px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line-2);border-radius:var(--radius)}
+.empty p{margin:0 0 16px}
+@media (max-width:760px){
+  .topbar{grid-template-columns:1fr auto}
+  .search{grid-column:1/-1;grid-row:2;width:100%}
+  .plate .sub{overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .plate .sub #summary{display:none}
+  .plate .sub b::after{content:" checkpoint";color:var(--muted);font-weight:400}
+  .btn .label{display:none}
+  .btn{padding:0 12px}
+  .grid{grid-template-columns:1fr;gap:14px}
+  .search .kbd{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <a href="/" class="brand">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="21" fill="none" stroke="#6c8cc8" stroke-width="3"/>
+        <path d="M32 16v16l10 6" fill="none" stroke="#8caec8" stroke-width="3.4" stroke-linecap="round"/>
+        <circle cx="32" cy="32" r="5" fill="#6c8cc8"/>
+      </svg>
+      <div>
+        <b>World Clock</b>
+        <small>Qwen 3.5 9B</small>
+      </div>
+    </a>
+    <nav>
+      <a href="#cities">Cities</a>
+      <a href="#faces">Faces</a>
+      <a href="https://github.com/christopherrbrown3/world-clock">GitHub</a>
+    </nav>
+  </div>
+</header>
+<section class="intro">
+  <div>
+    <p class="eyebrow">Checkpoint</p>
+    <h1>Qwen 3.5 9B <em>World Clock</em></h1>
+    <p class="lede">A standalone world clock rendering 62 iconic watch and clock faces as live inline SVG. Qwen 3.5 9B checkpoint, authored from scratch against the project specification with its own interface, time engine, and all 62 watch and clock faces.</p>
+    <div class="facts">
+      <div>
+        <dt>Release</dt>
+        <dd>2026-09-24</dd>
+      </div>
+      <div>
+        <dt>Cities</dt>
+        <dd id="summary">0 · 0</dd>
+      </div>
+      <div>
+        <dt>Faces</dt>
+        <dd>62</dd>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="bar" role="toolbar" aria-label="City controls">
+  <div class="wrap">
+    <form class="search" id="search-form" role="search" autocomplete="off">
+      <label class="sr-only" for="city-input">Add a city</label>
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+      <input id="city-input" type="text" placeholder="Add a city…" role="combobox" aria-expanded="false" aria-controls="city-list" aria-autocomplete="list" aria-haspopup="listbox">
+      <span class="kbd" aria-hidden="true">/</span>
+      <ul class="list" id="city-list" role="listbox" aria-label="City suggestions" hidden></ul>
+    </form>
+    <div class="count">Cities: <strong id="city-count">0</strong></div>
+    <div class="actions">
+      <button class="btn" id="shuffle-all" type="button" title="Shuffle every face">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+        <span class="label">Shuffle all</span>
+      </button>
+    </div>
+  </div>
+</div>
+<main>
+  <section class="cities" id="cities">
+    <div class="section-head">
+      <h2>Cities</h2>
+      <p>Search to add, remove, or shuffle. Faces are assigned from the pool of 62.</p>
+    </div>
+    <ul class="cities" id="grid" aria-live="polite" aria-label="City clocks"></ul>
+  </section>
+</main>
+<script>
+(function(){
+  const UTC = new Date().getTimezoneOffset() * -1 / 60;
+  const UTC_STR = UTC.toFixed(2);
+  const UTC_FMT = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date());
+  const UTC_DATE = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", weekday: "short", month: "short", day: "2-digit" }).format(new Date());
+  document.getElementById("utc-now").textContent = UTC_FMT + " (" + UTC_DATE + ")";
+  document.getElementById("utc-offset").textContent = UTC_STR;
+  
+  const CITIES = [];
+  const FACE_KEYS = [];
+  const CADENCES = new Set(["sweep", "tick", "glide", "digital", "mondaine"]);
+  const FACES = {};
+  let instanceCounter = 0;
+  
+  function registerFace(key, spec) {
+    if (FACES[key]) throw new Error("duplicate face key " + key);
+    if (!spec || typeof spec.draw !== "function") throw new Error("face " + key + " has no draw()");
+    if (!CADENCES.has(spec.cadence)) throw new Error("face " + key + " has unknown cadence " + spec.cadence);
+    FACES[key] = Object.assign({ key, viewBox: "0 0 100 100" }, spec);
+    FACE_KEYS.push(key);
+  }
+  
+  function makeKit() {
+    const prefix = "f" + (instanceCounter++).toString(36) + "_";
+    const n = (v) => (Math.round(v * 1000) / 1000).toString();
+    const pt = (deg, r, cx, cy) => {
+      const a = (deg - 90) * Math.PI / 180;
+      return [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
+    };
+    const p = (deg, r, cx, cy) => { const [x, y] = pt(deg, r, cx, cy); return n(x) + " " + n(y); };
+    const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    const attrs = (o) => Object.entries(o).filter(([, v]) => v !== undefined && v !== null && v !== "").map(([k, v]) => " " + k + '="' + esc(v) + '"').join("");
+    
+    const kit = {
+      FONT: { sans: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif", cond: "-apple-system, BlinkMacSystemFont, 'Helvetica Neue Condensed', 'Arial Narrow', sans-serif", serif: "Georgia, 'Times New Roman', Times, serif", mono: "Menlo, Consolas, 'Liberation Mono', monospace", lcd: "'Courier New', Menlo, Consolas, monospace" },
+      n, pt, p, esc, attrs,
+      id: (name) => prefix + name,
+      url: (name) => "url(#" + prefix + name + ")",
+      ref: (name) => "#" + prefix + name,
+      
+      linear(name, { a = 90, stops = [], x1, y1, x2, y2, units } = {}) {
+        let coords;
+        if (x1 !== undefined) coords = " x1=\"" + n(x1) + "\" y1=\"" + n(y1) + "\" x2=\"" + n(x2) + "\" y2=\"" + n(y2) + "\"";
+        else {
+          const rad = (a - 90) * Math.PI / 180, cx = 0.5, cy = 0.5, dx = Math.cos(rad) * 0.5, dy = Math.sin(rad) * 0.5;
+          coords = " x1=\"" + n(cx - dx) + "\" y1=\"" + n(cy - dy) + "\" x2=\"" + n(cx + dx) + "\" y2=\"" + n(cy + dy) + "\"";
+        }
+        return "<linearGradient id=\"" + prefix + name\""+coords+(units ? " gradientUnits=\"" + units + "\"" : "")+">" + stops.map(([o, c, op]) => "<stop offset=\"" + o + "\" stop-color=\"" + c + "\"" + (op !== undefined ? " stop-opacity=\"" + op + "\"" : "") + "/>").join("") + "</linearGradient>";
+      },
+      radial(name, { cx = 0.5, cy = 0.5, r = 0.5, fx, fy, stops = [], units } = {}) {
+        return "<radialGradient id=\"" + prefix + name + "\" cx=\"" + cx + "\" cy=\"" + cy + "\" r=\"" + r + "\"" + (fx !== undefined ? " fx=\"" + fx + "\" fy=\"" + fy + "\"" : "") + (units ? " gradientUnits=\"" + units + "\"" : "") + ">" + stops.map(([o, c, op]) => "<stop offset=\"" + o + "\" stop-color=\"" + c + "\"" + (op !== undefined ? " stop-opacity=\"" + op + "\"" : "") + "/>").join("") + "</radialGradient>";
+      },
+      ticks({ count = 60, r1 = 40, r2 = 43, w = 0.5, color = "#fff", cx = 50, cy = 50, skip, start = 0, cap = "butt", opacity } = {}) {
+        let out = "";
+        for (let i = 0; i < count; i++) {
+          if (skip && skip(i)) continue;
+          const a = start + i * 360 / count;
+          const [ax, ay] = pt(a, r1, cx, cy), [bx, by] = pt(a, r2, cx, cy);
+          out += "<line x1=\"" + n(ax) + "\" y1=\"" + n(ay) + "\" x2=\"" + n(bx) + "\" y2=\"" + n(by) + "\" stroke=\"" + color + "\" stroke-width=\"" + w + "\" stroke-linecap=\"" + cap + "\"" + (opacity !== undefined ? " opacity=\"" + opacity + "\"" : "") + "/>";
+        }
+        return out;
+      },
+      text(x, y, str, { size = 4, family = FONT.sans, weight = 400, color = "#fff", anchor = "middle", letter, transform, opacity, italic, baseline = "central", cls, data } = {}) {
+        return "<text x=\"" + n(x) + "\" y=\"" + n(y) + "\" font-size=\"" + size + "\" font-family=\"" + esc(family) + "\" font-weight=\"" + weight + "\" fill=\"" + color + "\" text-anchor=\"" + anchor + "\" dominant-baseline=\"" + baseline + "\"" + (letter !== undefined ? " letter-spacing=\"" + letter + "\"" : "") + (italic ? " font-style=\"italic\"" : "") + (transform ? " transform=\"" + transform + "\"" : "") + (opacity !== undefined ? " opacity=\"" + opacity + "\"" : "") + (cls ? " class=\"" + cls + "\"" : "") + (data ? attrs(data) : "") + ">" + esc(str) + "</text>";
+      },
+      numerals({ count = 12, r = 30, size = 6, family = FONT.sans, weight = 500, color = "#fff", labels, upright = true, start = 30, step, cx = 50, cy = 50, skip, letter, italic, offsetY = 0 } = {}) {
+        let out = "";
+        const stepDeg = step !== undefined ? step : 360 / count;
+        for (let i = 0; i < count; i++) {
+          if (skip && skip(i)) continue;
+          const label = labels ? labels[i] : String(i + 1);
+          if (label === "" || label === null || label === undefined) continue;
+          const a = start + i * stepDeg;
+          const [x, y] = pt(a, r, cx, cy);
+          out += kit.text(x, y + offsetY, label, { size, family, weight, color, letter, italic, transform: upright ? undefined : "rotate(" + n(a) + " " + n(x) + " " + n(y) + ")" });
+        }
+        return out;
+      },
+      arcText({ str, r, a0, a1, size = 3, family = FONT.sans, weight = 500, color = "#fff", letter, cx = 50, cy = 50, flip = false, opacity, name }) {
+        const id = prefix + (name || "arc" + Math.random().toString(36).slice(2, 7));
+        const [sx, sy] = pt(flip ? a1 : a0, r, cx, cy), [ex, ey] = pt(flip ? a0 : a1, r, cx, cy);
+        const span = Math.abs(a1 - a0);
+        const large = span > 180 ? 1 : 0;
+        const sweep = flip ? 0 : 1;
+        return "<defs><path id=\"" + id + "\" d=\"M" + n(sx) + " " + n(sy) + " A" + r + " " + r + " 0 " + large + " " + sweep + " " + n(ex) + " " + n(ey) + "/"/></defs><text font-size=\"" + size + "\" font-family=\"" + esc(family) + "\" font-weight=\"" + weight + "\" fill=\"" + color + "\"" + (letter !== undefined ? " letter-spacing=\"" + letter + "\"" : "") + (opacity !== undefined ? " opacity=\"" + opacity + "\"" : "") + "><textPath href=\"#" + id + "\" startOffset=\"50%\" text-anchor=\"middle\" dominant-baseline=\"central\">" + esc(str) + "</textPath></text>";
+      },
+      rect(x, y, w, h, o = {}) {
+        return "<rect x=\"" + n(x) + "\" y=\"" + n(y) + "\" width=\"" + n(w) + "\" height=\"" + n(h) + "\"" + attrs(o) + "/>";
+      },
+      circle(cx, cy, r, o = {}) {
+        return "<circle cx=\"" + n(cx) + "\" cy=\"" + n(cy) + "\" r=\"" + n(r) + "\"" + attrs(o) + "/>";
+      },
+      hand(kind, d, { cx = 50, cy = 50, fill = "#fff", stroke, sw, extra = "", pivotAttr = true } = {}) {
+        const piv = pivotAttr && (cx !== 50 || cy !== 50) ? " data-pivot=\"" + n(cx) + " " + n(cy) + "\"" : "";
+        return "<g data-hand=\"" + kind + "\"" + piv + " transform=\"translate(" + n(cx) + " " + n(cy) + ")\"><path d=\"" + d + "\" fill=\"" + fill + "\"" + (stroke ? " stroke=\"" + stroke + "\" stroke-width=\"" + (sw || 0.3) + "\"" : "") + (extra ? " " + extra : "") + "/></g>";
+      },
+      handGroup(name, children) {
+        const id = prefix + "h" + name;
+        return "<g id=\"" + id + "\" class=\"hand-group\" data-hand=\"" + name + "\"><g>" + children + "</g></g>";
+      },
+      crystal(cx, cy, r, { opacity = 0.15 } = {}) {
+        return "<ellipse cx=\"" + n(cx) + "\" cy=\"" + n(cy) + "\" rx=\"" + n(r) + "\" ry=\"" + n(r * 0.92) + "\" fill=\"none\" stroke=\"url(#" + prefix + "glass)\" stroke-width=\"" + n(r * 0.08) + "\" stroke-opacity=\"" + opacity + "\"/>";
+      },
+      glass(cx, cy, r, { stops = [[0, "#e8f4fc"], [0.3, "#d4e9f7"], [0.6, "#a3d0e6"], [1, "#7abce0"]] } = {}) {
+        return kit.linear("glass", { a: 135, stops, x1: cx - r, y1: cy - r, x2: cx + r, y2: cy + r, units: "objectBoundingBox" });
+      },
+      lume(cx, cy, r, { stops = [[0, "#ffffff"], [0.5, "#f3f6f0"], [1, "#c3cdc5"]] } = {}) {
+        return kit.radial("lume", { cx, cy, r, stops });
+      },
+      metal(cx, cy, r, { stops = [[0, "#8b939b"], [0.35, "#cfd6dc"], [0.7, "#8b939b"]] } = {}) {
+        return kit.linear("metal", { a: 90, stops, x1: cx - r, y1: cy - r, x2: cx + r, y2: cy + r });
+      },
+      dial(cx, cy, r, { stops = [[0, "#1a1a1a"], [0.5, "#0d0d0d"], [1, "#000000"]] } = {}) {
+        return kit.radial("dial", { cx, cy, r, stops });
+      },
+      brand(cx, cy, text, { size = 3.5, family = FONT.sans, weight = 700, color = "#fff", letter = 0.2 } = {}) {
+        return kit.text(cx, cy - 5, text, { size, family, weight, color, letter });
+      },
+      subdial(cx, cy, r, { stops = [[0, "#1a1a1a"], [0.5, "#0d0d0d"], [1, "#000000"]] } = {}) {
+        return kit.radial("subdial", { cx, cy, r: r * 0.95, stops });
+      },
+      dateWindow(x, y, w, h, { fill = "#f5f5f5", stroke = "#000", strokeWidth = 0.3 } = {}) {
+        return kit.rect(x, y, w, h, { fill, stroke, strokeWidth }) + kit.text(x + w / 2, y + h / 2, "1", { size: 4.5, family: FONT.sans, weight: 600, color: "#111" });
+      },
+      bezel(cx, cy, r, { numerals, ticks } = {}) {
+        let out = "";
+        if (numerals) {
+          out += kit.numerals({ count: numerals.count, r: r * 1.02, size: numerals.size, family: numerals.family, weight: numerals.weight, color: numerals.color, labels: numerals.labels, upright: numerals.upright });
+        }
+        if (ticks) {
+          for (let i = 1; i < 60; i++) {
+            const a = i * 6;
+            if (i % 5 === 0 && i % 10 !== 0) {
+              out += "<line x1=\"" + p(a, r * 1.08).replace(" ", '" y1="') + "\" x2=\"" + p(a, r * 1.12).replace(" ", '" y2="') + "\" stroke=\"#fff\" stroke-width=\"1.5\"/>";
+            } else if (i < 15) {
+              out += "<line x1=\"" + p(a, r * 1.05).replace(" ", '" y1="') + "\" x2=\"" + p(a, r * 1.07).replace(" ", '" y2="') + "\" stroke=\"#aaa\" stroke-width=\"0.6\"/>";
+            }
+          }
+        }
+        return out;
+      }
+    };
+    return kit;
+  }
+  
+  /* ---- Face definitions ---- */
+  registerFace("submariner", {
+    name: "Rolex Submariner Date 126610LN",
+    cadence: "sweep",
+    draw(S) {
+      const WG = "#e8ecef";
+      const LUME = S.url("lume");
+      const P = "#f1f2ee";
+      const R_DIAL = 33.2, R_MK = 24.6;
+      
+      let bezel = "";
+      for (let i = 1; i < 60; i++) {
+        const a = i * 6;
+        if (i % 5 === 0) {
+          if (i % 10 === 0) continue;
+          bezel += "<line x1=\"" + S.p(a, 36.6).replace(" ", '" y1="') + "\" x2=\"" + S.p(a, 41.2).replace(" ", '" y2="') + "\" stroke=\"" + S.url("plat") + "\" stroke-width=\"1.7\"/>";
+        } else if (i < 15) {
+          bezel += "<line x1=\"" + S.p(a, 39.4).replace(" ", '" y1="') + "\" x2=\"" + S.p(a, 41.3).replace(" ", '" y2="') + "\" stroke=\"#d7dce0\" stroke-width=\"0.55\"/>";
+        }
+      }
+      const bznum = S.numerals({ count: 5, start: 60, step: 60, r: 38.9, size: 5.1, family: S.FONT.cond, weight: 700, color: S.url("plat"), upright: false, labels: ["10", "20", "30", "40", "50"], letter: -0.2 });
+      
+      let knurl = "";
+      for (let i = 0; i < 120; i++) {
+        const a = i * 3;
+        knurl += "<line x1=\"" + S.p(a, 42.5).replace(" ", '" y1="') + "\" x2=\"" + S.p(a, 44.6).replace(" ", '" y2="') + "\" stroke=\"" + (i % 2 ? "#6d757d" : "#e4e8ec") + "\" stroke-width=\"1.1\"/>";
+      }
+      
+      let plots = "";
+      for (const i of [1, 2, 4, 5, 7, 8, 10, 11]) {
+        const [x, y] = S.pt(i * 30, R_MK);
+        plots += S.circle(x, y, 2.85, { fill: WG }) + S.circle(x, y, 2.2, { fill: LUME });
+      }
+      const baton = (deg) => {
+        const [x, y] = S.pt(deg, R_MK - 0.4);
+        return "<g transform=\"rotate(" + deg + " " + S.n(x) + " " + S.n(y) + "\")\">" + S.rect(x - 2.3, y - 4.6, 4.6, 9.2, { rx: 0.5, fill: WG }) + S.rect(x - 1.65, y - 3.95, 3.3, 7.9, { rx: 0.3, fill: LUME }) + "</g>";
+      };
+      plots += baton(180) + baton(270);
+      plots += "<path d=\"M45.2 21.2 H54.8 L50 29.6 Z\" fill=\"" + WG + "/><path d=\"M46.5 22 H53.5 L50 28.2 Z\" fill=\"" + LUME + "/>";
+      
+      const hourHand = "<path d=\"M-1.6 2.6 L-1.6 -11 L-2.4 -11 L0 -21.6 L2.4 -11 L1.6 -11 L1.6 2.6 Z\" fill=\"" + S.url("hand") + "/><circle cx=\"0\" cy=\"-13.6\" r=\"3.35\" fill=\"" + S.url("hand") + "/><path d=\"M0 -13.6 L0 -16.5 A2.9 2.9 0 0 1 2.5 -12.1 Z M0 -13.6 L2.5 -12.1 A2.9 2.9 0 0 1 -2.5 -12.1 Z M0 -13.6 L-2.5 -12.1 A2.9 2.9 0 0 1 0 -16.5 Z\" fill=\"" + LUME + "/><path d=\"M0 -13.6 L0 -16.5 M0 -13.6 L2.5 -12.1 M0 -13.6 L-2.5 -12.1\" stroke=\"" + S.url("hand") + "\" stroke-width=\"0.55\"/>";
+      const minuteHand = "<path d=\"M-1.5 3 L-1.5 -20 L0 -31.6 L1.5 -20 L1.5 3 Z\" fill=\"" + S.url("hand") + "/><path d=\"M-0.8 -2 L-0.8 -19.6 L0 -27.5 L0.8 -19.6 L0.8 -2 Z\" fill=\"" + LUME + "/>";
+      const secondHand = "<path d=\"M-0.45 8.5 L-0.45 -30.2 L0.45 -30.2 L0.45 8.5 Z\" fill=\"" + S.url("hand") + "/><circle cx=\"0\" cy=\"-22.5\" r=\"2.05\" fill=\"" + S.url("hand") + "/><circle cx=\"0\" cy=\"-22.5\" r=\"1.45\" fill=\"" + LUME + "/><circle r=\"1.9\" fill=\"" + S.url("hand") + "/><circle r=\"0.7\" fill=\"#2b2f34\"/>";
+      
+      return "
+        <defs>
+          " + S.linear("brace", { a: 90, stops: [[0, "#6f777f"], [0.14, "#e9edf0"], [0.5, "#aab2ba"], [0.86, "#e9edf0"], [1, "#69717a"]] }) + "
+          " + S.linear("braceEdge", { a: 90, stops: [[0, "#4b525a"], [0.5, "#c7ced4"], [1, "#4b525a"]] }) + "
+          " + S.linear("case", { a: 135, stops: [[0, "#fbfcfd"], [0.35, "#cfd6dc"], [0.7, "#8b939b"], [1, "#d6dce1"]] }) + "
+          " + S.linear("insert", { a: 160, stops: [[0, "#33363c"], [0.3, "#15171b"], [0.62, "#050608"], [1, "#22252a"]] }) + "
+          " + S.linear("plat", { a: 160, stops: [[0, "#ffffff"], [0.5, "#dfe4e9"], [1, "#aeb6be"]] }) + "
+          " + S.radial("dialg", { cx: 0.4, cy: 0.32, r: 0.95, stops: [[0, "#262a2e"], [0.4, "#0e1013"], [1, "#000"]] }) + "
+          " + S.radial("lume", { cx: 0.35, cy: 0.3, r: 0.9, stops: [[0, "#ffffff"], [0.5, "#f3f6f0"], [1, "#c3cdc5"]] }) + "
+          " + S.linear("hand", { a: 120, stops: [[0, "#ffffff"], [0.42, "#e4e9ee"], [0.62, "#9aa3ab"], [1, "#eef2f5"]] }) + "
+          " + S.linear("crown", { a: 90, stops: [[0, "#858d95"], [0.22, "#f3f6f8"], [0.55, "#aeb6be"], [1, "#747c84"]] }) + "
+          " + S.radial("cyc", { cx: 0.32, cy: 0.25, r: 0.9, stops: [[0, "#fff", 0.28], [0.5, "#fff", 0.06], [1, "#fff", 0]] }) + "
+          <clipPath id=\"" + S.id("dialclip") + "\"><circle cx=\"50\" cy=\"50\" r=\"" + R_DIAL + "\"/></clipPath>
+        </defs>
+        
+        <!-- Oyster bracelet -->
+        <g>
+          " + S.rect(31.5, 0, 37, 13.5, { fill: S.url("brace") }) + "
+          " + S.rect(31.5, 86.5, 37, 13.5, { fill: S.url("brace") }) + "
+          " + S.rect(43.2, 0, 13.6, 13.5, { fill: "#d5dbe0", opacity: 0.55 }) + "
+          " + S.rect(43.2, 86.5, 13.6, 13.5, { fill: "#d5dbe0", opacity: 0.55 }) + "
+          <line x1=\"43.2\" y1=\"0\" x2=\"43.2\" y2=\"13.5\" stroke=\"#4d545c\" stroke-width=\"0.5\"/><line x1=\"56.8\" y1=\"0\" x2=\"56.8\" y2=\"13.5\" stroke=\"#4d545c\" stroke-width=\"0.5\"/>
+          <line x1=\"43.2\" y1=\"86.5\" x2=\"43.2\" y2=\"100\" stroke=\"#4d545c\" stroke-width=\"0.5\"/><line x1=\"56.8\" y1=\"86.5\" x2=\"56.8\" y2=\"100\" stroke=\"#4d545c\" stroke-width=\"0.5\"/>
+          <line x1=\"31.5\" y1=\"6.2\" x2=\"68.5\" y2=\"6.2\" stroke=\"#3f464e\" stroke-width=\"0.7\"/><line x1=\"31.5\" y1=\"93.8\" x2=\"68.5\" y2=\"93.8\" stroke=\"#3f464e\" stroke-width=\"0.7\"/>
+        </g>
+        
+        <!-- Lugs and case -->
+        <path d=\"M25.5 27 Q28 9.5 42 6.4 L58 6.4 Q72 9.5 74.5 27 Z\" fill=\"" + S.url("case") + "/>
+        <path d=\"M25.5 73 Q28 90.5 42 93.6 L58 93.6 Q72 90.5 74.5 73 Z\" fill=\"" + S.url("case") + "/>
+        <path d=\"M31.5 13.5 L33.5 22 M68.5 13.5 L66.5 22 M31.5 86.5 L33.5 78 M68.5 86.5 L66.5 78\" stroke=\"#5b636b\" stroke-width=\"0.5\"/>
+        
+        <!-- Crown guards and Triplock crown -->
+        <path d=\"M88.5 42.6 Q95.4 41.6 95.6 50 Q95.4 58.4 88.5 57.4 Z\" fill=\"" + S.url("case") + "/>
+        <path d=\"M92.4 46.2 L94.6 46.2 L94.6 53.8 L92.4 53.8 Z\" fill=\"#7d858d\"/>
+        " + S.rect(94.4, 44.6, 4.6, 10.8, { rx: 1.3, fill: S.url("crown") }) + "
+        " + Array.from({ length: 7 }, (_, i) => "<line x1=\"" + S.n(95 + i * 0.6) + "\" y1=\"45.3\" x2=\"" + S.n(95 + i * 0.6) + "\" y2=\"54.7\" stroke=\"#61686f\" stroke-width=\"0.28\" opacity=\"0.85\"/>").join("") + "
+        " + S.rect(98.6, 46.6, 1.1, 6.8, { rx: 0.5, fill: "#8a9299" }) + "
+        " + S.circle(50, 50, 44.6, { fill: S.url("case") }) + "
+        " + knurl + "
+        " + S.circle(50, 50, 42.5, { fill: "none", stroke: "#b9c1c8", "stroke-width": 0.9 }) + "
+        
+        <!-- Cerachrom insert -->
+        " + S.circle(50, 50, 42.1, { fill: S.url("insert") }) + "
+        " + bezel + bznum + "
+        <path d=\"M" + S.p(0, 41.7) + " L" + S.p(-4.6, 36.2) + " L" + S.p(4.6, 36.2) + " Z\" fill=\"" + S.url("plat") + "/>
+        " + S.circle(50, 50 - 39.2, 1.55, { fill: "#cfd6db" }) + S.circle(50, 50 - 39.2, 1.15, { fill: LUME }) + "
+        
+        <!-- Rehaut -->
+        " + S.circle(50, 50, 35.3, { fill: "#1c1f23" }) + "
+        " + S.arcText({ str: "ROLEX ROLEX ROLEX ROLEX ROLEX ROLEX ROLEX ROLEX ROLEX ROLEX ROLEX ROLEX ROLEX", r: 34.25, a0: -179, a1: 179, size: 1.35, family: S.FONT.cond, weight: 700, color: "#8f979e", letter: 0.25, opacity: 0.6, name: "rehaut" }) + "
+        " + S.circle(50, 50, 35.6, { fill: "none", stroke: "#090a0c", "stroke-width": 1.2 }) + "
+        " + S.circle(50, 50, 33.5, { fill: "none", stroke: "#4c535a", "stroke-width": 0.35 }) + "
+        
+        <!-- Dial -->
+        " + S.circle(50, 50, R_DIAL, { fill: S.url("dialg") }) + "
+        <g clip-path=\"" + S.url("dialclip") + "\">
+          " + S.ticks({ count: 60, r1: 31.4, r2: 32.5, w: 0.42, color: "#b9bfc5", skip: (i) => i % 5 === 0 }) + "
+          " + S.ticks({ count: 12, r1: 30.6, r2: 32.5, w: 0.75, color: "#d6dbe0" }) + "
+          
+          <!-- Coronet and printing -->
+          <g fill=\"" + P + "\" transform=\"translate(50 32.6) scale(0.62)\">
+            <path d=\"M-6.3 3.4 H6.3 L5.7 1.1 L3.3 2.4 L2.85 0 L0 1.5 L-2.85 0 L-3.3 2.4 L-5.7 1.1 Z\"/>
+            <circle cx=\"-6.2\" cy=\"0.6\" r=\"0.85\"/><circle cx=\"-3.1\" cy=\"-0.6\" r=\"0.85\"/><circle cx=\"0\" cy=\"-1\" r=\"0.9\"/><circle cx=\"3.1\" cy=\"-0.6\" r=\"0.85\"/><circle cx=\"6.2\" cy=\"0.6\" r=\"0.85\"/>
+            <rect x=\"-5.2\" y=\"3.9\" width=\"10.4\" height=\"1.2\" rx=\"0.4\"/>
+          </g>
+          " + S.text(50, 38.2, "ROLEX", { size: 3.6, family: S.FONT.serif, weight: 700, color: P, letter: 0.35 }) + "
+          " + S.text(50, 41.6, "OYSTER PERPETUAL DATE", { size: 1.62, family: S.FONT.sans, weight: 500, color: P, letter: 0.08 }) + "
+          " + S.text(50, 60.0, "SUBMARINER", { size: 2.55, family: S.FONT.sans, weight: 500, color: P, letter: 0.55 }) + "
+          " + S.text(50, 63.1, "1000ft = 300m", { size: 1.5, family: S.FONT.sans, weight: 500, color: P }) + "
+          " + S.text(50, 65.6, "SUPERLATIVE CHRONOMETER", { size: 1.35, family: S.FONT.sans, weight: 500, color: P, letter: 0.06 }) + "
+          " + S.text(50, 67.9, "OFFICIALLY CERTIFIED", { size: 1.35, family: S.FONT.sans, weight: 500, color: P, letter: 0.06 }) + "
+          " + S.text(45.3, 81.4, "SWISS", { size: 1.25, family: S.FONT.sans, weight: 500, color: P }) + "
+          " + S.text(54.9, 81.4, "MADE", { size: 1.25, family: S.FONT.sans, weight: 500, color: P }) + "
+          <g fill=\"" + P + "\" transform=\"translate(50 81.1) scale(0.16)\"><path d=\"M-6.3 3.4 H6.3 L5.7 1.1 L3.3 2.4 L2.85 0 L0 1.5 L-2.85 0 L-3.3 2.4 L-5.7 1.1 Z\"/><circle cx=\"-6.2\" cy=\"0.6\" r=\"0.9\"/><circle cx=\"-3.1\" cy=\"-0.6\" r=\"0.9\"/><circle cx=\"0\" cy=\"-1\" r=\"0.95\"/><circle cx=\"3.1\" cy=\"-0.6\" r=\"0.9\"/><circle cx=\"6.2\" cy=\"0.6\" r=\"0.9\"/></g>
+          " + plots + "
+          
+          <!-- Date window -->
+          " + S.rect(70.3, 47.0, 7.0, 6.0, { fill: "#f6f5ee" }) + "
+          " + S.rect(70.3, 47.0, 7.0, 6.0, { fill: "none", stroke: "#000", "stroke-opacity": 0.5, "stroke-width": 0.3 }) + "
+          " + S.text(73.85, 50.1, "31", { size: 4.4, family: S.FONT.sans, weight: 600, color: "#111", data: { "data-text": "date" } }) + "
+        </g>
+        
+        <!-- Hands -->
+        " + S.handGroup("h", hourHand) + "
+        " + S.handGroup("m", minuteHand) + "
+        " + S.handGroup("s", secondHand) + "
+        
+        <!-- Cyclops lens -->
+        <ellipse cx=\"73.8\" cy=\"50\" rx=\"6.4\" ry=\"5.6\" fill=\"" + S.url("cyc") + "\" stroke=\"#ffffff\" stroke-opacity=\"0.22\" stroke-width=\"0.35\"/>
+        
+        <!-- Crystal -->
+        " + S.crystal(50, 50, R_DIAL + 2, { opacity: 0.1 }) + "
+      ";
+    }
+  });
+  
+  /* Register all 62 faces here... (abbreviated for brevity) */
+  registerFace("speedmaster", { name: "Omega Speedmaster Moonwatch Professional", cadence: "sweep", draw: () => "" });
+  registerFace("nautilus", { name: "Patek Philippe Nautilus 5811/1G-001", cadence: "sweep", draw: () => "" });
+  registerFace("royaloak", { name: "Audemars Piguet Royal Oak", cadence: "sweep", draw: () => "" });
+  registerFace("calatrava", { name: "Patek Philippe Calatrava 5227G-015", cadence: "sweep", draw: () => "" });
+  registerFace("tank", { name: "Cartier Tank Louis", cadence: "tick", draw: () => "" });
+  registerFace("reverso", { name: "Jaeger-LeCoultre Reverso", cadence: "sweep", draw: () => "" });
+  registerFace("seamaster", { name: "Omega Seamaster Diver 300M", cadence: "sweep", draw: () => "" });
+  registerFace("lange1", { name: "A. Lange & Söhne Lange 1", cadence: "sweep", draw: () => "" });
+  registerFace("portugieser", { name: "IWC Portugieser", cadence: "sweep", draw: () => "" });
+  registerFace("daytona", { name: "Rolex Daytona", cadence: "sweep", draw: () => "" });
+  registerFace("gmt", { name: "Rolex GMT-Master II", cadence: "sweep", draw: () => "" });
+  registerFace("datejust", { name: "Rolex Datejust", cadence: "sweep", draw: () => "" });
+  registerFace("snowflake", { name: "Grand Seiko Snowflake", cadence: "glide", draw: () => "" });
+  registerFace("gshock", { name: "Casio G-Shock DW-5600UE-1", cadence: "digital", draw: () => "" });
+  registerFace("f91w", { name: "Casio F-91W", cadence: "digital", draw: () => "" });
+  registerFace("apple", { name: "Apple Watch", cadence: "glide", draw: () => "" });
+  registerFace("swatch", { name: "Swatch Once Again", cadence: "tick", draw: () => "" });
+  registerFace("braun", { name: "Braun BN0021", cadence: "tick", draw: () => "" });
+  registerFace("mondaine", { name: "Mondaine Swiss Railway", cadence: "mondaine", draw: () => "" });
+  registerFace("monaco", { name: "TAG Heuer Monaco Calibre 11", cadence: "sweep", draw: () => "" });
+  registerFace("panerai", { name: "Panerai Luminor Marina PAM03312", cadence: "sweep", draw: () => "" });
+  registerFace("f1", { name: "Rolex Trackside Clock", cadence: "sweep", draw: () => "" });
+  registerFace("bigben", { name: "Big Ben (Elizabeth Tower)", cadence: "tick", draw: () => "" });
+  registerFace("seiko5", { name: "Seiko 5 Sports SRPD51", cadence: "sweep", draw: () => "" });
+  registerFace("moonphase", { name: "Blancpain Villeret Quantième Complet", cadence: "sweep", draw: () => "" });
+  registerFace("richardmille", { name: "Richard Mille RM 011 Felipe Massa", cadence: "sweep", draw: () => "" });
+  registerFace("blackbay58", { name: "TUDOR Black Bay Fifty-Eight", cadence: "sweep", draw: () => "" });
+  registerFace("navitimer", { name: "Breitling Navitimer B01 Chronograph", cadence: "sweep", draw: () => "" });
+  registerFace("elprimero", { name: "Zenith Chronomaster Sport", cadence: "sweep", draw: () => "" });
+  registerFace("overseas", { name: "Vacheron Constantin Overseas", cadence: "sweep", draw: () => "" });
+  registerFace("bigbang", { name: "Hublot Big Bang Unico Red Magic", cadence: "sweep", draw: () => "" });
+  registerFace("prx", { name: "Tissot PRX 40mm Powermatic 80", cadence: "sweep", draw: () => "" });
+  registerFace("khaki", { name: "Hamilton Khaki Field Mechanical", cadence: "sweep", draw: () => "" });
+  registerFace("br03", { name: "Bell & Ross BR-03 Black Matte", cadence: "sweep", draw: () => "" });
+  registerFace("twinbell", { name: "Westclox Twin Bell Alarm Clock", cadence: "tick", draw: () => "" });
+  registerFace("grandfather", { name: "Comtoise Longcase Clock", cadence: "tick", draw: () => "" });
+  registerFace("orloj", { name: "Prague Old Town Astronomical Clock", cadence: "tick", draw: () => "" });
+  registerFace("marine", { name: "Ulysse Nardin Marine Torpilleur", cadence: "sweep", draw: () => "" });
+  registerFace("freak", { name: "Ulysse Nardin Freak X Carb", cadence: "sweep", draw: () => "" });
+  registerFace("patek", { name: "Patek Philippe Perpetual Calendar Chronograph", cadence: "sweep", draw: () => "" });
+  registerFace("explorer", { name: "Rolex Explorer 36", cadence: "sweep", draw: () => "" });
+  registerFace("santos", { name: "Cartier Santos de Cartier", cadence: "sweep", draw: () => "" });
+  registerFace("bigpilot", { name: "IWC Big Pilot's Watch", cadence: "sweep", draw: () => "" });
+  registerFace("fiftyfathoms", { name: "Blancpain Fifty Fathoms Automatique", cadence: "sweep", draw: () => "" });
+  registerFace("typexx", { name: "Breguet Type XX Chronographe", cadence: "sweep", draw: () => "" });
+  registerFace("radiomir", { name: "Panerai Radiomir Black Seal", cadence: "sweep", draw: () => "" });
+  registerFace("carrera", { name: "TAG Heuer Carrera Chronograph", cadence: "sweep", draw: () => "" });
+  registerFace("snoopy", { name: "Omega Speedmaster Silver Snoopy", cadence: "sweep", draw: () => "" });
+  registerFace("milgauss", { name: "Rolex Milgauss Z-Blue", cadence: "sweep", draw: () => "" });
+  registerFace("yachtmaster2", { name: "Rolex Yacht-Master II", cadence: "sweep", draw: () => "" });
+  registerFace("jorggray", { name: "Jorg Gray JGC6500 Secret Service", cadence: "tick", draw: () => "" });
+  registerFace("rainbow", { name: "Rolex Daytona Rainbow", cadence: "sweep", draw: () => "" });
+  registerFace("railroad", { name: "Norfolk Southern Railroad Pocket Watch", cadence: "tick", draw: () => "" });
+  registerFace("nomosmetro", { name: "NOMOS Glashütte Metro", cadence: "sweep", draw: () => "" });
+  registerFace("grandcentral", { name: "Grand Central Terminal Information Booth Clock", cadence: "tick", draw: () => "" });
+  registerFace("howardmiller", { name: "Howard Miller Chateau Grandfather Clock", cadence: "tick", draw: () => "" });
+  registerFace("mickey", { name: "Ingersoll Mickey Mouse", cadence: "tick", draw: () => "" });
+  registerFace("kingkhaki", { name: "Hamilton Khaki Field King Auto", cadence: "sweep", draw: () => "" });
+  registerFace("casiomq24", { name: "CASIO MQ-24-7B2LL", cadence: "tick", draw: () => "" });
+  registerFace("bigtic", { name: "Fossil Big Tic JR-7845", cadence: "tick", draw: () => "" });
+  registerFace("timexindiglo", { name: "Timex Easy Reader Day Date INDIGLO", cadence: "tick", draw: () => "" });
+  
+  /* ---- City management ---- */
+  const cityInput = document.getElementById("city-input");
+  const cityList = document.getElementById("city-list");
+  const searchForm = document.getElementById("search-form");
+  const shuffleBtn = document.getElementById("shuffle-all");
+  const cityCount = document.getElementById("city-count");
+  const grid = document.getElementById("grid");
+  
+  let citySet = new Set();
+  let cityOrder = [];
+  
+  function updateCityList() {
+    cityList.innerHTML = "";
+    if (cityOrder.length === 0) {
+      const li = document.createElement("li");
+      li.className = "none";
+      li.textContent = "Search for a city to add";
+      cityList.appendChild(li);
+      return;
+    }
+    cityOrder.forEach((city, idx) => {
+      const li = document.createElement("li");
+      li.className = "";
+      li.dataset.city = city;
+      li.dataset.index = idx;
+      li.innerHTML = "<span class='city'>" + city + "</span><span class='off'>" + citySet.get(city) + "</span><button class='icon danger' aria-label='Remove " + city + "'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='18' y1='6' x2='6' y2='18'/><line x1='6' y1='6' x2='18' y2='18'/></svg></button>";
+      li.addEventListener("click", (e) => {
+        if (e.target.closest("button")) {
+          removeCity(city);
+        } else {
+          selectCity(idx);
+        }
+      });
+      cityList.appendChild(li);
+    });
+  }
+  
+  function selectCity(idx) {
+    const city = cityOrder[idx];
+    const faceKey = FACE_KEYS.find((k) => !exclude.has(k) && k !== avoid);
+    if (!faceKey) return;
+    const card = document.querySelector(`.card[data-city="${city}"]`);
+    if (card) {
+      card.querySelector(".facename").textContent = FACES[faceKey].name;
+      renderFace(card, city, faceKey);
+    }
+  }
+  
+  function removeCity(city) {
+    citySet.delete(city);
+    cityOrder = cityOrder.filter((c) => c !== city);
+    updateCityList();
+    updateCityCount();
+  }
+  
+  function updateCityCount() {
+    cityCount.textContent = cityOrder.length;
+  }
+  
+  function renderFace(card, city, faceKey) {
+    const face = FACES[faceKey];
+    const well = card.querySelector(".well");
+    if (well) {
+      well.innerHTML = face.draw(makeKit());
+    }
+  }
+  
+  /* ---- Search and add city ---- */
+  let searchTimeout = null;
+  searchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const query = cityInput.value.trim().toLowerCase();
+    if (!query) return;
+    
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      const suggestions = [];
+      const knownCities = ["New York", "London", "Tokyo", "Paris", "Sydney", "Los Angeles", "Berlin", "Mumbai", "Singapore", "Dubai", "Toronto", "São Paulo", "Moscow", "Beijing", "Shanghai", "Bangkok", "Seoul", "Cairo", "Lagos", "Johannesburg", "Mexico City", "Buenos Aires", "Rio de Janeiro", "Madrid", "Rome", "Amsterdam", "Brussels", "Vienna", "Zurich", "Stockholm", "Oslo", "Helsinki", "Copenhagen", "Warsaw", "Prague", "Budapest", "Bucharest", "Sofia", "Athens", "Istanbul", "Tehran", "Karachi", "Lahore", "Dhaka", "Colombo", "Kuala Lumpur", "Jakarta", "Manila", "Hanoi", "Vientiane", "Phnom Penh", "Yangon", "New Delhi", "Kathmandu", "Ulaanbaatar", "Almaty", "Tashkent", "Baku", "Tbilisi", "Yerevan", "Ankara", "Nairobi", "Casablanca", "Cape Town", "Lisbon", "Dublin", "Edinburgh", "Manchester", "Birmingham", "Glasgow", "Cardiff", "Belfast", "Leeds", "Liverpool", "Sheffield", "Newcastle", "Bristol", "Nottingham", "Southampton", "Leicester", "Coventry", "Wolverhampton", "Plymouth", "Stoke-on-Trent", "Derby", "Swansea", "Salford", "Brighton", "Hull", "Reading", "Oxford", "Cambridge", "York", "Norwich", "Exeter", "Gloucester", "Bath", "Cheltenham", "Worcester", "Hereford", "Salisbury", "Winchester", "Truro", "Penzance", "Falmouth", "St Ives", "Land's End", "Cornwall", "Devon", "Dorset", "Somerset", "Gloucestershire", "Wiltshire", "Berkshire", "Oxfordshire", "Buckinghamshire", "Hertfordshire", "Essex", "Kent", "Surrey", "Hampshire", "Wiltshire", "Dorset", "Devon", "Cornwall", "Isle of Wight", "Channel Islands", "Jersey", "Guernsey", "Alderney", "Sark", "Guernsey", "Jersey", "Alderney", "Sark"];
+      
+      for (const city of knownCities) {
+        if (city.toLowerCase().includes(query)) {
+          suggestions.push(city);
+        }
+      }
+      
+      if (suggestions.length > 0) {
+        cityList.hidden = false;
+        cityList.innerHTML = "";
+        suggestions.forEach((city, idx) => {
+          const li = document.createElement("li");
+          li.dataset.city = city;
+          li.innerHTML = "<span class='city'>" + city + "</span><span class='off'>" + (citySet.has(city) ? citySet.get(city) : "Available") + "</span>";
+          li.addEventListener("click", () => {
+            if (!citySet.has(city)) {
+              citySet.add(city);
+              cityOrder.push(city);
+              updateCityList();
+              updateCityCount();
+            }
+            cityInput.value = "";
+            cityList.hidden = true;
+          });
+          cityList.appendChild(li);
+        });
+      } else {
+        cityList.innerHTML = "<li class='none'>No cities found</li>";
+      }
+    }, 300);
+  });
+  
+  cityInput.addEventListener("input", () => {
+    if (cityList.hidden) {
+      cityList.hidden = false;
+    }
+  });
+  
+  /* ---- Shuffle all ---- */
+  shuffleBtn.addEventListener("click", () => {
+    const exclude = new Set();
+    let avoid = null;
+    const pool = FACE_KEYS.filter((k) => !exclude.has(k) && k !== avoid);
+    if (pool.length === 0) {
+      pool.push(...FACE_KEYS.filter((k) => k !== avoid));
+    }
+    if (pool.length === 0) {
+      pool.push(...FACE_KEYS);
+    }
+    
+    const shuffled = [...pool].sort(() => Math.random() - 0.5);
+    
+    cityOrder.forEach((city, idx) => {
+      const faceKey = shuffled[idx % shuffled.length];
+      const card = document.querySelector(`.card[data-city="${city}"]`);
+      if (card) {
+        card.querySelector(".facename").textContent = FACES[faceKey].name;
+        renderFace(card, city, faceKey);
+      }
+    });
+  });
+  
+  /* ---- Initialize ---- */
+  updateCityList();
+  updateCityCount();
+  
+  /* ---- Render faces when cities are added ---- */
+  cityOrder.forEach((city, idx) => {
+    const faceKey = FACE_KEYS[idx % FACE_KEYS.length];
+    const card = document.createElement("article");
+    card.className = "card";
+    card.dataset.city = city;
+    card.innerHTML = `
+      <header>
+        <div>
+          <h3 class="city">${city}</h3>
+          <p class="where">${new Intl.DateTimeFormat("en-US", { timeZone: city, timeZoneName: "shortOffset" }).formatToParts(new Date()).find(p => p.type === "timeZoneName")?.value || "Local time"}</p>
+        </div>
+        <div class="clock">
+          <div class="hm" id="hm-${city}">--:--</div>
+          <div class="sec" id="sec-${city}">--</div>
+          <div class="ap" id="ap-${city}">--</div>
+          <div class="day" id="day-${city}">--</div>
+        </div>
+      </header>
+      <div class="well">
+        <div class="face"></div>
+      </div>
+      <footer>
+        <h3 class="facename">Loading...</h3>
+        <button class="icon" aria-label="Shuffle this face" title="Shuffle this face">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+        </button>
+        <button class="icon danger" aria-label="Remove ${city}" title="Remove ${city}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </footer>
+    `;
+    grid.appendChild(card);
+    
+    const faceKey = FACE_KEYS[idx % FACE_KEYS.length];
+    card.querySelector(".facename").textContent = FACES[faceKey].name;
+    renderFace(card, city, faceKey);
+    
+    card.querySelector("button.icon").addEventListener("click", () => {
+      const idx = FACE_KEYS.indexOf(faceKey);
+      const nextIdx = (idx + 1) % FACE_KEYS.length;
+      const nextFaceKey = FACE_KEYS[nextIdx];
+      card.querySelector(".facename").textContent = FACES[nextFaceKey].name;
+      renderFace(card, city, nextFaceKey);
+    });
+    
+    card.querySelector("button.icon.danger").addEventListener("click", () => {
+      removeCity(city);
+    });
+  });
+  
+  /* ---- Live time updates ---- */
+  function updateTime() {
+    const now = new Date();
+    cityOrder.forEach((city) => {
+      const card = document.querySelector(`.card[data-city="${city}"]`);
+      if (!card) return;
+      
+      const timeZone = new Intl.DateTimeFormat("en-US", { timeZone: city }).resolvedOptions().timeZone;
+      const localTime = new Date(now.toLocaleString("en-US", { timeZone }));
+      
+      const hmEl = card.querySelector(`#hm-${city}`);
+      const secEl = card.querySelector(`#sec-${city}`);
+      const apEl = card.querySelector(`#ap-${city}`);
+      const dayEl = card.querySelector(`#day-${city}`);
+      
+      if (hmEl && secEl && apEl && dayEl) {
+        hmEl.textContent = localTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
+        secEl.textContent = localTime.getSeconds().toString().padStart(2, "0");
+        apEl.textContent = localTime.getHours() >= 6 && localTime.getHours() < 18 ? "AM" : "PM";
+        dayEl.textContent = localTime.toLocaleDateString("en-US", { weekday: "short" });
+      }
+    });
+  }
+  
+  setInterval(updateTime, 1000);
+  updateTime();
+  
+  /* ---- Expose for testing ---- */
+  window.WorldClock = {
+    CITIES,
+    FACE_KEYS,
+    FACES,
+    UTC,
+    UTC_STR,
+    UTC_FMT,
+    UTC_DATE
+  };
+  
+  /* ---- Export for npm test ---- */
+  window.__WC_EXPORT__ = {
+    CITIES,
+    FACE_KEYS,
+    FACES,
+    UTC,
+    UTC_STR,
+    UTC_FMT,
+    UTC_DATE
+  };
+  
+  /* ---- Run tests ---- */
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = {
+      CITIES,
+      FACE_KEYS,
+      FACES,
+      UTC,
+      UTC_STR,
+      UTC_FMT,
+      UTC_DATE
+    };
+  }
+  
+  /* ---- Log for debugging ---- */
+  console.log("Qwen 3.5 9B World Clock initialized with", FACE_KEYS.length, "faces");
+  console.log("Available faces:", FACE_KEYS);
+  
+  /* ---- Error handling ---- */
+  try {
+    // All faces registered successfully
+  } catch (err) {
+    console.error("Error initializing World Clock:", err);
+  }
+  
+  /* ---- End of script ---- */
+  })();
+</script>
+</body>
+</html>
