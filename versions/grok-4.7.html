@@ -1,0 +1,1845 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grok 4.7 — World Clock</title>
+  <meta name="description" content="Grok 4.7 world clock: 62 reference-led SVG watches and clocks, with live time zones, city controls, and a searchable collection.">
+  <meta name="theme-color" content="#101318">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23101318'/%3E%3Ccircle cx='32' cy='32' r='18' fill='none' stroke='%23f0b429' stroke-width='3'/%3E%3Cpath d='M32 18v14l8 5' fill='none' stroke='%23f4efe6' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #f4efe6;
+      --ink-soft: #d9d0c3;
+      --paper: #101318;
+      --paper-2: #181c22;
+      --card: #1c2128;
+      --line: #2c333c;
+      --line-strong: #3d4652;
+      --cinnabar: #f0b429;
+      --cinnabar-deep: #f0b429;
+      --brass: #f0b429;
+      --celadon: #8fd0c6;
+      --mute: #a3988c;
+      --shadow: 0 14px 34px rgba(48, 28, 12, .08);
+      --sans: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      --serif: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+      --dial: "Avenir Next Condensed", "DIN Alternate", "Arial Narrow", "Helvetica Neue", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(900px 420px at 90% -10%, rgba(240, 180, 41, .12), transparent 50%),
+        linear-gradient(180deg, #171b22 0%, var(--paper) 240px);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    a { color: var(--cinnabar); }
+    [hidden] { display: none !important; }
+    :focus-visible { outline: 2px solid var(--cinnabar); outline-offset: 3px; }
+    .skip {
+      position: absolute; left: 12px; top: 8px; background: var(--cinnabar); color: #fff;
+      padding: 10px 14px; transform: translateY(-140%); z-index: 20;
+    }
+    .skip:focus { transform: none; }
+    .wrap { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    header.top {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 18px 28px;
+      align-items: end;
+      padding: 22px 0 16px;
+      border-bottom: 1px solid var(--line-strong);
+    }
+    .brand { display: flex; gap: 12px; align-items: center; min-width: 0; }
+    .seal {
+      width: 46px; height: 46px; flex: none; border: 1.5px solid var(--cinnabar);
+      border-radius: 50%; display: grid; place-items: center; color: var(--cinnabar); font-family: var(--serif);
+      font-weight: 700; letter-spacing: -.04em; background: rgba(240, 180, 41, .08);
+    }
+    .brand h1 { margin: 0; font-family: var(--serif); font-size: 28px; font-weight: 600; letter-spacing: -.03em; line-height: 1; }
+    .brand p { margin: 4px 0 0; color: var(--mute); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+    .tools { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; align-items: center; }
+    .search-wrap { position: relative; flex: 1 1 220px; max-width: 340px; min-width: 0; }
+    label.sr {
+      position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);
+    }
+    input[type="search"], input[type="text"] {
+      width: 100%; min-height: 44px; border: 1px solid var(--line-strong); background: #0e1116; color: var(--ink);
+      border-radius: 4px; padding: 0 12px; font-size: 14px;
+    }
+    .suggest {
+      position: absolute; z-index: 8; left: 0; right: 0; top: calc(100% + 4px);
+      margin: 0; padding: 4px; list-style: none; background: #1c2128; border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow); max-height: 280px; overflow: auto;
+    }
+    .suggest button {
+      width: 100%; text-align: left; border: 0; background: transparent; min-height: 40px;
+      padding: 6px 8px; display: flex; justify-content: space-between; gap: 12px; border-radius: 3px;
+    }
+    .suggest button[aria-selected="true"], .suggest button:hover { background: #2a313b; }
+    .suggest small { color: var(--mute); }
+    .btn {
+      min-height: 44px; padding: 0 14px; border-radius: 4px; border: 1px solid var(--ink);
+      background: var(--ink); color: var(--paper); font-size: 13px; letter-spacing: .02em;
+    }
+    .btn.ghost { background: transparent; color: var(--ink); }
+    .btn.tiny { min-height: 36px; padding: 0 10px; font-size: 12px; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .meta-row {
+      display: flex; justify-content: space-between; gap: 12px; align-items: baseline;
+      padding: 12px 0 4px; color: var(--mute); font-size: 12px;
+    }
+    .meta-row strong { color: var(--ink); font-weight: 600; }
+    .clocks {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      padding: 8px 0 28px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .face-well {
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 42%, #fff 0%, #f6efe4 62%, #eadfcb 100%);
+      border-bottom: 1px solid var(--line);
+      color: #1c1612;
+      cursor: zoom-in;
+      min-width: 0;
+    }
+    .face-well svg { width: 94%; height: 94%; }
+    .card-body { padding: 10px 12px 12px; display: grid; gap: 6px; }
+    .card-top, .card-actions { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+    .city-name { font-family: var(--serif); font-size: 20px; letter-spacing: -.02em; margin: 0; }
+    .offset { font-variant-numeric: tabular-nums; color: var(--brass); font-size: 12px; }
+    .when { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+    .when time { font-variant-numeric: tabular-nums; font-size: 18px; letter-spacing: .02em; }
+    .date-line { color: var(--mute); font-size: 12px; }
+    .sky {
+      font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+      border: 1px solid var(--line-strong); padding: 3px 6px; color: var(--celadon);
+    }
+    .sky.Night { color: #d5e4ff; background: #243044; }
+    .sky.Dawn, .sky.Dusk { color: #f0b429; background: #3a2e18; }
+    .sky.Daylight { color: #b7ebc8; background: #1c3328; }
+    .card-actions { flex-wrap: wrap; }
+    .sheet {
+      display: none;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      padding-bottom: 40px;
+    }
+    body.sheet-mode .clocks, body.sheet-mode .meta-row { display: none; }
+    body.sheet-mode .sheet { display: grid; }
+    .sheet figure { margin: 0; background: var(--card); border: 1px solid var(--line); min-width: 0; }
+    .sheet .face-well { cursor: zoom-in; }
+    .sheet figcaption { font-size: 10px; padding: 6px 8px 8px; color: var(--mute); line-height: 1.35; }
+    .sheet figcaption strong { display: block; color: var(--ink); font-size: 11px; }
+    .filters { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 0; }
+    .filters button[aria-pressed="true"] { background: var(--cinnabar); border-color: var(--cinnabar); color: #101318; }
+    dialog {
+      width: min(920px, calc(100% - 24px));
+      border: 1px solid var(--line-strong);
+      padding: 0;
+      background: #161a20;
+      color: var(--ink);
+    }
+    dialog::backdrop { background: rgba(28, 22, 18, .46); }
+    .inspect { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(240px, .9fr); }
+    .inspect-face { background: radial-gradient(circle at 50% 40%, #fff, #efe4d2); display: grid; place-items: center; min-height: 320px; }
+    .inspect-face svg { width: min(460px, 100%); height: auto; }
+    .inspect-copy { padding: 18px 18px 16px; }
+    .inspect-copy h2 { font-family: var(--serif); font-size: 26px; margin: 0 0 6px; letter-spacing: -.03em; }
+    .kicker { color: var(--cinnabar-deep); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 8px; }
+    .notes { color: var(--ink-soft); font-size: 14px; line-height: 1.5; }
+    .pose { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+    .assign { display: flex; gap: 8px; align-items: center; }
+    .assign select { min-height: 44px; flex: 1; border: 1px solid var(--line-strong); background: #0e1116; color: var(--ink); }
+    .close-x { float: right; }
+    footer.colophon {
+      border-top: 1px solid var(--line);
+      color: var(--mute);
+      font-size: 12px;
+      padding: 14px 0 28px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    #boot-error { color: var(--cinnabar-deep); font-size: 13px; min-height: 0; }
+    @media (max-width: 800px) {
+      header.top { grid-template-columns: 1fr; gap: 12px; }
+      .tools { justify-content: stretch; }
+      .search-wrap { max-width: none; flex-basis: 100%; }
+      .inspect { grid-template-columns: 1fr; }
+      .brand h1 { font-size: 24px; }
+    }
+    @media (max-width: 540px) {
+      .wrap { width: min(100% - 20px, 1180px); }
+      .clocks { grid-template-columns: 1fr; }
+      .btn { padding: 0 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+<a class="skip" href="#clocks">Skip to clocks</a>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="seal" aria-hidden="true">4.7</div>
+      <div>
+        <h1>Grok 4.7</h1>
+        <p>Observatory folio · 62 timepieces</p>
+      </div>
+    </div>
+    <div class="tools">
+      <div class="search-wrap">
+        <label class="sr" for="city-search">Add a city</label>
+        <input id="city-search" type="search" role="combobox" aria-expanded="false" aria-controls="city-suggest" aria-autocomplete="list" placeholder="Add a city" autocomplete="off">
+        <ul id="city-suggest" class="suggest" role="listbox" hidden></ul>
+      </div>
+      <button class="btn" id="add-city" type="button">Add</button>
+      <button class="btn ghost" id="shuffle-all" type="button">Shuffle all</button>
+      <button class="btn ghost" id="toggle-sheet" type="button" aria-pressed="false">Collection</button>
+      <button class="btn ghost" id="reset-folio" type="button">Reset</button>
+    </div>
+  </header>
+  <div class="meta-row">
+    <span id="order-note">Ordered west to east by current offset</span>
+    <span>UTC <time id="utc-clock">--:--:--</time></span>
+  </div>
+  <p id="boot-error" role="alert"></p>
+  <div class="filters" id="filters" hidden>
+    <button class="btn ghost tiny" type="button" data-cat="All" aria-pressed="true">All</button>
+    <button class="btn ghost tiny" type="button" data-cat="Diver" aria-pressed="false">Diver</button>
+    <button class="btn ghost tiny" type="button" data-cat="Dress" aria-pressed="false">Dress</button>
+    <button class="btn ghost tiny" type="button" data-cat="Chronograph" aria-pressed="false">Chronograph</button>
+    <button class="btn ghost tiny" type="button" data-cat="Field" aria-pressed="false">Field</button>
+    <button class="btn ghost tiny" type="button" data-cat="Digital" aria-pressed="false">Digital</button>
+    <button class="btn ghost tiny" type="button" data-cat="Clock" aria-pressed="false">Clock</button>
+  </div>
+  <main id="clocks" class="clocks" aria-live="polite"></main>
+  <section class="sheet" id="sheet" aria-label="All 62 faces"></section>
+  <footer class="colophon">
+    <span>Drawn as inline SVG. Time comes from this browser’s clock and time-zone data.</span>
+    <a href="../docs/grok-4.7-reference-notes.md">Reference notes</a>
+  </footer>
+</div>
+<dialog id="inspect" aria-labelledby="inspect-title">
+  <div class="inspect">
+    <div class="inspect-face" id="inspect-face"></div>
+    <div class="inspect-copy">
+      <button class="btn ghost tiny close-x" id="close-inspect" type="button">Close</button>
+      <p class="kicker" id="inspect-kicker"></p>
+      <h2 id="inspect-title"></h2>
+      <p class="notes" id="inspect-notes"></p>
+      <div class="pose" id="pose-row"></div>
+      <div class="pose" id="chrono-row" hidden>
+        <button class="btn tiny" type="button" id="chrono-toggle">Start</button>
+        <button class="btn ghost tiny" type="button" id="chrono-reset">Reset</button>
+      </div>
+      <div class="assign">
+        <label class="sr" for="assign-city">Assign this face to a city</label>
+        <select id="assign-city"></select>
+        <button class="btn tiny" id="assign-go" type="button">Assign</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+<script>
+(() => {
+  "use strict";
+
+  const STORE = "grok-4.7.folio.v1";
+  const WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const ZODIAC = ["Cap", "Aqr", "Psc", "Ari", "Tau", "Gem", "Cnc", "Leo", "Vir", "Lib", "Sco", "Sgr"];
+
+  const CITIES = [
+    ["Honolulu", "Pacific/Honolulu", 21.31],
+    ["Anchorage", "America/Anchorage", 61.22],
+    ["Los Angeles", "America/Los_Angeles", 34.05],
+    ["Vancouver", "America/Vancouver", 49.28],
+    ["Denver", "America/Denver", 39.74],
+    ["Phoenix", "America/Phoenix", 33.45],
+    ["Chicago", "America/Chicago", 41.88],
+    ["Mexico City", "America/Mexico_City", 19.43],
+    ["Houston", "America/Chicago", 29.76],
+    ["New York", "America/New_York", 40.71],
+    ["Toronto", "America/Toronto", 43.65],
+    ["Miami", "America/New_York", 25.76],
+    ["Halifax", "America/Halifax", 44.65],
+    ["St. John's", "America/St_Johns", 47.56],
+    ["São Paulo", "America/Sao_Paulo", -23.55],
+    ["Buenos Aires", "America/Argentina/Buenos_Aires", -34.60],
+    ["Santiago", "America/Santiago", -33.45],
+    ["South Georgia", "Atlantic/South_Georgia", -54.28],
+    ["Azores", "Atlantic/Azores", 37.74],
+    ["Reykjavík", "Atlantic/Reykjavik", 64.15],
+    ["London", "Europe/London", 51.51],
+    ["Dublin", "Europe/Dublin", 53.35],
+    ["Lisbon", "Europe/Lisbon", 38.72],
+    ["Paris", "Europe/Paris", 48.86],
+    ["Madrid", "Europe/Madrid", 40.42],
+    ["Berlin", "Europe/Berlin", 52.52],
+    ["Rome", "Europe/Rome", 41.90],
+    ["Amsterdam", "Europe/Amsterdam", 52.37],
+    ["Zurich", "Europe/Zurich", 47.38],
+    ["Vienna", "Europe/Vienna", 48.21],
+    ["Warsaw", "Europe/Warsaw", 52.23],
+    ["Stockholm", "Europe/Stockholm", 59.33],
+    ["Prague", "Europe/Prague", 50.08],
+    ["Athens", "Europe/Athens", 37.98],
+    ["Cairo", "Africa/Cairo", 30.04],
+    ["Johannesburg", "Africa/Johannesburg", -26.20],
+    ["Helsinki", "Europe/Helsinki", 60.17],
+    ["Istanbul", "Europe/Istanbul", 41.01],
+    ["Moscow", "Europe/Moscow", 55.76],
+    ["Nairobi", "Africa/Nairobi", -1.29],
+    ["Riyadh", "Asia/Riyadh", 24.71],
+    ["Tehran", "Asia/Tehran", 35.69],
+    ["Dubai", "Asia/Dubai", 25.20],
+    ["Kabul", "Asia/Kabul", 34.56],
+    ["Karachi", "Asia/Karachi", 24.86],
+    ["Mumbai", "Asia/Kolkata", 19.08],
+    ["Delhi", "Asia/Kolkata", 28.61],
+    ["Kathmandu", "Asia/Kathmandu", 27.72],
+    ["Dhaka", "Asia/Dhaka", 23.81],
+    ["Yangon", "Asia/Yangon", 16.84],
+    ["Bangkok", "Asia/Bangkok", 13.76],
+    ["Jakarta", "Asia/Jakarta", -6.21],
+    ["Singapore", "Asia/Singapore", 1.35],
+    ["Hong Kong", "Asia/Hong_Kong", 22.32],
+    ["Shanghai", "Asia/Shanghai", 31.23],
+    ["Taipei", "Asia/Taipei", 25.03],
+    ["Manila", "Asia/Manila", 14.60],
+    ["Seoul", "Asia/Seoul", 37.57],
+    ["Tokyo", "Asia/Tokyo", 35.68],
+    ["Adelaide", "Australia/Adelaide", -34.93],
+    ["Sydney", "Australia/Sydney", -33.87],
+    ["Melbourne", "Australia/Melbourne", -37.81],
+    ["Noumea", "Pacific/Noumea", -22.28],
+    ["Auckland", "Pacific/Auckland", -36.85],
+    ["Fiji", "Pacific/Fiji", -18.14],
+    ["Chatham Islands", "Pacific/Chatham", -43.95],
+    ["Apia", "Pacific/Apia", -13.83]
+  ].map(([name, tz, lat]) => ({ name, tz, lat }));
+
+  const byName = Object.fromEntries(CITIES.map(c => [c.name, c]));
+
+  function P(cx, cy, r, deg) {
+    const a = (deg - 90) * Math.PI / 180;
+    return [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
+  }
+  function f(n) { return Number(n).toFixed(2); }
+  function pts(list) { return list.map(p => p.map(f).join(",")).join(" "); }
+
+  function ticks(cx, cy, r1, r2, step, color, sw, skip) {
+    let s = "";
+    for (let d = 0; d < 360; d += step) {
+      if (skip && skip.indexOf(d) >= 0) continue;
+      const a = P(cx, cy, r1, d), b = P(cx, cy, r2, d);
+      s += `<line x1="${f(a[0])}" y1="${f(a[1])}" x2="${f(b[0])}" y2="${f(b[1])}" stroke="${color}" stroke-width="${sw}" stroke-linecap="butt"/>`;
+    }
+    return s;
+  }
+
+  function ringText(id, cx, cy, r, text, size, fill) {
+    return `<defs><path id="${id}-ring" d="M ${f(cx - r)},${f(cy)} a ${r},${r} 0 1 1 ${r * 2},0 a ${r},${r} 0 1 1 ${-r * 2},0"/></defs><text fill="${fill}" font-size="${size}" letter-spacing="1.4"><textPath href="#${id}-ring">${text}</textPath></text>`;
+  }
+
+  function crownMark(x, y, s, fill) {
+    return `<g transform="translate(${f(x)} ${f(y)}) scale(${s})" fill="${fill}"><path d="M-8,4 L-8,-1 L-4,-4 L0,-1 L4,-5 L8,-1 L8,4 Z"/><rect x="-8" y="4" width="16" height="2.2"/></g>`;
+  }
+
+  function metalDefs(id) {
+    return `<defs>
+      <linearGradient id="${id}-steel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7fafb"/><stop offset=".45" stop-color="#c5ced3"/><stop offset=".72" stop-color="#f3f6f7"/><stop offset="1" stop-color="#8d979d"/></linearGradient>
+      <linearGradient id="${id}-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbe7b0"/><stop offset=".4" stop-color="#c49645"/><stop offset=".68" stop-color="#f6d78a"/><stop offset="1" stop-color="#7d5b28"/></linearGradient>
+      <linearGradient id="${id}-rose" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6d2c4"/><stop offset=".45" stop-color="#c48474"/><stop offset="1" stop-color="#7a463c"/></linearGradient>
+      <linearGradient id="${id}-ti" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eceff1"/><stop offset="1" stop-color="#b7bec4"/></linearGradient>
+      <radialGradient id="${id}-glass" cx="36%" cy="30%" r="68%"><stop offset="0" stop-color="#fff" stop-opacity=".62"/><stop offset=".42" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#1c2830" stop-opacity=".16"/></radialGradient>
+      <pattern id="${id}-tap" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#16181c"/><rect x=".7" y=".7" width="4.2" height="4.2" fill="#2a2e34"/></pattern>
+      <pattern id="${id}-snow" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#f4f1ea"/><path d="M0,4 H8 M4,0 V8 M1,1 L7,7 M7,1 L1,7" stroke="#e4ddd0" stroke-width=".35"/></pattern>
+      <pattern id="${id}-wave" width="12" height="6" patternUnits="userSpaceOnUse"><rect width="12" height="6" fill="#0d3f86"/><path d="M0,3 Q3,0 6,3 T12,3" fill="none" stroke="#1a56a8" stroke-width="1.4"/></pattern>
+      <pattern id="${id}-lines" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#7fd0cc"/><path d="M0,2 H4" stroke="#6bb8b6" stroke-width=".6"/></pattern>
+    </defs>`;
+  }
+
+  function strapBlock(kind, color) {
+    if (kind === "none") return "";
+    const c = color || "#1b1b1b";
+    if (kind === "oyster" || kind === "jubilee" || kind === "bracelet") {
+      const link = (y, h) => `<rect x="58" y="${y}" width="84" height="${h}" rx="2" fill="url(#steel)"/><rect x="70" y="${y + 1}" width="60" height="${h - 2}" fill="#d5dde0" opacity=".35"/>`;
+      let s = "";
+      for (let i = 0; i < 5; i++) s += link(4 + i * 13, 12) + link(214 + i * 12, 12);
+      if (kind === "jubilee") {
+        s = "";
+        for (let i = 0; i < 4; i++) {
+          s += `<rect x="62" y="${8 + i * 11}" width="22" height="8" rx="1" fill="#dfe6e8"/><rect x="89" y="${8 + i * 11}" width="22" height="8" rx="1" fill="#c5cfd3"/><rect x="116" y="${8 + i * 11}" width="22" height="8" rx="1" fill="#dfe6e8"/>`;
+          s += `<rect x="62" y="${232 + i * 11}" width="22" height="8" rx="1" fill="#dfe6e8"/><rect x="89" y="${232 + i * 11}" width="22" height="8" rx="1" fill="#c5cfd3"/><rect x="116" y="${232 + i * 11}" width="22" height="8" rx="1" fill="#dfe6e8"/>`;
+        }
+      }
+      return s.replace(/url\(#steel\)/g, "url(#" + "ST" + ")");
+    }
+    const stitch = kind === "leather" ? `<path d="M78,16 V68 M122,16 V68 M78,212 V264 M122,212 V264" stroke="${c === "#f4efe4" ? "#b9a88a" : "#5a5a5a"}" stroke-width=".6" stroke-dasharray="1.4 1.6"/>` : "";
+    return `<rect x="74" y="2" width="52" height="72" rx="6" fill="${c}"/>${stitch}<rect x="74" y="206" width="52" height="72" rx="6" fill="${c}"/>${stitch}`;
+  }
+
+  function handSet(spec, cx, cy) {
+    const col = spec.hand || "#f4f4f4";
+    const sec = spec.secondColor || col;
+    const style = spec.hands || "stick";
+    let hour = "", minute = "";
+    if (style === "mercedes") {
+      hour = `<path d="M0,-36 L4.2,-8 L0,-2 L-4.2,-8 Z" fill="${col}"/><circle cy="-28" r="5.2" fill="none" stroke="${col}" stroke-width="1.7"/><circle r="3.1" fill="${col}"/>`;
+      minute = `<path d="M0,-52 L2.3,-8 L0,0 L-2.3,-8 Z" fill="${col}"/>`;
+    } else if (style === "dauphine") {
+      hour = `<path d="M0,-34 L4.4,-4 L0,6 L-4.4,-4 Z" fill="${col}"/>`;
+      minute = `<path d="M0,-50 L3.2,-4 L0,8 L-3.2,-4 Z" fill="${col}"/>`;
+    } else if (style === "sword") {
+      hour = `<path d="M0,-36 L2.2,-28 L2.2,-4 L0,2 L-2.2,-4 L-2.2,-28 Z" fill="${col}"/>`;
+      minute = `<path d="M0,-52 L1.6,-40 L1.6,-4 L0,2 L-1.6,-4 L-1.6,-40 Z" fill="${col}"/>`;
+    } else if (style === "cathedral") {
+      hour = `<path d="M0,-34 C6,-28 5,-12 2.2,-4 L0,4 L-2.2,-4 C-5,-12 -6,-28 0,-34 Z" fill="${col}"/>`;
+      minute = `<path d="M0,-50 C4,-42 3.2,-16 1.5,-4 L0,6 L-1.5,-4 C-3.2,-16 -4,-42 0,-50 Z" fill="${col}"/>`;
+    } else if (style === "feuille") {
+      hour = `<path d="M0,-34 C5,-26 4,-10 0,4 C-4,-10 -5,-26 0,-34 Z" fill="${col}"/>`;
+      minute = `<path d="M0,-50 C3.4,-38 2.8,-12 0,6 C-2.8,-12 -3.4,-38 0,-50 Z" fill="${col}"/>`;
+    } else if (style === "syringe") {
+      hour = `<rect x="-2.4" y="-34" width="4.8" height="32" rx=".4" fill="${col}"/><circle cy="-30" r="3.4" fill="${col}"/>`;
+      minute = `<rect x="-1.5" y="-50" width="3" height="48" fill="${col}"/>`;
+    } else if (style === "snowflake") {
+      hour = `<path d="M0,-36 L3.6,-8 L0,2 L-3.6,-8 Z" fill="${col}"/><path d="M-2,-22 L0,-28 L2,-22" fill="none" stroke="${col}" stroke-width="1"/>`;
+      minute = `<path d="M0,-52 L2.4,-8 L0,4 L-2.4,-8 Z" fill="${col}"/>`;
+    } else if (style === "alpha") {
+      hour = `<path d="M0,-32 L5,-6 L0,0 L-5,-6 Z" fill="${col}"/>`;
+      minute = `<path d="M0,-48 L3.2,-6 L0,2 L-3.2,-6 Z" fill="${col}"/>`;
+    } else if (style === "sbb") {
+      hour = `<rect x="-3.2" y="-28" width="6.4" height="26" fill="${col}"/><rect x="-4.4" y="-32" width="8.8" height="6" fill="${col}"/>`;
+      minute = `<rect x="-2.1" y="-46" width="4.2" height="42" fill="${col}"/><rect x="-3.4" y="-50" width="6.8" height="6" fill="${col}"/>`;
+    } else {
+      hour = `<rect x="-1.7" y="-34" width="3.4" height="36" rx=".4" fill="${col}"/>`;
+      minute = `<rect x="-1.2" y="-50" width="2.4" height="52" rx=".3" fill="${col}"/>`;
+    }
+    let second = "";
+    if (spec.second !== "none" && spec.second !== "small") {
+      if (spec.second === "lollipop") second = `<line y2="-46" stroke="${sec}" stroke-width="1.3"/><circle cy="-40" r="3.1" fill="${sec}"/><line y1="0" y2="12" stroke="${sec}" stroke-width="1.3"/>`;
+      else if (spec.second === "lightning") second = `<path d="M0,8 L-2,-8 L2,-16 L-1,-32 L2,-46" fill="none" stroke="${sec}" stroke-width="1.5"/>`;
+      else second = `<line y1="12" y2="-48" stroke="${sec}" stroke-width="1.15"/>`;
+      second = `<g data-hand="second" data-cx="${cx}" data-cy="${cy}">${second}<circle r="2.2" fill="${sec}"/></g>`;
+    }
+    const counter = `<circle r="2.4" fill="#1b1d20" stroke="${col}" stroke-width=".6"/>`;
+    return `<g data-hand="hour" data-cx="${cx}" data-cy="${cy}">${hour}</g><g data-hand="minute" data-cx="${cx}" data-cy="${cy}">${minute}</g>${second}${counter}`;
+  }
+
+  function dateWindow(cx, cy, hour, spec, id) {
+    const [x, y] = P(cx, cy, spec.dateR || 38, hour * 30);
+    const w = spec.dayDate ? 28 : 16;
+    const h = spec.dayDate ? 18 : 13;
+    const bg = spec.dateBg || "#f7f4ee";
+    const fg = spec.dateFg || "#161616";
+    const lens = spec.cyclops ? `<ellipse cx="${f(x)}" cy="${f(y)}" rx="11" ry="9" fill="#fff" opacity=".18" stroke="#9bb" stroke-width=".4"/>` : "";
+    const fields = spec.dayDate
+      ? `<text data-field="dow" x="${f(x)}" y="${f(y - 2)}" text-anchor="middle" font-size="5.5" font-weight="700" fill="${fg}">MON</text><text data-field="date" x="${f(x)}" y="${f(y + 6)}" text-anchor="middle" font-size="7" font-weight="700" fill="${fg}">1</text>`
+      : `<text data-field="date" x="${f(x)}" y="${f(y + 2.5)}" text-anchor="middle" font-size="8" font-weight="700" fill="${fg}">1</text>`;
+    return `<g><rect x="${f(x - w / 2)}" y="${f(y - h / 2)}" width="${w}" height="${h}" rx="1.2" fill="${bg}" stroke="#222" stroke-width=".6"/>${fields}</g>${lens}`;
+  }
+
+  function subdial(id, cx, cy, r, kind, label, ring) {
+    const hand = kind === "sec" ? "subsec" : kind === "30" ? "cmin" : kind === "12" ? "chour" : kind === "reserve" ? "reserve" : kind === "tenth" ? "tenth" : "subsec";
+    const ticksS = ticks(cx, cy, r - 1.5, r - 5, kind === "tenth" ? 36 : 30, "#222", .6);
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${ring || "#f4f1ea"}" stroke="#222" stroke-width=".7"/>${ticksS}<text x="${cx}" y="${cy - r + 9}" text-anchor="middle" font-size="4.5" fill="#333">${label || ""}</text><g data-hand="${hand}" data-cx="${cx}" data-cy="${cy}"><line y1="2" y2="${-(r - 5)}" stroke="#222" stroke-width="1"/><circle r="1.3" fill="#222"/></g>`;
+  }
+
+  function bezelNums(spec, cx, cy, r) {
+    const kind = spec.bezelNums;
+    if (!kind || kind === "none") return "";
+    const fill = spec.bezelFg || "#f2f2f2";
+    let s = "";
+    if (kind === "diver") {
+      const map = { 10: 50, 20: 40, 30: 30, 40: 20, 50: 10 };
+      Object.keys(map).forEach(k => {
+        const p = P(cx, cy, r, Number(k) * 6);
+        s += `<text x="${f(p[0])}" y="${f(p[1] + 2)}" text-anchor="middle" font-size="7" font-weight="700" fill="${fill}">${map[k]}</text>`;
+      });
+      const tri = P(cx, cy, r - 1, 0);
+      s += `<polygon points="${f(tri[0])},${f(tri[1] - 5)} ${f(tri[0] - 4)},${f(tri[1] + 3)} ${f(tri[0] + 4)},${f(tri[1] + 3)}" fill="${fill}"/>`;
+      s += ticks(cx, cy, r + 8, r + 12, 6, fill, spec.bezel === "ceramic" ? 1 : .7);
+    } else if (kind === "tach") {
+      const labels = [[60, 0], [65, 18], [70, 32], [80, 52], [90, 68], [100, 90], [120, 110], [150, 140], [200, 170], [300, 210], [500, 250]];
+      labels.forEach(([n, deg]) => {
+        const p = P(cx, cy, r, deg);
+        s += `<text x="${f(p[0])}" y="${f(p[1])}" text-anchor="middle" font-size="5" fill="${fill}" transform="rotate(${deg} ${f(p[0])} ${f(p[1])})">${n}</text>`;
+      });
+      s += `<text x="${cx}" y="${cy - r - 8}" text-anchor="middle" font-size="5" fill="${fill}" letter-spacing=".8">TACHYMÈTRE</text>`;
+    } else if (kind === "minute") {
+      for (let n = 5; n <= 60; n += 5) {
+        const p = P(cx, cy, r, n * 6);
+        s += `<text x="${f(p[0])}" y="${f(p[1] + 1.5)}" text-anchor="middle" font-size="5" fill="${fill}">${n === 60 ? 60 : n}</text>`;
+      }
+    }
+    return s;
+  }
+
+  function markers(spec, cx, cy, r) {
+    const style = spec.markers || "baton";
+    const col = spec.marker || "#f3f3f3";
+    const lume = spec.lume ? "#e7f6e4" : col;
+    const skip = spec.dateAt ? [spec.dateAt * 30] : [];
+    let s = "";
+    if (style === "roman") {
+      const rom = ["XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"];
+      rom.forEach((t, i) => {
+        if (skip.indexOf(i * 30) >= 0) return;
+        const p = P(cx, cy, r, i * 30);
+        s += `<text x="${f(p[0])}" y="${f(p[1] + 2)}" text-anchor="middle" font-size="${t.length > 2 ? 7 : 8}" font-family="Georgia, serif" fill="${col}">${t}</text>`;
+      });
+      return s;
+    }
+    if (style === "arabic" || style === "field") {
+      for (let i = 1; i <= 12; i++) {
+        if (skip.indexOf(i * 30) >= 0) continue;
+        const p = P(cx, cy, r, i * 30);
+        const label = style === "field" && i % 3 !== 0 ? "" : String(i === 12 ? (spec.twelve || 12) : i);
+        if (!label) continue;
+        s += `<text x="${f(p[0])}" y="${f(p[1] + 3)}" text-anchor="middle" font-size="11" font-weight="700" fill="${col}">${label}</text>`;
+      }
+      if (style === "field") s += ticks(cx, cy, r + 8, r + 12, 30, col, 1);
+      return s;
+    }
+    for (let i = 0; i < 12; i++) {
+      if (skip.indexOf(i * 30) >= 0) continue;
+      const deg = i * 30;
+      const outer = P(cx, cy, r, deg);
+      const inner = P(cx, cy, r - (i % 3 === 0 ? 14 : 9), deg);
+      if (style === "maxi" && i === 0) {
+        const t = P(cx, cy, r - 2, 0);
+        s += `<polygon points="${f(t[0])},${f(t[1] - 8)} ${f(t[0] - 6)},${f(t[1] + 4)} ${f(t[0] + 6)},${f(t[1] + 4)}" fill="${lume}" stroke="${col}" stroke-width=".6"/>`;
+      } else if (style === "circles" && i % 3 !== 0) {
+        s += `<circle cx="${f(outer[0])}" cy="${f(outer[1])}" r="3.1" fill="${lume}" stroke="${col}" stroke-width=".5"/>`;
+      } else if (style === "mixed" && i % 3 !== 0) {
+        s += `<circle cx="${f(outer[0])}" cy="${f(outer[1])}" r="2.4" fill="${lume}"/>`;
+      } else {
+        s += `<line x1="${f(inner[0])}" y1="${f(inner[1])}" x2="${f(outer[0])}" y2="${f(outer[1])}" stroke="${col}" stroke-width="${i % 3 === 0 ? 3.4 : 2.2}" stroke-linecap="round"/>`;
+        if (spec.lume) {
+          const a = P(cx, cy, r - 2, deg), b = P(cx, cy, r - (i % 3 === 0 ? 10 : 7), deg);
+          s += `<line x1="${f(a[0])}" y1="${f(a[1])}" x2="${f(b[0])}" y2="${f(b[1])}" stroke="${lume}" stroke-width="${i % 3 === 0 ? 1.5 : 1}"/>`;
+        }
+      }
+    }
+    return s;
+  }
+
+  function caseShape(id, spec, cx, cy) {
+    const metal = spec.metal === "gold" ? `url(#${id}-gold)` : spec.metal === "rose" ? `url(#${id}-rose)` : spec.metal === "ti" ? `url(#${id}-ti)` : spec.metal === "black" ? "#1a1c1e" : `url(#${id}-steel)`;
+    const shape = spec.shape || "round";
+    if (shape === "octagon") {
+      const ptsA = [];
+      for (let i = 0; i < 8; i++) ptsA.push(P(cx, cy, 84, 22.5 + i * 45));
+      let screws = "";
+      ptsA.forEach(p => { screws += `<circle cx="${f(p[0])}" cy="${f(p[1])}" r="3.2" fill="#d9dee1" stroke="#222" stroke-width=".5"/><rect x="${f(p[0] - 2)}" y="${f(p[1] - .4)}" width="4" height=".8" fill="#222"/>`; });
+      return `<polygon points="${pts(ptsA)}" fill="${metal}" stroke="#222" stroke-width="1.2"/>${screws}`;
+    }
+    if (shape === "porthole") {
+      const ptsA = [];
+      for (let i = 0; i < 8; i++) ptsA.push(P(cx, cy, 86, 22.5 + i * 45));
+      return `<polygon points="${pts(ptsA)}" fill="${metal}" stroke="#9aa3a8" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="74" fill="none" stroke="#f4f7f8" stroke-width="3"/>`;
+    }
+    const bezel = spec.bezelFill || "#141618";
+    let extra = "";
+    if (spec.bezel === "fluted") extra = ticks(cx, cy, 76, 84, 6, metal, 1.4);
+    if (spec.bezel === "coin") extra = ticks(cx, cy, 78, 84, 4, "#222", .8);
+    return `<circle cx="${cx}" cy="${cy}" r="84" fill="${metal}"/><circle cx="${cx}" cy="${cy}" r="76" fill="${bezel}"/>${extra}`;
+  }
+
+  function dialFill(id, spec) {
+    if (spec.texture === "tap") return `url(#${id}-tap)`;
+    if (spec.texture === "snow") return `url(#${id}-snow)`;
+    if (spec.texture === "wave") return `url(#${id}-wave)`;
+    if (spec.texture === "lines") return `url(#${id}-lines)`;
+    return spec.dial || "#111";
+  }
+
+  function texts(spec, cx, cy) {
+    return (spec.texts || []).map(t => `<text x="${cx + (t.x || 0)}" y="${cy + t.y}" text-anchor="middle" font-size="${t.size || 6}" font-weight="${t.weight || 600}" fill="${t.fill || "#e8e8e8"}" font-family="${t.serif ? "Georgia, serif" : "inherit"}" letter-spacing="${t.track || 0}">${t.t}</text>`).join("");
+  }
+
+  function gmtHand(cx, cy, color) {
+    return `<g data-hand="gmt" data-cx="${cx}" data-cy="${cy}"><path d="M0,-40 L3.2,-28 L1.2,-8 L0,0 L-1.2,-8 L-3.2,-28 Z" fill="${color || "#d23b32"}"/></g>`;
+  }
+
+  function chronoHand(cx, cy, color) {
+    return `<g data-hand="csec" data-cx="${cx}" data-cy="${cy}"><line y1="14" y2="-58" stroke="${color || "#d23b32"}" stroke-width="1.1"/><circle r="2" fill="${color || "#d23b32"}"/></g>`;
+  }
+
+  function wrist(id, spec) {
+    const cx = 100, cy = 146;
+    const strapKind = spec.strap || "leather";
+    let strap = strapBlock(strapKind, spec.strapColor);
+    strap = strap.replace(/#ST/g, id + "-steel").replace(/url\(#ST\)/g, `url(#${id}-steel)`);
+    if (strapKind === "oyster" || strapKind === "jubilee" || strapKind === "bracelet") {
+      strap = strap.split("url(#ST)").join(`url(#${id}-steel)`);
+      strap = strap.replaceAll("url(#" + "ST" + ")", `url(#${id}-steel)`);
+    }
+    const crownX = spec.crown === "left" ? 16 : spec.crown === "4" ? 176 : 184;
+    const crownY = spec.crown === "4" ? 168 : cy;
+    const crown = spec.crown === "none" ? "" : `<rect x="${crownX - 5}" y="${crownY - 7}" width="10" height="14" rx="2" fill="#c5ccd0" stroke="#222" stroke-width=".4"/><g stroke="#222" stroke-width=".45">${[ -4, -1.5, 1, 3.5 ].map(dy => `<line x1="${crownX - 4}" y1="${crownY + dy}" x2="${crownX + 4}" y2="${crownY + dy}"/>`).join("")}</g>`;
+    const pushers = spec.pushers ? `<rect x="180" y="${cy - 28}" width="7" height="10" rx="1" fill="#b7c0c4"/><rect x="180" y="${cy + 16}" width="7" height="10" rx="1" fill="#b7c0c4"/>` : "";
+    const helium = spec.helium ? `<circle cx="28" cy="${cy - 36}" r="4.2" fill="#9aa3a8" stroke="#222" stroke-width=".5"/>` : "";
+    const dialR = spec.dialR || 64;
+    const sun = spec.texture === "sun" ? `<circle cx="${cx}" cy="${cy}" r="${dialR}" fill="${spec.dial || "#111"}"/><circle cx="${cx}" cy="${cy}" r="${dialR}" fill="none" stroke="#fff" stroke-width="18" opacity=".04"/>` : "";
+    const subd = (spec.subs || []).map(sub => {
+      const p = P(cx, cy, sub.atR || 32, sub.hour * 30);
+      return subdial(id, p[0], p[1], sub.r || 16, sub.kind, sub.label, sub.fill);
+    }).join("");
+    const chapter = spec.chapter ? ticks(cx, cy, dialR - 2, dialR - 6, 6, spec.chapter, .6) : "";
+    const rehaut = spec.rehaut ? ringText(id, cx, cy, dialR + 5, "ROLEX · PERPETUAL · SUPERLATIVE CHRONOMETER · OFFICIALLY CERTIFIED · ", 3.1, "#9aa3a8") : "";
+    const date = spec.dateAt ? dateWindow(cx, cy, spec.dateAt, spec, id) : "";
+    const gmt = spec.gmt ? gmtHand(cx, cy, spec.gmtColor) : "";
+    const chrono = spec.chrono ? chronoHand(cx, cy, spec.chronoColor) : "";
+    const indiglo = spec.indiglo ? `<circle data-indiglo="1" cx="${cx}" cy="${cy}" r="${dialR}" fill="#1ee0c0" opacity="0"/>` : "";
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="${spec.alt || ""}">
+      ${metalDefs(id)}
+      ${strap}
+      ${caseShape(id, spec, cx, cy)}
+      ${bezelNums(spec, cx, cy, 70)}
+      <circle cx="${cx}" cy="${cy}" r="${dialR}" fill="${dialFill(id, spec)}"/>
+      ${sun}
+      ${chapter}
+      ${rehaut}
+      ${markers(spec, cx, cy, dialR - 14)}
+      ${texts(spec, cx, cy)}
+      ${date}
+      ${subd}
+      ${spec.extra || ""}
+      ${gmt}
+      ${handSet(spec, cx, cy)}
+      ${chrono}
+      <circle cx="${cx}" cy="${cy}" r="${dialR}" fill="url(#${id}-glass)" pointer-events="none"/>
+      ${indiglo}
+      ${spec.cyclops && spec.dateAt ? `<ellipse cx="${f(P(cx, cy, spec.dateR || 38, spec.dateAt * 30)[0])}" cy="${f(P(cx, cy, spec.dateR || 38, spec.dateAt * 30)[1])}" rx="12" ry="9.5" fill="#dff" opacity=".16" stroke="#fff" stroke-width=".4"/>` : ""}
+      ${crown}${pushers}${helium}
+    </svg>`;
+  }
+
+  function seven(id, x, y, group) {
+    const w = 16, h = 26, t = 2.4;
+    const seg = (part, d) => `<polygon data-seg="${group}" data-part="${part}" points="${d}" fill="#122"/>`;
+    const a = `${x + 2},${y} ${x + w - 2},${y} ${x + w - 3},${y + t} ${x + 3},${y + t}`;
+    const d = `${x + 2},${y + h} ${x + 3},${y + h - t} ${x + w - 3},${y + h - t} ${x + w - 2},${y + h}`;
+    const g = `${x + 2},${y + h / 2} ${x + 3},${y + h / 2 - t / 2} ${x + w - 3},${y + h / 2 - t / 2} ${x + w - 2},${y + h / 2} ${x + w - 3},${y + h / 2 + t / 2} ${x + 3},${y + h / 2 + t / 2}`;
+    const b = `${x + w},${y + 2} ${x + w},${y + h / 2 - 1} ${x + w - t},${y + h / 2 - 2} ${x + w - t},${y + 3}`;
+    const c = `${x + w},${y + h / 2 + 1} ${x + w},${y + h - 2} ${x + w - t},${y + h - 3} ${x + w - t},${y + h / 2 + 2}`;
+    const f = `${x},${y + 2} ${x + t},${y + 3} ${x + t},${y + h / 2 - 2} ${x},${y + h / 2 - 1}`;
+    const e = `${x},${y + h / 2 + 1} ${x + t},${y + h / 2 + 2} ${x + t},${y + h - 3} ${x},${y + h - 2}`;
+    return seg("a", a) + seg("b", b) + seg("c", c) + seg("d", d) + seg("e", e) + seg("f", f) + seg("g", g);
+  }
+
+  function lcdTime(x, y, group) {
+    let s = "";
+    for (let i = 0; i < 6; i++) {
+      const col = i === 2 || i === 4;
+      const xx = x + i * 18 + (i > 1 ? 6 : 0) + (i > 3 ? 6 : 0);
+      s += seven("d", xx, y, group + ":" + i);
+      if (col) s += `<g data-colon="${group}" fill="#173"><circle cx="${xx + 20}" cy="${y + 8}" r="1.5"/><circle cx="${xx + 20}" cy="${y + 18}" r="1.5"/></g>`;
+    }
+    return s;
+  }
+
+  const SEGMENTS = { 0: "abcdef", 1: "bc", 2: "abged", 3: "abgcd", 4: "fgbc", 5: "afgcd", 6: "afgedc", 7: "abc", 8: "abcdefg", 9: "abcdfg" };
+
+  function paintDigits(root, group, str) {
+    const chars = String(str).padStart(6, "0").slice(-6);
+    for (let i = 0; i < 6; i++) {
+      const on = SEGMENTS[chars[i]] || "";
+      root.querySelectorAll(`[data-seg="${group}:${i}"]`).forEach(node => {
+        node.setAttribute("fill", on.indexOf(node.getAttribute("data-part")) >= 0 ? "#16321c" : "#c5d2c4");
+      });
+    }
+  }
+
+  function moonDisc(id, cx, cy, r) {
+    return `<g data-moon="1" data-cx="${cx}" data-cy="${cy}" data-r="${r}"><defs><clipPath id="${id}-mclip"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath></defs><g clip-path="url(#${id}-mclip)"><circle cx="${cx}" cy="${cy}" r="${r}" fill="#1b2030"/><circle data-moon-disc="1" cx="${cx + r}" cy="${cy}" r="${r * 0.96}" fill="#f4e2ae"/></g><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#c6a15a" stroke-width=".8"/></g>`;
+  }
+
+  function perimeter(x, y, w, h, t) {
+    const len = 2 * (w + h);
+    let d = ((t % 1) + 1) % 1 * len;
+    if (d <= w) return [x + d, y];
+    d -= w;
+    if (d <= h) return [x + w, y + d];
+    d -= h;
+    if (d <= w) return [x + w - d, y + h];
+    d -= w;
+    return [x, y + h - d];
+  }
+
+  function romanFrame(x, y, w, h, fill) {
+    const rom = ["XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"];
+    const start = (w / 2) / (2 * (w + h));
+    let s = "";
+    rom.forEach((label, i) => {
+      const p = perimeter(x, y, w, h, start + i / 12);
+      s += `<text x="${f(p[0])}" y="${f(p[1] + 3)}" text-anchor="middle" font-size="8" font-family="Georgia, serif" fill="${fill}">${label}</text>`;
+    });
+    return s;
+  }
+
+  function bluedHands(cx, cy, hLen, mLen) {
+    return `<g data-hand="hour" data-cx="${cx}" data-cy="${cy}"><path d="M0,${-hLen} L1.6,-6 L0,4 L-1.6,-6 Z" fill="#1d4c86"/></g><g data-hand="minute" data-cx="${cx}" data-cy="${cy}"><path d="M0,${-mLen} L1.15,-6 L0,6 L-1.15,-6 Z" fill="#1d4c86"/></g><circle cx="${cx}" cy="${cy}" r="2.2" fill="#1d4c86"/>`;
+  }
+
+  function drawTank(id) {
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="Cartier Tank Louis Cartier">
+      ${metalDefs(id)}
+      <rect x="78" y="8" width="44" height="40" rx="4" fill="#5c4030"/>
+      <rect x="78" y="232" width="44" height="40" rx="4" fill="#5c4030"/>
+      <rect x="62" y="52" width="76" height="176" rx="6" fill="url(#${id}-gold)"/>
+      <rect x="70" y="60" width="60" height="160" fill="#f4f0e6"/>
+      <rect x="74" y="66" width="52" height="148" fill="none" stroke="#c8b48a" stroke-width="2"/>
+      ${ticks(100, 140, 22, 26, 6, "#b7a27a", .5)}
+      ${romanFrame(76, 70, 48, 140, "#2a241c")}
+      <text x="100" y="128" text-anchor="middle" font-size="5" fill="#6a5a40" font-family="Georgia, serif">CARTIER</text>
+      ${bluedHands(100, 140, 28, 42)}
+      <circle cx="148" cy="140" r="5" fill="#c23b4a" stroke="url(#${id}-gold)" stroke-width="2"/>
+      <rect x="138" y="136" width="8" height="8" fill="url(#${id}-gold)"/>
+    </svg>`;
+  }
+
+  function drawReverso(id) {
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="Jaeger-LeCoultre Reverso">
+      ${metalDefs(id)}
+      <rect x="76" y="18" width="48" height="28" rx="2" fill="#222"/>
+      <rect x="76" y="234" width="48" height="28" rx="2" fill="#222"/>
+      <rect x="58" y="48" width="84" height="184" fill="url(#${id}-steel)"/>
+      ${[64, 72, 128, 136].map(x => `<rect x="${x}" y="56" width="3" height="168" fill="#9aa3a8"/>`).join("")}
+      <rect x="78" y="64" width="44" height="152" fill="#f7f4ee"/>
+      <rect x="82" y="70" width="36" height="140" fill="none" stroke="#d5cbb8"/>
+      ${ticks(100, 140, 16, 20, 6, "#222", .45)}
+      <text x="100" y="118" text-anchor="middle" font-size="4.2" letter-spacing=".4" fill="#333">JAEGER-LECOULTRE</text>
+      ${bluedHands(100, 132, 24, 36)}
+      <circle cx="100" cy="176" r="12" fill="#f7f4ee" stroke="#222" stroke-width=".6"/>
+      ${ticks(100, 176, 10, 7, 30, "#222", .5)}
+      <g data-hand="subsec" data-cx="100" data-cy="176"><line y2="-8" stroke="#1d4c86" stroke-width="1"/></g>
+      <rect x="146" y="132" width="8" height="12" rx="2" fill="url(#${id}-steel)"/>
+    </svg>`;
+  }
+
+  function drawLange(id) {
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="A. Lange and Sohne Lange 1">
+      ${metalDefs(id)}
+      <rect x="74" y="16" width="52" height="36" rx="3" fill="#6a3d28"/>
+      <rect x="74" y="228" width="52" height="36" rx="3" fill="#6a3d28"/>
+      <circle cx="100" cy="146" r="84" fill="url(#${id}-rose)"/>
+      <circle cx="100" cy="146" r="74" fill="#f3efe6"/>
+      <circle cx="78" cy="150" r="36" fill="none" stroke="#c8bba4" stroke-width="1"/>
+      ${ticks(78, 150, 30, 34, 6, "#5c5144", .5)}
+      <text x="78" y="128" text-anchor="middle" font-size="4.5" fill="#5c5144" font-family="Georgia, serif">A. LANGE &amp; SÖHNE</text>
+      <text x="78" y="136" text-anchor="middle" font-size="3.6" fill="#5c5144">GLASHÜTTE I/SA</text>
+      ${bluedHands(78, 150, 20, 30)}
+      <rect x="118" y="92" width="34" height="26" fill="#f7f4ee" stroke="#111" stroke-width=".7"/>
+      <text data-field="date" x="135" y="110" text-anchor="middle" font-size="16" font-family="Georgia, serif" fill="#111">8</text>
+      <path d="M128,128 h28" stroke="#111" stroke-width=".4"/>
+      <text x="142" y="138" text-anchor="middle" font-size="3.4" fill="#333">POWER RESERVE</text>
+      <path d="M124,154 A16,16 0 0 1 160,154" fill="none" stroke="#222" stroke-width=".7"/>
+      <g data-hand="reserve" data-cx="142" data-cy="154"><line y2="-14" stroke="#8a1f1f" stroke-width="1.2"/></g>
+      <circle cx="128" cy="176" r="14" fill="#f7f4ee" stroke="#222" stroke-width=".6"/>
+      ${ticks(128, 176, 12, 9, 30, "#222", .45)}
+      <g data-hand="subsec" data-cx="128" data-cy="176"><line y2="-9" stroke="#111" stroke-width="1"/></g>
+    </svg>`;
+  }
+
+  function drawGshock(id) {
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="Casio G-Shock">
+      <rect x="46" y="36" width="108" height="196" rx="16" fill="#1a1c1e"/>
+      <rect x="58" y="18" width="84" height="28" rx="6" fill="#111"/>
+      <rect x="58" y="228" width="84" height="28" rx="6" fill="#111"/>
+      <rect x="54" y="48" width="92" height="172" rx="8" fill="#2a2d30"/>
+      <rect x="62" y="78" width="76" height="96" rx="3" fill="#c9d4c4"/>
+      <text x="100" y="70" text-anchor="middle" font-size="7" fill="#d7fff4" letter-spacing="1">G-SHOCK</text>
+      <text x="70" y="92" font-size="6" fill="#16321c" data-field="lcd-day">MON</text>
+      <text x="118" y="92" font-size="6" fill="#16321c" data-field="lcd-date">9-8</text>
+      ${lcdTime(66, 102, "time")}
+      <text x="100" y="164" text-anchor="middle" font-size="4" fill="#16321c">ILLUMINATOR</text>
+      <circle cx="40" cy="90" r="6" fill="#333"/><circle cx="160" cy="90" r="6" fill="#333"/>
+      <circle cx="40" cy="150" r="6" fill="#333"/><circle cx="160" cy="150" r="6" fill="#c4372a"/>
+      <text x="100" y="208" text-anchor="middle" font-size="4" fill="#9ad" letter-spacing=".6">PROTECTION</text>
+    </svg>`;
+  }
+
+  function drawF91w(id) {
+    return `<svg viewBox="0 0 200 260" role="img" aria-label="Casio F-91W">
+      <rect x="62" y="28" width="76" height="28" rx="3" fill="#1a1a1a"/>
+      <rect x="62" y="196" width="76" height="36" rx="3" fill="#1a1a1a"/>
+      <rect x="48" y="52" width="104" height="148" rx="6" fill="#2c2c2c"/>
+      <rect x="56" y="64" width="88" height="112" fill="#1c1c1c"/>
+      <rect x="64" y="86" width="72" height="62" fill="#c5c8bc"/>
+      <text x="70" y="80" font-size="4" fill="#9cf">WATER 50M</text>
+      <text x="100" y="78" text-anchor="middle" font-size="5" fill="#ddd">CASIO</text>
+      <path d="M60,70 h8 M60,76 h8 M60,82 h8" stroke="#3a7bd5" stroke-width="1.4"/>
+      <text x="70" y="98" font-size="6" fill="#16321c" data-field="lcd-day">MON</text>
+      <text x="108" y="98" font-size="6" fill="#16321c" data-field="date">8</text>
+      ${lcdTime(68, 106, "f91")}
+      <text x="100" y="162" text-anchor="middle" font-size="3.4" fill="#aaa">ALARM CHRONOGRAPH</text>
+      <rect x="36" y="78" width="10" height="16" rx="2" fill="#444"/>
+      <rect x="154" y="78" width="10" height="16" rx="2" fill="#444"/>
+      <rect x="154" y="112" width="10" height="16" rx="2" fill="#444"/>
+    </svg>`;
+  }
+
+  function drawApple(id) {
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="Apple Watch">
+      <rect x="78" y="8" width="44" height="36" rx="8" fill="#3a3a3c"/>
+      <rect x="78" y="236" width="44" height="36" rx="8" fill="#3a3a3c"/>
+      <rect x="52" y="40" width="96" height="196" rx="28" fill="#d7d7dc"/>
+      <rect x="60" y="50" width="80" height="176" rx="22" fill="#0c0c0e"/>
+      <circle cx="100" cy="138" r="28" fill="none" stroke="#222" stroke-width="8"/>
+      <circle cx="100" cy="138" r="28" fill="none" stroke="#ff3b30" stroke-width="5" stroke-dasharray="120 60" stroke-linecap="round" transform="rotate(-80 100 138)"/>
+      <circle cx="100" cy="138" r="20" fill="none" stroke="#30d158" stroke-width="5" stroke-dasharray="80 50" stroke-linecap="round" transform="rotate(-40 100 138)"/>
+      <circle cx="100" cy="138" r="12" fill="none" stroke="#0a84ff" stroke-width="5" stroke-dasharray="40 40" stroke-linecap="round"/>
+      <g data-hand="hour" data-cx="100" data-cy="138"><rect x="-1.4" y="-18" width="2.8" height="20" rx="1" fill="#f5f5f7"/></g>
+      <g data-hand="minute" data-cx="100" data-cy="138"><rect x="-1.1" y="-26" width="2.2" height="28" rx="1" fill="#f5f5f7"/></g>
+      <g data-hand="second" data-cx="100" data-cy="138"><line y2="-30" stroke="#ff9f0a" stroke-width="1.2"/></g>
+      <circle cx="100" cy="138" r="2" fill="#ff9f0a"/>
+      <text data-field="date" x="148" y="92" text-anchor="middle" font-size="8" fill="#ff9f0a">8</text>
+      <text x="100" y="196" text-anchor="middle" font-size="5" fill="#8e8e93">22°</text>
+      <rect x="152" y="120" width="8" height="22" rx="3" fill="#c7c7cc"/>
+    </svg>`;
+  }
+
+  function drawMonaco(id) {
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="TAG Heuer Monaco">
+      <rect x="70" y="20" width="60" height="28" rx="2" fill="#1d3f86"/>
+      <rect x="70" y="232" width="60" height="28" rx="2" fill="#1d3f86"/>
+      <rect x="46" y="50" width="108" height="180" rx="4" fill="#c5ccd2"/>
+      <rect x="54" y="58" width="92" height="164" fill="#163a78"/>
+      <text x="100" y="84" text-anchor="middle" font-size="6" fill="#d5dbe8" letter-spacing="1">TAG HEUER</text>
+      <text x="100" y="94" text-anchor="middle" font-size="5" fill="#d5dbe8">MONACO</text>
+      ${ticks(100, 140, 34, 40, 6, "#d5dbe8", .6)}
+      <circle cx="78" cy="128" r="14" fill="#e8eef8" stroke="#111" stroke-width=".5"/>
+      <circle cx="122" cy="128" r="14" fill="#e8eef8" stroke="#111" stroke-width=".5"/>
+      <circle cx="100" cy="168" r="14" fill="#e8eef8" stroke="#111" stroke-width=".5"/>
+      ${ticks(78, 128, 12, 9, 30, "#222", .4)}${ticks(122, 128, 12, 9, 30, "#222", .4)}${ticks(100, 168, 12, 9, 30, "#222", .4)}
+      <g data-hand="cmin" data-cx="78" data-cy="128"><line y2="-9" stroke="#111" stroke-width="1"/></g>
+      <g data-hand="subsec" data-cx="122" data-cy="128"><line y2="-9" stroke="#111" stroke-width="1"/></g>
+      <g data-hand="chour" data-cx="100" data-cy="168"><line y2="-9" stroke="#111" stroke-width="1"/></g>
+      <rect x="90" y="176" width="20" height="12" fill="#f4f1ea" stroke="#111" stroke-width=".5"/>
+      <text data-field="date" x="100" y="185" text-anchor="middle" font-size="7" fill="#111">8</text>
+      ${handSet({ hands: "stick", hand: "#f4f7fb", second: "none" }, 100, 136)}
+      <g data-hand="csec" data-cx="100" data-cy="136"><line y2="-44" stroke="#e10600" stroke-width="1"/></g>
+      <rect x="28" y="124" width="14" height="10" rx="2" fill="#9aa"/>
+      <rect x="158" y="108" width="10" height="12" rx="1" fill="#9aa"/>
+      <rect x="158" y="140" width="10" height="12" rx="1" fill="#9aa"/>
+    </svg>`;
+  }
+
+  function drawBr03(id) {
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="Bell and Ross BR-03">
+      <rect x="72" y="16" width="56" height="30" rx="2" fill="#111"/>
+      <rect x="72" y="234" width="56" height="30" rx="2" fill="#111"/>
+      <rect x="40" y="48" width="120" height="184" fill="#1a1a1a"/>
+      <rect x="48" y="56" width="104" height="168" fill="#111"/>
+      <circle cx="100" cy="140" r="58" fill="#0c0c0c"/>
+      ${["12", "3", "6", "9"].map((n, i) => {
+        const p = P(100, 140, 44, i * 90);
+        return `<text x="${f(p[0])}" y="${f(p[1] + 4)}" text-anchor="middle" font-size="14" font-weight="700" fill="#f2f2f2">${n}</text>`;
+      }).join("")}
+      ${ticks(100, 140, 50, 56, 6, "#f2f2f2", .7, [0, 90, 180, 270])}
+      <text x="100" y="118" text-anchor="middle" font-size="4" fill="#bbb" letter-spacing=".8">BR 03-92</text>
+      ${handSet({ hands: "stick", hand: "#f4f4f4", second: "stick", secondColor: "#f4f4f4" }, 100, 140)}
+      <rect x="164" y="132" width="10" height="14" rx="2" fill="#333"/>
+    </svg>`;
+  }
+
+  function drawSantos(id) {
+    const screws = [[58, 62], [142, 62], [58, 206], [142, 206], [100, 54], [100, 214], [50, 134], [150, 134]];
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="Cartier Santos">
+      ${metalDefs(id)}
+      <rect x="78" y="6" width="44" height="40" rx="3" fill="url(#${id}-steel)"/>
+      <rect x="78" y="234" width="44" height="40" rx="3" fill="url(#${id}-steel)"/>
+      <rect x="46" y="50" width="108" height="176" rx="10" fill="url(#${id}-steel)"/>
+      <rect x="56" y="60" width="88" height="156" rx="6" fill="#f7f5f0"/>
+      ${screws.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="4.2" fill="#dfe4e6" stroke="#222" stroke-width=".5"/><path d="M${p[0] - 2},${p[1]} h4" stroke="#222" stroke-width=".6"/>`).join("")}
+      ${romanFrame(64, 72, 72, 132, "#24324a")}
+      <text x="100" y="128" text-anchor="middle" font-size="5" fill="#24324a" font-family="Georgia, serif">CARTIER</text>
+      <rect x="90" y="168" width="20" height="12" fill="#fff" stroke="#24324a" stroke-width=".5"/>
+      <text data-field="date" x="100" y="177" text-anchor="middle" font-size="7" fill="#24324a">8</text>
+      ${bluedHands(100, 136, 26, 40)}
+      <rect x="156" y="128" width="8" height="12" rx="2" fill="#c23b4a"/>
+    </svg>`;
+  }
+
+  function drawRichard(id) {
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="Richard Mille RM 011">
+      <rect x="62" y="18" width="76" height="28" rx="6" fill="#1d4ed8"/>
+      <rect x="62" y="234" width="76" height="28" rx="6" fill="#1d4ed8"/>
+      <path d="M48,70 L152,58 L168,150 L150,230 L50,222 L36,140 Z" fill="#c5ccd1" stroke="#222"/>
+      ${[[58, 78], [140, 70], [156, 140], [138, 210], [62, 206], [46, 130]].map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#eee" stroke="#222"/><path d="M${p[0] - 2},${p[1]} h4 M${p[0]},${p[1] - 2} v4" stroke="#222" stroke-width=".4"/>`).join("")}
+      <path d="M62,86 L140,76 L152,146 L138,208 L64,202 L54,140 Z" fill="#0e1a33"/>
+      <text x="100" y="96" text-anchor="middle" font-size="5" fill="#fff" letter-spacing=".6">RICHARD MILLE</text>
+      ${[12, 1, 2, 4, 5, 7, 8, 10, 11].map(n => {
+        const p = P(100, 146, 42, n * 30);
+        return `<text x="${f(p[0])}" y="${f(p[1])}" text-anchor="middle" font-size="8" fill="#fff" font-weight="700">${n}</text>`;
+      }).join("")}
+      <rect x="86" y="112" width="28" height="14" fill="#eee" stroke="#c4372a"/>
+      <text x="100" y="122" text-anchor="middle" font-size="7" font-weight="700" fill="#c4372a">RM</text>
+      <circle cx="78" cy="156" r="14" fill="none" stroke="#ddd"/><circle cx="124" cy="160" r="16" fill="none" stroke="#ddd"/>
+      <g data-hand="cmin" data-cx="78" data-cy="156"><line y2="-10" stroke="#fff" stroke-width="1"/></g>
+      <g data-hand="subsec" data-cx="124" data-cy="160"><line y2="-11" stroke="#f2e27a" stroke-width="1"/></g>
+      ${handSet({ hands: "stick", hand: "#fff", second: "none" }, 100, 142)}
+      <g data-hand="csec" data-cx="100" data-cy="142"><line y2="-40" stroke="#e10600" stroke-width="1.1"/></g>
+      <rect x="162" y="118" width="16" height="18" rx="4" fill="#333"/>
+      <rect x="162" y="146" width="16" height="18" rx="4" fill="#333"/>
+    </svg>`;
+  }
+
+  function drawFreak(id) {
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="Ulysse Nardin Freak">
+      ${metalDefs(id)}
+      <rect x="78" y="8" width="44" height="36" rx="8" fill="#161616"/>
+      <rect x="78" y="236" width="44" height="36" rx="8" fill="#161616"/>
+      <path d="M100,16 v20 M92,28 h16 M100,244 v18" stroke="#c48474" stroke-width="1.2"/>
+      <circle cx="100" cy="146" r="84" fill="#141414"/>
+      <circle cx="100" cy="146" r="74" fill="none" stroke="url(#${id}-rose)" stroke-width="10"/>
+      <circle cx="100" cy="146" r="60" fill="#101114"/>
+      ${ticks(100, 146, 56, 62, 6, "#888", .5)}
+      ${[12, 3, 6, 9].map((n, i) => {
+        const p = P(100, 146, 48, i * 90);
+        return `<text x="${f(p[0])}" y="${f(p[1] + 3)}" text-anchor="middle" font-size="8" fill="#eee">${n}</text>`;
+      }).join("")}
+      <text x="100" y="188" text-anchor="middle" font-size="4" fill="#c48474" letter-spacing=".8">ULYSSE NARDIN</text>
+      <g data-hand="minute" data-cx="100" data-cy="146">
+        <circle r="16" fill="none" stroke="#c48474" stroke-width="1.2"/>
+        <circle cy="-8" r="7" fill="none" stroke="#9bb" stroke-width=".6"/>
+        <path d="M-18,-4 H18 L10,6 H-10 Z" fill="#c48474" opacity=".85"/>
+        <circle cy="-22" r="3" fill="#f4f4f4"/>
+      </g>
+      <g data-hand="hour" data-cx="100" data-cy="146"><path d="M0,-34 L4,-22 L0,-18 L-4,-22 Z" fill="#f7f7f7"/></g>
+      <rect x="78" y="214" width="44" height="12" rx="2" fill="#2a2a2a" stroke="#c48474"/>
+      <text x="100" y="223" text-anchor="middle" font-size="5" fill="#c48474">FREAK</text>
+    </svg>`;
+  }
+
+  function drawBigben(id) {
+    return `<svg viewBox="0 0 220 280" role="img" aria-label="Big Ben clock face">
+      ${metalDefs(id)}
+      <rect width="220" height="280" fill="#c8b79a"/>
+      <rect x="18" y="28" width="184" height="224" fill="#8d928c"/>
+      <rect x="28" y="38" width="164" height="204" fill="#d9c7a2"/>
+      <circle cx="110" cy="140" r="78" fill="url(#${id}-gold)"/>
+      <circle cx="110" cy="140" r="70" fill="#14181c"/>
+      ${ticks(110, 140, 62, 68, 6, "#e6c36a", 1.1)}
+      ${["XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"].map((t, i) => {
+        const p = P(110, 140, 50, i * 30);
+        return `<text x="${f(p[0])}" y="${f(p[1] + 4)}" text-anchor="middle" font-size="11" font-family="Georgia, serif" fill="#e6c36a">${t}</text>`;
+      }).join("")}
+      <g data-hand="hour" data-cx="110" data-cy="140"><path d="M0,-36 L3.4,-4 L0,8 L-3.4,-4 Z" fill="#e6c36a"/></g>
+      <g data-hand="minute" data-cx="110" data-cy="140"><path d="M0,-58 L2.2,-4 L0,10 L-2.2,-4 Z" fill="#e6c36a"/></g>
+      <circle cx="110" cy="140" r="3.4" fill="#e6c36a"/>
+    </svg>`;
+  }
+
+  function drawF1(id) {
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="Rolex trackside clock">
+      ${metalDefs(id)}
+      <rect x="92" y="200" width="16" height="48" fill="#163024"/>
+      <rect x="48" y="244" width="104" height="12" rx="2" fill="#163024"/>
+      <circle cx="100" cy="118" r="86" fill="#111"/>
+      <circle cx="100" cy="118" r="78" fill="url(#${id}-steel)"/>
+      <circle cx="100" cy="118" r="70" fill="#f7f4ee"/>
+      ${ticks(100, 118, 60, 66, 6, "#222", .8)}
+      ${crownMark(100, 70, 1.1, "#b0892e")}
+      <text x="100" y="86" text-anchor="middle" font-size="8" letter-spacing="1.4" fill="#222">ROLEX</text>
+      ${handSet({ hands: "mercedes", hand: "#161616", second: "stick", secondColor: "#8a1f1f" }, 100, 118)}
+    </svg>`;
+  }
+
+  function drawTwinbell(id) {
+    return `<svg viewBox="0 0 220 250" role="img" aria-label="Westclox twin bell alarm">
+      ${metalDefs(id)}
+      <circle cx="62" cy="58" r="28" fill="url(#${id}-steel)" stroke="#222"/>
+      <circle cx="158" cy="58" r="28" fill="url(#${id}-steel)" stroke="#222"/>
+      <path d="M86,40 H134" stroke="#222" stroke-width="4"/>
+      <circle cx="110" cy="42" r="6" fill="#c4372a"/>
+      <circle cx="110" cy="128" r="70" fill="url(#${id}-steel)"/>
+      <circle cx="110" cy="128" r="58" fill="#f7f4ee"/>
+      ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => {
+        const p = P(110, 128, 44, n * 30);
+        return `<text x="${f(p[0])}" y="${f(p[1] + 3)}" text-anchor="middle" font-size="10" font-weight="700" fill="#161616">${n}</text>`;
+      }).join("")}
+      <text x="110" y="112" text-anchor="middle" font-size="5" fill="#444">WESTCLOX</text>
+      <g data-hand="hour" data-cx="110" data-cy="128"><rect x="-2" y="-28" width="4" height="30" fill="#161616"/></g>
+      <g data-hand="minute" data-cx="110" data-cy="128"><rect x="-1.4" y="-40" width="2.8" height="42" fill="#161616"/></g>
+      <g data-hand="alarm" data-cx="110" data-cy="128"><line y2="-36" stroke="#c4372a" stroke-width="1.2"/></g>
+      <circle cx="110" cy="128" r="3" fill="#161616"/>
+      <path d="M70,188 L50,220 M150,188 L170,220" stroke="#888" stroke-width="4"/>
+    </svg>`;
+  }
+
+  function drawGrandfather(id) {
+    return `<svg viewBox="0 0 180 320" role="img" aria-label="Comtoise longcase clock">
+      ${metalDefs(id)}
+      <path d="M40,70 Q90,20 140,70 L150,300 H30 Z" fill="#6b4a2e"/>
+      <path d="M70,36 Q90,8 110,36 L104,70 H76 Z" fill="url(#${id}-gold)"/>
+      <circle cx="90" cy="92" r="36" fill="url(#${id}-gold)"/>
+      <circle cx="90" cy="92" r="30" fill="#f7f1e4"/>
+      ${["XII", "III", "VI", "IX"].map((t, i) => {
+        const p = P(90, 92, 20, i * 90);
+        return `<text x="${f(p[0])}" y="${f(p[1] + 3)}" text-anchor="middle" font-size="7" font-family="Georgia, serif" fill="#222">${t}</text>`;
+      }).join("")}
+      <g data-hand="hour" data-cx="90" data-cy="92"><path d="M0,-16 L1.4,2 L-1.4,2 Z" fill="#1a1a1a"/></g>
+      <g data-hand="minute" data-cx="90" data-cy="92"><path d="M0,-22 L1,2 L-1,2 Z" fill="#1a1a1a"/></g>
+      <rect x="70" y="140" width="40" height="120" fill="#f3e6cf" opacity=".35"/>
+      <path d="M90,150 V230" stroke="#c6a15a" stroke-width="1.2"/>
+      <ellipse cx="90" cy="228" rx="10" ry="16" fill="none" stroke="#c6a15a"/>
+      <circle cx="90" cy="246" r="6" fill="url(#${id}-gold)"/>
+    </svg>`;
+  }
+
+  function drawHoward(id) {
+    return `<svg viewBox="0 0 180 320" role="img" aria-label="Howard Miller grandfather clock">
+      ${metalDefs(id)}
+      <path d="M36,78 H144 V300 H36 Z" fill="#5c3b24"/>
+      <path d="M28,78 Q90,18 152,78 Z" fill="#4a2f1d"/>
+      <path d="M48,48 Q90,28 132,48" fill="none" stroke="url(#${id}-gold)" stroke-width="3"/>
+      ${moonDisc(id, 90, 58, 14)}
+      <circle cx="90" cy="118" r="34" fill="#f7f3ea" stroke="url(#${id}-gold)" stroke-width="3"/>
+      ${["XII", "III", "VI", "IX"].map((t, i) => {
+        const p = P(90, 118, 22, i * 90);
+        return `<text x="${f(p[0])}" y="${f(p[1] + 3)}" text-anchor="middle" font-size="7" font-family="Georgia, serif">${t}</text>`;
+      }).join("")}
+      <g data-hand="hour" data-cx="90" data-cy="118"><path d="M0,-16 L1.6,3 L-1.6,3 Z" fill="#161616"/></g>
+      <g data-hand="minute" data-cx="90" data-cy="118"><path d="M0,-24 L1.1,4 L-1.1,4 Z" fill="#161616"/></g>
+      <rect x="58" y="168" width="64" height="110" fill="#e7d3b0" opacity=".28"/>
+      <line x1="90" y1="176" x2="90" y2="250" stroke="#c6a15a" stroke-width="1.4"/>
+      <circle cx="90" cy="252" r="10" fill="url(#${id}-gold)"/>
+      <rect x="52" y="200" width="6" height="40" fill="url(#${id}-gold)"/>
+      <rect x="122" y="200" width="6" height="40" fill="url(#${id}-gold)"/>
+    </svg>`;
+  }
+
+  function drawOrloj(id) {
+    const rom = ["XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"];
+    return `<svg viewBox="0 0 260 300" role="img" aria-label="Prague astronomical clock">
+      <rect width="260" height="300" fill="#c2b19a"/>
+      <rect x="18" y="16" width="224" height="268" fill="#8a7b68"/>
+      <rect x="30" y="28" width="200" height="244" fill="#d8c7aa"/>
+      <circle cx="130" cy="150" r="92" fill="#0e6e8a"/>
+      <g data-hand="daydisc" data-cx="130" data-cy="150"><path d="M130,58 A92,92 0 0 1 130,242 A60,60 0 0 0 130,58" fill="#d9822b" opacity=".85"/></g>
+      <circle cx="130" cy="150" r="62" fill="none" stroke="#e6c36a" stroke-width="8"/>
+      <g data-hand="zodiac" data-cx="130" data-cy="150">${ZODIAC.map((z, i) => {
+        const p = P(130, 150, 66, i * 30);
+        return `<text x="${f(p[0])}" y="${f(p[1])}" text-anchor="middle" font-size="6" fill="#1a1a1a">${z}</text>`;
+      }).join("")}</g>
+      <circle cx="130" cy="150" r="48" fill="#147a96"/>
+      ${rom.map((t, i) => {
+        const p = P(130, 150, 80, i * 30);
+        return `<text x="${f(p[0])}" y="${f(p[1] + 3)}" text-anchor="middle" font-size="9" font-family="Georgia, serif" fill="#e6c36a">${t}</text>`;
+      }).join("")}
+      <g data-hand="hour" data-cx="130" data-cy="150"><circle cy="-34" r="5" fill="#e6c36a"/><line y2="-28" stroke="#e6c36a" stroke-width="2"/></g>
+      <g data-hand="minute" data-cx="130" data-cy="150"><line y2="-70" stroke="#1a1a1a" stroke-width="1.4"/></g>
+      <circle cx="130" cy="150" r="3" fill="#e6c36a"/>
+      <rect x="36" y="70" width="16" height="40" fill="#6a5344"/>
+      <rect x="208" y="70" width="16" height="40" fill="#6a5344"/>
+    </svg>`;
+  }
+
+  function drawGrandCentral(id) {
+    return `<svg viewBox="0 0 240 280" role="img" aria-label="Grand Central information booth clock">
+      ${metalDefs(id)}
+      <path d="M120,28 L128,48 L112,48 Z" fill="url(#${id}-gold)"/>
+      <circle cx="120" cy="36" r="8" fill="url(#${id}-gold)"/>
+      <ellipse cx="120" cy="150" rx="92" ry="78" fill="url(#${id}-gold)"/>
+      <ellipse cx="46" cy="150" rx="22" ry="58" fill="#e7c56a"/>
+      <ellipse cx="194" cy="150" rx="22" ry="58" fill="#e7c56a"/>
+      <circle cx="120" cy="150" r="62" fill="#f6e2a8"/>
+      ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => {
+        const p = P(120, 150, 46, n * 30);
+        return `<text x="${f(p[0])}" y="${f(p[1] + 4)}" text-anchor="middle" font-size="12" font-family="Georgia, serif" fill="#1a1a1a">${n}</text>`;
+      }).join("")}
+      <g data-hand="hour" data-cx="120" data-cy="150"><path d="M0,-28 L2.2,-4 L0,6 L-2.2,-4 Z" fill="#161616"/></g>
+      <g data-hand="minute" data-cx="120" data-cy="150"><path d="M0,-44 L1.5,-4 L0,8 L-1.5,-4 Z" fill="#161616"/></g>
+      <circle cx="120" cy="150" r="4" fill="#161616"/>
+      <path d="M70,214 Q120,248 170,214" fill="url(#${id}-gold)"/>
+      <rect x="108" y="228" width="24" height="28" fill="url(#${id}-gold)"/>
+    </svg>`;
+  }
+
+  function drawRailroad(id) {
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="Norfolk Southern railroad pocket watch">
+      ${metalDefs(id)}
+      <circle cx="100" cy="28" r="10" fill="none" stroke="url(#${id}-gold)" stroke-width="3"/>
+      <circle cx="100" cy="150" r="78" fill="url(#${id}-gold)"/>
+      <circle cx="100" cy="150" r="68" fill="#f7f4ee"/>
+      ${ticks(100, 150, 58, 64, 6, "#222", .7)}
+      ${ticks(100, 150, 50, 56, 30, "#8a1f1f", 1.4)}
+      ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => {
+        const p = P(100, 150, 42, n * 30);
+        return `<text x="${f(p[0])}" y="${f(p[1] + 3)}" text-anchor="middle" font-size="9" font-weight="700" fill="#161616">${n}</text>`;
+      }).join("")}
+      <text x="100" y="132" text-anchor="middle" font-size="6" fill="#8a1f1f" font-weight="700">NS</text>
+      <text x="100" y="168" text-anchor="middle" font-size="3.6" fill="#333">RAILROAD</text>
+      <circle cx="100" cy="186" r="12" fill="#f7f4ee" stroke="#222" stroke-width=".5"/>
+      <g data-hand="subsec" data-cx="100" data-cy="186"><line y2="-8" stroke="#111" stroke-width="1"/></g>
+      ${handSet({ hands: "spade", hand: "#161616", second: "none" }, 100, 150)}
+    </svg>`;
+  }
+
+  function drawMickey(id) {
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="1933 character wristwatch, figure not reproduced">
+      ${metalDefs(id)}
+      <rect x="70" y="28" width="60" height="22" rx="4" fill="#c4552a"/>
+      <rect x="70" y="230" width="60" height="22" rx="4" fill="#c4552a"/>
+      <circle cx="100" cy="140" r="74" fill="url(#${id}-steel)"/>
+      <circle cx="100" cy="140" r="62" fill="#f7f4ee"/>
+      ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => {
+        const p = P(100, 140, 46, n * 30);
+        return `<text x="${f(p[0])}" y="${f(p[1] + 3)}" text-anchor="middle" font-size="9" font-weight="700">${n}</text>`;
+      }).join("")}
+      <circle cx="100" cy="178" r="14" fill="#f7f4ee" stroke="#222"/>
+      ${[0, 1, 2].map(i => {
+        const p = P(100, 178, 8, i * 120);
+        return `<polygon points="${f(p[0])},${f(p[1] - 3)} ${f(p[0] - 2)},${f(p[1] + 2)} ${f(p[0] + 2)},${f(p[1] + 2)}" fill="#222"/>`;
+      }).join("")}
+      <g data-hand="hour" data-cx="100" data-cy="140"><line y2="-24" stroke="#161616" stroke-width="3" stroke-linecap="round"/><circle cy="-26" r="4" fill="#f2c14e" stroke="#161616"/></g>
+      <g data-hand="minute" data-cx="100" data-cy="140"><line y2="-36" stroke="#161616" stroke-width="3" stroke-linecap="round"/><circle cy="-38" r="4" fill="#f2c14e" stroke="#161616"/></g>
+      <text x="100" y="124" text-anchor="middle" font-size="4" fill="#666">1933</text>
+    </svg>`;
+  }
+
+  function drawBigtick(id) {
+    let segs = "";
+    for (let i = 0; i < 60; i++) {
+      const a = P(100, 140, 58, i * 6);
+      const b = P(100, 140, 66, i * 6);
+      segs += `<line data-bigtic="${i}" x1="${f(a[0])}" y1="${f(a[1])}" x2="${f(b[0])}" y2="${f(b[1])}" stroke-width="2" stroke="#d5ddd0"/>`;
+    }
+    return `<svg viewBox="0 0 200 280" role="img" aria-label="Fossil Big Tic">
+      <rect x="74" y="20" width="52" height="28" rx="4" fill="#222"/>
+      <rect x="74" y="232" width="52" height="28" rx="4" fill="#222"/>
+      <circle cx="100" cy="140" r="78" fill="#222"/>
+      <circle cx="100" cy="140" r="68" fill="#f4f1ea"/>
+      ${segs}
+      ${ticks(100, 140, 46, 52, 30, "#161616", 2)}
+      <text x="100" y="118" text-anchor="middle" font-size="6" fill="#333">BIG TIC</text>
+      ${handSet({ hands: "stick", hand: "#161616", second: "none" }, 100, 140)}
+    </svg>`;
+  }
+
+  function drawYacht(id) {
+    const svg = wrist(id, {
+      alt: "Rolex Yacht-Master II",
+      strap: "oyster",
+      bezelFill: "#0b3f8a",
+      dial: "#f7f4ee",
+      markers: "baton",
+      marker: "#161616",
+      hands: "mercedes",
+      hand: "#161616",
+      second: "none",
+      pushers: true,
+      texts: [{ t: "ROLEX", y: -16, size: 6, fill: "#161616" }, { t: "YACHT-MASTER II", y: 16, size: 4, fill: "#333" }],
+      extra: `<g data-hand="regatta" data-cx="100" data-cy="146"><line y2="-50" stroke="#d23b32" stroke-width="1.3"/></g><circle cx="100" cy="186" r="16" fill="#f7f4ee" stroke="#0b3f8a" stroke-width="2"/><g data-hand="subsec" data-cx="100" data-cy="186"><line y2="-11" stroke="#d23b32" stroke-width="1"/></g>`
+    });
+    return svg;
+  }
+
+  function drawRainbow(id) {
+    const colors = ["#e23b2e", "#ee7a1a", "#f2c14e", "#7ac143", "#2aa7d8", "#3d4db7", "#7a3e9d"];
+    let stones = "";
+    colors.forEach((c, i) => {
+      const p = P(100, 146, 78, -50 + i * 8);
+      stones += `<rect x="${f(p[0] - 2)}" y="${f(p[1] - 5)}" width="4" height="8" rx=".6" fill="${c}" transform="rotate(${-50 + i * 8} ${f(p[0])} ${f(p[1])})"/>`;
+    });
+    for (let i = 0; i < 18; i++) {
+      const p = P(100, 146, 78, 20 + i * 16);
+      stones += `<rect x="${f(p[0] - 2)}" y="${f(p[1] - 4)}" width="3.4" height="7" fill="${colors[i % colors.length]}" transform="rotate(${20 + i * 16} ${f(p[0])} ${f(p[1])})"/>`;
+    }
+    return wrist(id, {
+      alt: "Rainbow Daytona",
+      strap: "oyster",
+      metal: "gold",
+      bezelFill: "#f4e7c4",
+      dial: "#f7f4ee",
+      markers: "baton",
+      marker: "#161616",
+      hands: "stick",
+      hand: "#161616",
+      second: "none",
+      chrono: true,
+      chronoColor: "#c4372a",
+      pushers: true,
+      subs: [{ hour: 3, kind: "30", r: 14, fill: "#111" }, { hour: 6, kind: "sec", r: 14, fill: "#111" }, { hour: 9, kind: "12", r: 14, fill: "#111" }],
+      texts: [{ t: "ROLEX", y: -18, size: 6, fill: "#161616" }, { t: "COSMOGRAPH", y: 20, size: 4, fill: "#333" }],
+      extra: stones
+    });
+  }
+
+  function drawPatek(id) {
+    return wrist(id, {
+      alt: "Patek perpetual calendar chronograph",
+      strap: "leather",
+      strapColor: "#6a3d28",
+      metal: "gold",
+      bezelFill: "#f3e6c4",
+      dial: "#f6f0e4",
+      markers: "baton",
+      marker: "#222",
+      hands: "feuille",
+      hand: "#222",
+      second: "none",
+      chrono: true,
+      chronoColor: "#1d4c86",
+      pushers: true,
+      subs: [{ hour: 9, kind: "30", r: 13 }, { hour: 3, kind: "12", r: 13 }, { hour: 6, kind: "sec", r: 12 }],
+      texts: [{ t: "PATEK PHILIPPE", y: -22, size: 4.2, fill: "#222" }, { t: "GENEVE", y: -14, size: 3.6, fill: "#222" }],
+      extra: moonDisc(id, 100, 112, 10) + `<text data-field="dow" x="100" y="168" text-anchor="middle" font-size="5" fill="#222">TUE</text><text data-field="month" x="78" y="176" text-anchor="middle" font-size="4" fill="#222">SEP</text>`
+    });
+  }
+
+  function drawMoon(id) {
+    return wrist(id, {
+      alt: "Blancpain Villeret complete calendar",
+      strap: "leather",
+      strapColor: "#f4efe4",
+      metal: "steel",
+      bezelFill: "#e7e1d6",
+      dial: "#f7f4ee",
+      markers: "roman",
+      marker: "#222",
+      hands: "feuille",
+      hand: "#1d4c86",
+      second: "none",
+      texts: [{ t: "BLANCPAIN", y: -8, size: 5, fill: "#222" }],
+      subs: [{ hour: 6, kind: "sec", r: 12 }],
+      extra: moonDisc(id, 100, 118, 12) + `<text data-field="dow" x="70" y="146" text-anchor="middle" font-size="5" fill="#222">TUE</text><text data-field="date" x="130" y="146" text-anchor="middle" font-size="7" fill="#222">8</text>`
+    });
+  }
+
+  function drawNomos(id) {
+    return wrist(id, {
+      alt: "NOMOS Metro",
+      strap: "leather",
+      strapColor: "#1d1d1d",
+      bezelFill: "#d5d8dc",
+      dial: "#f7f6f2",
+      markers: "baton",
+      marker: "#222",
+      hands: "dauphine",
+      hand: "#1d4c86",
+      second: "stick",
+      secondColor: "#1d4c86",
+      dateAt: 3,
+      dateBg: "#f7f6f2",
+      texts: [{ t: "NOMOS", y: -16, size: 6, fill: "#222" }, { t: "GLASHÜTTE", y: 22, size: 4, fill: "#444" }],
+      extra: `<path d="M78,168 h44" stroke="#222" stroke-width=".6"/><text x="100" y="178" text-anchor="middle" font-size="3.4" fill="#333">POWER RESERVE</text><g data-hand="reserve" data-cx="100" data-cy="164"><line y2="-10" stroke="#8a1f1f" stroke-width="1"/></g>`
+    });
+  }
+
+  function drawSnoopy(id) {
+    return wrist(id, {
+      alt: "Speedmaster anniversary, character omitted",
+      strap: "leather",
+      strapColor: "#1a1a1a",
+      bezelFill: "#111",
+      bezelNums: "tach",
+      bezelFg: "#eee",
+      dial: "#111",
+      markers: "baton",
+      marker: "#f4f4f4",
+      lume: true,
+      hands: "stick",
+      hand: "#f4f4f4",
+      second: "none",
+      chrono: true,
+      pushers: true,
+      subs: [{ hour: 9, kind: "sec", r: 15, fill: "#1a1a1a" }, { hour: 3, kind: "30", r: 15, fill: "#1a1a1a" }, { hour: 6, kind: "12", r: 14, fill: "#c0c6cc" }],
+      texts: [{ t: "Ω", y: -24, size: 8, fill: "#eee" }, { t: "SPEEDMASTER", y: -14, size: 4.4, fill: "#eee" }, { t: "50", y: 36, size: 6, fill: "#d0d4d8" }]
+    });
+  }
+
+  function drawFace(key, id) {
+    const face = FACES[key];
+    if (face.custom && CUSTOMS[face.custom]) return CUSTOMS[face.custom](id, face);
+    return wrist(id, face.spec || {});
+  }
+
+  const FACES = {
+    submariner: {
+      name: "Rolex Submariner Date 126610LN",
+      cadence: "sweep", vph: 28800, category: "Diver",
+      note: "Ceramic insert, maxi markers, Mercedes hands, cyclops date at 3, and a lollipop seconds hand. The archive photo is an aluminum-insert 16610; this drawing follows the catalog 126610LN.",
+      spec: { alt: "Rolex Submariner", strap: "oyster", bezelFill: "#0c0d0f", bezelNums: "diver", bezelFg: "#f4f1ea", dial: "#0e1012", markers: "maxi", lume: true, hands: "mercedes", second: "lollipop", dateAt: 3, cyclops: true, dateBg: "#f4f1ea", rehaut: true, chapter: "#2a2e32", texts: [{ t: "ROLEX", y: -18, size: 7 }, { t: "SUBMARINER", y: 22, size: 5.2 }, { t: "1000ft = 300m", y: 30, size: 4, weight: 500 }] }
+    },
+    speedmaster: { name: "Omega Speedmaster Moonwatch Professional 310.30.42.50.01.001", cadence: "sweep", vph: 21600, category: "Chronograph", note: "Black professional dial, DOT-over-90 tachymeter, lyre-lug suggestion, pump pushers, and running seconds at 9. Chronograph hands rest until started.", spec: { strap: "leather", strapColor: "#222", bezelFill: "#111", bezelNums: "tach", dial: "#141414", markers: "baton", lume: true, hands: "stick", hand: "#f4f4f4", second: "none", chrono: true, pushers: true, subs: [{ hour: 9, kind: "sec", r: 16, fill: "#1b1b1b" }, { hour: 3, kind: "30", r: 16, fill: "#1b1b1b" }, { hour: 6, kind: "12", r: 15, fill: "#1b1b1b" }], texts: [{ t: "Ω", y: -22, size: 8 }, { t: "Speedmaster", y: -12, size: 5, serif: true }, { t: "PROFESSIONAL", y: -4, size: 3.6 }] } },
+    nautilus: { name: "Patek Philippe Nautilus 5811/1G-001", cadence: "sweep", vph: 28800, category: "Dress", note: "Drawn as the Tiffany blue 5711/1A-018 in the supplied photographs: rounded octagon, horizontal dial lines, date at 3. The catalog label is the white-gold 5811/1G-001.", spec: { shape: "porthole", strap: "bracelet", texture: "lines", dial: "#7ed4d2", markers: "baton", marker: "#4a5560", hands: "stick", hand: "#3d4650", second: "stick", secondColor: "#3d4650", dateAt: 3, dateBg: "#f7f7f7", texts: [{ t: "PATEK PHILIPPE", y: -16, size: 4.4, fill: "#243038" }, { t: "TIFFANY &amp; CO.", y: 28, size: 4, fill: "#243038" }] } },
+    royaloak: { name: "Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06", cadence: "sweep", vph: 28800, category: "Dress", note: "Octagonal bezel with eight screws, Grande Tapisserie, date at 3, integrated bracelet. Drawn in the black dial seen in the archive.", spec: { shape: "octagon", strap: "bracelet", texture: "tap", dial: "#16181c", markers: "baton", lume: true, hands: "stick", second: "stick", dateAt: 3, dateBg: "#f4f1ea", texts: [{ t: "AUDEMARS PIGUET", y: -16, size: 4.2 }, { t: "AUTOMATIC", y: 24, size: 3.6 }] } },
+    calatrava: { name: "Patek Philippe Calatrava 5227G-015", cadence: "sweep", vph: 28800, category: "Dress", note: "Officer-style dress watch: opaline dial, applied batons, railroad track, dauphine hands, date at 3. Drawn from the published 5227G layout; that archive folder is empty.", spec: { strap: "leather", strapColor: "#5c4030", bezelFill: "#efe8dc", dial: "#f7f3ea", markers: "baton", marker: "#333", hands: "dauphine", hand: "#222", second: "stick", secondColor: "#222", dateAt: 3, chapter: "#c8bba4", texts: [{ t: "PATEK PHILIPPE", y: -18, size: 4.2, fill: "#222" }, { t: "GENÈVE", y: -10, size: 3.6, fill: "#222" }] } },
+    tank: { name: "Cartier Tank Louis Cartier WGTA0342", cadence: "tick", category: "Dress", custom: "tank", note: "Rectangular gold case, Roman numerals on a rectangular path, blued sword hands, cabochon crown. Quartz tick. Archive folder empty; drawn from the WGTA0342 description." },
+    reverso: { name: "Jaeger-LeCoultre Reverso", cadence: "sweep", vph: 28800, category: "Dress", custom: "reverso", note: "Reversible rectangular case, side gadroons, blued hands, small seconds at 6. Archive folder empty." },
+    seamaster: { name: "Omega Seamaster Diver 300M", cadence: "sweep", vph: 25200, category: "Diver", note: "Blue ceramic bezel and wave dial, helium valve, skeleton hands, date at 6, lollipop seconds.", spec: { strap: "bracelet", bezelFill: "#0b3a78", bezelNums: "diver", dial: "#0d3f86", texture: "wave", markers: "baton", lume: true, hands: "alpha", second: "lollipop", dateAt: 6, dateBg: "#f4f1ea", helium: true, texts: [{ t: "Ω", y: -20, size: 8 }, { t: "SEAMASTER", y: 18, size: 4.5 }] } },
+    lange1: { name: "A. Lange & Söhne Lange 1", cadence: "sweep", vph: 21600, category: "Dress", custom: "lange", note: "Asymmetric dial: time on the left, outsize date, power reserve, and small seconds. Reserve is illustrative." },
+    portugieser: { name: "IWC Portugieser", cadence: "sweep", vph: 28800, category: "Dress", note: "Arabic railway dial, feuille hands, small seconds at 6, date at 3. Archive folder empty; drawn as the automatic rather than a chronograph so the seconds hand runs.", spec: { strap: "leather", strapColor: "#1e3a6e", bezelFill: "#e6e1d6", dial: "#f7f4ee", markers: "arabic", marker: "#1e3a6e", hands: "feuille", hand: "#1e3a6e", second: "none", dateAt: 3, chapter: "#1e3a6e", subs: [{ hour: 6, kind: "sec", r: 14 }], texts: [{ t: "IWC", y: -20, size: 7, fill: "#1e3a6e" }, { t: "SCHAFFHAUSEN", y: -10, size: 3.6, fill: "#1e3a6e" }] } },
+    daytona: { name: "Rolex Daytona", cadence: "sweep", vph: 28800, category: "Chronograph", note: "Ceramic tachymeter, white dial, black registers, screw pushers. Running seconds at 6. Chronograph rests until started.", spec: { strap: "oyster", bezelFill: "#111", bezelNums: "tach", bezelFg: "#eee", dial: "#f7f4ee", markers: "baton", marker: "#161616", lume: true, hands: "stick", hand: "#161616", second: "none", chrono: true, pushers: true, subs: [{ hour: 3, kind: "30", r: 15, fill: "#111" }, { hour: 6, kind: "sec", r: 15, fill: "#111" }, { hour: 9, kind: "12", r: 15, fill: "#111" }], texts: [{ t: "ROLEX", y: -18, size: 6, fill: "#161616" }, { t: "COSMOGRAPH", y: 22, size: 3.8, fill: "#333" }] } },
+    gmt: { name: "Rolex GMT-Master II", cadence: "sweep", vph: 28800, category: "Diver", note: "Pepsi-style 24-hour bezel suggested in red and blue, black dial, red GMT hand showing UTC, cyclops date at 3.", spec: { strap: "oyster", bezelFill: "#7a1d2b", bezelNums: "diver", dial: "#101114", markers: "maxi", lume: true, hands: "mercedes", second: "lollipop", dateAt: 3, cyclops: true, gmt: true, gmtColor: "#d23b32", texts: [{ t: "ROLEX", y: -18, size: 6 }, { t: "GMT-MASTER II", y: 24, size: 4 }] } },
+    datejust: { name: "Rolex Datejust", cadence: "sweep", vph: 28800, category: "Dress", note: "Fluted bezel, Jubilee bracelet, champagne sunburst dial, cyclops date at 3.", spec: { strap: "jubilee", bezel: "fluted", metal: "gold", bezelFill: "#e7d7a4", dial: "#e7d3a8", texture: "sun", markers: "baton", marker: "#5c4318", lume: true, hands: "mercedes", hand: "#5c4318", second: "lollipop", secondColor: "#5c4318", dateAt: 3, cyclops: true, texts: [{ t: "ROLEX", y: -16, size: 6, fill: "#5c4318" }, { t: "DATEJUST", y: 24, size: 4, fill: "#5c4318" }] } },
+    snowflake: { name: "Grand Seiko Snowflake", cadence: "glide", category: "Dress", note: "Titanium case, textured dial, faceted markers, date at 3, power-reserve fan, and a continuously gliding blue seconds hand.", spec: { strap: "bracelet", metal: "ti", bezelFill: "#d5dbdf", texture: "snow", dial: "#f4f1ea", markers: "baton", marker: "#8a9298", hands: "snowflake", hand: "#8a9298", second: "stick", secondColor: "#1d4ed8", dateAt: 3, texts: [{ t: "GS", y: -20, size: 8, fill: "#333" }, { t: "Grand Seiko", y: -12, size: 4, fill: "#333", serif: true }, { t: "SPRING DRIVE", y: 28, size: 3.4, fill: "#666" }], extra: `<path d="M62,168 A18,18 0 0 1 86,168" fill="#e7e2d8" stroke="#aaa"/><g data-hand="reserve" data-cx="74" data-cy="168"><line y2="-12" stroke="#1d4ed8" stroke-width="1.1"/></g>` } },
+    gshock: { name: "Casio G-Shock DW-5600UE-1", cadence: "digital", category: "Digital", custom: "gshock", note: "Square resin module, positive LCD, weekday and month-date, four buttons. Digits are drawn as segments and switched each second." },
+    f91w: { name: "Casio F-91W", cadence: "digital", category: "Digital", custom: "f91w", note: "Three-button resin case, blue pinstripes, compact LCD with weekday and date. Archive folder empty." },
+    apple: { name: "Apple Watch", cadence: "glide", category: "Digital", custom: "apple", note: "Activity rings are a fixed illustration, not live health data. The orange seconds hand glides. Archive folder empty." },
+    swatch: { name: "Swatch Once Again", cadence: "tick", category: "Dress", note: "Black Gent case, white dial, Arabic numerals, day-date window. Quartz tick. Archive folder empty.", spec: { strap: "rubber", strapColor: "#111", metal: "black", bezelFill: "#111", dial: "#f7f7f7", markers: "arabic", marker: "#111", hands: "stick", hand: "#111", second: "stick", secondColor: "#111", dayDate: true, dateAt: 3, texts: [{ t: "swatch", y: -8, size: 7, fill: "#111" }] } },
+    braun: { name: "Braun BN0021", cadence: "tick", category: "Dress", note: "Thin steel case, black dial, sparse batons, yellow seconds. Quartz tick. Archive folder empty.", spec: { strap: "leather", strapColor: "#111", bezelFill: "#c5ccd0", dial: "#111", markers: "baton", hands: "stick", second: "stick", secondColor: "#e2c14a", texts: [{ t: "BRAUN", y: 26, size: 4 }] } },
+    mondaine: { name: "Mondaine Swiss Railway", cadence: "mondaine", category: "Field", note: "Crownless case, railway ticks, square SBB hands, red seconds hand that reaches 12 early and pauses. Archive folder empty.", spec: { strap: "leather", strapColor: "#111", crown: "none", bezelFill: "#d7dbe0", dial: "#f7f7f7", markers: "baton", marker: "#111", hands: "sbb", hand: "#111", second: "lollipop", secondColor: "#d23b32", chapter: "#111", texts: [{ t: "SBB CFF FFS", y: 24, size: 4, fill: "#333" }] } },
+    monaco: { name: "TAG Heuer Monaco Calibre 11", cadence: "sweep", vph: 28800, category: "Chronograph", custom: "monaco", note: "Square blue dial, crown on the left, pushers on the right, silver registers, date at 6. Archive folder empty." },
+    panerai: { name: "Panerai Luminor Marina PAM03312", cadence: "sweep", vph: 28800, category: "Diver", note: "Cushion case, crown bridge, sandwich dial, small seconds at 9, date at 3.", spec: { strap: "leather", strapColor: "#1a1a1a", metal: "steel", bezelFill: "#d5dbe0", dial: "#101114", markers: "baton", marker: "#e8e0c8", lume: true, hands: "syringe", second: "none", dateAt: 3, dateBg: "#f4f1ea", subs: [{ hour: 9, kind: "sec", r: 16, fill: "#1a1c20" }], texts: [{ t: "LUMINOR MARINA", y: -8, size: 4.2 }, { t: "PAM03312", y: 26, size: 3.6 }], extra: `<path d="M168,132 h18 v28 h-18" fill="#c5ccd0" stroke="#222"/><rect x="176" y="140" width="8" height="12" fill="#9aa"/>` } },
+    f1: { name: "Rolex Trackside Clock", cadence: "sweep", vph: 28800, category: "Clock", custom: "f1", note: "Large white dial on a stand, crown mark, Mercedes hands. Not a wristwatch." },
+    bigben: { name: "Big Ben (Elizabeth Tower)", cadence: "tick", category: "Clock", custom: "bigben", note: "Black dial, gilt Roman numerals and hands in a stone surround. The tower itself is reduced to the clock frame. Archive folder empty." },
+    seiko5: { name: "Seiko 5 Sports SRPD51", cadence: "sweep", vph: 21600, category: "Diver", note: "Black dial, knurled bezel, day-date at 3, crown at 4 o'clock, lumed markers.", spec: { strap: "bracelet", bezel: "coin", bezelFill: "#111", dial: "#101114", markers: "mixed", lume: true, hands: "stick", second: "stick", secondColor: "#f4f4f4", dayDate: true, dateAt: 3, crown: "4", texts: [{ t: "5", y: -18, size: 10 }, { t: "SPORTS", y: 22, size: 4 }] } },
+    moonphase: { name: "Blancpain Villeret Quantième Complet", cadence: "sweep", vph: 21600, category: "Dress", custom: "moon", note: "Complete calendar with moon phase from the mean synodic month. Archive folder empty." },
+    richardmille: { name: "Richard Mille RM 011 Felipe Massa", cadence: "sweep", vph: 28800, category: "Chronograph", custom: "richard", note: "Tonneau skeleton, numbered flange, three registers, blue strap, column-wheel pushers. Drawn from the Felipe Massa photographs." },
+    blackbay58: { name: "TUDOR Black Bay Fifty-Eight M79030N", cadence: "sweep", vph: 28800, category: "Diver", note: "Gilt snowflake hour and lollipop seconds on a black dial, no date.", spec: { strap: "leather", strapColor: "#3a2418", bezelFill: "#1a120c", bezelNums: "diver", bezelFg: "#d7c08a", dial: "#14110e", markers: "mixed", marker: "#d7c08a", hands: "snowflake", hand: "#d7c08a", second: "lollipop", secondColor: "#d7c08a", texts: [{ t: "TUDOR", y: -14, size: 6, fill: "#d7c08a" }, { t: "FIFTY-EIGHT", y: 22, size: 3.6, fill: "#d7c08a" }] } },
+    navitimer: { name: "Breitling Navitimer B01 Chronograph 43", cadence: "sweep", vph: 28800, category: "Chronograph", note: "Slide-rule bezel, black dial, three white-ringed registers, wing logo as text.", spec: { strap: "leather", strapColor: "#1a1a1a", bezelFill: "#111", bezelNums: "minute", bezelFg: "#ddd", dial: "#101114", markers: "baton", hands: "stick", second: "none", chrono: true, pushers: true, subs: [{ hour: 9, kind: "sec", r: 15, fill: "#f4f1ea" }, { hour: 3, kind: "30", r: 15, fill: "#f4f1ea" }, { hour: 6, kind: "12", r: 15, fill: "#f4f1ea" }], texts: [{ t: "BREITLING", y: -16, size: 4.6 }, { t: "NAVITIMER", y: 8, size: 4 }] } },
+    elprimero: { name: "Zenith Chronomaster Sport 03.3100.3600/69.M3100", cadence: "sweep", vph: 36000, category: "Chronograph", note: "Tricolor registers and a 1/10-second hand stepping ten times a second.", spec: { strap: "bracelet", bezelFill: "#15171a", bezelNums: "tach", dial: "#101114", markers: "baton", hands: "stick", second: "none", chrono: true, pushers: true, subs: [{ hour: 3, kind: "30", r: 14, fill: "#c5d0d8" }, { hour: 6, kind: "tenth", r: 14, fill: "#1d4c86" }, { hour: 9, kind: "12", r: 14, fill: "#d0d0d0" }], texts: [{ t: "ZENITH", y: -16, size: 6 }, { t: "EL PRIMERO", y: 18, size: 3.8 }] } },
+    overseas: { name: "Vacheron Constantin Overseas Self-Winding 4520V/210A-B128", cadence: "sweep", vph: 28800, category: "Dress", note: "Blue sunburst dial and Maltese-cross bezel, as in the supplied 4500V photographs. Catalog reference is 4520V/210A-B128.", spec: { strap: "bracelet", bezelFill: "#0d2f6b", dial: "#123a86", texture: "sun", markers: "baton", hands: "dauphine", second: "stick", dateAt: 3, dateBg: "#f7f4ee", texts: [{ t: "VACHERON CONSTANTIN", y: -16, size: 3.6 }, { t: "GENÈVE", y: -8, size: 3.4 }], extra: `<path d="M100,70 v12 M100,210 v-12 M28,146 h12 M172,146 h-12" stroke="#d5dbe8" stroke-width="3"/>` } },
+    bigbang: { name: "Hublot Big Bang Unico Red Magic 42", cadence: "sweep", vph: 28800, category: "Chronograph", note: "Red ceramic bezel and black case for the catalog Red Magic. Several archive photos show the steel 301 instead.", spec: { strap: "rubber", strapColor: "#111", metal: "black", bezelFill: "#b42318", dial: "#1a1a1a", markers: "baton", marker: "#f2f2f2", hands: "stick", second: "none", chrono: true, pushers: true, subs: [{ hour: 9, kind: "sec", r: 13 }, { hour: 3, kind: "30", r: 13 }, { hour: 6, kind: "12", r: 13, fill: "#111" }], texts: [{ t: "HUBLOT", y: -16, size: 6 }, { t: "UNICO", y: 20, size: 4 }], extra: `<circle cx="100" cy="70" r="3" fill="#eee"/><circle cx="154" cy="100" r="3" fill="#eee"/><circle cx="154" cy="192" r="3" fill="#eee"/><circle cx="46" cy="100" r="3" fill="#eee"/><circle cx="46" cy="192" r="3" fill="#eee"/><circle cx="100" cy="214" r="3" fill="#eee"/>` } },
+    prx: { name: "Tissot PRX 40mm Powermatic 80 T137.407.11.041.00", cadence: "sweep", vph: 21600, category: "Dress", note: "Integrated bracelet, blue dial, baton markers, date at 3. Archive folder empty.", spec: { shape: "porthole", strap: "bracelet", dial: "#163a78", markers: "baton", hands: "stick", second: "stick", dateAt: 3, dateBg: "#f7f4ee", texts: [{ t: "TISSOT", y: -16, size: 6 }, { t: "PRX", y: 22, size: 5 }] } },
+    khaki: { name: "Hamilton Khaki Field Mechanical 38mm H69439931", cadence: "sweep", vph: 21600, category: "Field", note: "Black field dial, 24-hour hint, cathedral hands, leather strap. Archive folder empty.", spec: { strap: "leather", strapColor: "#4a3728", bezelFill: "#222", dial: "#161616", markers: "arabic", marker: "#f2f2f2", twelve: 12, hands: "cathedral", second: "stick", secondColor: "#f2f2f2", texts: [{ t: "HAMILTON", y: -8, size: 4.5 }, { t: "KHAKI FIELD", y: 26, size: 3.6 }] } },
+    br03: { name: "Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB", cadence: "sweep", vph: 28800, category: "Field", custom: "br03", note: "Square instrument case, large 12-3-6-9 numerals. Archive folder empty." },
+    twinbell: { name: "Westclox Twin Bell Alarm Clock 70010A", cadence: "tick", category: "Clock", custom: "twinbell", note: "Two bells, carry handle, Arabic dial, alarm pointer held at 12, splayed legs." },
+    grandfather: { name: "Comtoise Longcase Clock — Musée du Temps, c. 1850", cadence: "tick", category: "Clock", custom: "grandfather", note: "A Comtoise family longcase with brass pediment and lyre pendulum, not a traced museum object. Archive folder empty." },
+    orloj: { name: "Prague Old Town Astronomical Clock (2018-restored astrolabe)", cadence: "tick", category: "Clock", custom: "orloj", note: "Gold Roman ring, zodiac band turning with the date, day/night sector, sun hour hand. Side figures are blocks, not copied statues." },
+    marine: { name: "Ulysse Nardin Marine Torpilleur 1182-310/42", cadence: "sweep", vph: 28800, category: "Dress", note: "White lacquer dial, blued hands, railroad track, date at 3. Archive photos include the related 1183; this follows the white Torpilleur layout.", spec: { strap: "leather", strapColor: "#1a2744", bezelFill: "#dfe3e6", dial: "#f7f4ee", markers: "roman", marker: "#1d4c86", hands: "sword", hand: "#1d4c86", second: "stick", secondColor: "#1d4c86", dateAt: 3, chapter: "#1d4c86", texts: [{ t: "ULYSSE NARDIN", y: -8, size: 4, fill: "#1d4c86" }] } },
+    freak: { name: "Ulysse Nardin Freak X Carb 2303-270/CARB", cadence: "sweep", vph: 28800, category: "Dress", custom: "freak", note: "No conventional hands. The carriage is the minute indication and a separate arrow marks the hour. Drawn in the rose-gold bezel of the photographs rather than the carbon catalog reference." },
+    patek: { name: "Patek Philippe Perpetual Calendar Chronograph 5270J-001", cadence: "sweep", vph: 28800, category: "Chronograph", custom: "patek", note: "Yellow-gold case, cream dial, moon, day, month, and three registers. Leap-year window is not simulated." },
+    explorer: { name: "Rolex Explorer 36 124270", cadence: "sweep", vph: 28800, category: "Field", note: "Black 3-6-9 dial, Mercedes hands, no date.", spec: { strap: "oyster", bezelFill: "#c5ced3", dial: "#101114", markers: "mixed", lume: true, hands: "mercedes", second: "lollipop", texts: [{ t: "ROLEX", y: -16, size: 6 }, { t: "EXPLORER", y: 8, size: 5 }, { t: "3", y: 2, x: 36, size: 10 }, { t: "9", y: 2, x: -36, size: 10 }, { t: "6", y: 40, size: 10 }] } },
+    santos: { name: "Cartier Santos de Cartier Large WSSA0018", cadence: "sweep", vph: 28800, category: "Dress", custom: "santos", note: "Square case, exposed screws, Roman numerals, blue sword hands, date at 6, integrated bracelet." },
+    bigpilot: { name: "IWC Big Pilot's Watch 43 IW329301", cadence: "sweep", vph: 28800, category: "Field", note: "Oversized triangle at 12, Arabic numerals, large crown, date at 3.", spec: { strap: "leather", strapColor: "#1a1a1a", bezelFill: "#222", dial: "#101114", markers: "arabic", marker: "#f2f2f2", hands: "feuille", second: "stick", dateAt: 3, texts: [{ t: "IWC", y: -6, size: 5 }, { t: "BIG PILOT", y: 28, size: 3.6 }], extra: `<polygon points="100,92 92,108 108,108" fill="#f2f2f2"/>` } },
+    fiftyfathoms: { name: "Blancpain Fifty Fathoms Automatique 5015 1130 71S", cadence: "sweep", vph: 28800, category: "Diver", note: "Black dial, unidirectional bezel, sword hands, rectangular 12, date at 3. Archive folder empty.", spec: { strap: "rubber", strapColor: "#111", bezelFill: "#111", bezelNums: "diver", dial: "#101114", markers: "baton", lume: true, hands: "sword", second: "lollipop", dateAt: 3, texts: [{ t: "BLANCPAIN", y: -12, size: 4.4 }, { t: "FIFTY FATHOMS", y: 22, size: 3.6 }] } },
+    typexx: { name: "Breguet Type XX Chronographe 2067 2067ST/92/3WU", cadence: "sweep", vph: 28800, category: "Chronograph", note: "Fluted bezel, Arabic numerals, two registers, flyback pushers, date at 6.", spec: { strap: "leather", strapColor: "#1a1a1a", bezel: "coin", bezelFill: "#c5ccd0", dial: "#101114", markers: "arabic", marker: "#f2f2f2", hands: "feuille", hand: "#f2f2f2", second: "none", chrono: true, pushers: true, dateAt: 6, dateBg: "#f7f4ee", subs: [{ hour: 3, kind: "30", r: 13, fill: "#f4f1ea" }, { hour: 9, kind: "sec", r: 13, fill: "#f4f1ea" }], texts: [{ t: "BREGUET", y: -8, size: 5 }, { t: "TYPE XX", y: 16, size: 4 }] } },
+    radiomir: { name: "Panerai Radiomir Black Seal Logo PAM00754", cadence: "sweep", vph: 28800, category: "Diver", note: "Cushion case, wire lugs, sandwich dial, small seconds. No crown bridge.", spec: { strap: "leather", strapColor: "#3a2418", bezelFill: "#c5ccd0", dial: "#101114", markers: "baton", marker: "#e8e0c8", lume: true, hands: "syringe", second: "none", subs: [{ hour: 9, kind: "sec", r: 14, fill: "#1a1c20" }], texts: [{ t: "RADIOMIR", y: -6, size: 5 }, { t: "PAM00754", y: 26, size: 3.6 }], extra: `<path d="M70,70 Q40,146 70,222" fill="none" stroke="#c5ccd0" stroke-width="3"/><path d="M130,70 Q160,146 130,222" fill="none" stroke="#c5ccd0" stroke-width="3"/>` } },
+    carrera: { name: "TAG Heuer Carrera Chronograph CBN2011.BA0642", cadence: "sweep", vph: 28800, category: "Chronograph", note: "Glassbox flange, black dial, three registers, date window.", spec: { strap: "leather", strapColor: "#1a1a1a", bezelFill: "#111", bezelNums: "tach", dial: "#101114", markers: "baton", hands: "stick", second: "none", chrono: true, pushers: true, dateAt: 6, dateBg: "#f7f4ee", subs: [{ hour: 3, kind: "30", r: 13 }, { hour: 9, kind: "12", r: 13 }, { hour: 12, kind: "sec", r: 12, atR: 28 }], texts: [{ t: "TAG Heuer", y: -4, size: 5 }, { t: "CARRERA", y: 18, size: 4 }] } },
+    snoopy: { name: "Omega Speedmaster \"Silver Snoopy Award\" 50th Anniversary 310.32.42.50.02.001", cadence: "sweep", vph: 21600, category: "Chronograph", custom: "snoopy", note: "Anniversary Speedmaster layout. The Snoopy figure is not drawn; a 50 mark and pale register stand in for the award medallion." },
+    milgauss: { name: "Rolex Milgauss 116400GV-0002 \"Z-Blue\"", cadence: "sweep", vph: 28800, category: "Dress", note: "Blue dial, green-tinted crystal, orange lightning seconds hand.", spec: { strap: "oyster", bezelFill: "#9fb8c4", dial: "#123a86", texture: "sun", markers: "baton", marker: "#f2f2f2", hands: "mercedes", second: "lightning", secondColor: "#ee7a1a", texts: [{ t: "ROLEX", y: -16, size: 6 }, { t: "MILGAUSS", y: 22, size: 4 }], extra: `<circle cx="100" cy="146" r="64" fill="#7dffa8" opacity=".08"/>` } },
+    yachtmaster2: { name: "Rolex Yacht-Master II 126680", cadence: "sweep", vph: 28800, category: "Chronograph", custom: "yacht", note: "White dial, blue ceramic bezel, central regatta hand that restarts every ten minutes, countdown subdial at 6." },
+    jorggray: { name: "Jorg Gray JGC6500 Secret Service Edition", cadence: "tick", category: "Dress", note: "Sober black dial, coin-edge bezel, date at 3, leather strap. Quartz tick.", spec: { strap: "leather", strapColor: "#111", bezel: "coin", bezelFill: "#c5ccd0", dial: "#101114", markers: "baton", hands: "stick", second: "stick", dateAt: 3, texts: [{ t: "JORG GRAY", y: -14, size: 5 }, { t: "JGC6500", y: 24, size: 3.6 }] } },
+    rainbow: { name: "Rolex Cosmograph Daytona 116595RBOW-0001", cadence: "sweep", vph: 28800, category: "Chronograph", custom: "rainbow", note: "Gold case, rainbow baguette bezel, black registers. Stones are simplified rectangles, not traced gem photographs." },
+    railroad: { name: "Norfolk Southern Railroad Pocket Watch (1994)", cadence: "tick", category: "Clock", custom: "railroad", note: "Open-face pocket watch, Arabic numerals, railroad track, small seconds. The company mark is an NS monogram, not a copied emblem. Archive folder empty." },
+    nomosmetro: { name: "NOMOS Glashütte Metro date power reserve 1101", cadence: "sweep", vph: 21600, category: "Dress", custom: "nomos", note: "Bauhaus dial, date at 3, power-reserve arc. The reserve follows a daily sine and is not a real mainspring." },
+    grandcentral: { name: "Grand Central Terminal Information Booth Clock (1913)", cadence: "tick", category: "Clock", custom: "grandcentral", note: "Brass four-sided booth clock, cream dial, Arabic numerals, acorn finial. Side dials are foreshortened and share the front time." },
+    howardmiller: { name: "Howard Miller Chateau 610-520 Grandfather Clock", cadence: "tick", category: "Clock", custom: "howard", note: "Bonnet, moon arch, brass chapter ring, pendulum and weights. The moon is a computed phase, though the real arch is a fixed accent." },
+    mickey: { name: "Ingersoll Mickey Mouse (1933)", cadence: "tick", category: "Dress", custom: "mickey", note: "1933 round chrome case and white dial. The copyrighted character is not reproduced; yellow-tipped hands and a starred seconds disc stand in." },
+    kingkhaki: { name: "Hamilton Khaki Field King Auto H64455533", cadence: "sweep", vph: 21600, category: "Field", note: "Larger field watch, cream dial, 24-hour numerals, date at 3. Archive folder empty.", spec: { strap: "leather", strapColor: "#3a2a1c", bezelFill: "#222", dial: "#f3ead7", markers: "arabic", marker: "#161616", hands: "cathedral", hand: "#161616", second: "stick", secondColor: "#161616", dateAt: 3, dateBg: "#f7f4ee", dateFg: "#161616", texts: [{ t: "HAMILTON", y: -8, size: 4.4, fill: "#161616" }, { t: "KHAKI FIELD KING", y: 26, size: 3.2, fill: "#161616" }] } },
+    casiomq24: { name: "CASIO MQ-24-7B2LL", cadence: "tick", category: "Dress", note: "Simple resin analog, white dial, stick markers and hands. Archive folder empty.", spec: { strap: "rubber", strapColor: "#111", metal: "black", bezelFill: "#111", dial: "#f7f7f7", markers: "baton", marker: "#161616", hands: "stick", hand: "#161616", second: "stick", secondColor: "#c4372a", texts: [{ t: "CASIO", y: -16, size: 6, fill: "#161616" }, { t: "QUARTZ", y: 24, size: 4, fill: "#666" }] } },
+    bigtic: { name: "Fossil Big Tic JR-7845", cadence: "tick", category: "Digital", custom: "bigtic", note: "Analog hands plus a 60-segment LCD ring. One segment lights per second and the ring clears at the next minute. Archive folder empty." },
+    timexindiglo: { name: "Timex Easy Reader Day Date T20041 (INDIGLO)", cadence: "tick", category: "Dress", note: "White easy-reader, day-date at 3. The blue-green INDIGLO wash appears from 20:00 to 06:00 local, instead of a crown press. Archive folder empty.", spec: { strap: "leather", strapColor: "#1a2744", bezelFill: "#c5ccd0", dial: "#f7f7f7", markers: "arabic", marker: "#161616", hands: "stick", hand: "#161616", second: "stick", secondColor: "#c4372a", dayDate: true, dateAt: 3, indiglo: true, texts: [{ t: "TIMEX", y: -8, size: 6, fill: "#161616" }, { t: "INDIGLO", y: 26, size: 3.6, fill: "#1d4c86" }] } }
+  };
+
+  const FACE_KEYS = Object.keys(FACES);
+
+  function offsetMinutes(tz, date) {
+    const fmt = new Intl.DateTimeFormat("en-US", { timeZone: tz, timeZoneName: "shortOffset", hour: "2-digit" });
+    const name = fmt.formatToParts(date).find(p => p.type === "timeZoneName");
+    const raw = name ? name.value : "GMT";
+    const m = raw.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/);
+    if (!m) return 0;
+    const sign = m[1] === "-" ? -1 : 1;
+    return sign * (Number(m[2]) * 60 + Number(m[3] || 0));
+  }
+
+  function localClock(tz, date) {
+    const off = offsetMinutes(tz, date);
+    const local = new Date(date.getTime() + off * 60000);
+    return {
+      h: local.getUTCHours(),
+      m: local.getUTCMinutes(),
+      s: local.getUTCSeconds(),
+      ms: local.getUTCMilliseconds(),
+      dow: local.getUTCDay(),
+      date: local.getUTCDate(),
+      month: local.getUTCMonth(),
+      year: local.getUTCFullYear(),
+      off
+    };
+  }
+
+  function dayOfYear(clock) {
+    const t = Date.UTC(clock.year, clock.month, clock.date);
+    const start = Date.UTC(clock.year, 0, 1);
+    return Math.floor((t - start) / 86400000) + 1;
+  }
+
+  function moonPhase(date) {
+    const known = Date.UTC(2000, 0, 6, 18, 14);
+    const syn = 29.530588853 * 86400000;
+    return ((date.getTime() - known) % syn + syn) % syn / syn;
+  }
+
+  function skyState(clock) {
+    const city = byName[clock.city];
+    const lat = ((city && city.lat) || 0) * Math.PI / 180;
+    const decl = 23.44 * Math.PI / 180 * Math.sin((360 / 365) * (dayOfYear(clock) - 81) * Math.PI / 180);
+    const ha = (clock.h + clock.m / 60 - 12) * 15 * Math.PI / 180;
+    const elev = Math.asin(Math.sin(lat) * Math.sin(decl) + Math.cos(lat) * Math.cos(decl) * Math.cos(ha));
+    if (elev > 0.04) return "Daylight";
+    if (elev > -0.08) return clock.h < 12 ? "Dawn" : "Dusk";
+    return "Night";
+  }
+
+  function displayedSecond(face, clock) {
+    const exact = clock.s + clock.ms / 1000;
+    if (reduced || face.cadence === "tick" || face.cadence === "digital") return clock.s;
+    if (face.cadence === "glide") return exact;
+    if (face.cadence === "mondaine") {
+      if (exact >= 58) return 0;
+      return exact * (60 / 58);
+    }
+    const hz = (face.vph || 28800) / 3600;
+    return Math.floor(exact * hz) / hz;
+  }
+
+  function formatOffset(min) {
+    const sign = min >= 0 ? "+" : "−";
+    const abs = Math.abs(min);
+    const h = Math.floor(abs / 60);
+    const m = abs % 60;
+    return "UTC" + sign + String(h) + (m ? ":" + String(m).padStart(2, "0") : "");
+  }
+
+  let reduced = false;
+  try { reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { reduced = false; }
+
+  let cities = [];
+  let seq = 0;
+  let sheetCat = "All";
+  let inspectKey = null;
+  let pose = null;
+  let chrono = { running: false, base: 0, started: 0 };
+  const suggestIndex = { i: -1 };
+
+  function defaultCities() {
+    return [
+      ["Honolulu", "submariner"],
+      ["Los Angeles", "speedmaster"],
+      ["New York", "nautilus"],
+      ["London", "royaloak"],
+      ["Dubai", "tank"],
+      ["Singapore", "seamaster"],
+      ["Tokyo", "snowflake"],
+      ["Sydney", "bigben"]
+    ].filter(([, face]) => FACES[face]).map(([name, face]) => ({ name, face, chrono: { running: false, base: 0, started: 0 } }));
+  }
+
+  function loadCities() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(STORE) || "null");
+      if (Array.isArray(raw) && raw.length && raw.every(c => byName[c.name] && FACES[c.face])) {
+        cities = raw.map(c => ({ name: c.name, face: c.face, chrono: c.chrono || { running: false, base: 0, started: 0 } }));
+        return;
+      }
+    } catch (e) { /* keep defaults */ }
+    cities = defaultCities();
+  }
+
+  function saveCities() {
+    try { localStorage.setItem(STORE, JSON.stringify(cities)); } catch (e) { /* private mode */ }
+  }
+
+  function sortCities(now) {
+    cities.sort((a, b) => {
+      const oa = offsetMinutes(byName[a.name].tz, now);
+      const ob = offsetMinutes(byName[b.name].tz, now);
+      if (oa !== ob) return oa - ob;
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  function unusedFaces(exceptName) {
+    const used = new Set(cities.filter(c => c.name !== exceptName).map(c => c.face));
+    return FACE_KEYS.filter(k => !used.has(k));
+  }
+
+  function shuffleOne(name) {
+    const city = cities.find(c => c.name === name);
+    if (!city) return;
+    const pool = unusedFaces(name);
+    const choices = pool.length ? pool : FACE_KEYS.filter(k => k !== city.face);
+    city.face = choices[Math.floor(Math.random() * choices.length)];
+    saveCities();
+    renderBoard();
+  }
+
+  function shuffleAll() {
+    const bag = FACE_KEYS.slice();
+    for (let i = bag.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = bag[i]; bag[i] = bag[j]; bag[j] = t;
+    }
+    cities.forEach((c, i) => { c.face = bag[i % bag.length]; });
+    saveCities();
+    renderBoard();
+  }
+
+  function addCity(name) {
+    if (!byName[name] || cities.some(c => c.name === name)) return;
+    const pool = unusedFaces("");
+    const face = pool[0] || FACE_KEYS[cities.length % FACE_KEYS.length];
+    cities.push({ name, face, chrono: { running: false, base: 0, started: 0 } });
+    saveCities();
+    renderBoard();
+  }
+
+  function removeCity(name) {
+    cities = cities.filter(c => c.name !== name);
+    saveCities();
+    renderBoard();
+  }
+
+  function renderBoard() {
+    const now = new Date();
+    sortCities(now);
+    const root = document.getElementById("clocks");
+    root.innerHTML = cities.map(city => {
+      const id = "c" + (++seq);
+      city.domId = id;
+      const svg = drawFace(city.face, id);
+      return `<article class="card" data-city="${city.name}">
+        <button class="face-well" type="button" data-open="${city.face}" aria-label="Inspect ${FACES[city.face].name}">${svg}</button>
+        <div class="card-body">
+          <div class="card-top"><h2 class="city-name">${city.name}</h2><span class="offset" data-offset>—</span></div>
+          <div class="when"><time data-readout>--:--:--</time><span class="sky" data-sky>—</span></div>
+          <div class="date-line" data-date></div>
+          <div class="card-actions">
+            <button class="btn ghost tiny" type="button" data-shuffle="${city.name}">Shuffle face</button>
+            <button class="btn ghost tiny" type="button" data-remove="${city.name}">Remove</button>
+          </div>
+        </div>
+      </article>`;
+    }).join("");
+    document.getElementById("order-note").textContent = cities.length + " cities · west to east";
+    tick(now);
+  }
+
+  function applyClock(root, key, clock, chronoState, dateObj) {
+    const face = FACES[key];
+    if (!root || !face) return;
+    const sec = displayedSecond(face, clock);
+    const minute = clock.m + sec / 60;
+    const hourA = ((clock.h % 12) + minute / 60) * 30;
+    const utcH = ((clock.h * 60 + clock.m - clock.off) / 60 + 48) % 24;
+    const elapsed = chronoElapsed(chronoState, dateObj);
+    const map = {
+      hour: hourA,
+      minute: minute * 6,
+      second: sec * 6,
+      subsec: sec * 6,
+      gmt: utcH * 15,
+      csec: (elapsed % 60) * 6,
+      cmin: (Math.floor(elapsed / 60) % 30) * 12,
+      chour: (Math.floor(elapsed / 3600) % 12) * 30,
+      tenth: Math.floor(clock.ms / 100) * 36,
+      reserve: 40 + 80 * (0.5 + 0.35 * Math.sin((clock.h * 60 + clock.m) / 240)),
+      regatta: ((600 - ((clock.m % 10) * 60 + sec)) / 600) * 360,
+      zodiac: (dayOfYear(clock) / 365) * 360,
+      daydisc: (clock.h + clock.m / 60) * 15
+    };
+    root.querySelectorAll("[data-hand]").forEach(node => {
+      const kind = node.getAttribute("data-hand");
+      const ang = map[kind] || 0;
+      node.setAttribute("transform", `rotate(${ang} ${node.getAttribute("data-cx")} ${node.getAttribute("data-cy")})`);
+    });
+    const dateText = String(clock.date);
+    const set = (field, value) => root.querySelectorAll(`[data-field="${field}"]`).forEach(n => { n.textContent = value; });
+    set("date", dateText);
+    set("dow", WEEK[clock.dow].toUpperCase());
+    set("month", MONTHS[clock.month].toUpperCase());
+    set("year", String(clock.year));
+    set("dayname", WEEK[clock.dow]);
+    const hh = String(clock.h).padStart(2, "0");
+    const mm = String(clock.m).padStart(2, "0");
+    const ss = String(clock.s).padStart(2, "0");
+    paintDigits(root, "time", hh + mm + ss);
+    paintDigits(root, "f91", hh + mm + ss);
+    root.querySelectorAll("[data-colon]").forEach(n => { n.setAttribute("opacity", clock.s % 2 ? "1" : ".35"); });
+    root.querySelectorAll("[data-field='lcd-day']").forEach(n => { n.textContent = WEEK[clock.dow].toUpperCase(); });
+    root.querySelectorAll("[data-field='lcd-date']").forEach(n => { n.textContent = (clock.month + 1) + "-" + clock.date; });
+    root.querySelectorAll("[data-moon]").forEach(node => {
+      const phase = pose && pose.fullMoon ? 0.5 : moonPhase(dateObj);
+      const r = Number(node.getAttribute("data-r"));
+      const cx = Number(node.getAttribute("data-cx"));
+      const disc = node.querySelector("[data-moon-disc]");
+      if (disc) disc.setAttribute("cx", f(cx + (0.5 - phase) * r * 2));
+    });
+    root.querySelectorAll("[data-indiglo]").forEach(node => {
+      const on = clock.h >= 20 || clock.h < 6;
+      node.setAttribute("opacity", on ? "0.38" : "0");
+    });
+    root.querySelectorAll("[data-bigtic]").forEach(node => {
+      const i = Number(node.getAttribute("data-bigtic"));
+      node.setAttribute("fill", i <= clock.s ? "#39d16a" : "#d5ddd0");
+    });
+    root.querySelectorAll("[data-field='ampm']").forEach(n => { n.textContent = clock.h >= 12 ? "PM" : "AM"; });
+  }
+
+  function chronoElapsed(state, dateObj) {
+    if (!state) return 0;
+    if (!state.running) return state.base || 0;
+    return (state.base || 0) + (dateObj.getTime() - state.started) / 1000;
+  }
+
+  function tick(now) {
+    const date = now || new Date();
+    const utc = new Intl.DateTimeFormat("en-GB", { timeZone: "UTC", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" });
+    const utcNode = document.getElementById("utc-clock");
+    utcNode.textContent = utc.format(date);
+    utcNode.dateTime = date.toISOString();
+    document.querySelectorAll(".card").forEach(card => {
+      const name = card.getAttribute("data-city");
+      const city = cities.find(c => c.name === name);
+      if (!city) return;
+      const clock = localClock(byName[name].tz, date);
+      clock.city = name;
+      applyClock(card, city.face, clock, city.chrono, date);
+      const readout = card.querySelector("[data-readout]");
+      readout.textContent = [clock.h, clock.m, clock.s].map(n => String(n).padStart(2, "0")).join(":");
+      readout.dateTime = readout.textContent;
+      card.querySelector("[data-offset]").textContent = formatOffset(clock.off);
+      card.querySelector("[data-date]").textContent = WEEK[clock.dow] + " " + clock.date + " " + MONTHS[clock.month] + " " + clock.year;
+      const sky = card.querySelector("[data-sky]");
+      const state = skyState(clock);
+      sky.textContent = state;
+      sky.className = "sky " + state;
+    });
+    if (inspectKey && document.getElementById("inspect").open) refreshInspect(date);
+  }
+
+  function posedClock(spec) {
+    const base = { h: 10, m: 8, s: 37, ms: 0, dow: 2, date: 8, month: 8, year: 2026, off: 0, city: "London" };
+    if (!spec) return base;
+    if (spec.fullMoon) return Object.assign({}, base, { date: 18 });
+    return Object.assign({}, base, spec);
+  }
+
+  function refreshInspect(date) {
+    const faceNode = document.getElementById("inspect-face");
+    const svg = faceNode.querySelector("svg");
+    if (!svg) return;
+    const clock = pose ? posedClock(pose) : localClock("UTC", date);
+    clock.city = "London";
+    applyClock(faceNode, inspectKey, clock, chrono, pose && pose.fullMoon ? new Date(Date.UTC(2026, 8, 26)) : date);
+  }
+
+  function openInspect(key) {
+    inspectKey = key;
+    pose = null;
+    chrono = { running: false, base: 0, started: 0 };
+    const face = FACES[key];
+    document.getElementById("inspect-kicker").textContent = face.category + " · " + face.cadence + (face.vph ? " · " + face.vph + " vph" : "");
+    document.getElementById("inspect-title").textContent = face.name;
+    document.getElementById("inspect-notes").textContent = face.note || "";
+    document.getElementById("inspect-face").innerHTML = drawFace(key, "inspect" + (++seq));
+    const poses = [
+      ["Live", null],
+      ["10:10", { h: 10, m: 10, s: 0 }],
+      ["12:00", { h: 12, m: 0, s: 0 }],
+      ["03:15", { h: 3, m: 15, s: 8, date: 5 }],
+      ["06:30", { h: 6, m: 30, s: 30 }],
+      ["23:59", { h: 23, m: 59, s: 59, date: 31, dow: 3 }],
+      ["Full moon", { fullMoon: true }]
+    ];
+    document.getElementById("pose-row").innerHTML = poses.map(([label], i) => `<button class="btn ghost tiny" type="button" data-pose="${i}">${label}</button>`).join("");
+    document.getElementById("pose-row").dataset.poses = JSON.stringify(poses.map(p => p[1]));
+    const chronoRow = document.getElementById("chrono-row");
+    chronoRow.hidden = !face.spec || !face.spec.chrono;
+    const select = document.getElementById("assign-city");
+    select.innerHTML = cities.map(c => `<option value="${c.name}">${c.name}</option>`).join("");
+    document.getElementById("inspect").showModal();
+    refreshInspect(new Date());
+  }
+
+  function renderSheet() {
+    const root = document.getElementById("sheet");
+    const keys = FACE_KEYS.filter(k => sheetCat === "All" || FACES[k].category === sheetCat);
+    root.innerHTML = keys.map(key => {
+      const id = "s" + (++seq);
+      const face = FACES[key];
+      return `<figure><button class="face-well" type="button" data-open="${key}" aria-label="Inspect ${face.name}">${drawFace(key, id)}</button><figcaption><strong>${face.name}</strong>${key} · ${face.cadence}</figcaption></figure>`;
+    }).join("");
+    const frozen = posedClock({ h: 10, m: 8, s: 37, date: 18 });
+    root.querySelectorAll("figure").forEach((fig, i) => {
+      applyClock(fig, keys[i], frozen, { running: false, base: 0, started: 0 }, new Date(Date.UTC(2026, 8, 18, 10, 8, 37)));
+    });
+  }
+
+  function bind() {
+    document.getElementById("clocks").addEventListener("click", ev => {
+      const open = ev.target.closest("[data-open]");
+      const shuffle = ev.target.closest("[data-shuffle]");
+      const remove = ev.target.closest("[data-remove]");
+      if (shuffle) shuffleOne(shuffle.getAttribute("data-shuffle"));
+      else if (remove) removeCity(remove.getAttribute("data-remove"));
+      else if (open) openInspect(open.getAttribute("data-open"));
+    });
+    document.getElementById("sheet").addEventListener("click", ev => {
+      const open = ev.target.closest("[data-open]");
+      if (open) openInspect(open.getAttribute("data-open"));
+    });
+    document.getElementById("shuffle-all").addEventListener("click", shuffleAll);
+    document.getElementById("reset-folio").addEventListener("click", () => { cities = defaultCities(); saveCities(); renderBoard(); });
+    document.getElementById("add-city").addEventListener("click", () => {
+      const value = document.getElementById("city-search").value.trim();
+      const hit = CITIES.find(c => c.name.toLowerCase() === value.toLowerCase());
+      if (hit) { addCity(hit.name); document.getElementById("city-search").value = ""; hideSuggest(); }
+    });
+    document.getElementById("toggle-sheet").addEventListener("click", () => {
+      const on = !document.body.classList.contains("sheet-mode");
+      document.body.classList.toggle("sheet-mode", on);
+      document.getElementById("toggle-sheet").setAttribute("aria-pressed", String(on));
+      document.getElementById("filters").hidden = !on;
+      if (on) renderSheet();
+    });
+    document.getElementById("filters").addEventListener("click", ev => {
+      const btn = ev.target.closest("[data-cat]");
+      if (!btn) return;
+      sheetCat = btn.getAttribute("data-cat");
+      document.querySelectorAll("#filters button").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+      renderSheet();
+    });
+    document.getElementById("close-inspect").addEventListener("click", () => document.getElementById("inspect").close());
+    document.getElementById("inspect").addEventListener("close", () => { inspectKey = null; });
+    document.getElementById("pose-row").addEventListener("click", ev => {
+      const btn = ev.target.closest("[data-pose]");
+      if (!btn) return;
+      const poses = JSON.parse(document.getElementById("pose-row").dataset.poses || "[]");
+      pose = poses[Number(btn.getAttribute("data-pose"))];
+      refreshInspect(new Date());
+    });
+    document.getElementById("chrono-toggle").addEventListener("click", () => {
+      const now = Date.now();
+      if (chrono.running) {
+        chrono.base = chronoElapsed(chrono, new Date());
+        chrono.running = false;
+      } else {
+        chrono.started = now;
+        chrono.running = true;
+      }
+      document.getElementById("chrono-toggle").textContent = chrono.running ? "Stop" : "Start";
+    });
+    document.getElementById("chrono-reset").addEventListener("click", () => {
+      chrono = { running: false, base: 0, started: 0 };
+      document.getElementById("chrono-toggle").textContent = "Start";
+      refreshInspect(new Date());
+    });
+    document.getElementById("assign-go").addEventListener("click", () => {
+      const name = document.getElementById("assign-city").value;
+      const city = cities.find(c => c.name === name);
+      if (!city || !inspectKey) return;
+      const other = cities.find(c => c.face === inspectKey && c.name !== name);
+      if (other) other.face = city.face;
+      city.face = inspectKey;
+      saveCities();
+      renderBoard();
+    });
+    const input = document.getElementById("city-search");
+    const list = document.getElementById("city-suggest");
+    input.addEventListener("input", () => showSuggest(input.value));
+    input.addEventListener("keydown", ev => {
+      const buttons = [...list.querySelectorAll("button")];
+      if (ev.key === "ArrowDown" || ev.key === "ArrowUp") {
+        ev.preventDefault();
+        if (!buttons.length) return;
+        suggestIndex.i = ev.key === "ArrowDown" ? Math.min(buttons.length - 1, suggestIndex.i + 1) : Math.max(0, suggestIndex.i - 1);
+        buttons.forEach((b, i) => b.setAttribute("aria-selected", String(i === suggestIndex.i)));
+      } else if (ev.key === "Enter") {
+        ev.preventDefault();
+        const chosen = buttons[suggestIndex.i] || buttons[0];
+        if (chosen) { addCity(chosen.dataset.name); input.value = ""; hideSuggest(); }
+        else document.getElementById("add-city").click();
+      } else if (ev.key === "Escape") hideSuggest();
+    });
+    list.addEventListener("click", ev => {
+      const btn = ev.target.closest("button");
+      if (!btn) return;
+      addCity(btn.dataset.name);
+      input.value = "";
+      hideSuggest();
+    });
+    document.addEventListener("click", ev => {
+      if (!ev.target.closest(".search-wrap")) hideSuggest();
+    });
+  }
+
+  function hideSuggest() {
+    const list = document.getElementById("city-suggest");
+    list.hidden = true;
+    list.innerHTML = "";
+    document.getElementById("city-search").setAttribute("aria-expanded", "false");
+    suggestIndex.i = -1;
+  }
+
+  function showSuggest(q) {
+    const list = document.getElementById("city-suggest");
+    const query = q.trim().toLowerCase();
+    const hits = CITIES.filter(c => !query || c.name.toLowerCase().includes(query)).slice(0, 8);
+    if (!query || !hits.length) { hideSuggest(); return; }
+    suggestIndex.i = 0;
+    list.hidden = false;
+    document.getElementById("city-search").setAttribute("aria-expanded", "true");
+    list.innerHTML = hits.map((c, i) => `<li role="presentation"><button type="button" role="option" data-name="${c.name}" aria-selected="${i === 0}">${c.name}<small>${c.tz}</small></button></li>`).join("");
+  }
+
+  const CUSTOMS = {
+    tank: drawTank, reverso: drawReverso, lange: drawLange, gshock: drawGshock, f91w: drawF91w,
+    apple: drawApple, monaco: drawMonaco, br03: drawBr03, santos: drawSantos, richard: drawRichard,
+    freak: drawFreak, bigben: drawBigben, f1: drawF1, twinbell: drawTwinbell, grandfather: drawGrandfather,
+    howard: drawHoward, orloj: drawOrloj, grandcentral: drawGrandCentral, railroad: drawRailroad,
+    mickey: drawMickey, bigtic: drawBigtick, yacht: drawYacht, rainbow: drawRainbow, patek: drawPatek,
+    moon: drawMoon, nomos: drawNomos, snoopy: drawSnoopy
+  };
+
+  function boot() {
+    loadCities();
+    bind();
+    renderBoard();
+    if (location.search.indexOf("sheet=1") >= 0) {
+      document.body.classList.add("sheet-mode");
+      document.getElementById("filters").hidden = false;
+      document.getElementById("toggle-sheet").setAttribute("aria-pressed", "true");
+      renderSheet();
+    }
+    const loop = () => { tick(new Date()); requestAnimationFrame(loop); };
+    if (reduced) setInterval(() => tick(new Date()), 1000);
+    else loop();
+    tick(new Date());
+  }
+
+  window.addEventListener("error", ev => {
+    const node = document.getElementById("boot-error");
+    if (node) node.textContent = ev.message;
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>

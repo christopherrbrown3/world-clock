@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "grok-4.7",
+      "label": "Grok 4.7",
+      "file": "versions/grok-4.7.html",
+      "snapshotDate": "2026-09-25",
+      "notes": "Independent Grok 4.7 rendition, authored from scratch with its own observatory interface, time engine, SVG drawing kit, and 62 reference-led timepieces."
+    },
+    {
       "id": "claude-opus-5.5",
       "label": "Claude Opus 5.5",
       "file": "versions/claude-opus-5.5.html",

@@ -8,11 +8,14 @@ The GPT 6 Luna rendition was captured on **September 22, 2026**. No official GPT
 
 Claude Opus 5.5’s release date, **September 22, 2026**, was verified against Anthropic’s announcement on September 24, 2026. The rendition was captured on **September 24, 2026**.
 
+Grok 4.7’s release date, **September 21, 2026**, was verified against [xAI’s announcement](https://x.ai/news/grok-4-7) on September 25, 2026. The page’s time element is `2026-09-21`. The rendition was captured on **September 25, 2026**.
+
 | Repository model label | Release date | Evidence |
 | --- | --- | --- |
 | GPT 6 Sol | 2026-09-22 | Maintainer confirmation on September 22, 2026; official announcement URL pending. |
 | Claude Opus 5.5 | 2026-09-22 | [Anthropic’s announcement](https://www.anthropic.com/claude-opus-5-5) is dated September 22 and says the model is available that day. GPT 6 Sol stays ahead for this tied date. |
 | GPT 6 Luna | — | No official GPT-6 Luna release date was verified when this rendition was added; its snapshot date is recorded separately. |
+| Grok 4.7 | 2026-09-21 | [xAI’s announcement](https://x.ai/news/grok-4-7) carries a September 21, 2026 publication date. The [API release notes](https://docs.x.ai/developers/release-notes) list Grok 4.7 under September. |
 | Codex Astra | 2026-09-03 | [OpenAI’s launch safety overview](https://openai.com/index/safety-overview-gpt-6-astra/) is dated September 3 and states that GPT-6 Astra is being released that day. |
 | Gemini 3.8 Flash | 2026-09-02 | [Google’s launch announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) is dated September 2. |
 | Muse Spark 1.3 | 2026-09-02 | [Wikipedia’s Muse Spark article](https://en.wikipedia.org/wiki/Muse_Spark) lists the stable 1.3 release as September 2, 2026. Press coverage reports Meta began serving 1.3 through the Meta Model API on September 2 US time (September 3 KST). |
@@ -30,6 +33,7 @@ Claude Opus 5.5’s release date, **September 22, 2026**, was verified against A
 - **GPT 6 Sol:** September 22 is the maintainer-confirmed release date and the project snapshot date. They are recorded separately despite matching.
 - **Claude Opus 5.5:** September 22 is the announcement and availability date; September 24 is this repository’s snapshot date. The `/news/claude-opus-5-5` address redirects to the announcement page linked above.
 - **GPT 6 Luna:** the September 22 date is this repository’s snapshot date only. Keep the model release date unlisted until an official source is verified.
+- **Grok 4.7:** September 21 is the announcement date. September 25 is this repository’s snapshot date. Grok 4.5 remains the earlier xAI rendition and is unchanged.
 - **Muse Spark 1.3:** the September 2 date comes from the model’s release record (stable 1.3 release September 2, 2026) rather than a Meta launch post; Korean press coverage timestamps the API rollout to September 3 KST, i.e. September 2 in US time zones. The directory uses September 2. This row was verified on September 14, 2026, later than the rest of the table.
 - **Astra:** September 3 is the launch/rollout date. The [launch post](https://openai.com/index/gpt-6-astra/) describes initial access for a limited set of organizations and broader availability over the following days. September 5 is this repository’s Astra snapshot date, not its model release date.
 - **Fable 5.1:** September 1 is explicit in the vendor’s release notes. The [announcement](https://www.anthropic.com/claude-fable-and-mythos-5-1) displays September 2026; its reference to August 2 concerns EU AI Act watermarking requirements, not this model’s launch. The previous directory incorrectly used August 2.
