@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "claude-sonnet-5.5",
+      "label": "Claude Sonnet 5.5",
+      "file": "versions/claude-sonnet-5.5.html",
+      "snapshotDate": "2026-09-28",
+      "notes": "Independent Claude Sonnet 5.5 rendition, authored from scratch with its own interface, time engine, SVG drawing kit, and 62 reference-led timepieces, with per-face movement cadences, a day-part rail on every city card, a filterable collection, and a posable inspection view."
+    },
+    {
       "id": "grok-4.7",
       "label": "Grok 4.7",
       "file": "versions/grok-4.7.html",
