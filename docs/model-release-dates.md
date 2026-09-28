@@ -10,8 +10,11 @@ Claude Opus 5.5’s release date, **September 22, 2026**, was verified against A
 
 Grok 4.7’s release date, **September 21, 2026**, was verified against [xAI’s announcement](https://x.ai/news/grok-4-7) on September 25, 2026. The page’s time element is `2026-09-21`. The rendition was captured on **September 25, 2026**.
 
+Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against [Anthropic’s announcement](https://www.anthropic.com/claude-sonnet-5-5) on the same day, and the rendition was captured on **September 28, 2026**.
+
 | Repository model label | Release date | Evidence |
 | --- | --- | --- |
+| Claude Sonnet 5.5 | 2026-09-28 | [Anthropic’s announcement](https://www.anthropic.com/claude-sonnet-5-5) is dated September 28, 2026 and introduces the model as the second in the Claude 5.5 family. |
 | GPT 6 Sol | 2026-09-22 | Maintainer confirmation on September 22, 2026; official announcement URL pending. |
 | Claude Opus 5.5 | 2026-09-22 | [Anthropic’s announcement](https://www.anthropic.com/claude-opus-5-5) is dated September 22 and says the model is available that day. GPT 6 Sol stays ahead for this tied date. |
 | GPT 6 Luna | — | No official GPT-6 Luna release date was verified when this rendition was added; its snapshot date is recorded separately. |

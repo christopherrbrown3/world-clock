@@ -15,6 +15,7 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
+- `versions/claude-sonnet-5.5.html`: Claude Sonnet 5.5 checkpoint, authored from scratch with its own interface, time engine, SVG drawing kit and all 62 faces.
 - `versions/grok-4.7.html`: Grok 4.7 checkpoint, authored from scratch with its own observatory interface, time engine, SVG drawing kit and all 62 faces.
 - `versions/claude-opus-5.5.html`: Claude Opus 5.5 checkpoint, authored from scratch with its own interface, time engine, SVG drawing kit and all 62 faces.
 - `versions/gpt-6-luna.html`: GPT 6 Luna checkpoint, drawn independently from the 62-piece catalog and local reference archive.
@@ -51,7 +52,7 @@ When a new model version is ready:
    git push origin model/<model-id>
    ```
 
-The index and README use model release dates documented in [Model Release Dates](model-release-dates.md), and the index records verified dates in `data-release-date` attributes. The manifest uses `snapshotDate`, which is the project checkpoint date. Do not treat that date as a model release date. GPT 6 Sol’s release date and snapshot both fall on September 22, 2026; its release date was confirmed by the maintainer. GPT 6 Luna’s snapshot is September 22, 2026; its release date remains unverified. Claude Opus 5.5 was released on September 22, 2026 and captured on September 24, 2026. Grok 4.7 was released on September 21, 2026 and captured on September 25, 2026.
+The index and README use model release dates documented in [Model Release Dates](model-release-dates.md), and the index records verified dates in `data-release-date` attributes. The manifest uses `snapshotDate`, which is the project checkpoint date. Do not treat that date as a model release date. GPT 6 Sol’s release date and snapshot both fall on September 22, 2026; its release date was confirmed by the maintainer. GPT 6 Luna’s snapshot is September 22, 2026; its release date remains unverified. Claude Opus 5.5 was released on September 22, 2026 and captured on September 24, 2026. Grok 4.7 was released on September 21, 2026 and captured on September 25, 2026. Claude Sonnet 5.5 was released and captured on September 28, 2026.
 
 Promoting a rendition to the active build is a separate, explicit operation. A new model entry does not require copying it into `world-clock.html`.
 
