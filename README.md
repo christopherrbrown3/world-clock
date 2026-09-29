@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Sixteen perspectives.**
+**One brief. Seventeen perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://christopherrbrown3.github.io/world-clock/) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html) · [Open Claude Opus 5.5](versions/claude-opus-5.5.html) · [Open GPT 6 Sol](versions/gpt-6-sol.html)**
+**[Explore the project](https://christopherrbrown3.github.io/world-clock/) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html) · [Open Claude Opus 5.5](versions/claude-opus-5.5.html) · [Open GPT 6 Sol](versions/gpt-6-sol.html)**
 
 </div>
 
@@ -30,6 +30,7 @@ Models with verified release dates are listed newest first. **Model release** li
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
+| [GPT 6.1 Sol](versions/gpt-6.1-sol.html) | Not verified | 2026-09-29 |
 | [Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) | [2026-09-28](https://www.anthropic.com/claude-sonnet-5-5) | 2026-09-28 |
 | [GPT 6 Sol](versions/gpt-6-sol.html) | 2026-09-22 (maintainer confirmed) | 2026-09-22 |
 | [Claude Opus 5.5](versions/claude-opus-5.5.html) | [2026-09-22](https://www.anthropic.com/claude-opus-5-5) | 2026-09-24 |
@@ -52,6 +53,12 @@ The [active development build](world-clock.html) remains available separately. I
 ## Inside a collection
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
+
+GPT 6.1 Sol implements all 62 faces in a new standalone page, authored from scratch from local photographs and public reference material. It has an original SVG drawing kit and time engine, 188 selectable cities, saved city settings, a searchable collection, enlarged inspection with fixed hand poses, lume studies, and working chronographs. [Read its reference and approximation notes](docs/gpt-6.1-sol-reference-notes.md).
+
+![GPT 6.1 Sol’s 62 independently drawn SVG timepieces in catalog order](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/gpt-6.1-sol-faces.png)
+
+[Desktop view](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/gpt-6.1-sol-desktop.png) · [Phone view](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/gpt-6.1-sol-mobile.png) · [Inspection view](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/gpt-6.1-sol-inspection.png)
 
 Claude Sonnet 5.5 implements all 62 faces in a new standalone page, written from scratch with its own time engine, city atlas and SVG drawing kit. Each face moves at its catalog cadence, every city card carries a 24-hour day-part rail, and pieces can be searched, filtered, posed at fixed times and inspected up close. [Read its reference and approximation notes](docs/claude-sonnet-5.5-reference-notes.md).
 
@@ -88,7 +95,7 @@ git clone https://github.com/christopherrbrown3/world-clock.git
 cd world-clock
 ```
 
-Open `index.html` in a browser, then choose a model. On macOS, `open index.html` does this from the terminal. To go directly to Claude Sonnet 5.5, open `versions/claude-sonnet-5.5.html`.
+Open `index.html` in a browser, then choose a model. On macOS, `open index.html` does this from the terminal. To go directly to GPT 6.1 Sol, open `versions/gpt-6.1-sol.html`.
 
 Each model app is a standalone HTML file whose clocks work offline. The index uses the local Manrope font in `assets/fonts/`; keep that directory alongside it for the intended typography. No font service is contacted by the index. A static server or GitHub Pages works too.
 

@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "gpt-6.1-sol",
+      "label": "GPT 6.1 Sol",
+      "file": "versions/gpt-6.1-sol.html",
+      "snapshotDate": "2026-09-29",
+      "notes": "Independent GPT 6.1 Sol rendition, authored from scratch with 62 reference-informed inline SVG timepieces, an original interface and time engine, 188 selectable cities, saved city settings, a searchable collection, posed inspection, lume studies, and working chronographs."
+    },
+    {
       "id": "claude-sonnet-5.5",
       "label": "Claude Sonnet 5.5",
       "file": "versions/claude-sonnet-5.5.html",
