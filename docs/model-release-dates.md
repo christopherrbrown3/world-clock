@@ -1,5 +1,7 @@
 # Model release dates
 
+The GPT 6.1 Sol rendition was captured on **September 29, 2026**. Its model release date has not been verified, so the directory marks it as unlisted and records the project snapshot separately.
+
 The older dates below were verified against vendor launch announcements and release notes on **September 5, 2026**. They describe model launch or public rollout, not the date a World Clock rendition was made. A rollout date does not imply that every account, region, or API had access that day.
 
 The maintainer confirmed **September 22, 2026** as GPT 6 Sol’s release date. The project snapshot was made the same day. An official OpenAI announcement URL was not located on September 22; add it here when available.
@@ -14,6 +16,7 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 
 | Repository model label | Release date | Evidence |
 | --- | --- | --- |
+| GPT 6.1 Sol | — | Model release date unverified; September 29, 2026 is the project snapshot date only. |
 | Claude Sonnet 5.5 | 2026-09-28 | [Anthropic’s announcement](https://www.anthropic.com/claude-sonnet-5-5) is dated September 28, 2026 and introduces the model as the second in the Claude 5.5 family. |
 | GPT 6 Sol | 2026-09-22 | Maintainer confirmation on September 22, 2026; official announcement URL pending. |
 | Claude Opus 5.5 | 2026-09-22 | [Anthropic’s announcement](https://www.anthropic.com/claude-opus-5-5) is dated September 22 and says the model is available that day. GPT 6 Sol stays ahead for this tied date. |

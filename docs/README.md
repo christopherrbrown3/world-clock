@@ -6,6 +6,7 @@ Use this index to find the right project guide.
 
 - [Model Release Dates](model-release-dates.md): verified vendor launch dates, source links, and rollout distinctions.
 
+- [GPT 6.1 Sol Reference Notes](gpt-6.1-sol-reference-notes.md): reference coverage, variant choices, drawing details, approximations, and browser validation for the independent rendition.
 - [Claude Sonnet 5.5 Reference Notes](claude-sonnet-5.5-reference-notes.md): photo coverage, variant choices, intentional approximations, and validation for the from-scratch rendition.
 - [Grok 4.7 Reference Notes](grok-4.7-reference-notes.md): photo coverage, variant choices, intentional approximations, and validation for the from-scratch rendition.
 - [Claude Opus 5.5 Reference Notes](claude-opus-5.5-reference-notes.md): photo coverage, variant choices, intentional approximations, and validation for the from-scratch rendition.
