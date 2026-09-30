@@ -30,11 +30,11 @@ Models with verified release dates are listed newest first. **Model release** li
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
-| [GPT 6.1 Sol](versions/gpt-6.1-sol.html) | 2026-09-29 (maintainer confirmed) | 2026-09-29 |
+| [GPT 6.1 Sol](versions/gpt-6.1-sol.html) | [2026-09-29](https://developers.openai.com/api/docs/changelog) | 2026-09-29 |
 | [Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) | [2026-09-28](https://www.anthropic.com/claude-sonnet-5-5) | 2026-09-28 |
-| [GPT 6 Sol](versions/gpt-6-sol.html) | 2026-09-22 (maintainer confirmed) | 2026-09-22 |
+| [GPT 6 Sol](versions/gpt-6-sol.html) | [2026-09-22](https://developers.openai.com/api/docs/changelog) | 2026-09-22 |
 | [Claude Opus 5.5](versions/claude-opus-5.5.html) | [2026-09-22](https://www.anthropic.com/claude-opus-5-5) | 2026-09-24 |
-| [GPT 6 Luna](versions/gpt-6-luna.html) | Not verified | 2026-09-22 |
+| [GPT 6 Luna](versions/gpt-6-luna.html) | [2026-09-22](https://developers.openai.com/api/docs/changelog) | 2026-09-22 |
 | [Grok 4.7](versions/grok-4.7.html) | [2026-09-21](https://x.ai/news/grok-4-7) | 2026-09-25 |
 | [Codex Astra](versions/astra.html) | [2026-09-03](https://openai.com/index/safety-overview-gpt-6-astra/) | 2026-09-05 |
 | [Gemini 3.8 Flash](versions/gemini-3.8-flash.html) | [2026-09-02](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) | 2026-09-03 |
