@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "hydrafusion",
+      "label": "GitHub Copilot Hydrafusion",
+      "file": "versions/hydrafusion.html",
+      "snapshotDate": "2026-09-30",
+      "notes": "Independent GitHub Copilot Hydrafusion rendition, authored from scratch with a new interface, city engine, SVG drawing system, 62 reference-led timepieces, saved city settings, collection search and filtering, inspection poses, and lume mode."
+    },
+    {
       "id": "gpt-6.1-sol",
       "label": "GPT 6.1 Sol",
       "file": "versions/gpt-6.1-sol.html",

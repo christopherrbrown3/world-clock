@@ -4,6 +4,7 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added GitHub Copilot Hydrafusion as an independent standalone rendition, authored from scratch with an original interface, city engine, SVG drawing system, and all 62 supplied-photo-informed watches and clocks. Added saved city settings, duplicate-aware face shuffling, collection search and filtering, inspection poses, lume mode, the manifest and directory entries, and reference notes. The model release date remains explicitly unverified; the project snapshot is September 30, 2026.
 - Verified GPT 6 Luna’s September 22, 2026 release date against OpenAI’s API changelog and ChatGPT release notes, added it to the index and README, and refreshed the index screenshots. Added official release sources for GPT 6 Sol and GPT 6.1 Sol from the same API changelog.
 - Corrected GPT 6.1 Sol’s directory release date to September 29, 2026 following maintainer confirmation, marked it as the latest rendition, and updated the README, date notes, and index screenshots.
 - Added GPT 6.1 Sol as an independent standalone rendition, authored from scratch with all 62 reference-informed SVG watches and clocks, its own interface and time engine, 188 cities, saved city controls, a searchable collection, posed inspection, lume studies, and working chronographs. Added the directory entry, manifest, reference notes, and browser screenshots. Its September 29, 2026 release and snapshot dates are recorded separately. Earlier model pages and the active build are unchanged.
