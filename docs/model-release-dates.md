@@ -1,6 +1,6 @@
 # Model release dates
 
-GitHub Copilot Hydrafusion has a project snapshot dated **September 30, 2026**, but no public model-release source was supplied or verified. The index therefore lists the rendition after dated releases and marks its release date as unverified. The snapshot date in `versions.json` records this repository checkpoint only.
+GitHub Copilot Hydrafusion’s directory release date, **September 30, 2026**, was supplied by the maintainer. No public vendor release source exists to verify it against, so it is recorded here as maintainer-supplied rather than externally confirmed. The rendition was captured on the same day, and the snapshot date in `versions.json` records that repository checkpoint separately.
 
 GPT 6.1 Sol’s release date, **September 29, 2026**, was verified against [OpenAI’s API changelog](https://developers.openai.com/api/docs/changelog) on the same day. This confirms the directory date supplied by the maintainer. The rendition was also captured on September 29.
 
@@ -18,7 +18,7 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 
 | Repository model label | Release date | Evidence |
 | --- | --- | --- |
-| GitHub Copilot Hydrafusion | Unverified | No public vendor release source was supplied or verified; the September 30 date is the repository snapshot only. |
+| GitHub Copilot Hydrafusion | 2026-09-30 | Maintainer-supplied. No public vendor release source exists, so this date is not externally verified. |
 | GPT 6.1 Sol | 2026-09-29 | [OpenAI’s API changelog](https://developers.openai.com/api/docs/changelog) records the model release under September 29, 2026. |
 | Claude Sonnet 5.5 | 2026-09-28 | [Anthropic’s announcement](https://www.anthropic.com/claude-sonnet-5-5) is dated September 28, 2026 and introduces the model as the second in the Claude 5.5 family. |
 | GPT 6 Sol | 2026-09-22 | [OpenAI’s API changelog](https://developers.openai.com/api/docs/changelog) records Sol and Luna’s releases under September 22, 2026; [ChatGPT’s release notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes) confirm the Work and Codex introduction that day. |
