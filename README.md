@@ -30,7 +30,7 @@ Models with verified release dates are listed newest first. **Model release** li
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
-| [GPT 6.1 Sol](versions/gpt-6.1-sol.html) | Not verified | 2026-09-29 |
+| [GPT 6.1 Sol](versions/gpt-6.1-sol.html) | 2026-09-29 (maintainer confirmed) | 2026-09-29 |
 | [Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) | [2026-09-28](https://www.anthropic.com/claude-sonnet-5-5) | 2026-09-28 |
 | [GPT 6 Sol](versions/gpt-6-sol.html) | 2026-09-22 (maintainer confirmed) | 2026-09-22 |
 | [Claude Opus 5.5](versions/claude-opus-5.5.html) | [2026-09-22](https://www.anthropic.com/claude-opus-5-5) | 2026-09-24 |
