@@ -38,4 +38,4 @@ The page includes all 62 catalog keys, live `Intl` time-zone updates, UTC-offset
 
 Headless Chrome checks covered the initial six-city render, all 62 collection cards, per-city shuffle, collection search and filtering, city search, both dialogs, fixed pose controls, desktop at 1440 px, and mobile at 390 px. The run completed without page or console errors. Screenshots are stored as `docs/assets/hydrafusion-desktop.png`, `docs/assets/hydrafusion-mobile.png`, and `docs/assets/hydrafusion-faces.png`.
 
-The GitHub Copilot Hydrafusion public release date was not verified. September 30, 2026 is the repository snapshot date, not a claimed vendor release date.
+The GitHub Copilot Hydrafusion directory release date, September 30, 2026, is maintainer-supplied and has no public vendor source to verify against. The repository snapshot date is the same day but is recorded separately in `versions.json`.

@@ -30,6 +30,7 @@ Models with verified release dates are listed newest first. **Model release** li
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
+| [GitHub Copilot Hydrafusion](versions/hydrafusion.html) | 2026-09-30 (maintainer-supplied) | 2026-09-30 |
 | [GPT 6.1 Sol](versions/gpt-6.1-sol.html) | [2026-09-29](https://developers.openai.com/api/docs/changelog) | 2026-09-29 |
 | [Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) | [2026-09-28](https://www.anthropic.com/claude-sonnet-5-5) | 2026-09-28 |
 | [GPT 6 Sol](versions/gpt-6-sol.html) | [2026-09-22](https://developers.openai.com/api/docs/changelog) | 2026-09-22 |
@@ -47,7 +48,6 @@ Models with verified release dates are listed newest first. **Model release** li
 | [Claude Fable 5](versions/fable-5.html) | [2026-06-09](https://www.anthropic.com/news/claude-fable-5-mythos-5) | 2026-07-17 |
 | [Claude Opus 4.8](versions/claude-opus-4.8.html) | [2026-05-28](https://www.anthropic.com/news/claude-opus-4-8) | 2026-06-30 |
 | [Codex 5.5](versions/codex-5.5.html) | [2026-04-23](https://openai.com/index/introducing-gpt-5-5/) | 2026-07-09 |
-| [GitHub Copilot Hydrafusion](versions/hydrafusion.html) | Not publicly verified | 2026-09-30 |
 
 The [active development build](world-clock.html) remains available separately. It is not automatically replaced by the newest model entry. [versions.json](versions.json) records the available snapshots.
 
