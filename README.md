@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Seventeen perspectives.**
+**One brief. Eighteen perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://christopherrbrown3.github.io/world-clock/) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html) · [Open Claude Opus 5.5](versions/claude-opus-5.5.html) · [Open GPT 6 Sol](versions/gpt-6-sol.html)**
+**[Explore the project](https://christopherrbrown3.github.io/world-clock/) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
 
 </div>
 
@@ -47,12 +47,19 @@ Models with verified release dates are listed newest first. **Model release** li
 | [Claude Fable 5](versions/fable-5.html) | [2026-06-09](https://www.anthropic.com/news/claude-fable-5-mythos-5) | 2026-07-17 |
 | [Claude Opus 4.8](versions/claude-opus-4.8.html) | [2026-05-28](https://www.anthropic.com/news/claude-opus-4-8) | 2026-06-30 |
 | [Codex 5.5](versions/codex-5.5.html) | [2026-04-23](https://openai.com/index/introducing-gpt-5-5/) | 2026-07-09 |
+| [GitHub Copilot Hydrafusion](versions/hydrafusion.html) | Not publicly verified | 2026-09-30 |
 
 The [active development build](world-clock.html) remains available separately. It is not automatically replaced by the newest model entry. [versions.json](versions.json) records the available snapshots.
 
 ## Inside a collection
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
+
+GitHub Copilot Hydrafusion implements all 62 faces in a clean-room standalone page with an original bioluminescent interface, independent city and SVG engines, saved city settings, collection search and filtering, fixed inspection poses, and a global lume study. [Read its reference and approximation notes](docs/hydrafusion-reference-notes.md).
+
+![GitHub Copilot Hydrafusion's 62 independently drawn SVG timepieces](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/hydrafusion-faces.png)
+
+[Desktop view](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/hydrafusion-desktop.png) · [Phone view](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/hydrafusion-mobile.png)
 
 GPT 6.1 Sol implements all 62 faces in a new standalone page, authored from scratch from local photographs and public reference material. It has an original SVG drawing kit and time engine, 188 selectable cities, saved city settings, a searchable collection, enlarged inspection with fixed hand poses, lume studies, and working chronographs. [Read its reference and approximation notes](docs/gpt-6.1-sol-reference-notes.md).
 

@@ -15,6 +15,7 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
+- `versions/hydrafusion.html`: GitHub Copilot Hydrafusion checkpoint, independently authored from scratch with its own interface, city engine, SVG drawing system and all 62 faces.
 - `versions/gpt-6.1-sol.html`: GPT 6.1 Sol checkpoint, authored from scratch with its own interface, time engine, city atlas, SVG drawing kit and all 62 faces.
 - `versions/claude-sonnet-5.5.html`: Claude Sonnet 5.5 checkpoint, authored from scratch with its own interface, time engine, SVG drawing kit and all 62 faces.
 - `versions/grok-4.7.html`: Grok 4.7 checkpoint, authored from scratch with its own observatory interface, time engine, SVG drawing kit and all 62 faces.
