@@ -57,6 +57,6 @@ The index and README use model release dates documented in [Model Release Dates]
 
 Promoting a rendition to the active build is a separate, explicit operation. A new model entry does not require copying it into `world-clock.html`.
 
-GPT 6.1 Sol was captured on September 29, 2026. Its model release date is unverified and is not inferred from this snapshot date.
+GPT 6.1 Sol was captured on September 29, 2026. The maintainer confirmed September 29 as its directory release date; the release and snapshot dates are recorded separately despite matching.
 
 For example, Claude Fable 5 uses `versions/fable-5.html` and the `fable-5` manifest entry, while the earlier Codex 5.6 Terra page remains frozen unless a maintainer asks for a correction.

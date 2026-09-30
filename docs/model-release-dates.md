@@ -1,6 +1,6 @@
 # Model release dates
 
-The GPT 6.1 Sol rendition was captured on **September 29, 2026**. Its model release date has not been verified, so the directory marks it as unlisted and records the project snapshot separately.
+The maintainer supplied **September 29, 2026** as GPT 6.1 Sol’s directory release date. The rendition was captured on the same day. The directory and README use this maintainer-confirmed date; an official announcement URL has not been recorded.
 
 The older dates below were verified against vendor launch announcements and release notes on **September 5, 2026**. They describe model launch or public rollout, not the date a World Clock rendition was made. A rollout date does not imply that every account, region, or API had access that day.
 
@@ -16,7 +16,7 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 
 | Repository model label | Release date | Evidence |
 | --- | --- | --- |
-| GPT 6.1 Sol | — | Model release date unverified; September 29, 2026 is the project snapshot date only. |
+| GPT 6.1 Sol | 2026-09-29 | Maintainer confirmation on September 29, 2026; official announcement URL pending. |
 | Claude Sonnet 5.5 | 2026-09-28 | [Anthropic’s announcement](https://www.anthropic.com/claude-sonnet-5-5) is dated September 28, 2026 and introduces the model as the second in the Claude 5.5 family. |
 | GPT 6 Sol | 2026-09-22 | Maintainer confirmation on September 22, 2026; official announcement URL pending. |
 | Claude Opus 5.5 | 2026-09-22 | [Anthropic’s announcement](https://www.anthropic.com/claude-opus-5-5) is dated September 22 and says the model is available that day. GPT 6 Sol stays ahead for this tied date. |
@@ -36,6 +36,7 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 
 ## Rollout and source distinctions
 
+- **GPT 6.1 Sol:** September 29 is the maintainer-confirmed directory release date and the project snapshot date. They are recorded separately despite matching.
 - **GPT 6 Sol:** September 22 is the maintainer-confirmed release date and the project snapshot date. They are recorded separately despite matching.
 - **Claude Opus 5.5:** September 22 is the announcement and availability date; September 24 is this repository’s snapshot date. The `/news/claude-opus-5-5` address redirects to the announcement page linked above.
 - **GPT 6 Luna:** the September 22 date is this repository’s snapshot date only. Keep the model release date unlisted until an official source is verified.
