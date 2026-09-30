@@ -1,12 +1,12 @@
 # Model release dates
 
-The maintainer supplied **September 29, 2026** as GPT 6.1 Sol’s directory release date. The rendition was captured on the same day. The directory and README use this maintainer-confirmed date; an official announcement URL has not been recorded.
+GPT 6.1 Sol’s release date, **September 29, 2026**, was verified against [OpenAI’s API changelog](https://developers.openai.com/api/docs/changelog) on the same day. This confirms the directory date supplied by the maintainer. The rendition was also captured on September 29.
 
 The older dates below were verified against vendor launch announcements and release notes on **September 5, 2026**. They describe model launch or public rollout, not the date a World Clock rendition was made. A rollout date does not imply that every account, region, or API had access that day.
 
-The maintainer confirmed **September 22, 2026** as GPT 6 Sol’s release date. The project snapshot was made the same day. An official OpenAI announcement URL was not located on September 22; add it here when available.
+GPT 6 Sol and GPT 6 Luna were released on **September 22, 2026**, verified against [OpenAI’s API changelog](https://developers.openai.com/api/docs/changelog) and [ChatGPT’s release notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes) on September 29. The API changelog records both model releases under September 22; the ChatGPT notes record their introduction in Work and Codex on that date. This also confirms GPT 6 Sol’s previously maintainer-supplied release date.
 
-The GPT 6 Luna rendition was captured on **September 22, 2026**. No official GPT-6 Luna release date was verified for this entry, so the snapshot date is not used as a substitute.
+The GPT 6 Sol and GPT 6 Luna renditions were both captured on **September 22, 2026**. Their project snapshot dates are recorded separately from the verified model release dates despite matching.
 
 Claude Opus 5.5’s release date, **September 22, 2026**, was verified against Anthropic’s announcement on September 24, 2026. The rendition was captured on **September 24, 2026**.
 
@@ -16,11 +16,11 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 
 | Repository model label | Release date | Evidence |
 | --- | --- | --- |
-| GPT 6.1 Sol | 2026-09-29 | Maintainer confirmation on September 29, 2026; official announcement URL pending. |
+| GPT 6.1 Sol | 2026-09-29 | [OpenAI’s API changelog](https://developers.openai.com/api/docs/changelog) records the model release under September 29, 2026. |
 | Claude Sonnet 5.5 | 2026-09-28 | [Anthropic’s announcement](https://www.anthropic.com/claude-sonnet-5-5) is dated September 28, 2026 and introduces the model as the second in the Claude 5.5 family. |
-| GPT 6 Sol | 2026-09-22 | Maintainer confirmation on September 22, 2026; official announcement URL pending. |
+| GPT 6 Sol | 2026-09-22 | [OpenAI’s API changelog](https://developers.openai.com/api/docs/changelog) records Sol and Luna’s releases under September 22, 2026; [ChatGPT’s release notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes) confirm the Work and Codex introduction that day. |
 | Claude Opus 5.5 | 2026-09-22 | [Anthropic’s announcement](https://www.anthropic.com/claude-opus-5-5) is dated September 22 and says the model is available that day. GPT 6 Sol stays ahead for this tied date. |
-| GPT 6 Luna | — | No official GPT-6 Luna release date was verified when this rendition was added; its snapshot date is recorded separately. |
+| GPT 6 Luna | 2026-09-22 | [OpenAI’s API changelog](https://developers.openai.com/api/docs/changelog) records Sol and Luna’s releases under September 22, 2026; [ChatGPT’s release notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes) confirm the Work and Codex introduction that day. |
 | Grok 4.7 | 2026-09-21 | [xAI’s announcement](https://x.ai/news/grok-4-7) carries a September 21, 2026 publication date. The [API release notes](https://docs.x.ai/developers/release-notes) list Grok 4.7 under September. |
 | Codex Astra | 2026-09-03 | [OpenAI’s launch safety overview](https://openai.com/index/safety-overview-gpt-6-astra/) is dated September 3 and states that GPT-6 Astra is being released that day. |
 | Gemini 3.8 Flash | 2026-09-02 | [Google’s launch announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) is dated September 2. |
@@ -36,10 +36,10 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 
 ## Rollout and source distinctions
 
-- **GPT 6.1 Sol:** September 29 is the maintainer-confirmed directory release date and the project snapshot date. They are recorded separately despite matching.
-- **GPT 6 Sol:** September 22 is the maintainer-confirmed release date and the project snapshot date. They are recorded separately despite matching.
+- **GPT 6.1 Sol:** September 29 is the API release date and the project snapshot date. They are recorded separately despite matching.
+- **GPT 6 Sol:** September 22 is the API release and Work/Codex introduction date, verified on September 29. The project snapshot also falls on September 22 and is recorded separately.
 - **Claude Opus 5.5:** September 22 is the announcement and availability date; September 24 is this repository’s snapshot date. The `/news/claude-opus-5-5` address redirects to the announcement page linked above.
-- **GPT 6 Luna:** the September 22 date is this repository’s snapshot date only. Keep the model release date unlisted until an official source is verified.
+- **GPT 6 Luna:** September 22 is the API release and Work/Codex introduction date, verified on September 29. The project snapshot also falls on September 22 and is recorded separately. Preserve the existing order of the three September 22 entries.
 - **Grok 4.7:** September 21 is the announcement date. September 25 is this repository’s snapshot date. Grok 4.5 remains the earlier xAI rendition and is unchanged.
 - **Muse Spark 1.3:** the September 2 date comes from the model’s release record (stable 1.3 release September 2, 2026) rather than a Meta launch post; Korean press coverage timestamps the API rollout to September 3 KST, i.e. September 2 in US time zones. The directory uses September 2. This row was verified on September 14, 2026, later than the rest of the table.
 - **Astra:** September 3 is the launch/rollout date. The [launch post](https://openai.com/index/gpt-6-astra/) describes initial access for a limited set of organizations and broader availability over the following days. September 5 is this repository’s Astra snapshot date, not its model release date.
