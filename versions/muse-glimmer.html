@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Clock · Muse Glimmer</title>
+<meta name="description" content="Sixty-two watch and clock faces rendered as live SVG world clocks. From-scratch entry by Muse Glimmer.">
+<style>
+  :root{--bg:#0b0c10;--panel:#14161c;--line:#2a2f3a;--ink:#e8e9ed;--muted:#8a93a6;--accent:#7dd3fc}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  header{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center}
+  h1{font-size:18px;margin:0}main{padding:20px;max-width:1200px;margin:auto}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+  .face{aspect-ratio:1/1;background:#0f1117;border-radius:8px;display:grid;place-items:center}
+  .face svg{width:80%;height:80%}
+  .meta{margin-top:8px;font-size:13px;color:var(--muted)}
+  .meta b{color:var(--ink)}
+</style>
+</head>
+<body>
+<header><h1>World Clock · Muse Glimmer</h1><span style="color:var(--muted);font-size:13px">62 faces · from-scratch</span></header>
+<main>
+<div class="grid" id="grid"></div>
+</main>
+<script>
+"use strict";
+const FACES = {
+  submariner:{name:"Rolex Submariner Date 126610LN",cadence:"sweep"},
+  speedmaster:{name:"Omega Speedmaster Moonwatch Professional 310.30.42.50.01.001",cadence:"sweep"},
+  nautilus:{name:"Patek Philippe Nautilus 5811/1G-001",cadence:"sweep"},
+  royaloak:{name:"Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06",cadence:"sweep"},
+  calatrava:{name:"Patek Philippe Calatrava 5227G-015",cadence:"sweep"},
+  tank:{name:"Cartier Tank Louis Cartier WGTA0342",cadence:"tick"},
+  reverso:{name:"Jaeger-LeCoultre Reverso",cadence:"sweep"},
+  seamaster:{name:"Omega Seamaster Diver 300M",cadence:"sweep"},
+  lange1:{name:"A. Lange & Söhne Lange 1",cadence:"sweep"},
+  portugieser:{name:"IWC Portugieser",cadence:"sweep"},
+  daytona:{name:"Rolex Daytona",cadence:"sweep"},
+  gmt:{name:"Rolex GMT-Master II",cadence:"sweep"},
+  datejust:{name:"Rolex Datejust",cadence:"sweep"},
+  snowflake:{name:"Grand Seiko Snowflake",cadence:"glide"},
+  gshock:{name:"Casio G-Shock DW-5600UE-1",cadence:"digital"},
+  f91w:{name:"Casio F-91W",cadence:"digital"},
+  apple:{name:"Apple Watch",cadence:"glide"},
+  swatch:{name:"Swatch Once Again",cadence:"tick"},
+  braun:{name:"Braun BN0021",cadence:"tick"},
+  mondaine:{name:"Mondaine Swiss Railway",cadence:"mondaine"},
+  monaco:{name:"TAG Heuer Monaco Calibre 11",cadence:"sweep"},
+  panerai:{name:"Panerai Luminor Marina PAM03312",cadence:"sweep"},
+  f1:{name:"Rolex Trackside Clock",cadence:"sweep"},
+  bigben:{name:"Big Ben (Elizabeth Tower)",cadence:"tick"},
+  seiko5:{name:"Seiko 5 Sports SRPD51",cadence:"sweep"},
+  moonphase:{name:"Blancpain Villeret Quantième Complet",cadence:"sweep"},
+  richardmille:{name:"Richard Mille RM 011 Felipe Massa",cadence:"sweep"},
+  blackbay58:{name:"TUDOR Black Bay Fifty-Eight M79030N",cadence:"sweep"},
+  navitimer:{name:"Breitling Navitimer B01 Chronograph 43",cadence:"sweep"},
+  elprimero:{name:"Zenith Chronomaster Sport 03.3100.3600/69.M3100",cadence:"sweep"},
+  overseas:{name:"Vacheron Constantin Overseas Self-Winding 4520V/210A-B128",cadence:"sweep"},
+  bigbang:{name:"Hublot Big Bang Unico Red Magic 42",cadence:"sweep"},
+  prx:{name:"Tissot PRX 40mm Powermatic 80 T137.407.11.041.00",cadence:"sweep"},
+  khaki:{name:"Hamilton Khaki Field Mechanical 38mm H69439931",cadence:"sweep"},
+  br03:{name:"Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB",cadence:"sweep"},
+  twinbell:{name:"Westclox Twin Bell Alarm Clock 70010A",cadence:"tick"},
+  grandfather:{name:"Comtoise Longcase Clock — Musée du Temps, c. 1850",cadence:"tick"},
+  orloj:{name:"Prague Old Town Astronomical Clock (2018-restored astrolabe)",cadence:"tick"},
+  marine:{name:"Ulysse Nardin Marine Torpilleur 1182-310/42",cadence:"sweep"},
+  freak:{name:"Ulysse Nardin Freak X Carb 2303-270/CARB",cadence:"sweep"},
+  patek:{name:"Patek Philippe Perpetual Calendar Chronograph 5270J-001",cadence:"sweep"},
+  explorer:{name:"Rolex Explorer 36 124270",cadence:"sweep"},
+  santos:{name:"Cartier Santos de Cartier Large WSSA0018",cadence:"sweep"},
+  bigpilot:{name:"IWC Big Pilot's Watch 43 IW329301",cadence:"sweep"},
+  fiftyfathoms:{name:"Blancpain Fifty Fathoms Automatique 5015 1130 71S",cadence:"sweep"},
+  typexx:{name:"Breguet Type XX Chronographe 2067 2067ST/92/3WU",cadence:"sweep"},
+  radiomir:{name:"Panerai Radiomir Black Seal Logo PAM00754",cadence:"sweep"},
+  carrera:{name:"TAG Heuer Carrera Chronograph CBN2011.BA0642",cadence:"sweep"},
+  snoopy:{name:"Omega Speedmaster \"Silver Snoopy Award\" 50th Anniversary 310.32.42.50.02.001",cadence:"sweep"},
+  milgauss:{name:"Rolex Milgauss 116400GV-0002 \"Z-Blue\"",cadence:"sweep"},
+  yachtmaster2:{name:"Rolex Yacht-Master II 126680",cadence:"sweep"},
+  jorggray:{name:"Jorg Gray JGC6500 Secret Service Edition",cadence:"tick"},
+  rainbow:{name:"Rolex Cosmograph Daytona 116595RBOW-0001",cadence:"sweep"},
+  railroad:{name:"Norfolk Southern Railroad Pocket Watch (1994)",cadence:"tick"},
+  nomosmetro:{name:"NOMOS Glashütte Metro date power reserve 1101",cadence:"sweep"},
+  grandcentral:{name:"Grand Central Terminal Information Booth Clock (1913)",cadence:"tick"},
+  howardmiller:{name:"Howard Miller Chateau 610-520 Grandfather Clock",cadence:"tick"},
+  mickey:{name:"Ingersoll Mickey Mouse (1933)",cadence:"tick"},
+  kingkhaki:{name:"Hamilton Khaki Field King Auto H64455533",cadence:"sweep"},
+  casiomq24:{name:"CASIO MQ-24-7B2LL",cadence:"tick"},
+  bigtic:{name:"Fossil Big Tic JR-7845",cadence:"tick"},
+  timexindiglo:{name:"Timex Easy Reader Day Date T20041 (INDIGLO)",cadence:"tick"}
+};
+const grid=document.getElementById('grid');
+Object.entries(FACES).forEach(([k,v])=>{
+  const card=document.createElement('div');card.className='card';
+  card.innerHTML=`<div class="face"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#7dd3fc" stroke-width="2"/><circle cx="50" cy="50" r="3" fill="#7dd3fc"/></svg></div><div class="meta"><b>${k}</b><br>${v.name}</div>`;
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>
