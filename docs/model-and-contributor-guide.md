@@ -10,13 +10,11 @@ Every face should be judged against reference photos, not memory or a generic st
 
 ## Model Version Strategy
 
-A new model can either reuse and improve an existing model page or create a new one from scratch.
+A new model must create a new page from scratch. It must not reuse, modify, or extend an existing page.
 
-- Reuse path: copy an existing page, then improve it with reference-grounded changes.
 - New path: create a new standalone page that preserves the required app behavior below.
 - Do not edit finalized older model pages except for explicit corrections requested by the maintainer.
 - While a model is currently active, its checkpoint page can be refreshed.
-- When a newer model begins, freeze the previous model page and create a new page for the new model.
 
 Follow `docs/model-versioning.md` for the file, manifest, directory, and pull request steps. Keep `versions.json` limited to real pages that exist in the repo. Do not add placeholder future versions.
 
