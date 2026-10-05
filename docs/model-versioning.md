@@ -40,7 +40,7 @@ Do not create placeholder pages for model versions that do not exist yet.
 
 When a new model version is ready:
 
-1. Confirm whether the task is an independent implementation or an improvement of an existing page. For independent work, start a new `versions/<model-id>.html` without copying another model’s implementation. For inherited work, copy only the agreed source page.
+1. Confirm that the task is an independent implementation and not an improvement of an existing page. Start a new `versions/<model-id>.html` without copying another model’s implementation. 
 2. Preserve finalized model pages. Do not change `world-clock.html` unless the task explicitly includes the active build.
 3. Finish and validate the new standalone page against the catalog and required app behavior.
 4. Add its actual snapshot date and file to `versions.json`.
