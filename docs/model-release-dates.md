@@ -29,6 +29,7 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 | Gemini 3.8 Flash | 2026-09-02 | [Google’s launch announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) is dated September 2. |
 | Muse Spark 1.3 | 2026-09-02 | [Wikipedia’s Muse Spark article](https://en.wikipedia.org/wiki/Muse_Spark) lists the stable 1.3 release as September 2, 2026. Press coverage reports Meta began serving 1.3 through the Meta Model API on September 2 US time (September 3 KST). |
 | Claude Fable 5.1 | 2026-09-01 | [Claude release notes](https://support.claude.com/en/articles/12138966-release-notes) explicitly place the Fable 5.1 launch under September 1. |
+| Qwen 3.8:27b | 2026-08-14 | [Datanorth](https://datanorth.ai/news/alibaba-releases-qwen3-8-27b) reports Alibaba released the open-weights Qwen3.8-27B on August 14, 2026 (Hugging Face: Qwen/Qwen3.8-27B). Third-party report; no dated Alibaba post was retrieved. |
 | Claude Opus 5 | 2026-07-24 | [Anthropic’s announcement](https://www.anthropic.com/news/claude-opus-5) is dated July 24 and says the model is available that day. |
 | Codex 5.6 Sol | 2026-07-09 | [OpenAI’s GPT-5.6 launch](https://openai.com/index/gpt-5-6/) dates general availability of Sol, Terra, and Luna to July 9, following a limited preview. |
 | Codex 5.6 Terra | 2026-07-09 | [The same GPT-5.6 launch](https://openai.com/index/gpt-5-6/) includes Terra. Sol stays ahead of Terra for this tied date. |
