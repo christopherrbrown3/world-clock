@@ -1,0 +1,1977 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Clock · Qwen 3.8:27b</title>
+<meta name="description" content="Sixty-two watch and clock faces rendered as live SVG world clocks. An independent from-scratch rendition by Qwen 3.8:27b.">
+<meta name="theme-color" content="#0d1512">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230d1512'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%235fd0a8' stroke-width='3'/%3E%3Cpath d='M32 17V32L43 39' fill='none' stroke='%235fd0a8' stroke-width='3'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0d1512; --bg2:#0a100e; --panel:#131e1a; --panel2:#182620;
+  --line:#26362f; --line2:#33473d; --ink:#e9f2ec; --muted:#8fa79b;
+  --accent:#5fd0a8; --accent2:#3aa883; --gold:#d8b877; --danger:#e07a6a;
+  --font:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(1200px 600px at 70% -10%,#122019 0%,var(--bg) 55%,var(--bg2) 100%);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;line-height:1.5}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;color:inherit}
+::selection{background:var(--accent);color:#04120c}
+.skip{position:fixed;top:8px;left:12px;background:var(--accent);color:#04120c;padding:10px 14px;border-radius:8px;z-index:20;transform:translateY(-160%);transition:transform .2s}
+.skip:focus{transform:none}
+header{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:16px;padding:14px 22px;background:rgba(13,21,18,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:11px;font-weight:600;letter-spacing:-.02em;font-size:17px}
+.brand svg{width:30px;height:30px;color:var(--accent)}
+.brand small{display:block;font-size:10.5px;color:var(--muted);font-weight:400;letter-spacing:.02em}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.utc{font-family:var(--mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:7px}
+.utc::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+main{max-width:1280px;margin:0 auto;padding:22px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
+.search{position:relative;flex:1 1 260px;min-width:220px}
+.search input{width:100%;padding:11px 14px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;color:var(--ink);font-size:14px;outline:none}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(95,208,168,.15)}
+.suggest{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;overflow:hidden;z-index:15;box-shadow:0 12px 30px rgba(0,0,0,.5);max-height:320px;overflow-y:auto}
+.suggest li{list-style:none;padding:9px 14px;display:flex;justify-content:space-between;gap:10px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--line)}
+.suggest li:last-child{border-bottom:none}
+.suggest li:hover,.suggest li[aria-selected="true"]{background:var(--panel)}
+.suggest .off{font-family:var(--mono);color:var(--muted);font-size:11px}
+.suggest .none{color:var(--muted);cursor:default}
+.btn{padding:10px 15px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;font-size:13px;display:inline-flex;align-items:center;gap:7px;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--accent);background:var(--panel2)}
+.btn svg{width:15px;height:15px}
+.btn.primary{background:var(--accent2);border-color:var(--accent);color:#04120c;font-weight:600}
+.summary{font-size:12px;color:var(--muted);margin:0 0 16px;font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.card{background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s,transform .15s}
+.card:hover{border-color:var(--line2)}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.city{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.where{font-size:11px;color:var(--muted)}
+.card-actions{display:flex;gap:4px}
+.icon-btn{width:30px;height:30px;display:grid;place-items:center;background:transparent;border:1px solid transparent;border-radius:8px;color:var(--muted)}
+.icon-btn:hover{background:var(--panel2);border-color:var(--line2);color:var(--ink)}
+.icon-btn svg{width:15px;height:15px}
+.well{aspect-ratio:1/1;background:radial-gradient(circle at 50% 40%,#0f1a15 0%,#080d0b 100%);border-radius:10px;display:grid;place-items:center;overflow:hidden;position:relative}
+.well svg{width:100%;height:100%;display:block}
+.card-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.facename{font-size:11px;color:var(--muted);line-height:1.3;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.readout{font-family:var(--mono);font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.readout .sec{color:var(--accent)}
+.delta{font-size:10.5px;color:var(--muted);text-align:right;margin-top:2px}
+.delta b{color:var(--ink);font-weight:600}
+.phase{position:absolute;top:8px;left:8px;font-size:9px;text-transform:uppercase;letter-spacing:.08em;padding:3px 7px;border-radius:20px;background:rgba(0,0,0,.4);border:1px solid var(--line2);color:var(--muted)}
+.phase[data-p="dawn"]{color:#f0c987;border-color:#5a4a2a}
+.phase[data-p="day"]{color:#8fd0f0;border-color:#2a4a5a}
+.phase[data-p="dusk"]{color:#e09a7a;border-color:#5a3a2a}
+.phase[data-p="night"]{color:#9aa8e0;border-color:#2a2a5a}
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+.empty button{margin-top:14px}
+footer{max-width:1280px;margin:0 auto;padding:24px 22px 40px;color:var(--muted);font-size:11px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(max-width:640px){
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .card{padding:10px}
+  .header-right .utc{display:none}
+  main{padding:14px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#board">Skip to the board</a>
+<header>
+  <a class="brand" href="#" aria-label="World Clock home">
+    <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="20" cy="20" r="17"/><ellipse cx="20" cy="20" rx="7.5" ry="17"/><path d="M3 20h34M6 11h28M6 29h28"/></svg>
+    <span>World Clock<small>Qwen 3.8:27b · 62 faces</small></span>
+  </a>
+  <div class="header-right">
+    <div class="utc"><span>UTC</span><time id="utc">—</time></div>
+  </div>
+</header>
+<main>
+  <div class="controls">
+    <div class="search">
+      <input id="city-input" type="text" role="combobox" aria-expanded="false" aria-controls="city-list" aria-autocomplete="list" placeholder="Add a city — search by name, country, or zone" autocomplete="off">
+      <ul id="city-list" class="suggest" role="listbox" hidden></ul>
+    </div>
+    <button class="btn" id="shuffle-all" type="button" title="Shuffle every face"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Shuffle all</button>
+    <button class="btn" id="reset" type="button" title="Restore the eight starting cities"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8m0-5v5h5"/></svg>Reset</button>
+  </div>
+  <p class="summary" id="summary">0 cities · 62 faces</p>
+  <div class="grid" id="board"></div>
+  <div class="empty" id="empty" hidden><p>No cities on the board.</p><button class="btn primary" id="restore" type="button">Add the default cities</button></div>
+</main>
+<footer>
+  <span>Drawn in SVG. Driven by your browser's clock. An independent rendition by Qwen 3.8:27b.</span>
+  <span>62 faces · one shared brief</span>
+</footer>
+<script>
+"use strict";
+/* =========================================================================
+   Qwen 3.8:27b — World Clock
+   An independent, from-scratch rendition. Own time engine, city atlas,
+   SVG drawing kit, and all 62 catalog faces. No other model's page is
+   reused, extended, or adapted.
+   ========================================================================= */
+
+/* ---- Time engine ------------------------------------------------------- */
+const WD = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+const WD_FULL = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
+const MO = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+const MO_FULL = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+const _fmt = new Map();
+function fmt(zone){
+  let f = _fmt.get(zone);
+  if(!f){
+    f = new Intl.DateTimeFormat("en-US",{timeZone:zone,hour12:false,weekday:"short",year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric",timeZoneName:"shortOffset"});
+    _fmt.set(zone,f);
+  }
+  return f;
+}
+function offsetOf(text){
+  const m = /GMT([+-])(\d{1,2})(?::(\d{2}))?/.exec(text||"");
+  if(!m) return 0;
+  return (m[1]==="-"?-1:1)*(Number(m[2])*60+Number(m[3]||0));
+}
+/* Mean synodic phase 0..1 (0 new, .5 full) from a UTC instant. */
+function moonPhase(d){
+  const syn = 29.530588853, ref = Date.UTC(2000,0,6,18,14);
+  const days = (d.getTime()-ref)/86400000;
+  return ((days/syn)%1+1)%1;
+}
+/* A local-time snapshot for a zone, shaped by the face cadence. */
+function snap(date, zone, cadence="sweep"){
+  const f = fmt(zone), parts = {};
+  for(const p of f.formatToParts(date)) parts[p.type]=p.value;
+  const h = Number(parts.hour)%24, m = Number(parts.minute), sW = Number(parts.second), ms = date.getMilliseconds();
+  const raw = sW + ms/1000;
+  let s = raw;
+  if(cadence==="sweep") s = Math.floor(raw*8)/8;
+  else if(cadence==="tick"||cadence==="digital") s = sW;
+  else if(cadence==="mondaine") s = raw>=58 ? 60 : raw*60/58;
+  const weekday = WD.indexOf(parts.weekday.slice(0,3).toUpperCase());
+  const mFrac = (cadence==="mondaine"||cadence==="tick"||cadence==="digital") ? 0 : s/60;
+  return {
+    zone, h, h12: h%12===0?12:h%12, m, s, sW, ms,
+    date: Number(parts.day), month: Number(parts.month), year: Number(parts.year), weekday,
+    offset: offsetOf(parts.timeZoneName), offsetText: parts.timeZoneName,
+    pm: h>=12, moon: moonPhase(date),
+    aH: ((h%12)+m/60+s/3600)*30,
+    aM: (m+mFrac)*6,
+    aS: s*6,
+    aH24: (h+m/60+s/3600)*15
+  };
+}
+
+/* ---- Text + hand bindings --------------------------------------------- */
+const TEXT = {
+  date:(t)=>String(t.date),
+  date2:(t)=>String(t.date).padStart(2,"0"),
+  day3:(t)=>WD[t.weekday],
+  day3c:(t)=>WD[t.weekday][0]+WD[t.weekday].slice(1).toLowerCase(),
+  day2:(t)=>WD[t.weekday].slice(0,2),
+  day1:(t)=>WD[t.weekday][0],
+  dayfull:(t)=>WD_FULL[t.weekday],
+  month3:(t)=>MO[t.month-1],
+  monthfull:(t)=>MO_FULL[t.month-1],
+  monthnum:(t)=>String(t.month),
+  monthnum2:(t)=>String(t.month).padStart(2,"0"),
+  year:(t)=>String(t.year),
+  hh:(t)=>String(t.h12),
+  hh2:(t)=>String(t.h12).padStart(2,"0"),
+  hh24:(t)=>String(t.h).padStart(2,"0"),
+  mm:(t)=>String(t.m).padStart(2,"0"),
+  ss:(t)=>String(t.sW).padStart(2,"0"),
+  ampm:(t)=>t.pm?"PM":"AM",
+  am:(t)=>t.pm?"":"AM",
+  pm:(t)=>t.pm?"PM":"",
+  "hh:mm":(t)=>`${t.h12}:${String(t.m).padStart(2,"0")}`,
+  "hh24:mm":(t)=>`${String(t.h).padStart(2,"0")}:${String(t.m).padStart(2,"0")}`,
+  "mo-dd":(t)=>`${t.month}-${String(t.date).padStart(2,"0")}`,
+  "mo/dd":(t)=>`${t.month}/${t.date}`
+};
+const HAND = {
+  h:(t)=>t.aH, m:(t)=>t.aM, s:(t)=>t.aS,
+  h24:(t)=>t.aH24, h24top:(t)=>t.aH24+180, gmt:(t)=>t.aH24,
+  date:(t)=>(t.date-1)*360/31, datehand:(t)=>t.date*360/31,
+  weekday:(t)=>t.weekday*360/7, month:(t)=>(t.month-1)*30,
+  moon:(t)=>t.moon*360, msec:(t)=>(t.ms/1000)*360,
+  min5:(t)=>(t.m%5+t.s/60)*72,
+  hshadow:(t)=>t.aH, mshadow:(t)=>t.aM
+};
+function applyBindings(svg, t){
+  for(const el of svg.querySelectorAll("[data-hand]")){
+    const fn = HAND[el.getAttribute("data-hand")];
+    if(!fn) continue;
+    const piv = (el.getAttribute("data-pivot")||"50 50").split(/[\s,]+/).map(Number);
+    let a = fn(t);
+    const off = el.getAttribute("data-offset"); if(off) a += Number(off);
+    const sc = el.getAttribute("data-scale"); if(sc) a *= Number(sc);
+    el.setAttribute("transform", `translate(${piv[0]} ${piv[1]}) rotate(${a.toFixed(3)})`);
+  }
+  for(const el of svg.querySelectorAll("[data-text]")){
+    const fn = TEXT[el.getAttribute("data-text")];
+    if(!fn) continue;
+    const v = fn(t);
+    if(el.textContent !== v) el.textContent = v;
+  }
+  for(const el of svg.querySelectorAll("[data-show]")){
+    const c = el.getAttribute("data-show");
+    let on = true;
+    if(c==="pm") on = t.pm;
+    else if(c==="am") on = !t.pm;
+    else if(c==="night") on = t.h<6||t.h>=18;
+    else if(c==="day") on = t.h>=6&&t.h<18;
+    else if(c==="blink") on = t.ms<500;
+    else if(c==="date2digit") on = t.date>=10;
+    else if(c==="date1digit") on = t.date<10;
+    el.style.visibility = on ? "visible" : "hidden";
+  }
+}
+
+/* ---- SVG drawing kit --------------------------------------------------- */
+let _uid = 0;
+function kit(){
+  const pre = `q${(_uid++).toString(36)}_`;
+  const n = (v)=> (Math.round(v*1000)/1000).toString();
+  const pt = (deg,r,cx=50,cy=50)=>{ const a=(deg-90)*Math.PI/180; return [cx+Math.cos(a)*r, cy+Math.sin(a)*r]; };
+  const P = (deg,r,cx=50,cy=50)=>{ const [x,y]=pt(deg,r,cx,cy); return `${n(x)} ${n(y)}`; };
+  const esc = (s)=> String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  const A = (o)=> Object.entries(o).filter(([,v])=>v!==undefined&&v!==null&&v!=="").map(([k,v])=>` ${k}="${esc(v)}"`).join("");
+  const K = {
+    pre, n, pt, P, esc, A,
+    id:(x)=>pre+x, url:(x)=>`url(#${pre}${x})`, ref:(x)=>`#${pre}${x}`,
+    linear(name,{a=90,stops=[],x1,y1,x2,y2,units}={}){
+      let c;
+      if(x1!==undefined) c=` x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"`;
+      else { const rad=(a-90)*Math.PI/180, dx=Math.cos(rad)*.5, dy=Math.sin(rad)*.5; c=` x1="${n(.5-dx)}" y1="${n(.5-dy)}" x2="${n(.5+dx)}" y2="${n(.5+dy)}"`; }
+      return `<linearGradient id="${pre}${name}"${c}${units?` gradientUnits="${units}"`:""}>${stops.map(([o,col,op])=>`<stop offset="${o}" stop-color="${col}"${op!==undefined?` stop-opacity="${op}"`:""}/>`).join("")}</linearGradient>`;
+    },
+    radial(name,{cx=.5,cy=.5,r=.5,fx,fy,stops=[],units}={}){
+      return `<radialGradient id="${pre}${name}" cx="${cx}" cy="${cy}" r="${r}"${fx!==undefined?` fx="${fx}" fy="${fy}"`:""}${units?` gradientUnits="${units}"`:""}>${stops.map(([o,col,op])=>`<stop offset="${o}" stop-color="${col}"${op!==undefined?` stop-opacity="${op}"`:""}/>`).join("")}</radialGradient>`;
+    },
+    ticks({count=60,r1=40,r2=43,w=.5,color="#fff",cx=50,cy=50,skip,start=0,cap="butt",opacity}={}){
+      let o="";
+      for(let i=0;i<count;i++){
+        if(skip&&skip(i)) continue;
+        const a=start+i*360/count, [ax,ay]=pt(a,r1,cx,cy), [bx,by]=pt(a,r2,cx,cy);
+        o+=`<line x1="${n(ax)}" y1="${n(ay)}" x2="${n(bx)}" y2="${n(by)}" stroke="${color}" stroke-width="${w}" stroke-linecap="${cap}"${opacity!==undefined?` opacity="${opacity}"`:""}/>`;
+      }
+      return o;
+    },
+    text(x,y,str,{size=4,family="var(--font)",weight=400,color="#fff",anchor="middle",letter,transform,opacity,italic,baseline="central",cls,data}={}){
+      return `<text x="${n(x)}" y="${n(y)}" font-size="${size}" font-family="${esc(family)}" font-weight="${weight}" fill="${color}" text-anchor="${anchor}" dominant-baseline="${baseline}"${letter!==undefined?` letter-spacing="${letter}"`:""}${italic?' font-style="italic"':""}${transform?` transform="${transform}"`:""}${opacity!==undefined?` opacity="${opacity}"`:""}${cls?` class="${cls}"`:""}${data?A(data):""}>${esc(str)}</text>`;
+    },
+    numerals({count=12,r=30,size=6,family="var(--font)",weight=500,color="#fff",labels,upright=true,start=30,step,cx=50,cy=50,skip,letter,italic,offsetY=0}={}){
+      let o="";
+      const st = step!==undefined?step:360/count;
+      for(let i=0;i<count;i++){
+        if(skip&&skip(i)) continue;
+        const label = labels?labels[i]:String(i+1);
+        if(label===""||label==null) continue;
+        const a=start+i*st, [x,y]=pt(a,r,cx,cy);
+        o+=K.text(x,y+offsetY,label,{size,family,weight,color,letter,italic,transform:upright?undefined:`rotate(${n(a)} ${n(x)} ${n(y)})`});
+      }
+      return o;
+    },
+    hand(kind,d,{cx=50,cy=50,fill="#fff",stroke,sw,extra="",pivot=true}={}){
+      const piv = pivot&&(cx!==50||cy!==50)?` data-pivot="${n(cx)} ${n(cy)}"`:"";
+      return `<g data-hand="${kind}"${piv} transform="translate(${n(cx)} ${n(cy)})"><path d="${d}" fill="${fill}"${stroke?` stroke="${stroke}" stroke-width="${sw||.3}"`:""}${extra?" "+extra:""}/></g>`;
+    },
+    handG(kind,inner,{cx=50,cy=50}={}){
+      const piv = cx!==50||cy!==50?` data-pivot="${n(cx)} ${n(cy)}"`:"";
+      return `<g data-hand="${kind}"${piv} transform="translate(${n(cx)} ${n(cy)})">${inner}</g>`;
+    },
+    circle(cx,cy,r,o={}){ return `<circle cx="${n(cx)}" cy="${n(cy)}" r="${n(r)}"${A(o)}/>`; },
+    rect(x,y,w,h,o={}){ return `<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}"${A(o)}/>`; },
+    path(d,o={}){ return `<path d="${d}"${A(o)}/>`; },
+    line(x1,y1,x2,y2,o={}){ return `<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}"${A(o)}/>`; },
+    g(inner,o={}){ return `<g${A(o)}>${inner}</g>`; },
+    /* Standard sweep-seconds needle with counterweight. */
+    needle(kind,{len=40,tail=9,w=.7,color="#fff",cx=50,cy=50,cap=1.6,capColor,tailW}={}){
+      return K.handG(kind,`<path d="M${n(-w/2)} ${n(tail)} L${n(-w/2)} ${n(-len)} L${n(w/2)} ${n(-len)} L${n(w/2)} ${n(tail)} Z" fill="${color}"/>${tailW?`<rect x="${n(-tailW/2)}" y="${n(tail*.35)}" width="${n(tailW)}" height="${n(tail*.65)}" fill="${color}"/>`:""}<circle r="${cap}" fill="${capColor||color}"/>`,{cx,cy});
+    },
+    /* Date window frame + bound date text. */
+    dateWin(x,y,w,h,{fill="#f5f3ea",color="#111",size=4.2,family="var(--font)",weight=600,frame,frameW=.5,rx=.4,pad=false,letter}={}){
+      return K.rect(x,y,w,h,{fill,rx,stroke:frame,strokeWidth:frameW}) +
+        K.text(x+w/2,y+h/2+.1,"31",{size,family,weight,color,letter,data:{"data-text":pad?"date2":"date"}});
+    },
+    /* Moonphase disc: a rotating disc with a lit crescent. */
+    moonDisc(cx,cy,r){
+      const id = K.id("moon");
+      return `<defs>${K.radial(id,{stops:[[0,"#1a2740"],[.7,"#0d1526"],[1,"#050a14"]]})}</defs>`+
+        K.circle(cx,cy,r,{fill:K.url(id),stroke:"#3a4a6a",strokeWidth:.4})+
+        K.handG("moon",`<circle cx="0" cy="${n(-r*.55)}" r="${n(r*.42)}" fill="#f4e9c8"/>`,{cx,cy});
+    }
+  };
+  return K;
+}
+
+/* ---- Face registry ----------------------------------------------------- */
+const FACES = {};
+const CAD = new Set(["sweep","tick","glide","digital","mondaine"]);
+function face(key, spec){
+  if(FACES[key]) throw new Error(`duplicate face ${key}`);
+  if(!spec||typeof spec.draw!=="function") throw new Error(`face ${key} has no draw()`);
+  if(!CAD.has(spec.cadence)) throw new Error(`face ${key} bad cadence ${spec.cadence}`);
+  FACES[key] = Object.assign({key, viewBox:"0 0 100 100"}, spec);
+}
+
+/* ---- Shared face helpers ---------------------------------------------- */
+/* A round case with a bezel ring and a dial. Returns the static dial layer. */
+function roundCase(K, {r=46, bezel=4, caseColor="#c9ced3", bezelColor="#dfe3e7", dial="#111", dialGrad, rehaut, lugs=true, crown=true, pushers=false}={}){
+  let s = "";
+  s += K.radial("case",{stops:[[0,caseColor],[.55,caseColor],[.75,"#8a9096"],[1,"#5a6066"]]});
+  s += K.circle(50,50,r,{fill:K.url("case")});
+  if(lugs){
+    for(const a of [35,145,215,325]){
+      const [x,y]=K.pt(a,r-2);
+      s += K.rect(x-3,y-3,6,6,{rx:1.5,fill:caseColor,stroke:"#5a6066",strokeWidth:.3,transform:`rotate(${a} ${n(x)} ${n(y)})`});
+    }
+  }
+  if(crown) s += K.rect(94,47,4,6,{rx:1,fill:bezelColor,stroke:"#5a6066",strokeWidth:.3});
+  if(pushers){
+    s += K.rect(93,30,3,4,{rx:.6,fill:bezelColor,stroke:"#5a6066",strokeWidth:.2});
+    s += K.rect(93,66,3,4,{rx:.6,fill:bezelColor,stroke:"#5a6066",strokeWidth:.2});
+  }
+  s += K.circle(50,50,r-bezel,{fill:bezelColor,stroke:"#5a6066",strokeWidth:.3});
+  if(dialGrad) s += K.circle(50,50,r-bezel,{fill:K.url(dialGrad)});
+  else s += K.circle(50,50,r-bezel,{fill:dial});
+  if(rehaut) s += K.circle(50,50,r-bezel,{fill:"none",stroke:rehaut,strokeWidth:1.2,opacity:.5});
+  return s;
+}
+function n(x){ return Math.round(x*1000)/1000; }
+
+/* Standard three-hand set (hour, minute, seconds) with a center cap. */
+function hands(K, {hour, minute, second, cx=50, cy=50, cap=1.8, capColor="#fff"}={}){
+  let s = "";
+  if(hour) s += K.hand("h", hour, {cx,cy,fill:"#fff"});
+  if(minute) s += K.hand("m", minute, {cx,cy,fill:"#fff"});
+  if(second) s += K.needle("s", {len:38,tail:8,w:.6,color:second.color||"#e05a4a",cx,cy,cap:1.2,capColor:second.color||"#e05a4a"});
+  s += K.circle(cx,cy,cap,{fill:capColor,stroke:"#333",strokeWidth:.2});
+  return s;
+}
+
+/* ---- Faces ------------------------------------------------------------- */
+/* Each face draws its static dial, then a moving hand layer. The update
+   loop rotates [data-hand] groups and fills [data-text] nodes. */
+
+/* Hand shape builders (pivot-local: 0,0 = pivot, -y points to 12). */
+const H = {
+  baton:(len,w,tail=6)=>`M${n(-w/2)} ${n(tail)} L${n(-w/2)} ${n(-len)} L${n(w/2)} ${n(-len)} L${n(w/2)} ${n(tail)} Z`,
+  dauphine:(len,w,tail=6)=>`M0 ${n(tail)} L${n(-w/2)} ${n(-len*.55)} L0 ${n(-len)} L${n(w/2)} ${n(-len*.55)} Z`,
+  leaf:(len,w,tail=6)=>`M0 ${n(tail)} C${n(-w)} ${n(-len*.3)} ${n(-w*.4)} ${n(-len)} 0 ${n(-len)} C${n(w*.4)} ${n(-len)} ${n(w)} ${n(-len*.3)} 0 ${n(tail)} Z`,
+  mercedes:(len,w=3.4)=>`M${n(-w/2)} 6 L${n(-w/2)} ${n(-len+4)} L${n(-w*.15)} ${n(-len+4)} L${n(-w*.15)} ${n(-len)} L${n(w*.15)} ${n(-len)} L${n(w*.15)} ${n(-len+4)} L${n(w/2)} ${n(-len+4)} L${n(w/2)} 6 Z`,
+  sword:(len,w,tail=6)=>`M0 ${n(tail)} L${n(-w/2)} ${n(-len*.7)} L${n(-w*.15)} ${n(-len)} L${n(w*.15)} ${n(-len)} L${n(w/2)} ${n(-len*.7)} Z`
+};
+
+/* ---- Rolex family ------------------------------------------------------ */
+/* ---- submariner: Rolex Submariner Date 126610LN ---- */
+face("submariner",{name:"Rolex Submariner Date 126610LN",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[.7,"#0a0a0a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:6,caseColor:"#c9ced3",bezelColor:"#111",dial:K.url("dial")});
+  /* Rotating dive bezel: 60-min scale, red 15-min segment, triangle at 12. */
+  s += K.circle(50,50,40,{fill:"#0d0d0d",stroke:"#333",strokeWidth:.4});
+  s += K.ticks({count:60,r1:36,r2:39,w:.5,color:"#cfd3d6",skip:(i)=>i%5!==0});
+  s += K.ticks({count:12,r1:34,r2:39,w:1,color:"#fff"});
+  s += K.path(`M${K.P(0,39)} L${K.P(-15,36)} L${K.P(15,36)} Z`,{fill:"#c0392b"});
+  s += K.text(50,33,"15",{size:3.5,weight:700,color:"#fff"});
+  s += K.text(50,67,"45",{size:3.5,weight:700,color:"#fff"});
+  s += K.text(50,50,"ROLEX",{size:3.4,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,54,"SUBMARINER",{size:2.2,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,60,"DATE",{size:1.8,weight:400,color:"#cfd3d6",letter:.5});
+  /* Applied baton markers with lume. */
+  for(let i=0;i<12;i++){
+    if(i===3) continue;
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.4,y-3.2,2.8,6.4,{rx:.6,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+   }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += K.circle(69.5,50,4.2,{fill:"none",stroke:"#888",strokeWidth:.4,opacity:.6});
+  s += hands(K,{hour:H.mercedes(20,3.6),minute:H.mercedes(30,3),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- speedmaster: Omega Speedmaster Moonwatch Professional 310.30.42.50.01.001 ---- */
+face("speedmaster",{name:"Omega Speedmaster Moonwatch Professional 310.30.42.50.01.001",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:5,caseColor:"#d0d4d8",bezelColor:"#1a1a1a",dial:K.url("dial")});
+  /* Tachymeter bezel. */
+  s += K.circle(50,50,41,{fill:"#111",stroke:"#333",strokeWidth:.4});
+  s += K.ticks({count:60,r1:38,r2:40,w:.4,color:"#cfd3d6"});
+  s += K.text(50,36,"SPEEDMASTER",{size:2.4,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,39,"PROFESSIONAL",{size:1.6,weight:400,color:"#cfd3d6",letter:.5});
+  s += K.text(50,64,"OMEGA",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,67,"CHRONOMETER",{size:1.4,weight:400,color:"#cfd3d6",letter:.5});
+  /* Three subdials at 3, 6, 9. */
+  for(const [cx,cy] of [[70,50],[50,70],[30,50]]){
+    s += K.circle(cx,cy,7,{fill:"#0d0d0d",stroke:"#333",strokeWidth:.3});
+    s += K.ticks({count:12,r1:5,r2:6.5,w:.3,color:"#888",cx,cy});
+   }
+  s += K.handG("s",`<path d="${H.baton(18,1)}" fill="#fff"/>`,{cx:70,cy:50});
+  s += K.handG("m",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:50,cy:70});
+  s += K.handG("h",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:30,cy:50});
+  /* Main hands. */
+  s += K.numerals({count:12,r:30,size:3.5,weight:700,color:"#fff",labels:["12","1","2","3","4","5","6","7","8","9","10","11"],skip:(i)=>[0,3,6,9].includes(i)});
+  s += hands(K,{hour:H.baton(18,2.4),minute:H.baton(28,1.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- nautilus: Patek Philippe Nautilus 5811/1G-001 ---- */
+face("nautilus",{name:"Patek Philippe Nautilus 5811/1G-001",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a3a6a"],[.6,"#0d2444"],[1,"#061529"]]});
+  /* Porthole case: rounded octagon. */
+  s += K.path("M20 12 L80 12 L88 20 L88 80 L80 88 L20 88 L12 80 L12 20 Z",{fill:K.radial("case",{stops:[[0,"#e8ecef"],[.7,"#b8bec4"],[1,"#8a9096"]]}),stroke:"#5a6066",strokeWidth:.5});
+  s += K.circle(50,50,38,{fill:K.url("dial"),stroke:"#0a1a30",strokeWidth:.5});
+  /* Horizontal embossed lines. */
+  for(let y=20;y<=80;y+=4) s += K.line(14,y,86,y,{stroke:"#0a1a30",strokeWidth:.4,opacity:.5});
+  s += K.text(50,30,"PATEK PHILIPPE",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"GENEVE",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"SWISS",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  /* Applied baton markers. */
+  for(let i=0;i<12;i++){
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.2,y-3,2.4,6,{rx:.4,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+   }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.dauphine(18,3),minute:H.dauphine(28,2.4),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- royaloak: Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06 ---- */
+face("royaloak",{name:"Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a2a3a"],[1,"#0a1420"]]});
+  /* Octagonal bezel with 8 screws. */
+  s += K.path("M28 10 L72 10 L90 28 L90 72 L72 90 L28 90 L10 72 L10 28 Z",{fill:K.radial("case",{stops:[[0,"#e8ecef"],[.7,"#b8bec4"],[1,"#8a9096"]]}),stroke:"#5a6066",strokeWidth:.5});
+  for(const a of [0,45,90,135,180,225,270,315]){
+    const [x,y]=K.pt(a,40);
+    s += K.circle(x,y,1.6,{fill:"#8a9096",stroke:"#5a6066",strokeWidth:.3});
+    s += K.line(x-1,y,y+1,y,{stroke:"#5a6066",strokeWidth:.4,transform:`rotate(${a} ${n(x)} ${n(y)})`});
+   }
+  s += K.circle(50,50,36,{fill:K.url("dial"),stroke:"#0a1420",strokeWidth:.5});
+  /* Tapisserie pattern. */
+  for(let x=16;x<=84;x+=4) for(let y=16;y<=84;y+=4) s += K.rect(x,y,3,3,{fill:"#1a2a3a",stroke:"#0a1420",strokeWidth:.2,opacity:.6});
+  s += K.text(50,30,"AUDEMARS PIGUET",{size:2.4,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"ROYAL OAK",{size:1.8,weight:400,color:"#cfd3d6",letter:1});
+  for(let i=0;i<12;i++){
+    if(i===3) continue;
+    const a=i*30, [x,y]=K.pt(a,28);
+    s += K.rect(x-1.2,y-3,2.4,6,{rx:.4,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+   }
+  s += K.dateWin(66,47,7,6,{fill:"#0a1420",color:"#fff",frame:"#888"});
+  s += hands(K,{hour:H.dauphine(18,3),minute:H.dauphine(28,2.4),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- calatrava: Patek Philippe Calatrava 5227G-015 ---- */
+face("calatrava",{name:"Patek Philippe Calatrava 5227G-015",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#f0f0f0"],[.7,"#d8d8d8"],[1,"#c0c0c0"]]});
+  /* Clous de Paris bezel. */
+  s += K.circle(50,50,44,{fill:K.radial("case",{stops:[[0,"#e8ecef"],[.7,"#b8bec4"],[1,"#8a9096"]]}),stroke:"#5a6066",strokeWidth:.5});
+  for(let i=0;i<60;i++){
+    const a=i*6, [x,y]=K.pt(a,42);
+    s += K.circle(x,y,1.2,{fill:"#c0c0c0",stroke:"#8a9096",strokeWidth:.2});
+   }
+  s += K.circle(50,50,38,{fill:K.url("dial"),stroke:"#8a9096",strokeWidth:.5});
+  s += K.text(50,30,"PATEK PHILIPPE",{size:2.4,weight:700,color:"#111",letter:.5});
+  s += K.text(50,33,"GENEVE",{size:1.6,weight:400,color:"#333",letter:1});
+  /* Roman numerals. */
+  const rom=["XII","I","II","III","IIII","V","VI","VII","VIII","IX","X","XI"];
+  s += K.numerals({count:12,r:30,size:3.5,weight:600,color:"#111",family:"Georgia,serif",labels:rom});
+  s += K.ticks({count:60,r1:34,r2:36,w:.3,color:"#333"});
+  /* Small seconds at 6. */
+  s += K.circle(50,68,6,{fill:"#e8e8e8",stroke:"#8a9096",strokeWidth:.3});
+  s += K.ticks({count:12,r1:4,r2:5.5,w:.3,color:"#333",cx:50,cy:68});
+  s += K.handG("s",`<path d="${H.baton(5,.6)}" fill="#1a3a6a"/>`,{cx:50,cy:68});
+  s += hands(K,{hour:H.dauphine(16,2.6),minute:H.dauphine(26,2),second:null,capColor:"#1a3a6a"});
+  return s;
+}});
+
+/* ---- tank: Cartier Tank Louis Cartier WGTA0342 ---- */
+face("tank",{name:"Cartier Tank Louis Cartier WGTA0342",cadence:"tick",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#f0f0f0"],[1,"#d0d0d0"]]});
+  /* Rectangular case. */
+  s += K.rect(28,10,44,80,{rx:3,fill:K.radial("case",{stops:[[0,"#e8d8a8"],[.7,"#c8b878"],[1,"#a89858"]]}),stroke:"#8a7a3a",strokeWidth:.5});
+  s += K.rect(32,14,36,72,{rx:2,fill:K.url("dial"),stroke:"#8a7a3a",strokeWidth:.3});
+  s += K.text(50,22,"CARTIER",{size:2.4,weight:700,color:"#111",letter:.5});
+  /* Roman numerals. */
+  const rom=["XII","I","II","III","IIII","V","VI","VII","VIII","IX","X","XI"];
+  s += K.numerals({count:12,r:28,size:3,weight:600,color:"#111",family:"Georgia,serif",labels:rom});
+  s += K.ticks({count:60,r1:30,r2:32,w:.3,color:"#333"});
+  s += hands(K,{hour:H.sword(16,2.4),minute:H.sword(26,1.8),second:{color:"#1a3a6a"}});
+  return s;
+}});
+
+/* ---- reverso: Jaeger-LeCoultre Reverso ---- */
+face("reverso",{name:"Jaeger-LeCoultre Reverso",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#e8e8e8"],[1,"#c8c8c8"]]});
+  /* Rectangular reversible case. */
+  s += K.rect(26,12,48,76,{rx:2,fill:K.radial("case",{stops:[[0,"#e8ecef"],[.7,"#b8bec4"],[1,"#8a9096"]]}),stroke:"#5a6066",strokeWidth:.5});
+  s += K.rect(30,16,40,68,{rx:1,fill:K.url("dial"),stroke:"#8a9096",strokeWidth:.3});
+  /* Coin-stack guilloché. */
+  for(let y=18;y<=82;y+=2) s += K.line(30,y,70,y,{stroke:"#b8b8b8",strokeWidth:.3,opacity:.5});
+  s += K.text(50,24,"JAEGER-LECOULTRE",{size:2,weight:700,color:"#111",letter:.3});
+  s += K.text(50,76,"SWISS",{size:1.4,weight:400,color:"#333",letter:1});
+  s += K.ticks({count:60,r1:30,r2:32,w:.3,color:"#333"});
+  /* Small seconds at 6. */
+  s += K.circle(50,66,5,{fill:"#d8d8d8",stroke:"#8a9096",strokeWidth:.3});
+  s += K.ticks({count:12,r1:3,r2:4.5,w:.3,color:"#333",cx:50,cy:66});
+  s += K.handG("s",`<path d="${H.baton(4,.5)}" fill="#1a3a6a"/>`,{cx:50,cy:66});
+  s += hands(K,{hour:H.baton(14,2),minute:H.baton(24,1.6),second:null,capColor:"#1a3a6a"});
+  return s;
+}});
+
+/* ---- seamaster: Omega Seamaster Diver 300M ---- */
+face("seamaster",{name:"Omega Seamaster Diver 300M",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a4a8a"],[.6,"#0d2a5a"],[1,"#061529"]]});
+  s += roundCase(K,{r:46,bezel:6,caseColor:"#c9ced3",bezelColor:"#0d2a5a",dial:K.url("dial")});
+  /* Wave pattern. */
+  for(let y=16;y<=84;y+=3) s += K.path(`M14 ${n(y)} Q25 ${n(y-1.5)} 36 ${n(y)} T58 ${n(y)} T80 ${n(y)}`,{fill:"none",stroke:"#0a1a30",strokeWidth:.4,opacity:.4});
+  s += K.text(50,30,"OMEGA",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"SEAMASTER",{size:1.8,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"300M",{size:2,weight:700,color:"#fff",letter:.5});
+  for(let i=0;i<12;i++){
+    if(i===6) continue;
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.4,y-3.2,2.8,6.4,{rx:.6,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+   }
+  s += K.dateWin(46,66,8,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- lange1: A. Lange & Söhne Lange 1 ---- */
+face("lange1",{name:"A. Lange & Söhne Lange 1",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#f0f0f0"],[1,"#d8d8d8"]]});
+  s += roundCase(K,{r:46,bezel:3,caseColor:"#e8d8a8",bezelColor:"#c8b878",dial:K.url("dial")});
+  s += K.text(50,26,"A. LANGE & SÖHNE",{size:2,weight:700,color:"#111",letter:.3});
+  s += K.text(50,74,"GLASHÜTTE",{size:1.4,weight:400,color:"#333",letter:1});
+  /* Off-center time display at 9. */
+  s += K.circle(35,50,14,{fill:"#e8e8e8",stroke:"#8a9096",strokeWidth:.3});
+  s += K.ticks({count:12,r1:11,r2:13,w:.4,color:"#333",cx:35,cy:50});
+  s += K.handG("h",`<path d="${H.baton(10,1.6)}" fill="#111"/>`,{cx:35,cy:50});
+  s += K.handG("m",`<path d="${H.baton(13,1.2)}" fill="#111"/>`,{cx:35,cy:50});
+  /* Large date at 4-5. */
+  s += K.rect(58,58,12,10,{rx:1,fill:"#fff",stroke:"#8a9096",strokeWidth:.3});
+  s += K.text(64,63,"31",{size:5,weight:700,color:"#111",data:{"data-text":"date"}});
+  /* Power reserve at 1. */
+  s += K.circle(65,35,8,{fill:"#e8e8e8",stroke:"#8a9096",strokeWidth:.3});
+  s += K.ticks({count:12,r1:6,r2:7.5,w:.3,color:"#333",cx:65,cy:35});
+  s += K.handG("h",`<path d="${H.baton(6,.8)}" fill="#c0392b"/>`,{cx:65,cy:35});
+  /* Small seconds at 7. */
+  s += K.circle(35,68,6,{fill:"#e8e8e8",stroke:"#8a9096",strokeWidth:.3});
+  s += K.ticks({count:12,r1:4,r2:5.5,w:.3,color:"#333",cx:35,cy:68});
+  s += K.handG("s",`<path d="${H.baton(5,.6)}" fill="#111"/>`,{cx:35,cy:68});
+  return s;
+}});
+
+/* ---- portugieser: IWC Portugieser ---- */
+face("portugieser",{name:"IWC Portugieser",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#f0f0f0"],[1,"#d8d8d8"]]});
+  s += roundCase(K,{r:46,bezel:3,caseColor:"#e8d8a8",bezelColor:"#c8b878",dial:K.url("dial")});
+  s += K.text(50,30,"IWC",{size:3,weight:700,color:"#111",letter:.5});
+  s += K.text(50,33,"SCHAFFHAUSEN",{size:1.4,weight:400,color:"#333",letter:1});
+  s += K.text(50,66,"PORTUGIESER",{size:1.6,weight:400,color:"#333",letter:1});
+  s += K.numerals({count:12,r:30,size:3.5,weight:600,color:"#111",family:"Georgia,serif"});
+  s += K.ticks({count:60,r1:34,r2:36,w:.3,color:"#333"});
+  /* Small seconds at 6. */
+  s += K.circle(50,68,6,{fill:"#e8e8e8",stroke:"#8a9096",strokeWidth:.3});
+  s += K.ticks({count:12,r1:4,r2:5.5,w:.3,color:"#333",cx:50,cy:68});
+  s += K.handG("s",`<path d="${H.baton(5,.6)}" fill="#111"/>`,{cx:50,cy:68});
+  s += hands(K,{hour:H.leaf(16,2.4),minute:H.leaf(26,1.8),second:null,capColor:"#111"});
+  return s;
+}});
+
+/* ---- Chronographs ------------------------------------------------------ */
+/* ---- daytona: Rolex Cosmograph Daytona 126500LN ---- */
+face("daytona",{name:"Rolex Cosmograph Daytona 126500LN",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#f0f0f0"],[1,"#d8d8d8"]]});
+  s += roundCase(K,{r:46,bezel:5,caseColor:"#c9ced3",bezelColor:"#111",dial:K.url("dial"),pushers:true});
+  s += K.circle(50,50,41,{fill:"#111",stroke:"#333",strokeWidth:.4});
+  s += K.ticks({count:60,r1:38,r2:40,w:.4,color:"#cfd3d6"});
+  s += K.text(50,30,"ROLEX",{size:2.6,weight:700,color:"#111",letter:.5});
+  s += K.text(50,33,"COSMOGRAPH",{size:1.6,weight:400,color:"#333",letter:1});
+  s += K.text(50,66,"DAYTONA",{size:2,weight:700,color:"#111",letter:1});
+   /* Three subdials. */
+  for(const [cx,cy] of [[35,38],[65,38],[50,62]]){
+    s += K.circle(cx,cy,7,{fill:"#111",stroke:"#333",strokeWidth:.3});
+    s += K.ticks({count:12,r1:5,r2:6.5,w:.3,color:"#888",cx,cy});
+    }
+  s += K.handG("s",`<path d="${H.baton(18,1)}" fill="#fff"/>`,{cx:35,cy:38});
+  s += K.handG("m",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:65,cy:38});
+  s += K.handG("h",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:50,cy:62});
+  s += K.numerals({count:12,r:30,size:3,weight:700,color:"#111",labels:["12","1","2","3","4","5","6","7","8","9","10","11"],skip:(i)=>[0,3,6,9].includes(i)});
+  s += hands(K,{hour:H.baton(16,2.4),minute:H.baton(26,1.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- gmt: Rolex GMT-Master II 126710BLRO-0002 ---- */
+face("gmt",{name:"Rolex GMT-Master II 126710BLRO-0002",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:6,caseColor:"#c9ced3",bezelColor:"#111",dial:K.url("dial")});
+   /* 24h bezel: blue/red. */
+  s += K.path(`M${K.P(0,40)} A40 40 0 0 1 ${K.P(180,40)} L${K.P(180,34)} A34 34 0 0 0 ${K.P(0,34)} Z`,{fill:"#1a3a8a"});
+  s += K.path(`M${K.P(180,40)} A40 40 0 0 1 ${K.P(360,40)} L${K.P(360,34)} A34 34 0 0 0 ${K.P(180,34)} Z`,{fill:"#c0392b"});
+  s += K.ticks({count:24,r1:34,r2:38,w:.5,color:"#fff"});
+  s += K.text(50,30,"ROLEX",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"OYSTER PERPETUAL",{size:1.4,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"GMT-MASTER II",{size:1.8,weight:700,color:"#fff",letter:.5});
+  for(let i=0;i<12;i++){
+    if(i===3) continue;
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.4,y-3.2,2.8,6.4,{rx:.6,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+   }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.mercedes(18,3.4),minute:H.mercedes(28,2.8),second:{color:"#e05a4a"}});
+  s += K.handG("gmt",`<path d="M0 6 L-1.5 -22 L0 -26 L1.5 -22 Z" fill="#e05a4a"/>`,{cx:50,cy:50});
+  return s;
+}});
+
+/* ---- datejust: Rolex Datejust 36 126233-0015 ---- */
+face("datejust",{name:"Rolex Datejust 36 126233-0015",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#e8d8a8"],[.7,"#d8c888"],[1,"#c8b878"]]});
+  s += roundCase(K,{r:46,bezel:5,caseColor:"#e8d8a8",bezelColor:"#d8c888",dial:K.url("dial")});
+   /* Fluted bezel. */
+  for(let i=0;i<60;i++){
+    const a=i*6, [x,y]=K.pt(a,42);
+    s += K.rect(x-1,y-1,2,2,{fill:"#c8b878",stroke:"#a89858",strokeWidth:.2,transform:`rotate(${a} ${n(x)} ${n(y)})`});
+   }
+  s += K.text(50,30,"ROLEX",{size:2.6,weight:700,color:"#111",letter:.5});
+  s += K.text(50,33,"OYSTER PERPETUAL",{size:1.4,weight:400,color:"#333",letter:1});
+  s += K.text(50,66,"DATEJUST",{size:1.8,weight:700,color:"#111",letter:.5});
+  for(let i=0;i<12;i++){
+    if(i===3) continue;
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.2,y-3,2.4,6,{rx:.4,fill:"#111",stroke:"#888",strokeWidth:.2});
+   }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += K.circle(69.5,50,4.2,{fill:"none",stroke:"#888",strokeWidth:.4,opacity:.6});
+  s += hands(K,{hour:H.mercedes(18,3.4),minute:H.mercedes(28,2.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- snowflake: Grand Seiko Snowflake SBGA211 ---- */
+face("snowflake",{name:"Grand Seiko Snowflake SBGA211",cadence:"glide",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#d8dce0"],[.7,"#b8bec4"],[1,"#9aa0a6"]]});
+  s += roundCase(K,{r:46,bezel:4,caseColor:"#c9ced3",bezelColor:"#b8bec4",dial:K.url("dial")});
+   /* Snow texture. */
+  for(let i=0;i<40;i++){
+    const a=Math.random()*360, r=Math.random()*36;
+    const [x,y]=K.pt(a,r);
+    s += K.circle(x,y,Math.random()*1.5+.5,{fill:"#fff",opacity:Math.random()*.5+.3});
+   }
+  s += K.text(50,30,"GRAND SEIKO",{size:2.4,weight:700,color:"#111",letter:.5});
+  s += K.text(50,33,"SNOWFLAKE",{size:1.6,weight:400,color:"#333",letter:1});
+   /* Snowflake markers. */
+  for(let i=0;i<12;i++){
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.g(K.path(`M${n(x)} ${n(y-3)} L${n(x)} ${n(y+3)} M${n(x-3)} ${n(y)} L${n(x+3)} ${n(y)} M${n(x-2)} ${n(y-2)} L${n(x+2)} ${n(y+2)} M${n(x-2)} ${n(y+2)} L${n(x+2)} ${n(y-2)}`,{stroke:"#111",strokeWidth:.6}),{transform:`rotate(${a} ${n(x)} ${n(y)})`});
+   }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.dauphine(18,3),minute:H.dauphine(28,2.4),second:{color:"#1a3a8a"}});
+  return s;
+}});
+
+/* ---- monaco: TAG Heuer Monaco Calibre 11 ---- */
+face("monaco",{name:"TAG Heuer Monaco Calibre 11",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+   /* Square case. */
+  s += K.rect(14,14,72,72,{rx:6,fill:K.radial("case",{stops:[[0,"#e8ecef"],[.7,"#b8bec4"],[1,"#8a9096"]]}),stroke:"#5a6066",strokeWidth:.5});
+  s += K.rect(18,18,64,64,{rx:4,fill:K.url("dial"),stroke:"#333",strokeWidth:.3});
+  s += K.text(50,26,"TAG HEUER",{size:2.4,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,74,"MONACO",{size:2,weight:700,color:"#fff",letter:1});
+   /* Three subdials. */
+  for(const [cx,cy] of [[35,38],[65,38],[50,62]]){
+    s += K.circle(cx,cy,7,{fill:"#0d0d0d",stroke:"#333",strokeWidth:.3});
+    s += K.ticks({count:12,r1:5,r2:6.5,w:.3,color:"#888",cx,cy});
+    }
+  s += K.handG("s",`<path d="${H.baton(18,1)}" fill="#fff"/>`,{cx:35,cy:38});
+  s += K.handG("m",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:65,cy:38});
+  s += K.handG("h",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:50,cy:62});
+  s += K.numerals({count:12,r:28,size:3,weight:700,color:"#fff",labels:["12","1","2","3","4","5","6","7","8","9","10","11"],skip:(i)=>[0,3,6,9].includes(i)});
+  s += hands(K,{hour:H.baton(16,2.4),minute:H.baton(26,1.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- navitimer: Breitling Navitimer B01 Chronograph 43 ---- */
+face("navitimer",{name:"Breitling Navitimer B01 Chronograph 43",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#f0f0f0"],[1,"#d8d8d8"]]});
+  s += roundCase(K,{r:46,bezel:6,caseColor:"#c9ced3",bezelColor:"#111",dial:K.url("dial"),pushers:true});
+   /* Slide-rule bezel. */
+  s += K.circle(50,50,41,{fill:"#111",stroke:"#333",strokeWidth:.4});
+  s += K.ticks({count:60,r1:38,r2:40,w:.4,color:"#cfd3d6"});
+  s += K.text(50,30,"BREITLING",{size:2.4,weight:700,color:"#111",letter:.5});
+  s += K.text(50,33,"NAVITIMER",{size:1.6,weight:400,color:"#333",letter:1});
+  s += K.text(50,66,"B01",{size:2,weight:700,color:"#111",letter:1});
+   /* Three subdials. */
+  for(const [cx,cy] of [[35,38],[65,38],[50,62]]){
+    s += K.circle(cx,cy,7,{fill:"#111",stroke:"#333",strokeWidth:.3});
+    s += K.ticks({count:12,r1:5,r2:6.5,w:.3,color:"#888",cx,cy});
+    }
+  s += K.handG("s",`<path d="${H.baton(18,1)}" fill="#fff"/>`,{cx:35,cy:38});
+  s += K.handG("m",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:65,cy:38});
+  s += K.handG("h",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:50,cy:62});
+  s += K.numerals({count:12,r:30,size:3,weight:700,color:"#111",labels:["12","1","2","3","4","5","6","7","8","9","10","11"],skip:(i)=>[0,3,6,9].includes(i)});
+  s += hands(K,{hour:H.baton(16,2.4),minute:H.baton(26,1.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- elprimero: Zenith Chronomaster Sport 03.3100.3600/69.M3100 ---- */
+face("elprimero",{name:"Zenith Chronomaster Sport 03.3100.3600/69.M3100",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a3a6a"],[1,"#0d2444"]]});
+  s += roundCase(K,{r:46,bezel:4,caseColor:"#c9ced3",bezelColor:"#1a3a6a",dial:K.url("dial"),pushers:true});
+  s += K.text(50,30,"ZENITH",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"EL PRIMERO",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"CHRONOMASTER",{size:1.6,weight:700,color:"#fff",letter:.5});
+   /* Three subdials. */
+  for(const [cx,cy] of [[35,38],[65,38],[50,62]]){
+    s += K.circle(cx,cy,7,{fill:"#0d2444",stroke:"#333",strokeWidth:.3});
+    s += K.ticks({count:12,r1:5,r2:6.5,w:.3,color:"#888",cx,cy});
+    }
+  s += K.handG("s",`<path d="${H.baton(18,1)}" fill="#fff"/>`,{cx:35,cy:38});
+  s += K.handG("m",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:65,cy:38});
+  s += K.handG("h",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:50,cy:62});
+  s += K.numerals({count:12,r:30,size:3,weight:700,color:"#fff",labels:["12","1","2","3","4","5","6","7","8","9","10","11"],skip:(i)=>[0,3,6,9].includes(i)});
+  s += hands(K,{hour:H.baton(16,2.4),minute:H.baton(26,1.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- carrera: TAG Heuer Carrera Chronograph CBN2011.BA0642 ---- */
+face("carrera",{name:"TAG Heuer Carrera Chronograph CBN2011.BA0642",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#f0f0f0"],[1,"#d8d8d8"]]});
+  s += roundCase(K,{r:46,bezel:4,caseColor:"#c9ced3",bezelColor:"#111",dial:K.url("dial"),pushers:true});
+  s += K.text(50,30,"TAG HEUER",{size:2.4,weight:700,color:"#111",letter:.5});
+  s += K.text(50,33,"CARRERA",{size:1.6,weight:400,color:"#333",letter:1});
+  s += K.text(50,66,"CHRONOGRAPH",{size:1.4,weight:400,color:"#333",letter:1});
+   /* Three subdials. */
+  for(const [cx,cy] of [[35,38],[65,38],[50,62]]){
+    s += K.circle(cx,cy,7,{fill:"#111",stroke:"#333",strokeWidth:.3});
+    s += K.ticks({count:12,r1:5,r2:6.5,w:.3,color:"#888",cx,cy});
+    }
+  s += K.handG("s",`<path d="${H.baton(18,1)}" fill="#fff"/>`,{cx:35,cy:38});
+  s += K.handG("m",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:65,cy:38});
+  s += K.handG("h",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:50,cy:62});
+  s += K.numerals({count:12,r:30,size:3,weight:700,color:"#111",labels:["12","1","2","3","4","5","6","7","8","9","10","11"],skip:(i)=>[0,3,6,9].includes(i)});
+  s += hands(K,{hour:H.baton(16,2.4),minute:H.baton(26,1.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- typexx: Breguet Type XX Chronographe 2067ST/92/3WU ---- */
+face("typexx",{name:"Breguet Type XX Chronographe 2067ST/92/3WU",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:4,caseColor:"#c9ced3",bezelColor:"#111",dial:K.url("dial"),pushers:true});
+  s += K.text(50,30,"BREGUET",{size:2.4,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"TYPE XX",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"CHRONOGRAPHE",{size:1.4,weight:400,color:"#cfd3d6",letter:1});
+   /* Three subdials. */
+  for(const [cx,cy] of [[35,38],[65,38],[50,62]]){
+    s += K.circle(cx,cy,7,{fill:"#0d0d0d",stroke:"#333",strokeWidth:.3});
+    s += K.ticks({count:12,r1:5,r2:6.5,w:.3,color:"#888",cx,cy});
+    }
+  s += K.handG("s",`<path d="${H.baton(18,1)}" fill="#fff"/>`,{cx:35,cy:38});
+  s += K.handG("m",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:65,cy:38});
+  s += K.handG("h",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:50,cy:62});
+  s += K.numerals({count:12,r:30,size:3,weight:700,color:"#fff",labels:["12","1","2","3","4","5","6","7","8","9","10","11"],skip:(i)=>[0,3,6,9].includes(i)});
+  s += hands(K,{hour:H.baton(16,2.4),minute:H.baton(26,1.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- rainbow: Rolex Cosmograph Daytona 116595RBOW-0001 ---- */
+face("rainbow",{name:"Rolex Cosmograph Daytona 116595RBOW-0001",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#f0f0f0"],[1,"#d8d8d8"]]});
+  s += roundCase(K,{r:46,bezel:6,caseColor:"#e8d8a8",bezelColor:"#d8c888",dial:K.url("dial"),pushers:true});
+   /* Rainbow bezel. */
+  const colors=["#c0392b","#e67e22","#f1c40f","#27ae60","#2980b9","#8e44ad"];
+  for(let i=0;i<6;i++){
+    const a0=i*60, a1=(i+1)*60;
+    s += K.path(`M${K.P(a0,40)} A40 40 0 0 1 ${K.P(a1,40)} L${K.P(a1,34)} A34 34 0 0 0 ${K.P(a0,34)} Z`,{fill:colors[i]});
+   }
+  s += K.text(50,30,"ROLEX",{size:2.6,weight:700,color:"#111",letter:.5});
+  s += K.text(50,33,"COSMOGRAPH",{size:1.6,weight:400,color:"#333",letter:1});
+  s += K.text(50,66,"DAYTONA",{size:2,weight:700,color:"#111",letter:1});
+   /* Three subdials. */
+  for(const [cx,cy] of [[35,38],[65,38],[50,62]]){
+    s += K.circle(cx,cy,7,{fill:"#111",stroke:"#333",strokeWidth:.3});
+    s += K.ticks({count:12,r1:5,r2:6.5,w:.3,color:"#888",cx,cy});
+    }
+  s += K.handG("s",`<path d="${H.baton(18,1)}" fill="#fff"/>`,{cx:35,cy:38});
+  s += K.handG("m",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:65,cy:38});
+  s += K.handG("h",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:50,cy:62});
+  s += K.numerals({count:12,r:30,size:3,weight:700,color:"#111",labels:["12","1","2","3","4","5","6","7","8","9","10","11"],skip:(i)=>[0,3,6,9].includes(i)});
+  s += hands(K,{hour:H.baton(16,2.4),minute:H.baton(26,1.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- Divers & field watches ------------------------------------------- */
+/* ---- explorer: Rolex Explorer 36 124270 ---- */
+face("explorer",{name:"Rolex Explorer 36 124270",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:5,caseColor:"#c9ced3",bezelColor:"#111",dial:K.url("dial")});
+  s += K.text(50,30,"ROLEX",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"OYSTER PERPETUAL",{size:1.4,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"EXPLORER",{size:1.8,weight:700,color:"#fff",letter:.5});
+  for(let i=0;i<12;i++){
+    if(i===3) continue;
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.4,y-3.2,2.8,6.4,{rx:.6,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+     }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.mercedes(18,3.4),minute:H.mercedes(28,2.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- blackbay58: TUDOR Black Bay Fifty-Eight M79030N ---- */
+face("blackbay58",{name:"TUDOR Black Bay Fifty-Eight M79030N",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:6,caseColor:"#c9ced3",bezelColor:"#111",dial:K.url("dial")});
+  s += K.circle(50,50,40,{fill:"#0d0d0d",stroke:"#333",strokeWidth:.4});
+  s += K.ticks({count:60,r1:36,r2:39,w:.5,color:"#cfd3d6",skip:(i)=>i%5!==0});
+  s += K.ticks({count:12,r1:34,r2:39,w:1,color:"#fff"});
+  s += K.text(50,30,"TUDOR",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"BLACK BAY",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"FIFTY-EIGHT",{size:1.6,weight:700,color:"#fff",letter:.5});
+  for(let i=0;i<12;i++){
+    if(i===3) continue;
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.4,y-3.2,2.8,6.4,{rx:.6,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+     }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- seiko5: Seiko 5 Sports SRPD51 ---- */
+face("seiko5",{name:"Seiko 5 Sports SRPD51",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a3a6a"],[1,"#0d2444"]]});
+  s += roundCase(K,{r:46,bezel:6,caseColor:"#c9ced3",bezelColor:"#1a3a6a",dial:K.url("dial")});
+  s += K.circle(50,50,40,{fill:"#0d2444",stroke:"#333",strokeWidth:.4});
+  s += K.ticks({count:60,r1:36,r2:39,w:.5,color:"#cfd3d6",skip:(i)=>i%5!==0});
+  s += K.ticks({count:12,r1:34,r2:39,w:1,color:"#fff"});
+  s += K.text(50,30,"SEIKO",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"5 SPORTS",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"DIVER",{size:1.6,weight:700,color:"#fff",letter:.5});
+  for(let i=0;i<12;i++){
+    if(i===4) continue;
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.4,y-3.2,2.8,6.4,{rx:.6,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+     }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- fiftyfathoms: Blancpain Fifty Fathoms Automatique 5015 1130 71S ---- */
+face("fiftyfathoms",{name:"Blancpain Fifty Fathoms Automatique 5015 1130 71S",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a3a2a"],[1,"#0d2414"]]});
+  s += roundCase(K,{r:46,bezel:6,caseColor:"#c9ced3",bezelColor:"#1a3a2a",dial:K.url("dial")});
+  s += K.circle(50,50,40,{fill:"#0d2414",stroke:"#333",strokeWidth:.4});
+  s += K.ticks({count:60,r1:36,r2:39,w:.5,color:"#cfd3d6",skip:(i)=>i%5!==0});
+  s += K.ticks({count:12,r1:34,r2:39,w:1,color:"#fff"});
+  s += K.text(50,30,"BLANCPAIN",{size:2.4,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"FIFTY FATHOMS",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"300M",{size:1.6,weight:700,color:"#fff",letter:.5});
+  for(let i=0;i<12;i++){
+    if(i===3) continue;
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.4,y-3.2,2.8,6.4,{rx:.6,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+     }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- milgauss: Rolex Milgauss 116400GV-0002 Z-Blue ---- */
+face("milgauss",{name:"Rolex Milgauss 116400GV-0002 Z-Blue",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a3a8a"],[1,"#0d245a"]]});
+  s += roundCase(K,{r:46,bezel:4,caseColor:"#c9ced3",bezelColor:"#1a3a8a",dial:K.url("dial")});
+  s += K.text(50,30,"ROLEX",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"OYSTER PERPETUAL",{size:1.4,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"MILGAUSS",{size:1.8,weight:700,color:"#fff",letter:.5});
+  for(let i=0;i<12;i++){
+    if(i===3) continue;
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.4,y-3.2,2.8,6.4,{rx:.6,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+     }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#f1c40f"}});
+  return s;
+}});
+
+/* ---- yachtmaster2: Rolex Yacht-Master II 126680 ---- */
+face("yachtmaster2",{name:"Rolex Yacht-Master II 126680",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:6,caseColor:"#c9ced3",bezelColor:"#111",dial:K.url("dial")});
+  s += K.circle(50,50,40,{fill:"#0d0d0d",stroke:"#333",strokeWidth:.4});
+  s += K.ticks({count:60,r1:36,r2:39,w:.5,color:"#cfd3d6",skip:(i)=>i%5!==0});
+  s += K.ticks({count:12,r1:34,r2:39,w:1,color:"#fff"});
+  s += K.text(50,30,"ROLEX",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"OYSTER PERPETUAL",{size:1.4,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"YACHT-MASTER II",{size:1.6,weight:700,color:"#fff",letter:.5});
+  for(let i=0;i<12;i++){
+    if(i===3) continue;
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.4,y-3.2,2.8,6.4,{rx:.6,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+     }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.mercedes(18,3.4),minute:H.mercedes(28,2.8),second:{color:"#e05a4a"}});
+  s += K.handG("min5",`<path d="M0 6 L-1.5 -22 L0 -26 L1.5 -22 Z" fill="#e05a4a"/>`,{cx:50,cy:50});
+  return s;
+}});
+
+/* ---- khaki: Hamilton Khaki Field Mechanical 38mm H69439931 ---- */
+face("khaki",{name:"Hamilton Khaki Field Mechanical 38mm H69439931",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:3,caseColor:"#3a3a3a",bezelColor:"#1a1a1a",dial:K.url("dial")});
+  s += K.text(50,30,"HAMILTON",{size:2.4,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"KHAKI FIELD",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"MECHANICAL",{size:1.4,weight:400,color:"#cfd3d6",letter:1});
+  s += K.numerals({count:12,r:30,size:3.5,weight:700,color:"#e8e8e8",family:"var(--font)"});
+  s += K.ticks({count:60,r1:34,r2:36,w:.3,color:"#888"});
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- kingkhaki: Hamilton Khaki Field King Auto H64455533 ---- */
+face("kingkhaki",{name:"Hamilton Khaki Field King Auto H64455533",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:3,caseColor:"#3a3a3a",bezelColor:"#1a1a1a",dial:K.url("dial")});
+  s += K.text(50,30,"HAMILTON",{size:2.4,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"KHAKI FIELD",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"KING",{size:1.8,weight:700,color:"#fff",letter:.5});
+  s += K.numerals({count:12,r:30,size:3.5,weight:700,color:"#e8e8e8",family:"var(--font)"});
+  s += K.ticks({count:60,r1:34,r2:36,w:.3,color:"#888"});
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- br03: Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB ---- */
+face("br03",{name:"Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:4,caseColor:"#3a3a3a",bezelColor:"#1a1a1a",dial:K.url("dial")});
+  s += K.text(50,30,"BELL & ROSS",{size:2.4,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"BR-03",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"PILOT",{size:1.6,weight:700,color:"#fff",letter:.5});
+  s += K.numerals({count:12,r:30,size:3.5,weight:700,color:"#e8e8e8",family:"var(--font)"});
+  s += K.ticks({count:60,r1:34,r2:36,w:.3,color:"#888"});
+  s += K.circle(50,68,6,{fill:"#0d0d0d",stroke:"#333",strokeWidth:.3});
+  s += K.ticks({count:12,r1:4,r2:5.5,w:.3,color:"#888",cx:50,cy:68});
+  s += K.handG("h24",`<path d="${H.baton(5,.6)}" fill="#e05a4a"/>`,{cx:50,cy:68});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- jorggray: Jorg Gray JGC6500 Secret Service Edition ---- */
+face("jorggray",{name:"Jorg Gray JGC6500 Secret Service Edition",cadence:"tick",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:3,caseColor:"#3a3a3a",bezelColor:"#1a1a1a",dial:K.url("dial")});
+  s += K.text(50,30,"JORG GRAY",{size:2.4,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"SECRET SERVICE",{size:1.4,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"JGC6500",{size:1.6,weight:700,color:"#fff",letter:.5});
+  s += K.numerals({count:12,r:30,size:3.5,weight:700,color:"#e8e8e8",family:"var(--font)"});
+  s += K.ticks({count:60,r1:34,r2:36,w:.3,color:"#888"});
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- panerai: Panerai Luminor Marina PAM03312 ---- */
+face("panerai",{name:"Panerai Luminor Marina PAM03312",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:3,caseColor:"#3a3a3a",bezelColor:"#1a1a1a",dial:K.url("dial")});
+  s += K.text(50,30,"PANERAI",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"LUMINOR",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"MARINA",{size:1.6,weight:700,color:"#fff",letter:.5});
+  s += K.numerals({count:12,r:30,size:3.5,weight:700,color:"#e8e8e8",family:"var(--font)"});
+  s += K.ticks({count:60,r1:34,r2:36,w:.3,color:"#888"});
+  s += K.circle(30,50,6,{fill:"#0d0d0d",stroke:"#333",strokeWidth:.3});
+  s += K.ticks({count:12,r1:4,r2:5.5,w:.3,color:"#888",cx:30,cy:50});
+  s += K.handG("s",`<path d="${H.baton(5,.6)}" fill="#e05a4a"/>`,{cx:30,cy:50});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:null,capColor:"#e05a4a"});
+  return s;
+}});
+
+/* ---- radiomir: Panerai Radiomir Black Seal Logo PAM00754 ---- */
+face("radiomir",{name:"Panerai Radiomir Black Seal Logo PAM00754",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:3,caseColor:"#3a3a3a",bezelColor:"#1a1a1a",dial:K.url("dial")});
+  s += K.text(50,30,"PANERAI",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"RADIOMIR",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"BLACK SEAL",{size:1.4,weight:700,color:"#fff",letter:.5});
+  s += K.numerals({count:12,r:30,size:3.5,weight:700,color:"#e8e8e8",family:"var(--font)"});
+  s += K.ticks({count:60,r1:34,r2:36,w:.3,color:"#888"});
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- prx: Tissot PRX 40mm Powermatic 80 T137.407.11.041.00 ---- */
+face("prx",{name:"Tissot PRX 40mm Powermatic 80 T137.407.11.041.00",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a3a6a"],[1,"#0d2444"]]});
+  s += roundCase(K,{r:46,bezel:4,caseColor:"#c9ced3",bezelColor:"#b8bec4",dial:K.url("dial")});
+  s += K.text(50,30,"TISSOT",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"PRX",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"POWERMATIC 80",{size:1.4,weight:700,color:"#fff",letter:.5});
+  for(let i=0;i<12;i++){
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.2,y-3,2.4,6,{rx:.4,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+     }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- nomosmetro: NOMOS Glashütte Metro date power reserve 1101 ---- */
+face("nomosmetro",{name:"NOMOS Glashütte Metro date power reserve 1101",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#f0f0f0"],[1,"#d8d8d8"]]});
+  s += roundCase(K,{r:46,bezel:3,caseColor:"#c9ced3",bezelColor:"#b8bec4",dial:K.url("dial")});
+  s += K.text(50,30,"NOMOS",{size:2.6,weight:700,color:"#111",letter:.5});
+  s += K.text(50,33,"GLASHÜTTE",{size:1.4,weight:400,color:"#333",letter:1});
+  s += K.text(50,66,"METRO",{size:1.6,weight:700,color:"#111",letter:.5});
+  s += K.numerals({count:12,r:30,size:3,weight:600,color:"#111",family:"var(--font)"});
+  s += K.ticks({count:60,r1:34,r2:36,w:.3,color:"#333"});
+  s += K.circle(50,30,5,{fill:"#e8e8e8",stroke:"#8a9096",strokeWidth:.3});
+  s += K.ticks({count:12,r1:3,r2:4.5,w:.3,color:"#333",cx:50,cy:30});
+  s += K.handG("h",`<path d="${H.baton(4,.5)}" fill="#c0392b"/>`,{cx:50,cy:30});
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#111"}});
+  return s;
+}});
+
+/* ---- marine: Ulysse Nardin Marine Torpilleur 1182-310/42 ---- */
+face("marine",{name:"Ulysse Nardin Marine Torpilleur 1182-310/42",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#f0f0f0"],[1,"#d8d8d8"]]});
+  s += roundCase(K,{r:46,bezel:3,caseColor:"#c9ced3",bezelColor:"#b8bec4",dial:K.url("dial")});
+  s += K.text(50,30,"ULYSSE NARDIN",{size:2.2,weight:700,color:"#111",letter:.3});
+  s += K.text(50,33,"MARINE",{size:1.6,weight:400,color:"#333",letter:1});
+  s += K.text(50,66,"TORPILLEUR",{size:1.4,weight:700,color:"#111",letter:.5});
+  s += K.numerals({count:12,r:30,size:3,weight:600,color:"#111",family:"var(--font)"});
+  s += K.ticks({count:60,r1:34,r2:36,w:.3,color:"#333"});
+  s += K.circle(50,68,6,{fill:"#e8e8e8",stroke:"#8a9096",strokeWidth:.3});
+  s += K.ticks({count:12,r1:4,r2:5.5,w:.3,color:"#333",cx:50,cy:68});
+  s += K.handG("s",`<path d="${H.baton(5,.6)}" fill="#111"/>`,{cx:50,cy:68});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:null,capColor:"#111"});
+  return s;
+}});
+
+/* ---- overseas: Vacheron Constantin Overseas Self-Winding 4520V/210A-B128 ---- */
+face("overseas",{name:"Vacheron Constantin Overseas Self-Winding 4520V/210A-B128",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a3a6a"],[1,"#0d2444"]]});
+  s += roundCase(K,{r:46,bezel:5,caseColor:"#c9ced3",bezelColor:"#b8bec4",dial:K.url("dial")});
+  s += K.circle(50,50,41,{fill:"#b8bec4",stroke:"#5a6066",strokeWidth:.4});
+  for(const a of [0,90,180,270]){
+    const [x,y]=K.pt(a,40);
+    s += K.circle(x,y,2,{fill:"#8a9096",stroke:"#5a6066",strokeWidth:.3});
+     }
+  s += K.text(50,30,"VACHERON CONSTANTIN",{size:2,weight:700,color:"#fff",letter:.3});
+  s += K.text(50,33,"OVERSEAS",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"SWISS",{size:1.4,weight:700,color:"#fff",letter:.5});
+  for(let i=0;i<12;i++){
+    const a=i*30, [x,y]=K.pt(a,30);
+    s += K.rect(x-1.2,y-3,2.4,6,{rx:.4,fill:"#e8e8e8",stroke:"#888",strokeWidth:.2});
+     }
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,2.6),minute:H.baton(28,2),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- bigbang: Hublot Big Bang Unico Red Magic 42 ---- */
+face("bigbang",{name:"Hublot Big Bang Unico Red Magic 42",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:5,caseColor:"#3a3a3a",bezelColor:"#c0392b",dial:K.url("dial"),pushers:true});
+  s += K.text(50,30,"HUBLOT",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"BIG BANG",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"UNICO",{size:1.6,weight:700,color:"#fff",letter:.5});
+  for(const [cx,cy] of [[35,38],[65,38],[50,62]]){
+    s += K.circle(cx,cy,7,{fill:"#0d0d0d",stroke:"#333",strokeWidth:.3});
+    s += K.ticks({count:12,r1:5,r2:6.5,w:.3,color:"#888",cx,cy});
+       }
+  s += K.handG("s",`<path d="${H.baton(18,1)}" fill="#fff"/>`,{cx:35,cy:38});
+  s += K.handG("m",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:65,cy:38});
+  s += K.handG("h",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:50,cy:62});
+  s += K.numerals({count:12,r:30,size:3,weight:700,color:"#fff",labels:["12","1","2","3","4","5","6","7","8","9","10","11"],skip:(i)=>[0,3,6,9].includes(i)});
+  s += hands(K,{hour:H.baton(16,2.4),minute:H.baton(26,1.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- richardmille: Richard Mille RM 011 Felipe Massa ---- */
+face("richardmille",{name:"Richard Mille RM 011 Felipe Massa",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += K.path("M30 12 L70 12 L88 30 L88 70 L70 88 L30 88 L12 70 L12 30 Z",{fill:K.radial("case",{stops:[[0,"#3a3a3a"],[1,"#1a1a1a"]]}),stroke:"#5a6066",strokeWidth:.5});
+  s += K.circle(50,50,36,{fill:K.url("dial"),stroke:"#333",strokeWidth:.3});
+  s += K.text(50,30,"RICHARD MILLE",{size:2,weight:700,color:"#fff",letter:.3});
+  s += K.text(50,33,"RM 011",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"FELIPE MASSA",{size:1.4,weight:700,color:"#fff",letter:.5});
+  for(const [cx,cy] of [[35,38],[65,38],[50,62]]){
+    s += K.circle(cx,cy,7,{fill:"#0d0d0d",stroke:"#333",strokeWidth:.3});
+    s += K.ticks({count:12,r1:5,r2:6.5,w:.3,color:"#888",cx,cy});
+       }
+  s += K.handG("s",`<path d="${H.baton(18,1)}" fill="#fff"/>`,{cx:35,cy:38});
+  s += K.handG("m",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:65,cy:38});
+  s += K.handG("h",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:50,cy:62});
+  s += K.numerals({count:12,r:30,size:3,weight:700,color:"#fff",labels:["12","1","2","3","4","5","6","7","8","9","10","11"],skip:(i)=>[0,3,6,9].includes(i)});
+  s += hands(K,{hour:H.baton(16,2.4),minute:H.baton(26,1.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- patek: Patek Philippe Perpetual Calendar Chronograph 5270J-001 ---- */
+face("patek",{name:"Patek Philippe Perpetual Calendar Chronograph 5270J-001",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a3a6a"],[1,"#0d2444"]]});
+  s += roundCase(K,{r:46,bezel:3,caseColor:"#e8d8a8",bezelColor:"#c8b878",dial:K.url("dial"),pushers:true});
+  s += K.text(50,28,"PATEK PHILIPPE",{size:2,weight:700,color:"#fff",letter:.3});
+  s += K.text(50,31,"GENEVE",{size:1.4,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,70,"PERPETUAL",{size:1.4,weight:700,color:"#fff",letter:.5});
+  for(const [cx,cy] of [[35,35],[65,35],[35,65],[65,65]]){
+    s += K.circle(cx,cy,6,{fill:"#0d2444",stroke:"#333",strokeWidth:.3});
+    s += K.ticks({count:12,r1:4,r2:5.5,w:.3,color:"#888",cx,cy});
+       }
+  s += K.handG("weekday",`<path d="${H.baton(5,.6)}" fill="#fff"/>`,{cx:35,cy:35});
+  s += K.handG("month",`<path d="${H.baton(5,.6)}" fill="#fff"/>`,{cx:65,cy:35});
+  s += K.handG("h",`<path d="${H.baton(5,.6)}" fill="#fff"/>`,{cx:35,cy:65});
+  s += K.handG("s",`<path d="${H.baton(5,.6)}" fill="#e05a4a"/>`,{cx:65,cy:65});
+  s += K.numerals({count:12,r:30,size:3,weight:700,color:"#fff",labels:["12","1","2","3","4","5","6","7","8","9","10","11"],skip:(i)=>[0,3,6,9].includes(i)});
+  s += hands(K,{hour:H.baton(16,2.4),minute:H.baton(26,1.8),second:null,capColor:"#fff"});
+  return s;
+}});
+
+/* ---- moonphase: Blancpain Villeret Quantième Complet ---- */
+face("moonphase",{name:"Blancpain Villeret Quantième Complet",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#f0f0f0"],[1,"#d8d8d8"]]});
+  s += roundCase(K,{r:46,bezel:3,caseColor:"#e8d8a8",bezelColor:"#c8b878",dial:K.url("dial")});
+  s += K.text(50,30,"BLANCPAIN",{size:2.4,weight:700,color:"#111",letter:.5});
+  s += K.text(50,33,"VILLERET",{size:1.6,weight:400,color:"#333",letter:1});
+  s += K.numerals({count:12,r:30,size:3,weight:600,color:"#111",family:"Georgia,serif"});
+  s += K.ticks({count:60,r1:34,r2:36,w:.3,color:"#333"});
+  s += K.moonDisc(50,66,6);
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.dauphine(18,3),minute:H.dauphine(28,2.4),second:{color:"#111"}});
+  return s;
+}});
+
+/* ---- freak: Ulysse Nardin Freak X Carb 2303-270/CARB ---- */
+face("freak",{name:"Ulysse Nardin Freak X Carb 2303-270/CARB",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:4,caseColor:"#3a3a3a",bezelColor:"#1a1a1a",dial:K.url("dial")});
+  s += K.text(50,30,"ULYSSE NARDIN",{size:2,weight:700,color:"#fff",letter:.3});
+  s += K.text(50,33,"FREAK",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"X CARB",{size:1.4,weight:700,color:"#fff",letter:.5});
+  s += K.handG("h",`<circle r="30" fill="none" stroke="#333" stroke-width=".5" stroke-dasharray="2 2"/>`,{cx:50,cy:50});
+  s += K.handG("m",`<circle r="20" fill="none" stroke="#555" stroke-width=".5" stroke-dasharray="1 1"/>`,{cx:50,cy:50});
+  s += K.circle(50,50,3,{fill:"#e05a4a"});
+  return s;
+}});
+
+/* ---- Digital faces ----------------------------------------------------- */
+/* LCD display: a green segment panel with bound time/day/date text. */
+function lcd(K, {x=20,y=30,w=60,h=40,bg="#9aa87a",fg="#1a2a1a",label}={}){
+  let s = K.rect(x,y,w,h,{rx:3,fill:bg,stroke:"#5a6a4a",strokeWidth:.5});
+  s += K.rect(x+2,y+2,w-4,h-4,{rx:2,fill:"none",stroke:"#7a8a5a",strokeWidth:.3,opacity:.5});
+  if(label) s += K.text(x+w/2,y+6,label,{size:2.5,weight:700,color:fg,family:"var(--mono)"});
+  s += K.text(x+w/2,y+h/2+2,"12:00",{size:11,weight:700,color:fg,family:"var(--mono)",data:{"data-text":"hh:mm"}});
+  s += K.text(x+8,y+h-6,"MON",{size:3,weight:700,color:fg,family:"var(--mono)",data:{"data-text":"day3"}});
+  s += K.text(x+w-8,y+h-6,"31",{size:3,weight:700,color:fg,family:"var(--mono)",anchor:"end",data:{"data-text":"date"}});
+  return s;
+}
+
+/* ---- gshock: Casio G-SHOCK DW-5600UE-1 ---- */
+face("gshock",{name:"Casio G-SHOCK DW-5600UE-1",cadence:"digital",draw(K){
+  let s = K.rect(14,14,72,72,{rx:10,fill:K.radial("case",{stops:[[0,"#3a3a3a"],[1,"#1a1a1a"]]}),stroke:"#000",strokeWidth:.5});
+  s += K.rect(20,20,60,60,{rx:6,fill:"#1a1a1a",stroke:"#333",strokeWidth:.3});
+  s += K.text(50,26,"G-SHOCK",{size:3,weight:700,color:"#5fd0a8",family:"var(--mono)"});
+  s += lcd(K,{x:26,y:32,w:48,h:36,bg:"#9aa87a",fg:"#1a2a1a"});
+  s += K.text(50,74,"CASIO",{size:2.5,weight:700,color:"#cfd3d6",family:"var(--mono)"});
+  return s;
+}});
+
+/* ---- f91w: Casio F-91W-1 ---- */
+face("f91w",{name:"Casio F-91W-1",cadence:"digital",draw(K){
+  let s = K.rect(18,18,64,64,{rx:8,fill:K.radial("case",{stops:[[0,"#3a3a3a"],[1,"#1a1a1a"]]}),stroke:"#000",strokeWidth:.5});
+  s += K.rect(24,24,52,52,{rx:4,fill:"#1a1a1a",stroke:"#333",strokeWidth:.3});
+  s += K.text(50,30,"CASIO",{size:2.5,weight:700,color:"#cfd3d6",family:"var(--mono)"});
+  s += lcd(K,{x:28,y:34,w:44,h:32,bg:"#9aa87a",fg:"#1a2a1a"});
+  s += K.text(50,72,"F-91W",{size:2,weight:700,color:"#cfd3d6",family:"var(--mono)"});
+  return s;
+}});
+
+/* ---- casiomq24: Casio MQ-24 ---- */
+face("casiomq24",{name:"Casio MQ-24",cadence:"tick",draw(K){
+  let s = K.rect(18,18,64,64,{rx:8,fill:K.radial("case",{stops:[[0,"#3a3a3a"],[1,"#1a1a1a"]]}),stroke:"#000",strokeWidth:.5});
+  s += K.rect(24,24,52,52,{rx:4,fill:"#1a1a1a",stroke:"#333",strokeWidth:.3});
+  s += K.text(50,30,"CASIO",{size:2.5,weight:700,color:"#cfd3d6",family:"var(--mono)"});
+  s += lcd(K,{x:28,y:34,w:44,h:32,bg:"#9aa87a",fg:"#1a2a1a"});
+  s += K.text(50,72,"MQ-24",{size:2,weight:700,color:"#cfd3d6",family:"var(--mono)"});
+  return s;
+}});
+
+/* ---- timexindiglo: Timex Easy Reader Indiglo ---- */
+face("timexindiglo",{name:"Timex Easy Reader Indiglo",cadence:"tick",draw(K){
+  let s = K.rect(18,18,64,64,{rx:8,fill:K.radial("case",{stops:[[0,"#3a3a3a"],[1,"#1a1a1a"]]}),stroke:"#000",strokeWidth:.5});
+  s += K.rect(24,24,52,52,{rx:4,fill:"#1a1a1a",stroke:"#333",strokeWidth:.3});
+  s += K.text(50,30,"TIMEX",{size:2.5,weight:700,color:"#5fd0a8",family:"var(--mono)"});
+  s += lcd(K,{x:28,y:34,w:44,h:32,bg:"#1a3a4a",fg:"#5fd0a8"});
+  s += K.text(50,72,"INDIGLO",{size:2,weight:700,color:"#5fd0a8",family:"var(--mono)"});
+  return s;
+}});
+
+/* ---- apple: Apple Watch Activity Analog ---- */
+face("apple",{name:"Apple Watch Activity Analog",cadence:"glide",draw(K){
+  let s = K.rect(20,14,60,72,{rx:14,fill:K.radial("case",{stops:[[0,"#3a3a3a"],[1,"#1a1a1a"]]}),stroke:"#000",strokeWidth:.5});
+  s += K.rect(24,18,52,64,{rx:10,fill:"#000",stroke:"#333",strokeWidth:.3});
+   /* Activity rings. */
+  s += K.circle(50,50,20,{fill:"none",stroke:"#3a1a1a",strokeWidth:3});
+  s += K.circle(50,50,20,{fill:"none",stroke:"#e05a4a",strokeWidth:3,"stroke-dasharray":"100 25","stroke-linecap":"round",transform:"rotate(-90 50 50)"});
+  s += K.circle(50,50,15,{fill:"none",stroke:"#1a3a1a",strokeWidth:3});
+  s += K.circle(50,50,15,{fill:"none",stroke:"#5fd0a8",strokeWidth:3,"stroke-dasharray":"80 30","stroke-linecap":"round",transform:"rotate(-90 50 50)"});
+  s += K.circle(50,50,10,{fill:"none",stroke:"#1a1a3a",strokeWidth:3});
+  s += K.circle(50,50,10,{fill:"none",stroke:"#4a7ae0",strokeWidth:3,"stroke-dasharray":"60 40","stroke-linecap":"round",transform:"rotate(-90 50 50)"});
+  s += K.text(50,50,"12:00",{size:6,weight:700,color:"#fff",family:"var(--mono)",data:{"data-text":"hh:mm"}});
+  s += K.text(50,74,"APPLE",{size:2,weight:700,color:"#cfd3d6",family:"var(--mono)"});
+  return s;
+}});
+
+/* ---- Rectangular & minimalist ----------------------------------------- */
+/* ---- swatch: Swatch Once Again GB743-S26 ---- */
+face("swatch",{name:"Swatch Once Again GB743-S26",cadence:"tick",draw(K){
+  let s = K.rect(18,18,64,64,{rx:10,fill:K.radial("case",{stops:[[0,"#3a3a3a"],[1,"#1a1a1a"]]}),stroke:"#000",strokeWidth:.5});
+  s += K.circle(50,50,30,{fill:"#1a1a1a",stroke:"#333",strokeWidth:.3});
+  s += K.text(50,30,"SWATCH",{size:2.5,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,70,"ONCE AGAIN",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.numerals({count:12,r:26,size:3,weight:700,color:"#fff",family:"var(--font)"});
+  s += K.ticks({count:60,r1:28,r2:30,w:.3,color:"#888"});
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(16,2.4),minute:H.baton(24,1.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- braun: Braun BN0021BKBKG ---- */
+face("braun",{name:"Braun BN0021BKBKG",cadence:"tick",draw(K){
+  let s = K.rect(20,16,60,68,{rx:4,fill:K.radial("case",{stops:[[0,"#3a3a3a"],[1,"#1a1a1a"]]}),stroke:"#000",strokeWidth:.5});
+  s += K.rect(24,20,52,60,{rx:2,fill:"#1a1a1a",stroke:"#333",strokeWidth:.3});
+  s += K.text(50,28,"BRAUN",{size:2.5,weight:700,color:"#fff",letter:1});
+  s += K.numerals({count:12,r:24,size:3,weight:400,color:"#fff",family:"var(--font)",labels:["12","","","3","","","6","","","9","","",""]});
+  s += K.ticks({count:12,r1:26,r2:28,w:.5,color:"#fff"});
+  s += hands(K,{hour:H.baton(14,1.6),minute:H.baton(22,1.2),second:{color:"#f1c40f"}});
+  return s;
+}});
+
+/* ---- bigtic: Fossil Big Tic ---- */
+face("bigtic",{name:"Fossil Big Tic",cadence:"tick",draw(K){
+  let s = K.rect(18,18,64,64,{rx:6,fill:K.radial("case",{stops:[[0,"#3a3a3a"],[1,"#1a1a1a"]]}),stroke:"#000",strokeWidth:.5});
+  s += K.rect(22,22,56,56,{rx:3,fill:"#1a1a1a",stroke:"#333",strokeWidth:.3});
+  s += K.text(50,30,"FOSSIL",{size:2.5,weight:700,color:"#fff",letter:1});
+  s += K.numerals({count:12,r:24,size:3.5,weight:700,color:"#fff",family:"var(--font)"});
+  s += K.ticks({count:60,r1:26,r2:28,w:.3,color:"#888"});
+  s += hands(K,{hour:H.baton(14,2),minute:H.baton(22,1.6),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- mondaine: Mondaine Swiss Railway ---- */
+face("mondaine",{name:"Mondaine Swiss Railway",cadence:"mondaine",draw(K){
+  let s = K.circle(50,50,44,{fill:"#fff",stroke:"#333",strokeWidth:.5});
+  s += K.circle(50,50,42,{fill:"#fff",stroke:"#111",strokeWidth:.3});
+  s += K.ticks({count:60,r1:38,r2:42,w:.5,color:"#111"});
+  s += K.ticks({count:12,r1:34,r2:42,w:1.5,color:"#111"});
+  s += K.text(50,30,"MONDAINE",{size:2.5,weight:700,color:"#111",letter:1});
+  s += K.text(50,70,"SWISS RAILWAY",{size:1.6,weight:400,color:"#111",letter:1});
+  s += hands(K,{hour:H.baton(18,3),minute:H.baton(30,2.4),second:{color:"#c0392b"}});
+  return s;
+}});
+
+/* ---- Architectural clocks --------------------------------------------- */
+/* ---- bigben: Big Ben Elizabeth Tower ---- */
+face("bigben",{name:"Big Ben Elizabeth Tower",cadence:"tick",draw(K){
+  let s = K.rect(30,10,40,80,{rx:2,fill:K.radial("case",{stops:[[0,"#d8c8a8"],[1,"#a89858"]]}),stroke:"#5a4a2a",strokeWidth:.5});
+  s += K.rect(34,14,32,72,{rx:1,fill:"#f0f0f0",stroke:"#5a4a2a",strokeWidth:.3});
+  s += K.circle(50,40,16,{fill:"#f0f0f0",stroke:"#111",strokeWidth:.5});
+  s += K.ticks({count:12,r1:13,r2:16,w:.5,color:"#111",cx:50,cy:40});
+  s += K.numerals({count:12,r:12,size:2.5,weight:600,color:"#111",family:"Georgia,serif",cx:50,cy:40,labels:["XII","I","II","III","IIII","V","VI","VII","VIII","IX","X","XI"]});
+  s += K.handG("h",`<path d="${H.baton(10,1.2)}" fill="#111"/>`,{cx:50,cy:40});
+  s += K.handG("m",`<path d="${H.baton(13,1)}" fill="#111"/>`,{cx:50,cy:40});
+  s += K.circle(50,40,1,{fill:"#111"});
+  s += K.text(50,70,"LONDON",{size:2,weight:700,color:"#111",letter:1});
+  s += K.text(50,74,"1859",{size:1.4,weight:400,color:"#333",letter:1});
+  return s;
+}});
+
+/* ---- twinbell: Westclox Twin Bell Alarm ---- */
+face("twinbell",{name:"Westclox Twin Bell Alarm",cadence:"tick",draw(K){
+  let s = K.circle(50,55,30,{fill:K.radial("case",{stops:[[0,"#3a3a3a"],[1,"#1a1a1a"]]}),stroke:"#000",strokeWidth:.5});
+  s += K.circle(50,55,26,{fill:"#f0f0f0",stroke:"#333",strokeWidth:.3});
+  s += K.ticks({count:12,r1:22,r2:26,w:.5,color:"#111",cx:50,cy:55});
+  s += K.numerals({count:12,r:20,size:2.5,weight:700,color:"#111",family:"var(--font)",cx:50,cy:55});
+  s += K.handG("h",`<path d="${H.baton(12,1.2)}" fill="#111"/>`,{cx:50,cy:55});
+  s += K.handG("m",`<path d="${H.baton(16,1)}" fill="#111"/>`,{cx:50,cy:55});
+  s += K.circle(50,55,1,{fill:"#111"});
+   /* Two bells on top. */
+  s += K.circle(38,20,6,{fill:K.radial("bell",{stops:[[0,"#e8ecef"],[1,"#8a9096"]]}),stroke:"#5a6066",strokeWidth:.3});
+  s += K.circle(62,20,6,{fill:K.radial("bell",{stops:[[0,"#e8ecef"],[1,"#8a9096"]]}),stroke:"#5a6066",strokeWidth:.3});
+  s += K.text(50,88,"WESTCLOX",{size:2,weight:700,color:"#cfd3d6",letter:1});
+  return s;
+}});
+
+/* ---- grandfather: Comtoise Longcase Clock ---- */
+face("grandfather",{name:"Comtoise Longcase Clock",cadence:"tick",draw(K){
+  let s = K.rect(30,8,40,84,{rx:2,fill:K.radial("case",{stops:[[0,"#5a3a1a"],[1,"#3a2a1a"]]}),stroke:"#1a1a1a",strokeWidth:.5});
+  s += K.rect(34,12,32,40,{rx:1,fill:"#f0f0f0",stroke:"#3a2a1a",strokeWidth:.3});
+  s += K.circle(50,32,14,{fill:"#f0f0f0",stroke:"#111",strokeWidth:.5});
+  s += K.ticks({count:12,r1:11,r2:14,w:.5,color:"#111",cx:50,cy:32});
+  s += K.numerals({count:12,r:10,size:2,weight:600,color:"#111",family:"Georgia,serif",cx:50,cy:32,labels:["XII","I","II","III","IIII","V","VI","VII","VIII","IX","X","XI"]});
+  s += K.handG("h",`<path d="${H.baton(8,1)}" fill="#111"/>`,{cx:50,cy:32});
+  s += K.handG("m",`<path d="${H.baton(11,.8)}" fill="#111"/>`,{cx:50,cy:32});
+  s += K.circle(50,32,.8,{fill:"#111"});
+   /* Pendulum. */
+  s += K.line(50,52,50,80,{stroke:"#c8b878",strokeWidth:.5});
+  s += K.circle(50,82,4,{fill:K.radial("pend",{stops:[[0,"#e8d8a8"],[1,"#a89858"]]}),stroke:"#5a4a2a",strokeWidth:.3});
+  s += K.text(50,90,"COMTOISE",{size:1.6,weight:700,color:"#cfd3d6",letter:1});
+  return s;
+}});
+
+/* ---- howardmiller: Howard Miller Grandfather Clock ---- */
+face("howardmiller",{name:"Howard Miller Grandfather Clock",cadence:"tick",draw(K){
+  let s = K.rect(30,8,40,84,{rx:2,fill:K.radial("case",{stops:[[0,"#5a3a1a"],[1,"#3a2a1a"]]}),stroke:"#1a1a1a",strokeWidth:.5});
+  s += K.rect(34,12,32,40,{rx:1,fill:"#f0f0f0",stroke:"#3a2a1a",strokeWidth:.3});
+  s += K.circle(50,32,14,{fill:"#f0f0f0",stroke:"#111",strokeWidth:.5});
+  s += K.ticks({count:12,r1:11,r2:14,w:.5,color:"#111",cx:50,cy:32});
+  s += K.numerals({count:12,r:10,size:2,weight:600,color:"#111",family:"Georgia,serif",cx:50,cy:32,labels:["XII","I","II","III","IIII","V","VI","VII","VIII","IX","X","XI"]});
+  s += K.handG("h",`<path d="${H.baton(8,1)}" fill="#111"/>`,{cx:50,cy:32});
+  s += K.handG("m",`<path d="${H.baton(11,.8)}" fill="#111"/>`,{cx:50,cy:32});
+  s += K.circle(50,32,.8,{fill:"#111"});
+  s += K.line(50,52,50,80,{stroke:"#c8b878",strokeWidth:.5});
+  s += K.circle(50,82,4,{fill:K.radial("pend",{stops:[[0,"#e8d8a8"],[1,"#a89858"]]}),stroke:"#5a4a2a",strokeWidth:.3});
+  s += K.text(50,90,"HOWARD MILLER",{size:1.4,weight:700,color:"#cfd3d6",letter:1});
+  return s;
+}});
+
+/* ---- orloj: Prague Astronomical Clock ---- */
+face("orloj",{name:"Prague Astronomical Clock",cadence:"tick",draw(K){
+  let s = K.rect(20,10,60,80,{rx:2,fill:K.radial("case",{stops:[[0,"#5a3a1a"],[1,"#3a2a1a"]]}),stroke:"#1a1a1a",strokeWidth:.5});
+  s += K.rect(24,14,52,72,{rx:1,fill:"#1a1a2a",stroke:"#3a2a1a",strokeWidth:.3});
+   /* Zodiac ring. */
+  s += K.circle(50,40,20,{fill:"#1a1a2a",stroke:"#c8b878",strokeWidth:.5});
+  s += K.ticks({count:12,r1:17,r2:20,w:.5,color:"#c8b878",cx:50,cy:40});
+  s += K.numerals({count:12,r:15,size:2,weight:600,color:"#c8b878",family:"Georgia,serif",cx:50,cy:40,labels:["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"]});
+   /* Day/night sector. */
+  s += K.handG("h",`<path d="M0 0 L-3 -18 L0 -20 L3 -18 Z" fill="#c8b878"/>`,{cx:50,cy:40});
+  s += K.handG("m",`<path d="M0 0 L-2 -14 L0 -16 L2 -14 Z" fill="#e05a4a"/>`,{cx:50,cy:40});
+  s += K.circle(50,40,1,{fill:"#c8b878"});
+   /* Side figures (blocks). */
+  s += K.rect(28,60,8,16,{rx:1,fill:"#3a2a1a",stroke:"#c8b878",strokeWidth:.3});
+  s += K.rect(64,60,8,16,{rx:1,fill:"#3a2a1a",stroke:"#c8b878",strokeWidth:.3});
+  s += K.text(50,88,"PRAGUE",{size:1.6,weight:700,color:"#cfd3d6",letter:1});
+  return s;
+}});
+
+/* ---- grandcentral: Grand Central Terminal Clock ---- */
+face("grandcentral",{name:"Grand Central Terminal Clock",cadence:"tick",draw(K){
+  let s = K.rect(14,14,72,72,{rx:4,fill:K.radial("case",{stops:[[0,"#3a3a3a"],[1,"#1a1a1a"]]}),stroke:"#000",strokeWidth:.5});
+  s += K.rect(18,18,64,64,{rx:2,fill:"#1a1a1a",stroke:"#333",strokeWidth:.3});
+   /* Two dials. */
+  for(const [cx,cy] of [[35,35],[65,35]]){
+    s += K.circle(cx,cy,12,{fill:"#f0f0f0",stroke:"#111",strokeWidth:.5});
+    s += K.ticks({count:12,r1:9,r2:12,w:.5,color:"#111",cx,cy});
+    s += K.numerals({count:12,r:8,size:2,weight:700,color:"#111",family:"var(--font)",cx,cy});
+    s += K.handG("h",`<path d="${H.baton(7,1)}" fill="#111"/>`,{cx,cy});
+    s += K.handG("m",`<path d="${H.baton(10,.8)}" fill="#111"/>`,{cx,cy});
+    s += K.circle(cx,cy,.8,{fill:"#111"});
+     }
+  s += K.text(50,66,"GRAND CENTRAL",{size:2,weight:700,color:"#cfd3d6",letter:1});
+  s += K.text(50,70,"TERMINAL",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  return s;
+}});
+
+/* ---- railroad: Norfolk Southern Pocket Watch ---- */
+face("railroad",{name:"Norfolk Southern Pocket Watch",cadence:"tick",draw(K){
+  let s = K.circle(50,50,40,{fill:K.radial("case",{stops:[[0,"#e8d8a8"],[1,"#a89858"]]}),stroke:"#5a4a2a",strokeWidth:.5});
+  s += K.circle(50,50,36,{fill:"#f0f0f0",stroke:"#5a4a2a",strokeWidth:.3});
+  s += K.ticks({count:60,r1:32,r2:36,w:.3,color:"#111"});
+  s += K.ticks({count:12,r1:28,r2:36,w:1,color:"#111"});
+  s += K.numerals({count:12,r:26,size:3,weight:600,color:"#111",family:"Georgia,serif",labels:["XII","I","II","III","IIII","V","VI","VII","VIII","IX","X","XI"]});
+  s += K.text(50,30,"NORFOLK",{size:2,weight:700,color:"#111",letter:1});
+  s += K.text(50,34,"SOUTHERN",{size:1.6,weight:400,color:"#333",letter:1});
+  s += K.handG("h",`<path d="${H.baton(14,1.4)}" fill="#111"/>`,{cx:50,cy:50});
+  s += K.handG("m",`<path d="${H.baton(20,1.2)}" fill="#111"/>`,{cx:50,cy:50});
+  s += K.circle(50,50,1,{fill:"#111"});
+  return s;
+}});
+
+/* ---- mickey: Ingersoll 1933 Mickey Mouse ---- */
+face("mickey",{name:"Ingersoll 1933 Mickey Mouse",cadence:"tick",draw(K){
+  let s = K.circle(50,50,40,{fill:K.radial("case",{stops:[[0,"#e8ecef"],[1,"#8a9096"]]}),stroke:"#5a6066",strokeWidth:.5});
+  s += K.circle(50,50,36,{fill:"#f0f0f0",stroke:"#5a6066",strokeWidth:.3});
+  s += K.ticks({count:12,r1:32,r2:36,w:.5,color:"#111"});
+  s += K.numerals({count:12,r:28,size:3,weight:700,color:"#111",family:"var(--font)"});
+   /* Mickey silhouette. */
+  s += K.circle(50,30,6,{fill:"#111"});
+  s += K.circle(44,24,3,{fill:"#111"});
+  s += K.circle(56,24,3,{fill:"#111"});
+  s += K.handG("h",`<path d="${H.baton(14,1.4)}" fill="#111"/>`,{cx:50,cy:50});
+  s += K.handG("m",`<path d="${H.baton(20,1.2)}" fill="#111"/>`,{cx:50,cy:50});
+  s += K.circle(50,50,1,{fill:"#111"});
+  s += K.text(50,70,"INGERSOLL",{size:1.6,weight:700,color:"#111",letter:1});
+  return s;
+}});
+
+/* ---- f1: Rolex Trackside Clock ---- */
+face("f1",{name:"Rolex Trackside Clock",cadence:"sweep",draw(K){
+  let s = K.circle(50,50,44,{fill:K.radial("case",{stops:[[0,"#3a3a3a"],[1,"#1a1a1a"]]}),stroke:"#000",strokeWidth:.5});
+  s += K.circle(50,50,40,{fill:"#1a1a1a",stroke:"#333",strokeWidth:.3});
+  s += K.ticks({count:60,r1:36,r2:40,w:.5,color:"#fff"});
+  s += K.ticks({count:12,r1:32,r2:40,w:1.5,color:"#fff"});
+  s += K.numerals({count:12,r:30,size:4,weight:700,color:"#fff",family:"var(--font)"});
+  s += K.text(50,30,"ROLEX",{size:2.5,weight:700,color:"#e05a4a",letter:1});
+  s += K.text(50,70,"F1",{size:3,weight:700,color:"#e05a4a",letter:1});
+  s += hands(K,{hour:H.baton(18,3),minute:H.baton(30,2.4),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- bigpilot: IWC Big Pilot's Watch 43 IW500201 ---- */
+face("bigpilot",{name:"IWC Big Pilot's Watch 43 IW500201",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:4,caseColor:"#3a3a3a",bezelColor:"#1a1a1a",dial:K.url("dial")});
+  s += K.text(50,30,"IWC",{size:3,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"SCHAFFHAUSEN",{size:1.4,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,66,"BIG PILOT",{size:1.8,weight:700,color:"#fff",letter:.5});
+  s += K.numerals({count:12,r:30,size:4,weight:700,color:"#e8e8e8",family:"var(--font)"});
+  s += K.ticks({count:60,r1:34,r2:36,w:.3,color:"#888"});
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.baton(18,3),minute:H.baton(30,2.4),second:{color:"#e05a4a"}});
+  return s;
+}});
+
+/* ---- santos: Cartier Santos 103.20.37.630.00 ---- */
+face("santos",{name:"Cartier Santos 103.20.37.630.00",cadence:"sweep",draw(K){
+  let s = K.rect(18,18,64,64,{rx:6,fill:K.radial("case",{stops:[[0,"#e8d8a8"],[1,"#a89858"]]}),stroke:"#5a4a2a",strokeWidth:.5});
+  s += K.rect(22,22,56,56,{rx:3,fill:K.radial("dial",{stops:[[0,"#f0f0f0"],[1,"#d8d8d8"]]}),stroke:"#5a4a2a",strokeWidth:.3});
+  s += K.text(50,30,"CARTIER",{size:2.5,weight:700,color:"#111",letter:.5});
+  s += K.text(50,70,"SANTOS",{size:1.6,weight:400,color:"#333",letter:1});
+  s += K.numerals({count:12,r:24,size:3,weight:600,color:"#111",family:"Georgia,serif",labels:["XII","I","II","III","IIII","V","VI","VII","VIII","IX","X","XI"]});
+  s += K.ticks({count:60,r1:26,r2:28,w:.3,color:"#333"});
+  s += K.dateWin(66,47,7,6,{fill:"#f5f3ea",color:"#111",frame:"#888"});
+  s += hands(K,{hour:H.sword(14,2.4),minute:H.sword(22,1.8),second:{color:"#1a3a6a"}});
+  return s;
+}});
+
+/* ---- snoopy: Omega Speedmaster Snoopy Award ---- */
+face("snoopy",{name:"Omega Speedmaster Snoopy Award",cadence:"sweep",draw(K){
+  let s = K.radial("dial",{stops:[[0,"#1a1a1a"],[1,"#000"]]});
+  s += roundCase(K,{r:46,bezel:5,caseColor:"#d0d4d8",bezelColor:"#1a1a1a",dial:K.url("dial")});
+  s += K.circle(50,50,41,{fill:"#111",stroke:"#333",strokeWidth:.4});
+  s += K.ticks({count:60,r1:38,r2:40,w:.4,color:"#cfd3d6"});
+  s += K.text(50,30,"SPEEDMASTER",{size:2.4,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,33,"PROFESSIONAL",{size:1.6,weight:400,color:"#cfd3d6",letter:1});
+  s += K.text(50,64,"OMEGA",{size:2.6,weight:700,color:"#fff",letter:.5});
+  s += K.text(50,67,"50",{size:1.6,weight:700,color:"#e05a4a",letter:1});
+  for(const [cx,cy] of [[70,50],[50,70],[30,50]]){
+    s += K.circle(cx,cy,7,{fill:"#0d0d0d",stroke:"#333",strokeWidth:.3});
+    s += K.ticks({count:12,r1:5,r2:6.5,w:.3,color:"#888",cx,cy});
+      }
+  s += K.handG("s",`<path d="${H.baton(18,1)}" fill="#fff"/>`,{cx:70,cy:50});
+  s += K.handG("m",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:50,cy:70});
+  s += K.handG("h",`<path d="${H.baton(14,1)}" fill="#fff"/>`,{cx:30,cy:50});
+  s += K.numerals({count:12,r:30,size:3,weight:700,color:"#fff",labels:["12","1","2","3","4","5","6","7","8","9","10","11"],skip:(i)=>[0,3,6,9].includes(i)});
+  s += hands(K,{hour:H.baton(16,2.4),minute:H.baton(26,1.8),second:{color:"#e05a4a"}});
+  return s;
+}});
+/* ---- City atlas -------------------------------------------------------- */
+/* A compact atlas of world cities: [id, name, country, IANA zone]. */
+const CITIES = [
+  ["pago-pago","Pago Pago","American Samoa","Pacific/Pago_Pago"],
+  ["honolulu","Honolulu","United States","Pacific/Honolulu"],
+  ["papeete","Papeete","French Polynesia","Pacific/Tahiti"],
+  ["anchorage","Anchorage","United States","America/Anchorage"],
+  ["vancouver","Vancouver","Canada","America/Vancouver"],
+  ["seattle","Seattle","United States","America/Los_Angeles"],
+  ["portland","Portland","United States","America/Los_Angeles"],
+  ["san-francisco","San Francisco","United States","America/Los_Angeles"],
+  ["los-angeles","Los Angeles","United States","America/Los_Angeles"],
+  ["las-vegas","Las Vegas","United States","America/Los_Angeles"],
+  ["tijuana","Tijuana","Mexico","America/Tijuana"],
+  ["phoenix","Phoenix","United States","America/Phoenix"],
+  ["salt-lake-city","Salt Lake City","United States","America/Denver"],
+  ["denver","Denver","United States","America/Denver"],
+  ["calgary","Calgary","Canada","America/Edmonton"],
+  ["guatemala-city","Guatemala City","Guatemala","America/Guatemala"],
+  ["mexico-city","Mexico City","Mexico","America/Mexico_City"],
+  ["winnipeg","Winnipeg","Canada","America/Winnipeg"],
+  ["chicago","Chicago","United States","America/Chicago"],
+  ["minneapolis","Minneapolis","United States","America/Chicago"],
+  ["dallas","Dallas","United States","America/Chicago"],
+  ["houston","Houston","United States","America/Chicago"],
+  ["new-orleans","New Orleans","United States","America/Chicago"],
+  ["bogota","Bogotá","Colombia","America/Bogota"],
+  ["lima","Lima","Peru","America/Lima"],
+  ["quito","Quito","Ecuador","America/Guayaquil"],
+  ["panama-city","Panama City","Panama","America/Panama"],
+  ["havana","Havana","Cuba","America/Havana"],
+  ["miami","Miami","United States","America/New_York"],
+  ["atlanta","Atlanta","United States","America/New_York"],
+  ["washington","Washington, D.C.","United States","America/New_York"],
+  ["new-york","New York","United States","America/New_York"],
+  ["boston","Boston","United States","America/New_York"],
+  ["detroit","Detroit","United States","America/Detroit"],
+  ["toronto","Toronto","Canada","America/Toronto"],
+  ["montreal","Montréal","Canada","America/Toronto"],
+  ["caracas","Caracas","Venezuela","America/Caracas"],
+  ["la-paz","La Paz","Bolivia","America/La_Paz"],
+  ["santiago","Santiago","Chile","America/Santiago"],
+  ["halifax","Halifax","Canada","America/Halifax"],
+  ["san-juan","San Juan","Puerto Rico","America/Puerto_Rico"],
+  ["st-johns","St. John's","Canada","America/St_Johns"],
+  ["buenos-aires","Buenos Aires","Argentina","America/Argentina/Buenos_Aires"],
+  ["montevideo","Montevideo","Uruguay","America/Montevideo"],
+  ["sao-paulo","São Paulo","Brazil","America/Sao_Paulo"],
+  ["rio-de-janeiro","Rio de Janeiro","Brazil","America/Sao_Paulo"],
+  ["nuuk","Nuuk","Greenland","America/Nuuk"],
+  ["south-georgia","King Edward Point","South Georgia","Atlantic/South_Georgia"],
+  ["praia","Praia","Cape Verde","Atlantic/Cape_Verde"],
+  ["ponta-delgada","Ponta Delgada","Azores, Portugal","Atlantic/Azores"],
+  ["reykjavik","Reykjavík","Iceland","Atlantic/Reykjavik"],
+  ["dakar","Dakar","Senegal","Africa/Dakar"],
+  ["accra","Accra","Ghana","Africa/Accra"],
+  ["abidjan","Abidjan","Côte d'Ivoire","Africa/Abidjan"],
+  ["lisbon","Lisbon","Portugal","Europe/Lisbon"],
+  ["dublin","Dublin","Ireland","Europe/Dublin"],
+  ["london","London","United Kingdom","Europe/London"],
+  ["edinburgh","Edinburgh","United Kingdom","Europe/London"],
+  ["casablanca","Casablanca","Morocco","Africa/Casablanca"],
+  ["lagos","Lagos","Nigeria","Africa/Lagos"],
+  ["algiers","Algiers","Algeria","Africa/Algiers"],
+  ["madrid","Madrid","Spain","Europe/Madrid"],
+  ["barcelona","Barcelona","Spain","Europe/Madrid"],
+  ["paris","Paris","France","Europe/Paris"],
+  ["brussels","Brussels","Belgium","Europe/Brussels"],
+  ["amsterdam","Amsterdam","Netherlands","Europe/Amsterdam"],
+  ["geneva","Geneva","Switzerland","Europe/Zurich"],
+  ["zurich","Zürich","Switzerland","Europe/Zurich"],
+  ["biel","Biel/Bienne","Switzerland","Europe/Zurich"],
+  ["le-locle","Le Locle","Switzerland","Europe/Zurich"],
+  ["milan","Milan","Italy","Europe/Rome"],
+  ["rome","Rome","Italy","Europe/Rome"],
+  ["munich","Munich","Germany","Europe/Berlin"],
+  ["frankfurt","Frankfurt","Germany","Europe/Berlin"],
+  ["berlin","Berlin","Germany","Europe/Berlin"],
+  ["glashutte","Glashütte","Germany","Europe/Berlin"],
+  ["copenhagen","Copenhagen","Denmark","Europe/Copenhagen"],
+  ["oslo","Oslo","Norway","Europe/Oslo"],
+  ["stockholm","Stockholm","Sweden","Europe/Stockholm"],
+  ["vienna","Vienna","Austria","Europe/Vienna"],
+  ["prague","Prague","Czechia","Europe/Prague"],
+  ["warsaw","Warsaw","Poland","Europe/Warsaw"],
+  ["budapest","Budapest","Hungary","Europe/Budapest"],
+  ["tunis","Tunis","Tunisia","Africa/Tunis"],
+  ["johannesburg","Johannesburg","South Africa","Africa/Johannesburg"],
+  ["cape-town","Cape Town","South Africa","Africa/Johannesburg"],
+  ["cairo","Cairo","Egypt","Africa/Cairo"],
+  ["athens","Athens","Greece","Europe/Athens"],
+  ["bucharest","Bucharest","Romania","Europe/Bucharest"],
+  ["kyiv","Kyiv","Ukraine","Europe/Kyiv"],
+  ["helsinki","Helsinki","Finland","Europe/Helsinki"],
+  ["tallinn","Tallinn","Estonia","Europe/Tallinn"],
+  ["istanbul","Istanbul","Türkiye","Europe/Istanbul"],
+  ["jerusalem","Jerusalem","Israel","Asia/Jerusalem"],
+  ["beirut","Beirut","Lebanon","Asia/Beirut"],
+  ["amman","Amman","Jordan","Asia/Amman"],
+  ["nairobi","Nairobi","Kenya","Africa/Nairobi"],
+  ["addis-ababa","Addis Ababa","Ethiopia","Africa/Addis_Ababa"],
+  ["moscow","Moscow","Russia","Europe/Moscow"],
+  ["riyadh","Riyadh","Saudi Arabia","Asia/Riyadh"],
+  ["baghdad","Baghdad","Iraq","Asia/Baghdad"],
+  ["doha","Doha","Qatar","Asia/Qatar"],
+  ["tehran","Tehran","Iran","Asia/Tehran"],
+  ["dubai","Dubai","United Arab Emirates","Asia/Dubai"],
+  ["abu-dhabi","Abu Dhabi","United Arab Emirates","Asia/Dubai"],
+  ["muscat","Muscat","Oman","Asia/Muscat"],
+  ["baku","Baku","Azerbaijan","Asia/Baku"],
+  ["tbilisi","Tbilisi","Georgia","Asia/Tbilisi"],
+  ["kabul","Kabul","Afghanistan","Asia/Kabul"],
+  ["karachi","Karachi","Pakistan","Asia/Karachi"],
+  ["tashkent","Tashkent","Uzbekistan","Asia/Tashkent"],
+  ["mumbai","Mumbai","India","Asia/Kolkata"],
+  ["new-delhi","New Delhi","India","Asia/Kolkata"],
+  ["bengaluru","Bengaluru","India","Asia/Kolkata"],
+  ["colombo","Colombo","Sri Lanka","Asia/Colombo"],
+  ["kathmandu","Kathmandu","Nepal","Asia/Kathmandu"],
+  ["dhaka","Dhaka","Bangladesh","Asia/Dhaka"],
+  ["almaty","Almaty","Kazakhstan","Asia/Almaty"],
+  ["yangon","Yangon","Myanmar","Asia/Yangon"],
+  ["bangkok","Bangkok","Thailand","Asia/Bangkok"],
+  ["hanoi","Hanoi","Vietnam","Asia/Ho_Chi_Minh"],
+  ["jakarta","Jakarta","Indonesia","Asia/Jakarta"],
+  ["kuala-lumpur","Kuala Lumpur","Malaysia","Asia/Kuala_Lumpur"],
+  ["singapore","Singapore","Singapore","Asia/Singapore"],
+  ["hong-kong","Hong Kong","China","Asia/Hong_Kong"],
+  ["macau","Macau","China","Asia/Macau"],
+  ["shenzhen","Shenzhen","China","Asia/Shanghai"],
+  ["shanghai","Shanghai","China","Asia/Shanghai"],
+  ["beijing","Beijing","China","Asia/Shanghai"],
+  ["taipei","Taipei","Taiwan","Asia/Taipei"],
+  ["manila","Manila","Philippines","Asia/Manila"],
+  ["perth","Perth","Australia","Australia/Perth"],
+  ["seoul","Seoul","South Korea","Asia/Seoul"],
+  ["tokyo","Tokyo","Japan","Asia/Tokyo"],
+  ["osaka","Osaka","Japan","Asia/Tokyo"],
+  ["darwin","Darwin","Australia","Australia/Darwin"],
+  ["adelaide","Adelaide","Australia","Australia/Adelaide"],
+  ["brisbane","Brisbane","Australia","Australia/Brisbane"],
+  ["sydney","Sydney","Australia","Australia/Sydney"],
+  ["melbourne","Melbourne","Australia","Australia/Melbourne"],
+  ["hobart","Hobart","Australia","Australia/Hobart"],
+  ["port-moresby","Port Moresby","Papua New Guinea","Pacific/Port_Moresby"],
+  ["noumea","Nouméa","New Caledonia","Pacific/Noumea"],
+  ["auckland","Auckland","New Zealand","Pacific/Auckland"],
+  ["wellington","Wellington","New Zealand","Pacific/Auckland"],
+  ["suva","Suva","Fiji","Pacific/Fiji"],
+  ["chatham","Waitangi","Chatham Islands, New Zealand","Pacific/Chatham"],
+  ["apia","Apia","Samoa","Pacific/Apia"],
+  ["nukualofa","Nuku'alofa","Tonga","Pacific/Tongatapu"],
+  ["kiritimati","Kiritimati","Kiribati","Pacific/Kiritimati"]
+].map(([id,name,country,zone])=>({id,name,country,zone}));
+const CITY_BY_ID = new Map(CITIES.map(c=>[c.id,c]));
+const DEFAULT_CITIES = ["san-francisco","new-york","sao-paulo","london","zurich","dubai","tokyo","sydney"];
+const FACE_KEYS = Object.keys(FACES);
+const STORE_KEY = "worldclock.qwen-3.8.v1";
+
+/* ---- Face build / update / render ------------------------------------- */
+/* A face is a spec whose draw(K) returns an SVG string. We wrap it in a
+   live <svg> element and re-bind its [data-hand]/[data-text]/[data-show]
+   nodes every frame from a fresh time snapshot. */
+function buildFace(key){
+  const spec = FACES[key] || FACES[FACE_KEYS[0]];
+  const K = kit();
+  const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+  svg.setAttribute("viewBox", spec.viewBox || "0 0 100 100");
+  svg.setAttribute("preserveAspectRatio","xMidYMid meet");
+  svg.innerHTML = spec.draw(K);
+  return { svg, face: spec };
+}
+function updateFace(instance, now, zone){
+  const t = snap(now, zone, instance.face.cadence);
+  applyBindings(instance.svg, t);
+  return t;
+}
+
+/* ---- State ------------------------------------------------------------ */
+const state = { entries: [] }; // { city, faceKey, el, instance, lastMinute, offset }
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return null;
+    const data = JSON.parse(raw);
+    if(!data || data.version !== 1 || !Array.isArray(data.entries)) return null;
+    return data.entries
+      .filter(e=>CITY_BY_ID.has(e.city))
+      .map(e=>({ city: CITY_BY_ID.get(e.city), faceKey: FACES[e.face] ? e.face : null }));
+  }catch(e){ return null; }
+}
+function save(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify({ version:1, entries: state.entries.map(e=>({ city:e.city.id, face:e.faceKey })) }));
+  }catch(e){ /* storage unavailable: still works for this session */ }
+}
+function shuffled(list){
+  const a = list.slice();
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; }
+  return a;
+}
+/* Pick a face not used by any other entry when one is free; never the current one when avoidable. */
+function pickFace(exclude=new Set(), avoid=null){
+  let pool = FACE_KEYS.filter(k=>!exclude.has(k) && k!==avoid);
+  if(!pool.length) pool = FACE_KEYS.filter(k=>k!==avoid);
+  if(!pool.length) pool = FACE_KEYS.slice();
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+function usedFaces(except){
+  const used = new Set();
+  for(const e of state.entries) if(e!==except && e.faceKey) used.add(e.faceKey);
+  return used;
+}
+
+/* ---- DOM -------------------------------------------------------------- */
+const $ = (sel, root=document)=>root.querySelector(sel);
+const board = $("#board");
+const empty = $("#empty");
+const input = $("#city-input");
+const list = $("#city-list");
+const summary = $("#summary");
+const utcNow = $("#utc");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+function offsetLabel(min){
+  const sign = min<0 ? "−" : "+";
+  const a = Math.abs(min), h = Math.floor(a/60), mm = a%60;
+  return `UTC${sign}${h}${mm ? ":"+String(mm).padStart(2,"0") : ""}`;
+}
+function deltaLabel(min){
+  if(min===0) return "same time as you";
+  const sign = min<0 ? "−" : "+";
+  const a = Math.abs(min), h = Math.floor(a/60), mm = a%60;
+  return `${sign}${h}${mm ? ":"+String(mm).padStart(2,"0") : ""}h from you`;
+}
+function phaseOf(h){
+  if(h>=6 && h<8) return "dawn";
+  if(h>=8 && h<18) return "day";
+  if(h>=18 && h<20) return "dusk";
+  return "night";
+}
+
+/* Build a fresh card element matching the page's card CSS. */
+function cardEl(){
+  const el = document.createElement("article");
+  el.className = "card";
+  el.innerHTML =
+    `<div class="card-head">
+       <div><h2 class="city"></h2><p class="where"></p></div>
+       <div class="card-actions">
+         <button class="icon-btn shuffle-one" type="button" title="Shuffle this face"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button>
+         <button class="icon-btn remove" type="button" title="Remove city"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+       </div>
+     </div>
+     <div class="well"><div class="phase" data-p="day" aria-hidden="true">DAY</div></div>
+     <div class="card-foot">
+       <p class="facename"></p>
+       <div><div class="readout"><span class="hm">--:--</span> <span class="sec">00</span></div><p class="delta"></p></div>
+     </div>`;
+  return el;
+}
+
+function mountEntry(entry){
+  const el = cardEl();
+  el.dataset.city = entry.city.id;
+  $(".city", el).textContent = entry.city.name;
+  $(".where", el).textContent = entry.city.country;
+  $(".shuffle-one", el).setAttribute("aria-label", `Shuffle the face for ${entry.city.name}`);
+  $(".remove", el).setAttribute("aria-label", `Remove ${entry.city.name}`);
+  $(".shuffle-one", el).addEventListener("click", ()=>{
+    entry.faceKey = pickFace(usedFaces(entry), entry.faceKey);
+    setFace(entry);
+    save();
+  });
+  $(".remove", el).addEventListener("click", ()=>removeEntry(entry));
+  entry.el = el;
+  entry.phase = $(".phase", el);
+  entry.hm = $(".hm", el);
+  entry.sec = $(".sec", el);
+  entry.delta = $(".delta", el);
+  setFace(entry);
+  return el;
+}
+function setFace(entry){
+  const well = $(".well", entry.el);
+  const old = well.querySelector("svg");
+  if(old) old.remove();
+  entry.instance = buildFace(entry.faceKey);
+  well.appendChild(entry.instance.svg);
+  $(".facename", entry.el).textContent = entry.instance.face.name;
+  entry.el.setAttribute("aria-label", `${entry.city.name}, ${entry.instance.face.name}`);
+  entry.lastMinute = -1;
+  updateEntry(entry, new Date(), true);
+}
+function updateEntry(entry, now, force){
+  const t = updateFace(entry.instance, now, entry.city.zone);
+  const minuteKey = t.h*60 + t.m;
+  if(force || minuteKey !== entry.lastMinute){
+    entry.lastMinute = minuteKey;
+    entry.hm.textContent = `${String(t.h).padStart(2,"0")}:${String(t.m).padStart(2,"0")}`;
+    const local = -now.getTimezoneOffset();
+    entry.delta.innerHTML = `<b>${offsetLabel(t.offset)}</b> · ${deltaLabel(t.offset - local)}`;
+    const p = phaseOf(t.h);
+    entry.phase.dataset.p = p;
+    entry.phase.textContent = p.toUpperCase();
+    entry.offset = t.offset;
+  }
+  entry.sec.textContent = String(t.sW).padStart(2,"0");
+  return t;
+}
+
+function sortEntries(){
+  const now = new Date();
+  for(const e of state.entries) if(e.offset===undefined) e.offset = snap(now, e.city.zone, "tick").offset;
+  state.entries.sort((a,b)=> a.offset - b.offset || a.city.name.localeCompare(b.city.name, "en"));
+  const order = state.entries.map(e=>e.el);
+  const current = Array.from(board.children).filter(c=>c.classList.contains("card"));
+  if(order.some((el,i)=>el!==current[i])) for(const el of order) board.appendChild(el);
+}
+
+function renderAll(){
+  board.innerHTML = "";
+  if(!state.entries.length){
+    empty.hidden = false;
+  } else {
+    empty.hidden = true;
+    for(const e of state.entries) board.appendChild(e.el || mountEntry(e));
+    sortEntries();
+  }
+  updateSummary();
+}
+function updateSummary(){
+  const n = state.entries.length;
+  summary.textContent = `${n} ${n===1 ? "city" : "cities"} · ${FACE_KEYS.length} faces`;
+}
+function seedDefaults(){
+  state.entries = [];
+  const pool = shuffled(FACE_KEYS);
+  DEFAULT_CITIES.forEach((id,i)=> state.entries.push({ city: CITY_BY_ID.get(id), faceKey: pool[i % pool.length] }));
+}
+function addCity(city){
+  if(state.entries.some(e=>e.city.id===city.id)){
+    const el = state.entries.find(e=>e.city.id===city.id).el;
+    el.scrollIntoView({ behavior: reducedMotion.matches ? "auto" : "smooth", block: "center" });
+    el.animate([{ outline: "2px solid var(--accent)" }, { outline: "2px solid transparent" }], { duration: 1200 });
+    return;
+  }
+  const entry = { city, faceKey: pickFace(usedFaces()) };
+  state.entries.push(entry);
+  renderAll();
+  save();
+  entry.el.scrollIntoView({ behavior: reducedMotion.matches ? "auto" : "smooth", block: "center" });
+}
+function removeEntry(entry){
+  state.entries = state.entries.filter(e=>e!==entry);
+  renderAll();
+  save();
+}
+function shuffleAll(){
+  const pool = shuffled(FACE_KEYS);
+  const taken = new Set();
+  state.entries.forEach((e,i)=>{
+    let next = pool.find(k=>!taken.has(k) && k!==e.faceKey);
+    if(!next) next = pool.find(k=>!taken.has(k)) || pool[i % pool.length];
+    taken.add(next);
+    e.faceKey = next;
+    setFace(e);
+  });
+  save();
+}
+
+/* ---- Search combobox -------------------------------------------------- */
+let matches = [];
+let activeIndex = -1;
+function norm(s){ return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+function searchCities(q){
+  const n = norm(q.trim());
+  if(!n) return [];
+  const scored = [];
+  for(const c of CITIES){
+    const name = norm(c.name), country = norm(c.country), zone = norm(c.zone.replace(/_/g, " "));
+    let score = 0;
+    if(name.startsWith(n)) score = 3;
+    else if(name.includes(n)) score = 2;
+    else if(country.includes(n) || zone.includes(n)) score = 1;
+    if(score) scored.push([score, c]);
+  }
+  scored.sort((a,b)=> b[0]-a[0] || a[1].name.localeCompare(b[1].name, "en"));
+  return scored.slice(0,12).map(s=>s[1]);
+}
+function renderSuggestions(){
+  list.innerHTML = "";
+  if(!input.value.trim()){ closeList(); return; }
+  matches = searchCities(input.value);
+  const now = new Date();
+  if(!matches.length){
+    const li = document.createElement("li");
+    li.className = "none"; li.setAttribute("role","option"); li.setAttribute("aria-disabled","true");
+    li.textContent = "No matching city";
+    list.appendChild(li);
+  }
+  matches.forEach((c,i)=>{
+    const li = document.createElement("li");
+    li.setAttribute("role","option");
+    li.id = `opt-${c.id}`;
+    li.setAttribute("aria-selected", String(i===activeIndex));
+    const off = snap(now, c.zone, "tick").offset;
+    li.innerHTML = `<span class="city"></span><span class="off">${offsetLabel(off)}</span><span class="country"></span>`;
+    $(".city", li).textContent = c.name;
+    $(".country", li).textContent = c.country;
+    li.addEventListener("mousedown", (ev)=>{ ev.preventDefault(); choose(c); });
+    list.appendChild(li);
+  });
+  list.hidden = false;
+  input.setAttribute("aria-expanded","true");
+  input.setAttribute("aria-activedescendant", activeIndex>=0 && matches[activeIndex] ? `opt-${matches[activeIndex].id}` : "");
+}
+function closeList(){
+  list.hidden = true; list.innerHTML = "";
+  input.setAttribute("aria-expanded","false");
+  input.removeAttribute("aria-activedescendant");
+  activeIndex = -1; matches = [];
+}
+function choose(city){
+  addCity(city);
+  input.value = "";
+  closeList();
+  input.focus();
+}
+input.addEventListener("input", ()=>{ activeIndex = -1; renderSuggestions(); });
+input.addEventListener("focus", ()=>{ if(input.value.trim()) renderSuggestions(); });
+input.addEventListener("keydown", (ev)=>{
+  if(ev.key==="ArrowDown" || ev.key==="ArrowUp"){
+    if(!matches.length){ renderSuggestions(); if(!matches.length) return; }
+    ev.preventDefault();
+    const dir = ev.key==="ArrowDown" ? 1 : -1;
+    activeIndex = (activeIndex + dir + matches.length) % matches.length;
+    renderSuggestions();
+    const active = list.children[activeIndex];
+    if(active) active.scrollIntoView({ block: "nearest" });
+  } else if(ev.key==="Enter"){
+    ev.preventDefault();
+    if(!matches.length) renderSuggestions();
+    const pick = matches[activeIndex>=0 ? activeIndex : 0];
+    if(pick) choose(pick);
+  } else if(ev.key==="Escape"){
+    if(list.hidden) input.value = "";
+    closeList();
+  }
+});
+document.addEventListener("click", (ev)=>{ if(!ev.target.closest(".search")) closeList(); });
+document.addEventListener("keydown", (ev)=>{
+  if(ev.key==="/" && document.activeElement!==input && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)){ ev.preventDefault(); input.focus(); }
+});
+$("#shuffle-all").addEventListener("click", shuffleAll);
+$("#reset").addEventListener("click", ()=>{ seedDefaults(); renderAll(); save(); });
+$("#restore").addEventListener("click", ()=>{ seedDefaults(); renderAll(); save(); });
+
+/* ---- Live loop -------------------------------------------------------- */
+let lastSecond = -1;
+let lastSortCheck = 0;
+function frame(){
+  const now = new Date();
+  const whole = Math.floor(now.getTime()/1000);
+  const stepOnly = reducedMotion.matches;
+  if(!stepOnly || whole !== lastSecond){
+    for(const e of state.entries) if(e.el && e.el.isConnected) updateEntry(e, now, false);
+    if(whole !== lastSecond){
+      utcNow.textContent = now.toISOString().slice(11,19);
+      lastSecond = whole;
+      if(now.getTime() - lastSortCheck > 30000){ lastSortCheck = now.getTime(); sortEntries(); }
+    }
+  }
+  if(stepOnly) setTimeout(frame, 1000 - now.getMilliseconds() + 5);
+  else requestAnimationFrame(frame);
+}
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) lastSecond = -1; });
+
+/* ---- Boot ------------------------------------------------------------- */
+const saved = load();
+if(saved && saved.length){
+  state.entries = saved;
+  const used = new Set();
+  for(const e of state.entries){
+    if(!e.faceKey || used.has(e.faceKey)) e.faceKey = pickFace(used);
+    used.add(e.faceKey);
+  }
+} else if(saved === null){
+  seedDefaults();
+}
+renderAll();
+frame();
+
+window.WorldClock = { FACES, FACE_KEYS, CITIES, snap, buildFace, updateFace, addCity, shuffleAll, state };
+
+</script>
+</body>
+</html>
