@@ -31,6 +31,7 @@ Models with verified release dates are listed newest first. **Model release** li
 | Model | Model release | Snapshot |
 | --- | --- | --- |
 | [Muse Glimmer](versions/muse-glimmer.html) | [2026-08-10](https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model) | 2026-10-05 |
+| [Qwen 3.8:27b](versions/qwen-3.8.html) | [2026-08-14](https://datanorth.ai/news/alibaba-releases-qwen3-8-27b) | 2026-10-05 |
 | [GitHub Copilot Hydrafusion](versions/hydrafusion.html) | 2026-09-30 (maintainer-supplied) | 2026-09-30 |
 | [GPT 6.1 Sol](versions/gpt-6.1-sol.html) | [2026-09-29](https://developers.openai.com/api/docs/changelog) | 2026-09-29 |
 | [Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) | [2026-09-28](https://www.anthropic.com/claude-sonnet-5-5) | 2026-09-28 |

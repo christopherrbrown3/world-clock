@@ -4,6 +4,7 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added Qwen 3.8:27b as a new standalone rendition, authored from scratch with its own time engine, city atlas, SVG drawing kit, and all 62 reference-led timepieces, each moving at its catalog cadence. Added it to the project index (including an Alibaba provider filter), the README model table, and the snapshot manifest. Its snapshot date is October 5, 2026; its release date is August 14, 2026, per Alibaba’s Qwen3.8-27B open-weights launch. Earlier model pages are unchanged.
 - Set GitHub Copilot Hydrafusion’s directory release date to the maintainer-supplied September 30, 2026, moving it to the top of the index as the latest rendition and updating the README table and date notes accordingly.
 - Added GitHub Copilot Hydrafusion as an independent standalone rendition, authored from scratch with an original interface, city engine, SVG drawing system, and all 62 supplied-photo-informed watches and clocks. Added saved city settings, duplicate-aware face shuffling, collection search and filtering, inspection poses, lume mode, the manifest and directory entries, and reference notes. The project snapshot is September 30, 2026.
 - Verified GPT 6 Luna’s September 22, 2026 release date against OpenAI’s API changelog and ChatGPT release notes, added it to the index and README, and refreshed the index screenshots. Added official release sources for GPT 6 Sol and GPT 6.1 Sol from the same API changelog.

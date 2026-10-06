@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "qwen-3.8",
+      "label": "Qwen 3.8:27b",
+      "file": "versions/qwen-3.8.html",
+      "snapshotDate": "2026-10-05",
+      "notes": "Independent Qwen 3.8:27b rendition, authored from scratch with its own time engine, city atlas, SVG drawing kit, and 62 reference-led timepieces, with per-face movement cadences, a day-part phase badge on every city card, a filterable collection, and a live-updating render loop."
+    },
+    {
       "id": "hydrafusion",
       "label": "GitHub Copilot Hydrafusion",
       "file": "versions/hydrafusion.html",
