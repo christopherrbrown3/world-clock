@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "qwen-3.6",
+      "label": "Qwen 3.6",
+      "file": "versions/qwen-3.6.html",
+      "snapshotDate": "2026-10-07",
+      "notes": "Independent Qwen 3.6 rendition, authored from scratch as the Horology Atlas: its own Intl-based time engine, a searchable atlas of 188+ cities, a reusable SVG drawing kit, and 62 reference-led timepieces with per-face movement cadences, live date/day/moon/24-hour complications, segment LCDs, saved city cards, a filterable collection, and an inspection dialog."
+    },
+    {
       "id": "qwen-3.8",
       "label": "Qwen 3.8:27b",
       "file": "versions/qwen-3.8.html",
