@@ -1,5 +1,7 @@
 # Model release dates
 
+Claude Haiku 5.5’s release date, **October 7, 2026**, was verified against [Anthropic’s announcement](https://www.anthropic.com/claude-haiku-5-5), which is dated October 7, 2026 and introduces the model under the API model ID `claude-haiku-5-5`. The rendition was captured on **October 8, 2026**, the snapshot date recorded in `versions.json`.
+
 GitHub Copilot Hydrafusion’s directory release date, **September 30, 2026**, was supplied by the maintainer. No public vendor release source exists to verify it against, so it is recorded here as maintainer-supplied rather than externally confirmed. The rendition was captured on the same day, and the snapshot date in `versions.json` records that repository checkpoint separately.
 
 GPT 6.1 Sol’s release date, **September 29, 2026**, was verified against [OpenAI’s API changelog](https://developers.openai.com/api/docs/changelog) on the same day. This confirms the directory date supplied by the maintainer. The rendition was also captured on September 29.
@@ -18,6 +20,7 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 
 | Repository model label | Release date | Evidence |
 | --- | --- | --- |
+| Claude Haiku 5.5 | 2026-10-07 | [Anthropic’s announcement](https://www.anthropic.com/claude-haiku-5-5) is dated October 7, 2026 and introduces the model. |
 | GitHub Copilot Hydrafusion | 2026-09-30 | Maintainer-supplied. No public vendor release source exists, so this date is not externally verified. |
 | GPT 6.1 Sol | 2026-09-29 | [OpenAI’s API changelog](https://developers.openai.com/api/docs/changelog) records the model release under September 29, 2026. |
 | Claude Sonnet 5.5 | 2026-09-28 | [Anthropic’s announcement](https://www.anthropic.com/claude-sonnet-5-5) is dated September 28, 2026 and introduces the model as the second in the Claude 5.5 family. |

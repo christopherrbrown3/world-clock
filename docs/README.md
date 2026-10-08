@@ -6,6 +6,7 @@ Use this index to find the right project guide.
 
 - [Model Release Dates](model-release-dates.md): verified vendor launch dates, source links, and rollout distinctions.
 
+- [Claude Haiku 5.5 Reference Notes](claude-haiku-5.5-reference-notes.md): reference basis for all 62 faces, variant choices, intentional approximations, and validation for the from-scratch rendition.
 - [GitHub Copilot Hydrafusion Reference Notes](hydrafusion-reference-notes.md): supplied-photo coverage, rendering choices, intentional approximations, and validation for the independent rendition.
 - [GPT 6.1 Sol Reference Notes](gpt-6.1-sol-reference-notes.md): reference coverage, variant choices, drawing details, approximations, and browser validation for the independent rendition.
 - [Claude Sonnet 5.5 Reference Notes](claude-sonnet-5.5-reference-notes.md): photo coverage, variant choices, intentional approximations, and validation for the from-scratch rendition.
