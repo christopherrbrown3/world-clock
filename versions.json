@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "claude-haiku-5.5",
+      "label": "Claude Haiku 5.5",
+      "file": "versions/claude-haiku-5.5.html",
+      "snapshotDate": "2026-10-08",
+      "notes": "Independent Claude Haiku 5.5 rendition, authored from scratch with its own graphite board interface, time engine, SVG drawing kit, 190-city atlas, and 62 reference-led timepieces, with per-face movement cadences, live date and moon complications, a board sorted west to east by UTC offset, duplicate-aware face shuffling, a larger inspection view, and a filterable collection."
+    },
+    {
       "id": "qwen-3.6",
       "label": "Qwen 3.6:35b",
       "file": "versions/qwen-3.6.html",
