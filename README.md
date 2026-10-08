@@ -50,6 +50,7 @@ Models with verified release dates are listed newest first. **Model release** li
 | [Claude Fable 5](versions/fable-5.html) | [2026-06-09](https://www.anthropic.com/news/claude-fable-5-mythos-5) | 2026-07-17 |
 | [Claude Opus 4.8](versions/claude-opus-4.8.html) | [2026-05-28](https://www.anthropic.com/news/claude-opus-4-8) | 2026-06-30 |
 | [Codex 5.5](versions/codex-5.5.html) | [2026-04-23](https://openai.com/index/introducing-gpt-5-5/) | 2026-07-09 |
+| [Qwen 3.6](versions/qwen-3.6.html) | [2026-04-16](https://github.com/QwenLM/Qwen3.6) | 2026-10-07 |
 
 The [active development build](world-clock.html) remains available separately. It is not automatically replaced by the newest model entry. [versions.json](versions.json) records the available snapshots.
 

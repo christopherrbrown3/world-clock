@@ -31,6 +31,7 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 - `versions/claude-opus-5.html`: finalized Claude Opus 5 checkpoint.
 - `versions/fable-5.html`: finalized Claude Fable 5 checkpoint.
 - `versions/codex-5.6.html`: finalized Codex 5.6 Terra snapshot.
+- `versions/qwen-3.6.html`: Qwen 3.6 checkpoint, authored from scratch with its own Horology Atlas interface, time engine, SVG drawing kit and all 62 faces.
 - `versions/codex-5.5.html`: finalized Codex 5.5 snapshot.
 - `versions/claude-opus-4.8.html`: Claude Opus 4.8 baseline.
 

@@ -37,6 +37,7 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 | Claude Fable 5 | 2026-06-09 | [Anthropic’s original announcement](https://www.anthropic.com/news/claude-fable-5-mythos-5) is dated June 9. Its later July 1 redeployment is a separate event. |
 | Claude Opus 4.8 | 2026-05-28 | [Anthropic’s announcement](https://www.anthropic.com/news/claude-opus-4-8) is dated May 28 and says it is available that day. |
 | Codex 5.5 | 2026-04-23 | [OpenAI’s launch announcement](https://openai.com/index/introducing-gpt-5-5/) dates the ChatGPT/Codex rollout to April 23. Its April 24 API update is a separate event. |
+| Qwen 3.6 | 2026-04-16 | The [QwenLM/Qwen3.6 README](https://github.com/QwenLM/Qwen3.6) news log dates the first open-weights Qwen3.6 release, Qwen3.6-35B-A3B, to April 16, 2026 ([Hugging Face: Qwen/Qwen3.6-35B-A3B](https://huggingface.co/Qwen/Qwen3.6-35B-A3B)). |
 
 ## Rollout and source distinctions
 
