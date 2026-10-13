@@ -15,6 +15,7 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
+- `versions/gemini-4-argon.html`: Gemini 4 Argon checkpoint, authored from scratch with its own Spectral Horological Atelier interface, time engine, SVG drawing kit, 192-city atlas, and all 62 faces.
 - `versions/claude-haiku-5.5.html`: Claude Haiku 5.5 checkpoint, authored from scratch with its own graphite board interface, time engine, SVG drawing kit, 190-city atlas, and all 62 faces.
 - `versions/hydrafusion.html`: GitHub Copilot Hydrafusion checkpoint, independently authored from scratch with its own interface, city engine, SVG drawing system and all 62 faces.
 - `versions/gpt-6.1-sol.html`: GPT 6.1 Sol checkpoint, authored from scratch with its own interface, time engine, city atlas, SVG drawing kit and all 62 faces.
