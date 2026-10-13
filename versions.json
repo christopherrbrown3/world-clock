@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "gemini-4-argon",
+      "label": "Gemini 4 Argon",
+      "file": "versions/gemini-4-argon.html",
+      "snapshotDate": "2026-10-13",
+      "notes": "Independent Gemini 4 Argon rendition, authored from scratch as the Spectral Horological Atelier with its own Intl time engine, 192-city timezone atlas, West-to-East meridian choreography, SVG geometry kit, and 62 reference-led timepieces with per-face movement cadences, working chronographs, Lume/Night Mode, a filterable 62-piece catalog, and a Horological Loupe & Timebench modal."
+    },
+    {
       "id": "claude-haiku-5.5",
       "label": "Claude Haiku 5.5",
       "file": "versions/claude-haiku-5.5.html",
