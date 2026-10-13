@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://christopherrbrown3.github.io/world-clock/) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
+**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
 
 </div>
 
