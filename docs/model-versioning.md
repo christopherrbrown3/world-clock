@@ -14,6 +14,7 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 - `index.html`: project introduction and release-ordered model directory for GitHub Pages and local browsing.
 
 ## Current Model Pages
+- `versions/reflection-beam.html`: Reflection Beam checkpoint, authored from scratch with its own interface, time engine, SVG drawing kit, and all 62 faces.
 
 - `versions/gemini-4-argon.html`: Gemini 4 Argon checkpoint, authored from scratch with its own Spectral Horological Atelier interface, time engine, SVG drawing kit, 192-city atlas, and all 62 faces.
 - `versions/claude-haiku-5.5.html`: Claude Haiku 5.5 checkpoint, authored from scratch with its own graphite board interface, time engine, SVG drawing kit, 190-city atlas, and all 62 faces.

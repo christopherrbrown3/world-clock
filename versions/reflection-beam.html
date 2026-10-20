@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<meta name="description" content="Reflection Beam's independent World Clock: 62 reference-led SVG watches and clocks showing live time across the world.">
+<title>World Clock · Reflection Beam</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#121a2e;--panel2:#0f1626;--rule:#2a3555;--ink:#eaf0ff;--muted:#8fa0c9;--accent:#7dd3fc;--accent2:#c084fc;--glow:#7dd3fc}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+body{min-height:100vh;background:radial-gradient(1200px 600px at 50% -10%,#1a2545 0%,#0b1020 60%)}
+header{padding:18px 22px;border-bottom:1px solid var(--rule);display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:linear-gradient(180deg,#121a2e,#0b1020)}
+h1{font-size:20px;margin:0;letter-spacing:.5px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--muted);font-size:13px}
+main{padding:20px;max-width:1320px;margin:auto}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.toolbar input,.toolbar select{background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:8px 10px;font-size:14px}
+.toolbar button{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0b1020;border:none;border-radius:8px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer}
+.toolbar button.secondary{background:var(--panel);color:var(--ink);border:1px solid var(--rule)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:12px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.face{aspect-ratio:1/1;background:radial-gradient(circle at 50% 40%,#1a2238,#0a0f1c);border-radius:10px;display:grid;place-items:center;overflow:hidden}
+.face svg{width:92%;height:92%}
+.meta{margin-top:8px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+.meta b{color:var(--ink)}
+.city{font-weight:600;color:var(--ink)}
+.offset{font-size:11px;color:var(--accent)}
+.controls{display:flex;gap:6px;margin-top:8px}
+.controls button{flex:1;background:var(--panel2);color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:6px;font-size:12px;cursor:pointer}
+.controls button:hover{border-color:var(--accent)}
+dialog{background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:16px;padding:0;max-width:90vw}
+dialog::backdrop{background:rgba(0,0,0,.7)}
+.detail{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:20px}
+.detail .stage{background:radial-gradient(circle at 50% 40%,#1a2238,#0a0f1c);border-radius:12px;display:grid;place-items:center;padding:10px}
+.detail .stage svg{width:100%;max-width:360px}
+.detail h2{margin:0 0 6px;font-size:18px}
+.detail p{color:var(--muted);font-size:13px;margin:4px 0}
+.closebtn{position:absolute;top:10px;right:10px;background:var(--panel2);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:6px 10px;cursor:pointer}
+@media(max-width:640px){.detail{grid-template-columns:1fr}.grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}}
+.addpanel{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:12px;margin-bottom:16px}
+.addpanel input{width:100%;margin-bottom:8px}
+.sugg{max-height:160px;overflow:auto;border:1px solid var(--rule);border-radius:8px}
+.sugg div{padding:6px 10px;cursor:pointer;font-size:13px}
+.sugg div:hover{background:var(--panel2)}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>Reflection Beam</h1>
+  <span class="sub">62 reference-led SVG timepieces · live world clock · from scratch</span>
+</header>
+<main>
+  <div class="toolbar">
+    <input id="search" placeholder="Search cities..." style="flex:1;min-width:180px">
+    <button id="shuffleAll">Shuffle all faces</button>
+    <button id="toggleView" class="secondary">Collection</button>
+    <button id="addCityBtn" class="secondary">+ Add city</button>
+  </div>
+  <div id="addPanel" class="addpanel hidden">
+    <input id="citySearch" placeholder="Type a city name...">
+    <div id="suggestions" class="sugg"></div>
+  </div>
+  <div id="worldView">
+    <div class="meta" style="margin-bottom:10px"><span id="worldCount"></span></div>
+    <div class="grid" id="worldGrid"></div>
+  </div>
+  <div id="collectionView" class="hidden">
+    <div class="toolbar">
+      <input id="collectionSearch" placeholder="Filter faces..." style="flex:1">
+      <span id="collectionCount" class="sub"></span>
+    </div>
+    <div class="grid" id="galleryGrid"></div>
+  </div>
+</main>
+<dialog id="detailDialog">
+  <button class="closebtn" id="closeDetail">Close</button>
+  <div class="detail">
+    <div class="stage" id="detailStage"></div>
+    <div>
+      <h2 id="detailTitle"></h2>
+      <p id="detailModel"></p>
+      <p id="detailDescription"></p>
+      <div id="chronoControls" class="hidden">
+        <button id="chronoToggle">Start chronograph</button>
+        <button id="chronoReset" class="secondary">Reset</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+<script>
+"use strict";
+const FACES = {
+  submariner:{name:"Rolex Submariner Date 126610LN",cadence:"sweep",dial:"#0a2a3a",bezel:"#111",accent:"#e8e8e8",hand:"#f5f5f5",second:"#e11",marker:"dot",date:true,cyclops:true,bezelMarkers:true},
+  speedmaster:{name:"Omega Speedmaster Moonwatch Professional 310.30.42.50.01.001",cadence:"sweep",dial:"#0e0e0e",bezel:"#111",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"baton",chrono:true},
+  nautilus:{name:"Patek Philippe Nautilus 5811/1G-001",cadence:"sweep",dial:"#1f3a5f",bezel:"#c9c9c9",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"baton",date:true},
+  royaloak:{name:"Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06",cadence:"sweep",dial:"#1a2a3a",bezel:"#c9c9c9",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"baton",date:true,tapisserie:true},
+  calatrava:{name:"Patek Philippe Calatrava 5227G-015",cadence:"sweep",dial:"#f2efe6",bezel:"#c9a84c",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"numeral",date:true},
+  tank:{name:"Cartier Tank Louis Cartier WGTA0342",cadence:"tick",dial:"#f5f0e0",bezel:"#c9a84c",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"roman",shaped:"tank"},
+  reverso:{name:"Jaeger-LeCoultre Reverso",cadence:"sweep",dial:"#f5f0e0",bezel:"#c9a84c",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"numeral",shaped:"reverso"},
+  seamaster:{name:"Omega Seamaster Diver 300M",cadence:"sweep",dial:"#0a2a4a",bezel:"#0a2a4a",accent:"#f5f5f5",hand:"#f5f5f5",second:"#e11",marker:"dot",wave:true,date:true},
+  lange1:{name:"A. Lange & Söhne Lange 1",cadence:"sweep",dial:"#f2efe6",bezel:"#c9a84c",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"numeral",offcenter:true},
+  portugieser:{name:"IWC Portugieser",cadence:"sweep",dial:"#f2efe6",bezel:"#c9a84c",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"numeral",railroad:true},
+  daytona:{name:"Rolex Daytona",cadence:"sweep",dial:"#f5f5f5",bezel:"#111",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"baton",chrono:true,tachy:true},
+  gmt:{name:"Rolex GMT-Master II",cadence:"sweep",dial:"#0a2a3a",bezel:"#111",accent:"#f5f5f5",hand:"#f5f5f5",second:"#e11",marker:"dot",gmt:true,bezelMarkers:true},
+  datejust:{name:"Rolex Datejust",cadence:"sweep",dial:"#d4e4f0",bezel:"#c9a84c",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"baton",date:true,cyclops:true,fluted:true},
+  snowflake:{name:"Grand Seiko Snowflake",cadence:"glide",dial:"#e8f0f5",bezel:"#c9c9c9",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a5a8a",marker:"baton",snowflake:true},
+  gshock:{name:"Casio G-Shock DW-5600UE-1",cadence:"digital",dial:"#0a0a0a",bezel:"#1a1a1a",accent:"#3cff6a",hand:"#3cff6a",second:"#3cff6a",marker:"none",digital:true},
+  f91w:{name:"Casio F-91W",cadence:"digital",dial:"#c8d8c0",bezel:"#1a1a1a",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"none",digital:true,small:true},
+  apple:{name:"Apple Watch",cadence:"glide",dial:"#0a0a0a",bezel:"#1a1a1a",accent:"#f5f5f5",hand:"#f5f5f5",second:"#ff3b30",marker:"none",apple:true},
+  swatch:{name:"Swatch Once Again",cadence:"tick",dial:"#f5f5f5",bezel:"#c9c9c9",accent:"#1a1a1a",hand:"#1a1a1a",second:"#e11",marker:"numeral"},
+  braun:{name:"Braun BN0021",cadence:"tick",dial:"#f5f5f5",bezel:"#1a1a1a",accent:"#1a1a1a",hand:"#1a1a1a",second:"#f5a623",marker:"numeral"},
+  mondaine:{name:"Mondaine Swiss Railway",cadence:"mondaine",dial:"#f5f5f5",bezel:"#1a1a1a",accent:"#1a1a1a",hand:"#1a1a1a",second:"#e11",marker:"numeral",mondaine:true},
+  monaco:{name:"TAG Heuer Monaco Calibre 11",cadence:"sweep",dial:"#1a3a6a",bezel:"#c9c9c9",accent:"#f5f5f5",hand:"#f5f5f5",second:"#e11",marker:"baton",shaped:"square",chrono:true},
+  panerai:{name:"Panerai Luminor Marina PAM03312",cadence:"sweep",dial:"#0e1a0e",bezel:"#1a1a1a",accent:"#d4c08a",hand:"#d4c08a",second:"#d4c08a",marker:"numeral",cushion:true,crownGuard:true},
+  f1:{name:"Rolex Trackside Clock",cadence:"sweep",dial:"#f5f5f5",bezel:"#1a1a1a",accent:"#1a1a1a",hand:"#1a1a1a",second:"#e11",marker:"numeral",clock:true},
+  bigben:{name:"Big Ben (Elizabeth Tower)",cadence:"tick",dial:"#1a2a4a",bezel:"#c9a84c",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"numeral",clock:true,gothic:true},
+  seiko5:{name:"Seiko 5 Sports SRPD51",cadence:"sweep",dial:"#1a3a2a",bezel:"#1a1a1a",accent:"#f5f5f5",hand:"#f5f5f5",second:"#e11",marker:"dot",daydate:true},
+  moonphase:{name:"Blancpain Villeret Quantième Complet",cadence:"sweep",dial:"#f2efe6",bezel:"#c9a84c",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"numeral",moon:true,complete:true},
+  richardmille:{name:"Richard Mille RM 011 Felipe Massa",cadence:"sweep",dial:"#0a0a0a",bezel:"#c9c9c9",accent:"#f5f5f5",hand:"#f5f5f5",second:"#e11",marker:"numeral",tonneau:true,skeleton:true},
+  blackbay58:{name:"TUDOR Black Bay Fifty-Eight M79030N",cadence:"sweep",dial:"#1a1a1a",bezel:"#1a1a1a",accent:"#d4c08a",hand:"#d4c08a",second:"#e11",marker:"dot",snowflakeHands:true},
+  navitimer:{name:"Breitling Navitimer B01 Chronograph 43",cadence:"sweep",dial:"#0e0e0e",bezel:"#1a1a1a",accent:"#f5f5f5",hand:"#f5f5f5",second:"#e11",marker:"numeral",slideRule:true,chrono:true},
+  elprimero:{name:"Zenith Chronomaster Sport 03.3100.3600/69.M3100",cadence:"sweep",dial:"#f5f5f5",bezel:"#1a1a1a",accent:"#1a1a1a",hand:"#1a1a1a",second:"#e11",marker:"baton",chrono:true},
+  overseas:{name:"Vacheron Constantin Overseas Self-Winding 4520V/210A-B128",cadence:"sweep",dial:"#1a3a5f",bezel:"#c9c9c9",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"baton",maltese:true},
+  bigbang:{name:"Hublot Big Bang Unico Red Magic 42",cadence:"sweep",dial:"#8a1a1a",bezel:"#1a1a1a",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"baton",skeleton:true},
+  prx:{name:"Tissot PRX 40mm Powermatic 80 T137.407.11.041.00",cadence:"sweep",dial:"#1a3a5f",bezel:"#c9c9c9",accent:"#f5f5f5",hand:"#f5f5f5",second:"#e11",marker:"baton",waffle:true},
+  khaki:{name:"Hamilton Khaki Field Mechanical 38mm H69439931",cadence:"sweep",dial:"#1a2a1a",bezel:"#1a1a1a",accent:"#d4c08a",hand:"#d4c08a",second:"#e11",marker:"numeral",military:true},
+  br03:{name:"Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB",cadence:"sweep",dial:"#0a0a0a",bezel:"#1a1a1a",accent:"#d4c08a",hand:"#d4c08a",second:"#e11",marker:"numeral",shaped:"square",aviation:true},
+  twinbell:{name:"Westclox Twin Bell Alarm Clock 70010A",cadence:"tick",dial:"#f5f5f5",bezel:"#1a1a1a",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"numeral",clock:true,alarm:true},
+  grandfather:{name:"Comtoise Longcase Clock — Musée du Temps, c. 1850",cadence:"tick",dial:"#f2efe6",bezel:"#5a3a1a",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"numeral",clock:true,pendulum:true},
+  orloj:{name:"Prague Old Town Astronomical Clock (2018-restored astrolabe)",cadence:"tick",dial:"#1a2a4a",bezel:"#c9a84c",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"numeral",clock:true,astro:true},
+  marine:{name:"Ulysse Nardin Marine Torpilleur 1182-310/42",cadence:"sweep",dial:"#f2efe6",bezel:"#c9a84c",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"numeral",roman:true,marine:true},
+  freak:{name:"Ulysse Nardin Freak X Carb 2303-270/CARB",cadence:"sweep",dial:"#0a0a0a",bezel:"#1a1a1a",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"none",freak:true},
+  patek:{name:"Patek Philippe Perpetual Calendar Chronograph 5270J-001",cadence:"sweep",dial:"#f2efe6",bezel:"#c9a84c",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"numeral",perpetual:true,chrono:true},
+  explorer:{name:"Rolex Explorer 36 124270",cadence:"sweep",dial:"#0a0a0a",bezel:"#1a1a1a",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"numeral",explorer:true},
+  santos:{name:"Cartier Santos de Cartier Large WSSA0018",cadence:"sweep",dial:"#f5f5f5",bezel:"#c9c9c9",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"roman",shaped:"square",screws:true},
+  bigpilot:{name:"IWC Big Pilot's Watch 43 IW329301",cadence:"sweep",dial:"#0a0a0a",bezel:"#1a1a1a",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"numeral",bigpilot:true},
+  fiftyfathoms:{name:"Blancpain Fifty Fathoms Automatique 5015 1130 71S",cadence:"sweep",dial:"#0a1a2a",bezel:"#1a1a1a",accent:"#f5f5f5",hand:"#f5f5f5",second:"#e11",marker:"numeral",fifty:true},
+  typexx:{name:"Breguet Type XX Chronographe 2067 2067ST/92/3WU",cadence:"sweep",dial:"#0e0e0e",bezel:"#1a1a1a",accent:"#f5f5f5",hand:"#f5f5f5",second:"#e11",marker:"numeral",chrono:true,typexx:true},
+  radiomir:{name:"Panerai Radiomir Black Seal Logo PAM00754",cadence:"sweep",dial:"#0e1a0e",bezel:"#1a1a1a",accent:"#d4c08a",hand:"#d4c08a",second:"#d4c08a",marker:"numeral",cushion:true,radiomir:true},
+  carrera:{name:"TAG Heuer Carrera Chronograph CBN2011.BA0642",cadence:"sweep",dial:"#f5f5f5",bezel:"#1a1a1a",accent:"#1a1a1a",hand:"#1a1a1a",second:"#e11",marker:"baton",chrono:true,carrera:true},
+  snoopy:{name:'Omega Speedmaster "Silver Snoopy Award" 50th Anniversary 310.32.42.50.02.001',cadence:"sweep",dial:"#f2efe6",bezel:"#1a1a1a",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"baton",snoopy:true,chrono:true},
+  milgauss:{name:"Rolex Milgauss 116400GV-0002 \"Z-Blue\"",cadence:"sweep",dial:"#1a2a5a",bezel:"#c9c9c9",accent:"#f5f5f5",hand:"#f5f5f5",second:"#ff6a00",marker:"baton",milgauss:true},
+  yachtmaster2:{name:"Rolex Yacht-Master II 126680",cadence:"sweep",dial:"#f5f5f5",bezel:"#1a1a1a",accent:"#1a1a1a",hand:"#1a1a1a",second:"#e11",marker:"baton",yacht:true},
+  jorggray:{name:"Jorg Gray JGC6500 Secret Service Edition",cadence:"tick",dial:"#0a1a2a",bezel:"#1a1a1a",accent:"#f5f5f5",hand:"#f5f5f5",second:"#e11",marker:"numeral",jorg:true},
+  rainbow:{name:"Rolex Cosmograph Daytona 116595RBOW-0001",cadence:"sweep",dial:"#0a0a0a",bezel:"#c9a84c",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"baton",rainbow:true,chrono:true},
+  railroad:{name:"Norfolk Southern Railroad Pocket Watch (1994)",cadence:"tick",dial:"#f5f5f5",bezel:"#c9a84c",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"numeral",pocket:true},
+  nomosmetro:{name:"NOMOS Glashütte Metro date power reserve 1101",cadence:"sweep",dial:"#f5f5f5",bezel:"#c9c9c9",accent:"#1a1a1a",hand:"#1a1a1a",second:"#e11",marker:"numeral",nomos:true},
+  grandcentral:{name:"Grand Central Terminal Information Booth Clock (1913)",cadence:"tick",dial:"#1a2a4a",bezel:"#c9a84c",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"numeral",clock:true,grandcentral:true},
+  howardmiller:{name:"Howard Miller Chateau 610-520 Grandfather Clock",cadence:"tick",dial:"#f2efe6",bezel:"#5a3a1a",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"numeral",clock:true,howard:true},
+  mickey:{name:"Ingersoll Mickey Mouse (1933)",cadence:"tick",dial:"#f5f5f5",bezel:"#c9c9c9",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"none",mickey:true},
+  kingkhaki:{name:"Hamilton Khaki Field King Auto H64455533",cadence:"sweep",dial:"#1a2a1a",bezel:"#1a1a1a",accent:"#d4c08a",hand:"#d4c08a",second:"#e11",marker:"numeral",daydate:true,king:true},
+  casiomq24:{name:"CASIO MQ-24-7B2LL",cadence:"tick",dial:"#f5f5f5",bezel:"#1a1a1a",accent:"#1a1a1a",hand:"#1a1a1a",second:"#1a1a1a",marker:"numeral",simple:true},
+  bigtic:{name:"Fossil Big Tic JR-7845",cadence:"tick",dial:"#0a0a0a",bezel:"#1a1a1a",accent:"#3cff6a",hand:"#3cff6a",second:"#3cff6a",marker:"numeral",bigtic:true},
+  timexindiglo:{name:"Timex Easy Reader Day Date T20041 (INDIGLO)",cadence:"tick",dial:"#1a3a5f",bezel:"#1a1a1a",accent:"#f5f5f5",hand:"#f5f5f5",second:"#f5f5f5",marker:"numeral",indiglo:true,daydate:true}
+};
+const FACE_KEYS = Object.keys(FACES);
+
+// ---------- drawing kit ----------
+const TAU = Math.PI*2;
+function pt(cx,cy,r,a){const rad=(a-90)*Math.PI/180;return [cx+r*Math.cos(rad), cy+r*Math.sin(rad)]}
+function circle(cx,cy,r,fill,stroke,sw){return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill||'none'}" stroke="${stroke||'none'}" stroke-width="${sw||0}"/>`}
+function line(x1,y1,x2,y2,stroke,sw,lc){return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${sw||1}" stroke-linecap="${lc||'round'}"/>`}
+function path(d,fill,stroke,sw){return `<path d="${d}" fill="${fill||'none'}" stroke="${stroke||'none'}" stroke-width="${sw||0}"/>`}
+function rect(x,y,w,h,fill,stroke,sw,rx){return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill||'none'}" stroke="${stroke||'none'}" stroke-width="${sw||0}" rx="${rx||0}"/>`}
+function txt(x,y,t,size,fill,attrs){return `<text x="${x}" y="${y}" font-size="${size}" fill="${fill}" text-anchor="middle" dominant-baseline="middle" ${attrs||''}>${t}</text>`}
+function handGroup(role,cx,cy,len,color,w){return `<g data-hand="${role}" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy-len}" stroke="${color}" stroke-width="${w||3}" stroke-linecap="round"/></g>`}
+function defs(u,s){return `<defs><radialGradient id="g${u}" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffffff" stop-opacity=".18"/><stop offset="100%" stop-color="#000000" stop-opacity=".35"/></radialGradient></defs>`}
+
+function roundFace(key,s,u){
+  const cx=150,cy=150,R=118;
+  const dial=s.dial, bezel=s.bezel, accent=s.accent, hand=s.hand, second=s.second;
+  let out='';
+  // bezel
+  out+=circle(cx,cy,R+10,s.bezelFill||bezel,'none',0);
+  out+=circle(cx,cy,R+6,'#111','none',0);
+  out+=circle(cx,cy,R,dial,'none',0);
+  // bezel markers (minute ticks on bezel) if requested
+  if(s.bezelMarkers){
+    for(let i=0;i<60;i++){
+      const [x1,y1]=pt(cx,cy,R+2,i*6),[x2,y2]=pt(cx,cy,R+6,i*6);
+      out+=line(x1,y1,x2,y2,i%5?'#888':'#fff',i%5?.5:1.2);
+    }
+    // triangle at 12
+    const [tx,ty]=pt(cx,cy,R+1,0); // placeholder
+    out+=path(`M${cx} ${cy-R-4} L${cx-6} ${cy-R+4} L${cx+6} ${cy-R+4} Z`,'#fff','none',0);
+  }
+  // fluted bezel
+  if(s.fluted){
+    for(let i=0;i<48;i++){
+      const a=i*7.5;const [x1,y1]=pt(cx,cy,R+4,a),[x2,y2]=pt(cx,cy,R+10,a);
+      out+=line(x1,y1,x2,y2,'#c9a84c',1);
+    }
+  }
+  // tachy scale
+  if(s.tachy){
+    for(let i=0;i<12;i++){
+      const [x,y]=pt(cx,cy,R-14,i*30);
+      out+=txt(x,y,String([400,360,330,300,270,240,210,180,150,120,90,60][i]||''),7,accent,'font-family="Arial,sans-serif"');
+    }
+  }
+  // hour markers
+  if(s.marker==='dot'){
+    for(let i=0;i<12;i++){const [x,y]=pt(cx,cy,R-12,i*30);out+=circle(x,y,3,accent,'none',0)}
+  } else if(s.marker==='baton'){
+    for(let i=0;i<12;i++){
+      const [x1,y1]=pt(cx,cy,R-6,i*30),[x2,y2]=pt(cx,cy,R-18,i*30);
+      out+=line(x1,y1,x2,y2,accent,2.5);
+    }
+  } else if(s.marker==='numeral'){
+    for(let i=0;i<12;i++){const [x,y]=pt(cx,cy,R-16,i*30);out+=txt(x,y+4,i===0?12:i,11,accent,'font-family="Georgia,serif"')}
+  } else if(s.marker==='roman'){
+    const romans=['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
+    for(let i=0;i<12;i++){const [x,y]=pt(cx,cy,R-16,i*30);out+=txt(x,y+4,romans[i],10,accent,'font-family="Georgia,serif"')}
+  }
+  // snowflake dial texture
+  if(s.snowflake){
+    for(let i=0;i<80;i++){const a=Math.random()*TAU,r=Math.random()*R*.9;out+=circle(cx+r*Math.cos(a),cy+r*Math.sin(a),.6,'#b8c8d8','none',0)}
+  }
+  // tapisserie
+  if(s.tapisserie){
+    for(let i=-R;i<R;i+=6)for(let j=-R;j<R;j+=6){
+      if(Math.hypot(i,j)<R-10) out+=circle(cx+i,cy+j,.8,'#2a3a4a','none',0);
+    }
+  }
+  // wave dial
+  if(s.wave){
+    for(let i=0;i<6;i++){const r=R-20-i*8;out+=circle(cx,cy,r,'none','#1a4a6a',.6)}
+  }
+  // waffle
+  if(s.waffle){
+    for(let i=-R+20;i<R-20;i+=8)for(let j=-R+20;j<R-20;j+=8){
+      if(Math.hypot(i,j)<R-20) out+=rect(cx+i-3,cy+j-3,6,6,'none','#2a4a6a',.4);
+    }
+  }
+  // date window
+  if(s.date){
+    out+=rect(cx+R-42,cy-8,28,16,dial,'#888',1,2);
+    out+=`<text data-field="date" x="${cx+R-28}" y="${cy+1}" font-size="11" fill="${accent}" text-anchor="middle" dominant-baseline="middle">1</text>`;
+    if(s.cyclops){
+      out+=circle(cx+R-28,cy,14,'none','#fff',1);
+    }
+  }
+  // day-date
+  if(s.daydate){
+    out+=rect(cx-40,cy-R+22,80,16,dial,'#888',1,2);
+    out+=`<text data-field="weekday" x="${cx}" y="${cy-R+30}" font-size="10" fill="${accent}" text-anchor="middle" dominant-baseline="middle">MON</text>`;
+  }
+  // brand text
+  out+=txt(cx,cy-R+46,s.maker? '': '',0,accent,'');
+  // hands
+  out+=handGroup('hour',cx,cy,52,hand,4);
+  out+=handGroup('minute',cx,cy,74,hand,3);
+  out+=handGroup('second',cx,cy,80,second,1.5);
+  out+=circle(cx,cy,4,accent,'none',0);
+  // glass
+  out+=circle(cx,cy,R+2,'none','rgba(255,255,255,.15)',1);
+  return out;
+}
+
+function shapedFace(key,s,u){
+  const cx=150,cy=150;
+  let out='';
+  if(s.shaped==='tank'){
+    out+=rect(cx-70,cy-95,140,190,s.bezel,'#c9a84c',3,8);
+    out+=rect(cx-58,cy-83,116,166,s.dial,'none',0,4);
+    // roman numerals
+    const romans=['XII','III','VI','IX'];
+    const pos=[[cx,cy-60],[cx+46,cy],[cx,cy+60],[cx-46,cy]];
+    romans.forEach((r,i)=>{out+=txt(pos[i][0],pos[i][1],r,11,s.accent,'font-family="Georgia,serif"')});
+    // railtrack
+    out+=rect(cx-50,cy-75,100,150,'none',s.accent,.5,0);
+    out+=handGroup('hour',cx,cy,40,s.hand,3);
+    out+=handGroup('minute',cx,cy,58,s.hand,2.5);
+    out+=handGroup('second',cx,cy,62,s.second,1);
+    out+=circle(cx,cy,3,s.accent,'none',0);
+  } else if(s.shaped==='reverso'){
+    out+=rect(cx-60,cy-80,120,160,s.bezel,'#c9a84c',3,4);
+    out+=rect(cx-50,cy-70,100,140,s.dial,'none',0,2);
+    for(let i=0;i<12;i++){const [x,y]=pt(cx,cy,52,i*30);out+=txt(x,y+3,i===0?12:i,9,s.accent,'font-family="Georgia,serif"')}
+    out+=handGroup('hour',cx,cy,36,s.hand,3);
+    out+=handGroup('minute',cx,cy,50,s.hand,2.5);
+    out+=handGroup('second',cx,cy,54,s.second,1);
+    out+=circle(cx,cy,3,s.accent,'none',0);
+  } else if(s.shaped==='square'){
+    out+=rect(cx-85,cy-85,170,170,s.bezel,'#c9c9c9',3,6);
+    out+=rect(cx-75,cy-75,150,150,s.dial,'none',0,4);
+    if(s.screws){for(const [x,y] of [[cx-70,cy-70],[cx+70,cy-70],[cx-70,cy+70],[cx+70,cy+70]])out+=circle(x,y,4,'#888','none',0)}
+    for(let i=0;i<12;i++){const [x,y]=pt(cx,cy,62,i*30);out+=txt(x,y+3,i===0?12:i,9,s.accent,'font-family="Arial,sans-serif"')}
+    out+=handGroup('hour',cx,cy,42,s.hand,3);
+    out+=handGroup('minute',cx,cy,60,s.hand,2.5);
+    out+=handGroup('second',cx,cy,64,s.second,1);
+    out+=circle(cx,cy,3,s.accent,'none',0);
+  } else if(s.shaped==='tonneau'){
+    out+=path(`M${cx-60} ${cy-90} Q${cx} ${cy-100} ${cx+60} ${cy-90} L${cx+70} ${cy+80} Q${cx} ${cy+95} ${cx-70} ${cy+80} Z`,s.bezel,'#c9c9c9',2);
+    out+=path(`M${cx-50} ${cy-80} Q${cx} ${cy-88} ${cx+50} ${cy-80} L${cx+58} ${cy+72} Q${cx} ${cy+84} ${cx-58} ${cy+72} Z`,s.dial,'none',0);
+    for(let i=0;i<12;i++){const [x,y]=pt(cx,cy,55,i*30);out+=txt(x,y+3,i===0?12:i,9,s.accent,'font-family="Arial,sans-serif"')}
+    out+=handGroup('hour',cx,cy,40,s.hand,3);
+    out+=handGroup('minute',cx,cy,56,s.hand,2.5);
+    out+=handGroup('second',cx,cy,60,s.second,1);
+    out+=circle(cx,cy,3,s.accent,'none',0);
+  } else {
+    out+=roundFace(key,s,u);
+  }
+  return out;
+}
+
+function digitalFace(key,s,u){
+  const cx=150,cy=150;
+  let out='';
+  if(s.small){
+    out+=rect(cx-90,cy-50,180,100,s.bezel,'#111',2,6);
+    out+=rect(cx-82,cy-42,164,84,s.dial,'none',0,4);
+    out+=`<g data-digit-index="0" transform="translate(${cx-60},${cy-20})"><rect data-segment="a" x="0" y="0" width="24" height="4" fill="#1a1a1a"/><rect data-segment="b" x="20" y="4" width="4" height="16" fill="#1a1a1a"/><rect data-segment="c" x="20" y="22" width="4" height="16" fill="#1a1a1a"/><rect data-segment="d" x="0" y="38" width="24" height="4" fill="#1a1a1a"/><rect data-segment="e" x="0" y="22" width="4" height="16" fill="#1a1a1a"/><rect data-segment="f" x="0" y="4" width="4" height="16" fill="#1a1a1a"/><rect data-segment="g" x="0" y="19" width="24" height="4" fill="#1a1a1a"/></g>`;
+    out+=`<g data-digit-index="1" transform="translate(${cx-30},${cy-20})"><rect data-segment="a" x="0" y="0" width="24" height="4" fill="#1a1a1a"/><rect data-segment="b" x="20" y="4" width="4" height="16" fill="#1a1a1a"/><rect data-segment="c" x="20" y="22" width="4" height="16" fill="#1a1a1a"/><rect data-segment="d" x="0" y="38" width="24" height="4" fill="#1a1a1a"/><rect data-segment="e" x="0" y="22" width="4" height="16" fill="#1a1a1a"/><rect data-segment="f" x="0" y="4" width="4" height="16" fill="#1a1a1a"/><rect data-segment="g" x="0" y="19" width="24" height="4" fill="#1a1a1a"/></g>`;
+    out+=txt(cx+10,cy+2,':',16,s.accent,'font-family="monospace"');
+    out+=`<g data-digit-index="2" transform="translate(${cx+20},${cy-20})"><rect data-segment="a" x="0" y="0" width="24" height="4" fill="#1a1a1a"/><rect data-segment="b" x="20" y="4" width="4" height="16" fill="#1a1a1a"/><rect data-segment="c" x="20" y="22" width="4" height="16" fill="#1a1a1a"/><rect data-segment="d" x="0" y="38" width="24" height="4" fill="#1a1a1a"/><rect data-segment="e" x="0" y="22" width="4" height="16" fill="#1a1a1a"/><rect data-segment="f" x="0" y="4" width="4" height="16" fill="#1a1a1a"/><rect data-segment="g" x="0" y="19" width="24" height="4" fill="#1a1a1a"/></g>`;
+    out+=`<g data-digit-index="3" transform="translate(${cx+50},${cy-20})"><rect data-segment="a" x="0" y="0" width="24" height="4" fill="#1a1a1a"/><rect data-segment="b" x="20" y="4" width="4" height="16" fill="#1a1a1a"/><rect data-segment="c" x="20" y="22" width="4" height="16" fill="#1a1a1a"/><rect data-segment="d" x="0" y="38" width="24" height="4" fill="#1a1a1a"/><rect data-segment="e" x="0" y="22" width="4" height="16" fill="#1a1a1a"/><rect data-segment="f" x="0" y="4" width="4" height="16" fill="#1a1a1a"/><rect data-segment="g" x="0" y="19" width="24" height="4" fill="#1a1a1a"/></g>`;
+  } else if(s.digital){
+    out+=rect(cx-95,cy-60,190,120,s.bezel,'#111',2,8);
+    out+=rect(cx-88,cy-52,176,104,s.dial,'none',0,6);
+    // 4 digits HHMM
+    const xs=[cx-70,cx-35,cx+5,cx+40];
+    for(let d=0;d<4;d++){
+      const x=xs[d];
+      out+=`<g data-digit-index="${d}" transform="translate(${x},${cy-22})">`;
+      for(const seg of ['a','b','c','d','e','f','g']){
+        const coords={a:'0,0,24,4',b:'20,4,4,16',c:'20,22,4,16',d:'0,38,24,4',e:'0,22,4,16',f:'0,4,4,16',g:'0,19,24,4'};
+        const [xx,yy,ww,hh]=coords[seg].split(',').map(Number);
+        out+=`<rect data-segment="${seg}" x="${xx}" y="${yy}" width="${ww}" height="${hh}" fill="${s.accent}" opacity=".1"/>`;
+      }
+      out+='</g>';
+    }
+    out+=txt(cx,cy+40,'CASIO',9,s.accent,'font-family="Arial,sans-serif"');
+  } else if(s.apple){
+    out+=rect(cx-70,cy-90,140,180,s.bezel,'#111',2,24);
+    out+=rect(cx-62,cy-82,124,164,s.dial,'none',0,20);
+    // activity rings
+    out+=circle(cx,cy,46,'none','#ff3b30',6);
+    out+=circle(cx,cy,34,'none','#34c759',6);
+    out+=circle(cx,cy,22,'none','#007aff',6);
+    out+=txt(cx,cy,'10:09',14,s.accent,'font-family="Arial,sans-serif"');
+  } else if(s.mickey){
+    // mickey watch
+    out+=circle(cx,cy,100,s.bezel,'#111',2);
+    out+=circle(cx,cy,92,s.dial,'none',0);
+    // mickey face
+    out+=circle(cx,cy-10,28,'#f5d6a0','none',0);
+    out+=circle(cx-22,cy-32,12,'#1a1a1a','none',0);
+    out+=circle(cx+22,cy-32,12,'#1a1a1a','none',0);
+    out+=circle(cx-8,cy-6,3,'#1a1a1a','none',0);
+    out+=circle(cx+8,cy-6,3,'#1a1a1a','none',0);
+    out+=path(`M${cx-6} ${cy+4} Q${cx} ${cy+10} ${cx+6} ${cy+4}`,'none','#1a1a1a',1.5);
+    // hands are mickey arms
+    out+=handGroup('hour',cx,cy,40,s.hand,4);
+    out+=handGroup('minute',cx,cy,58,s.hand,3);
+    out+=circle(cx,cy,4,s.accent,'none',0);
+  } else {
+    out+=roundFace(key,s,u);
+  }
+  return out;
+}
+
+function clockFace(key,s,u){
+  const cx=150,cy=150,R=120;
+  let out='';
+  if(s.grandcentral){
+    out+=circle(cx,cy,R+8,s.bezel,'#c9a84c',3);
+    out+=circle(cx,cy,R,s.dial,'none',0);
+    // roman numerals
+    const romans=['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
+    for(let i=0;i<12;i++){const [x,y]=pt(cx,cy,R-18,i*30);out+=txt(x,y+4,romans[i],12,s.accent,'font-family="Georgia,serif"')}
+    out+=handGroup('hour',cx,cy,50,s.hand,5);
+    out+=handGroup('minute',cx,cy,78,s.hand,4);
+    out+=circle(cx,cy,6,s.accent,'none',0);
+  } else if(s.bigben){
+    out+=circle(cx,cy,R+6,s.bezel,'#c9a84c',3);
+    out+=circle(cx,cy,R,s.dial,'none',0);
+    for(let i=0;i<12;i++){const [x,y]=pt(cx,cy,R-16,i*30);out+=txt(x,y+4,i===0?12:i,12,s.accent,'font-family="Georgia,serif"')}
+    out+=handGroup('hour',cx,cy,48,s.hand,5);
+    out+=handGroup('minute',cx,cy,76,s.hand,4);
+    out+=circle(cx,cy,6,s.accent,'none',0);
+  } else if(s.grandfather||s.howard){
+    out+=rect(cx-90,cy-130,180,260,s.bezel,'#5a3a1a',3,8);
+    out+=circle(cx,cy-20,70,s.dial,'none',0);
+    out+=circle(cx,cy-20,66,'none','#5a3a1a',2);
+    for(let i=0;i<12;i++){const [x,y]=pt(cx,cy-20,58,i*30);out+=txt(x,y+3,i===0?12:i,10,s.accent,'font-family="Georgia,serif"')}
+    out+=handGroup('hour',cx,cy-20,32,s.hand,4);
+    out+=handGroup('minute',cx,cy-20,50,s.hand,3);
+    // pendulum
+    out+=`<g data-pendulum><line x1="${cx}" y1="${cy+50}" x2="${cx}" y2="${cy+110}" stroke="#c9a84c" stroke-width="2"/><circle cx="${cx}" cy="${cy+115}" r="12" fill="#c9a84c" stroke="#5a3a1a" stroke-width="2"/></g>`;
+  } else if(s.twinbell){
+    out+=rect(cx-100,cy-60,200,120,s.bezel,'#1a1a1a',2,8);
+    out+=circle(cx,cy,55,s.dial,'none',0);
+    for(let i=0;i<12;i++){const [x,y]=pt(cx,cy,46,i*30);out+=txt(x,y+3,i===0?12:i,9,s.accent,'font-family="Arial,sans-serif"')}
+    out+=handGroup('hour',cx,cy,24,s.hand,3);
+    out+=handGroup('minute',cx,cy,40,s.hand,2.5);
+    // bells
+    out+=circle(cx-70,cy-40,14,'#c9c9c9','none',0);
+    out+=circle(cx+70,cy-40,14,'#c9c9c9','none',0);
+  } else if(s.f1){
+    out+=circle(cx,cy,R+4,s.bezel,'#1a1a1a',2);
+    out+=circle(cx,cy,R,s.dial,'none',0);
+    for(let i=0;i<12;i++){const [x,y]=pt(cx,cy,R-14,i*30);out+=txt(x,y+4,i===0?12:i,12,s.accent,'font-family="Arial,sans-serif"')}
+    out+=handGroup('hour',cx,cy,50,s.hand,4);
+    out+=handGroup('minute',cx,cy,76,s.hand,3);
+    out+=handGroup('second',cx,cy,80,s.second,2);
+    out+=circle(cx,cy,5,s.accent,'none',0);
+  } else if(s.orloj){
+    out+=circle(cx,cy,R+6,s.bezel,'#c9a84c',3);
+    out+=circle(cx,cy,R,s.dial,'none',0);
+    // zodiac ring
+    out+=circle(cx,cy,R-20,'none','#c9a84c',1);
+    for(let i=0;i<12;i++){const [x,y]=pt(cx,cy,R-10,i*30);out+=txt(x,y+3,i===0?12:i,10,s.accent,'font-family="Georgia,serif"')}
+    out+=handGroup('hour',cx,cy,50,s.hand,4);
+    out+=handGroup('minute',cx,cy,76,s.hand,3);
+    out+=circle(cx,cy,5,s.accent,'none',0);
+  } else {
+    out+=roundFace(key,s,u);
+  }
+  return out;
+}
+
+function renderFace(key){
+  const s=FACES[key];if(!s)return '';
+  const u='rb'+(++renderSerial);
+  let art;
+  if(s.digital) art=digitalFace(key,s,u);
+  else if(s.shaped) art=shapedFace(key,s,u);
+  else if(s.clock) art=clockFace(key,s,u);
+  else art=roundFace(key,s,u);
+  // special overrides for distinctive faces
+  if(s.freak) art=freakFace(key,s,u);
+  if(s.moon) art=moonFace(key,s,u);
+  if(s.freak) {}
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" role="img" aria-label="${esc(s.name+' showing live time')}" data-face-key="${esc(key)}">${defs(u,s)}${art}</svg>`;
+}
+
+function freakFace(key,s,u){
+  const cx=150,cy=150,R=118;
+  let out='';
+  out+=circle(cx,cy,R+6,s.bezel,'#1a1a1a',2);
+  out+=circle(cx,cy,R,s.dial,'none',0);
+  // carousel (no hands) - rotating disc with pointer
+  out+=circle(cx,cy,90,'none','#c9c9c9',1);
+  for(let i=0;i<12;i++){const [x,y]=pt(cx,cy,80,i*30);out+=txt(x,y+3,i===0?12:i,9,s.accent,'font-family="Arial,sans-serif"')}
+  out+=`<g data-hand="minute" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy-70}" stroke="${s.hand}" stroke-width="3" stroke-linecap="round"/></g>`;
+  out+=circle(cx,cy,6,s.accent,'none',0);
+  return out;
+}
+
+function moonFace(key,s,u){
+  const cx=150,cy=150,R=118;
+  let out=roundFace(key,s,u);
+  // moonphase aperture at 6
+  out+=circle(cx,cy+55,18,'#0a1a2a','#c9a84c',1);
+  out+=`<circle data-moon-shadow cx="${cx+11}" cy="${cy+55}" r="18" fill="#0a1a2a" opacity=".6"/>`;
+  return out;
+}
+
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+// ---------- engine ----------
+let renderSerial = 0;
+const $ = id => document.getElementById(id);
+const storeKey = 'world-clock-reflection-beam-v1';
+const CITIES = [
+ {name:'New York',zone:'America/New_York'},{name:'Los Angeles',zone:'America/Los_Angeles'},{name:'Chicago',zone:'America/Chicago'},{name:'Denver',zone:'America/Denver'},{name:'Toronto',zone:'America/Toronto'},{name:'Vancouver',zone:'America/Vancouver'},{name:'Mexico City',zone:'America/Mexico_City'},{name:'Sao Paulo',zone:'America/Sao_Paulo'},{name:'Buenos Aires',zone:'America/Argentina/Buenos_Aires'},{name:'London',zone:'Europe/London'},{name:'Paris',zone:'Europe/Paris'},{name:'Berlin',zone:'Europe/Berlin'},{name:'Madrid',zone:'Europe/Madrid'},{name:'Rome',zone:'Europe/Rome'},{name:'Amsterdam',zone:'Europe/Amsterdam'},{name:'Brussels',zone:'Europe/Brussels'},{name:'Vienna',zone:'Europe/Vienna'},{name:'Zurich',zone:'Europe/Zurich'},{name:'Stockholm',zone:'Europe/Stockholm'},{name:'Oslo',zone:'Europe/Oslo'},{name:'Copenhagen',zone:'Europe/Copenhagen'},{name:'Helsinki',zone:'Europe/Helsinki'},{name:'Moscow',zone:'Europe/Moscow'},{name:'Istanbul',zone:'Europe/Istanbul'},{name:'Athens',zone:'Europe/Athens'},{name:'Dubai',zone:'Asia/Dubai'},{name:'Mumbai',zone:'Asia/Kolkata'},{name:'Delhi',zone:'Asia/Kolkata'},{name:'Bangkok',zone:'Asia/Bangkok'},{name:'Singapore',zone:'Asia/Singapore'},{name:'Hong Kong',zone:'Asia/Hong_Kong'},{name:'Shanghai',zone:'Asia/Shanghai'},{name:'Beijing',zone:'Asia/Shanghai'},{name:'Tokyo',zone:'Asia/Tokyo'},{name:'Seoul',zone:'Asia/Seoul'},{name:'Sydney',zone:'Australia/Sydney'},{name:'Melbourne',zone:'Australia/Melbourne'},{name:'Perth',zone:'Australia/Perth'},{name:'Auckland',zone:'Pacific/Auckland'},{name:'Honolulu',zone:'Pacific/Honolulu'},{name:'Anchorage',zone:'America/Anchorage'},{name:'Reykjavik',zone:'Atlantic/Reykjavik'},{name:'Cairo',zone:'Africa/Cairo'},{name:'Johannesburg',zone:'Africa/Johannesburg'},{name:'Lagos',zone:'Africa/Lagos'},{name:'Nairobi',zone:'Africa/Nairobi'},{name:'Casablanca',zone:'Africa/Casablanca'},{name:'Lisbon',zone:'Europe/Lisbon'},{name:'Dublin',zone:'Europe/Dublin'},{name:'Prague',zone:'Europe/Prague'},{name:'Warsaw',zone:'Europe/Warsaw'},{name:'Budapest',zone:'Europe/Budapest'},{name:'Bucharest',zone:'Europe/Bucharest'},{name:'Sofia',zone:'Europe/Sofia'},{name:'Belgrade',zone:'Europe/Belgrade'},{name:'Zagreb',zone:'Europe/Zagreb'},{name:'Bratislava',zone:'Europe/Bratislava'},{name:'Ljubljana',zone:'Europe/Ljubljana'},{name:'Sarajevo',zone:'Europe/Sarajevo'},{name:'Skopje',zone:'Europe/Skopje'},{name:'Tirana',zone:'Europe/Tirana'},{name:'Podgorica',zone:'Europe/Podgorica'},{name:'Pristina',zone:'Europe/Belgrade'},{name:'Chisinau',zone:'Europe/Chisinau'},{name:'Kyiv',zone:'Europe/Kyiv'},{name:'Minsk',zone:'Europe/Minsk'},{name:'Vilnius',zone:'Europe/Vilnius'},{name:'Riga',zone:'Europe/Riga'},{name:'Tallinn',zone:'Europe/Tallinn'},{name:'Hamburg',zone:'Europe/Berlin'},{name:'Munich',zone:'Europe/Berlin'},{name:'Frankfurt',zone:'Europe/Berlin'},{name:'Cologne',zone:'Europe/Berlin'},{name:'Dusseldorf',zone:'Europe/Berlin'},{name:'Stuttgart',zone:'Europe/Berlin'},{name:'Leipzig',zone:'Europe/Berlin'},{name:'Dresden',zone:'Europe/Berlin'},{name:'Bremen',zone:'Europe/Berlin'},{name:'Hanover',zone:'Europe/Berlin'},{name:'Nuremberg',zone:'Europe/Berlin'},{name:'Bonn',zone:'Europe/Berlin'},{name:'Karlsruhe',zone:'Europe/Berlin'},{name:'Mannheim',zone:'Europe/Berlin'},{name:'Augsburg',zone:'Europe/Berlin'},{name:'Wiesbaden',zone:'Europe/Berlin'},{name:'Gelsenkirchen',zone:'Europe/Berlin'},{name:'Muenster',zone:'Europe/Berlin'},{name:'Aachen',zone:'Europe/Berlin'},{name:'Braunschweig',zone:'Europe/Berlin'},{name:'Kiel',zone:'Europe/Berlin'},{name:'Magdeburg',zone:'Europe/Berlin'},{name:'Freiburg',zone:'Europe/Berlin'},{name:'Erfurt',zone:'Europe/Berlin'},{name:'Rostock',zone:'Europe/Berlin'},{name:'Kassel',zone:'Europe/Berlin'},{name:'Halle',zone:'Europe/Berlin'},{name:'Mainz',zone:'Europe/Berlin'},{name:'Saarbrucken',zone:'Europe/Berlin'},{name:'Potsdam',zone:'Europe/Berlin'},{name:'Ludwigshafen',zone:'Europe/Berlin'},{name:'Oldenburg',zone:'Europe/Berlin'},{name:'Leverkusen',zone:'Europe/Berlin'},{name:'Osnabruck',zone:'Europe/Berlin'},{name:'Solingen',zone:'Europe/Berlin'},{name:'Heidelberg',zone:'Europe/Berlin'},{name:'Darmstadt',zone:'Europe/Berlin'},{name:'Regensburg',zone:'Europe/Berlin'},{name:'Ingolstadt',zone:'Europe/Berlin'},{name:'Wurzburg',zone:'Europe/Berlin'},{name:'Furth',zone:'Europe/Berlin'},{name:'Ulm',zone:'Europe/Berlin'},{name:'Heilbronn',zone:'Europe/Berlin'},{name:'Paderborn',zone:'Europe/Berlin'},{name:'Gottingen',zone:'Europe/Berlin'},{name:'Bottrop',zone:'Europe/Berlin'},{name:'Trier',zone:'Europe/Berlin'},{name:'Recklinghausen',zone:'Europe/Berlin'},{name:'Bremerhaven',zone:'Europe/Berlin'},{name:'Cottbus',zone:'Europe/Berlin'},{name:'Gera',zone:'Europe/Berlin'},{name:'Koblenz',zone:'Europe/Berlin'},{name:'Bergisch Gladbach',zone:'Europe/Berlin'},{name:'Jena',zone:'Europe/Berlin'},{name:'Remscheid',zone:'Europe/Berlin'},{name:'Erlangen',zone:'Europe/Berlin'},{name:'Moers',zone:'Europe/Berlin'},{name:'Siegen',zone:'Europe/Berlin'},{name:'Hildesheim',zone:'Europe/Berlin'},{name:'Salzgitter',zone:'Europe/Berlin'},{name:'Kaiserslautern',zone:'Europe/Berlin'}
+];
+const defaultCities = [
+  {name:'New York',zone:'America/New_York',face:'submariner'},
+  {name:'London',zone:'Europe/London',face:'bigben'},
+  {name:'Tokyo',zone:'Asia/Tokyo',face:'snowflake'},
+  {name:'Sydney',zone:'Australia/Sydney',face:'f91w'}
+];
+const state = {cities:defaultCities.map(v=>({...v})),view:'world',detailKey:null,detailZone:null,chrono:{}};
+let lastOffsetCheck=0,lastOffsetSignature='';
+const visibleGallery=new Set();
+const galleryObserver = ('IntersectionObserver' in window) ? new IntersectionObserver(entries=>{for(const e of entries){const svg=e.target.querySelector('svg');if(!svg)continue;if(e.isIntersecting)visibleGallery.add(svg);else visibleGallery.delete(svg)}updateAll()},{rootMargin:'300px'}):null;
+
+try{const saved=JSON.parse(localStorage.getItem(storeKey)||'null');if(saved&&Array.isArray(saved.cities)){const seen=new Set();const valid=saved.cities.filter(c=>c&&typeof c.name==='string'&&typeof c.zone==='string'&&FACES[c.face]&&CITIES.some(v=>v.name===c.name&&v.zone===c.zone)&&!seen.has(c.name+'|'+c.zone)&&(seen.add(c.name+'|'+c.zone),true));if(valid.length)state.cities=valid.slice(0,62)}}catch{}
+function save(){try{localStorage.setItem(storeKey,JSON.stringify({cities:state.cities}))}catch{}}
+
+function zoneOffset(zone,now=new Date()){
+  try{const v=new Intl.DateTimeFormat('en-US',{timeZone:zone,timeZoneName:'shortOffset'}).formatToParts(now).find(p=>p.type==='timeZoneName')?.value||'GMT';const m=v.replace('−','-').match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/);return m?(m[1]==='-'?-1:1)*(Number(m[2])*60+Number(m[3]||0)):0}catch{return 0}
+}
+function offsetLabel(min){const sign=min<0?'-':'+',v=Math.abs(min);return `UTC${sign}${String(Math.floor(v/60)).padStart(2,'0')}:${String(v%60).padStart(2,'0')}`}
+function sortCities(){const now=new Date();state.cities.sort((a,b)=>zoneOffset(a.zone,now)-zoneOffset(b.zone,now)||a.name.localeCompare(b.name))}
+const formatCache=new Map();
+function localParts(zone,now=new Date()){
+  if(!formatCache.has(zone))formatCache.set(zone,new Intl.DateTimeFormat('en-US',{timeZone:zone,year:'numeric',month:'short',day:'2-digit',weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}));
+  const p=Object.fromEntries(formatCache.get(zone).formatToParts(now).map(v=>[v.type,v.value]));
+  return {h:Number(p.hour),m:Number(p.minute),s:Number(p.second),day:Number(p.day),month:p.month,weekday:p.weekday,year:Number(p.year),ms:now.getMilliseconds()};
+}
+function timeText(p){return `${String(p.h).padStart(2,'0')}:${String(p.m).padStart(2,'0')}:${String(p.s).padStart(2,'0')}`}
+function dateText(p){return `${p.weekday}, ${p.month} ${p.day}`}
+function chronoSeconds(key,now){const c=state.chrono[key];return c?(c.elapsed||0)+(c.running?Math.max(0,(now.getTime()-c.started)/1000):0):0}
+function updateSvg(svg,p,now){
+  const key=svg.dataset.faceKey,s=FACES[key],rawSecond=p.s+p.ms/1000;
+  const second=s.cadence==='tick'?Math.floor(rawSecond):s.cadence==='mondaine'?Math.min(rawSecond,58.5)*60/58.5:rawSecond;
+  const elapsed=chronoSeconds(key,now);
+  const angles={hour:(p.h%12+p.m/60+rawSecond/3600)*30,minute:(p.m+rawSecond/60)*6,second:second*6,gmt:((p.h-zoneOffset(svg.dataset.zone||'UTC',now)/60+24)%24+p.m/60)*15,subseconds:second*6,chrono:(elapsed%60)*6,chrono10:(elapsed%10)*36,chronoMinute:(elapsed/60%30)*12,chronoHour:(elapsed/3600%12)*30,datepointer:(p.day-1)*360/31};
+  svg.querySelectorAll('[data-hand]').forEach(g=>{const role=g.dataset.hand,angle=angles[role];if(Number.isFinite(angle))g.setAttribute('transform',`rotate(${angle} ${g.dataset.px||150} ${g.dataset.py||150})`)});
+  svg.querySelectorAll('[data-field]').forEach(n=>{const field=n.dataset.field;let value='';
+    if(field==='date')value=String(p.day);else if(field==='day'||field==='weekday')value=p.weekday.toUpperCase();else if(field==='weekdaydate')value=`${p.weekday.toUpperCase()} ${p.day}`;else if(field==='dayfull')value=({Sun:'SUNDAY',Mon:'MONDAY',Tue:'TUESDAY',Wed:'WEDNESDAY',Thu:'THURSDAY',Fri:'FRIDAY',Sat:'SATURDAY'})[p.weekday]||p.weekday.toUpperCase();else if(field==='month')value=p.month.toUpperCase();else if(field==='seconds')value=String(p.s).padStart(2,'0');else if(field==='datetens')value=p.day<10?'0':String(Math.floor(p.day/10));else if(field==='dateones')value=String(p.day%10);
+    if(n.textContent!==value)n.textContent=value;
+  });
+  const digits=`${String(p.h).padStart(2,'0')}${String(p.m).padStart(2,'0')}${String(p.s).padStart(2,'0')}`;
+  const on={0:'abcdef',1:'bc',2:'abged',3:'abgcd',4:'fgbc',5:'afgcd',6:'afgecd',7:'abc',8:'abcdefg',9:'abfgcd'};
+  svg.querySelectorAll('[data-digit-index]').forEach(g=>{const active=on[Number(digits[Number(g.dataset.digitIndex)])]||'';g.querySelectorAll('[data-segment]').forEach(seg=>{const visible=active.includes(seg.dataset.segment);seg.setAttribute('opacity',visible?'.95':'.09');seg.setAttribute('fill',visible?s.accent:'#486052')})});
+  const moon=svg.querySelector('[data-moon-shadow]');if(moon){const lunar=(now.getTime()-Date.UTC(2000,0,6,18,14))/(29.530588853*86400000);const phase=((lunar%1)+1)%1;moon.setAttribute('cx',String(152+Math.cos(phase*2*Math.PI)*11));moon.setAttribute('opacity',String(.5+.22*Math.sin(phase*2*Math.PI)))}
+  const pendulum=svg.querySelector('[data-pendulum]');if(pendulum)pendulum.setAttribute('transform',`rotate(${Math.sin(now.getTime()/370)*7} 150 218)`);
+}
+function updateAll(){if(document.hidden)return;const now=new Date(),cache=new Map();const get=zone=>{if(!cache.has(zone))cache.set(zone,localParts(zone,now));return cache.get(zone)};
+  if(now.getTime()-lastOffsetCheck>60000){lastOffsetCheck=now.getTime();const signature=state.cities.map(c=>c.name+':'+zoneOffset(c.zone,now)).join('|');if(signature!==lastOffsetSignature){renderWorld();return}}
+  document.querySelectorAll('#worldGrid svg').forEach(svg=>{const zone=svg.dataset.zone||'UTC';updateSvg(svg,get(zone),now)});
+  if(!$('collectionView').classList.contains('hidden')){const p=get(Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC');(visibleGallery.size?visibleGallery:new Set(document.querySelectorAll('#galleryGrid svg'))).forEach(svg=>updateSvg(svg,p,now))}
+  if(state.detailKey){const svg=$('detailStage').querySelector('svg');if(svg){svg.dataset.zone=state.detailZone;updateSvg(svg,get(state.detailZone),now)}}
+}
+
+function availableFace(except){const used=new Set(state.cities.filter(c=>c!==except).map(c=>c.face));const free=FACE_KEYS.filter(k=>!used.has(k)&&k!==except?.face);return free.length?free[Math.floor(Math.random()*free.length)]:FACE_KEYS[Math.floor(Math.random()*FACE_KEYS.length)]}
+
+function renderWorld(){
+  sortCities();lastOffsetSignature=state.cities.map(c=>c.name+':'+zoneOffset(c.zone)).join('|');
+  $('worldCount').textContent=`${state.cities.length} ${state.cities.length===1?'city':'cities'} · west to east`;
+  const grid=$('worldGrid');grid.innerHTML='';
+  state.cities.forEach(city=>{
+    const card=document.createElement('div');card.className='card';
+    const face=document.createElement('div');face.className='face';
+    const svgWrap=document.createElement('div');svgWrap.innerHTML=renderFace(city.face);
+    const svg=svgWrap.querySelector('svg');svg.dataset.zone=city.zone;svg.dataset.faceKey=city.face;
+    face.appendChild(svg);card.appendChild(face);
+    const meta=document.createElement('div');meta.className='meta';
+    meta.innerHTML=`<span class="city">${city.name}</span><span class="offset">${offsetLabel(zoneOffset(city.zone))}</span>`;
+    card.appendChild(meta);
+    const sub=document.createElement('div');sub.className='meta';sub.innerHTML=`<span>${FACES[city.face].name}</span>`;
+    card.appendChild(sub);
+    const ctrl=document.createElement('div');ctrl.className='controls';
+    const sh=document.createElement('button');sh.textContent='Shuffle face';sh.onclick=()=>{city.face=availableFace(city);save();renderWorld()};
+    const rm=document.createElement('button');rm.textContent='Remove';rm.onclick=()=>{state.cities=state.cities.filter(c=>c!==city);save();renderWorld()};
+    const insp=document.createElement('button');insp.textContent='Inspect';insp.onclick=()=>openDetail(city.face,city.zone);
+    ctrl.append(sh,rm,insp);card.appendChild(ctrl);
+    grid.appendChild(card);
+  });
+}
+
+function renderGallery(){
+  const q=$('collectionSearch').value.trim().toLowerCase();
+  const keys=FACE_KEYS.filter(key=>{const s=FACES[key];return [key,s.name].join(' ').toLowerCase().includes(q)});
+  $('collectionCount').textContent=`${keys.length} of ${FACE_KEYS.length}`;
+  const grid=$('galleryGrid');grid.innerHTML='';
+  keys.forEach(key=>{
+    const card=document.createElement('div');card.className='card';
+    const face=document.createElement('div');face.className='face';
+    const svgWrap=document.createElement('div');svgWrap.innerHTML=renderFace(key);
+    const svg=svgWrap.querySelector('svg');svg.dataset.faceKey=key;
+    face.appendChild(svg);card.appendChild(face);
+    const meta=document.createElement('div');meta.className='meta';
+    meta.innerHTML=`<span class="city">${FACES[key].name}</span>`;
+    card.appendChild(meta);
+    const ctrl=document.createElement('div');ctrl.className='controls';
+    const insp=document.createElement('button');insp.textContent='Inspect';insp.onclick=()=>openDetail(key,Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC');
+    ctrl.append(insp);card.appendChild(ctrl);
+    if(galleryObserver)galleryObserver.observe(card);
+    grid.appendChild(card);
+  });
+}
+
+function openDetail(key,zone){
+  const s=FACES[key];if(!s)return;
+  state.detailKey=key;state.detailZone=zone||Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';
+  $('detailTitle').textContent=s.name;
+  $('detailModel').textContent=s.cadence+' cadence';
+  $('detailDescription').textContent='Live SVG rendition. Hands update with local time.';
+  $('detailStage').innerHTML=renderFace(key);
+  const svg=$('detailStage').querySelector('svg');svg.dataset.zone=state.detailZone;svg.dataset.faceKey=key;
+  $('chronoControls').classList.toggle('hidden',!s.chrono);
+  updateChronoButtons();
+  $('detailDialog').showModal();
+  updateAll();
+}
+function updateChronoButtons(){const c=state.chrono[state.detailKey];$('chronoToggle').textContent=c?.running?'Stop chronograph':c?.elapsed?'Resume chronograph':'Start chronograph';$('chronoReset').disabled=!c?.running&&!c?.elapsed}
+
+// events
+$('shuffleAll').addEventListener('click',()=>{let keys,tries=0;do{keys=[...FACE_KEYS];for(let i=keys.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[keys[i],keys[j]]=[keys[j],keys[i]]}tries++}while(tries<30&&state.cities.some((c,i)=>c.face===keys[i]));state.cities.forEach((c,i)=>c.face=keys[i%keys.length]);save();renderWorld()});
+$('toggleView').addEventListener('click',()=>{const w=$('worldView'),c=$('collectionView');if(c.classList.contains('hidden')){c.classList.remove('hidden');w.classList.add('hidden');$('toggleView').textContent='World';renderGallery()}else{w.classList.remove('hidden');c.classList.add('hidden');$('toggleView').textContent='Collection'}});
+$('addCityBtn').addEventListener('click',()=>{$('addPanel').classList.toggle('hidden')});
+$('citySearch').addEventListener('input',e=>{
+  const q=e.target.value.trim().toLowerCase();
+  const sugg=$('suggestions');sugg.innerHTML='';
+  if(!q)return;
+  CITIES.filter(c=>c.name.toLowerCase().includes(q)).slice(0,12).forEach(c=>{
+    const d=document.createElement('div');d.textContent=`${c.name} (${c.zone})`;d.onclick=()=>{if(!state.cities.some(x=>x.name===c.name)){state.cities.push({name:c.name,zone:c.zone,face:availableFace()});save();renderWorld()}$('addPanel').classList.add('hidden');$('citySearch').value=''};
+    sugg.appendChild(d);
+  });
+});
+$('collectionSearch').addEventListener('input',renderGallery);
+$('closeDetail').addEventListener('click',()=>$('detailDialog').close());
+$('detailDialog').addEventListener('close',()=>{state.detailKey=null});
+$('chronoToggle').addEventListener('click',()=>{
+  const key=state.detailKey;if(!key)return;
+  const c=state.chrono[key]||{elapsed:0,running:false,started:0};
+  if(c.running){c.elapsed+=(Date.now()-c.started)/1000;c.running=false}
+  else{c.started=Date.now();c.running=true}
+  state.chrono[key]=c;updateChronoButtons();
+});
+$('chronoReset').addEventListener('click',()=>{const key=state.detailKey;if(!key)return;state.chrono[key]={elapsed:0,running:false,started:0};updateChronoButtons()});
+$('search').addEventListener('input',e=>{
+  const q=e.target.value.trim().toLowerCase();
+  document.querySelectorAll('#worldGrid .card').forEach(card=>{
+    const name=card.querySelector('.city')?.textContent.toLowerCase()||'';
+    card.style.display=name.includes(q)?'':'none';
+  });
+});
+
+renderWorld();
+setInterval(updateAll,window.matchMedia('(prefers-reduced-motion: reduce)').matches?1000:250);
+document.addEventListener('visibilitychange',updateAll);
+</script>
+</body>
+</html>

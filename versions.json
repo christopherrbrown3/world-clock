@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "reflection-beam",
+      "label": "Reflection Beam",
+      "file": "versions/reflection-beam.html",
+      "snapshotDate": "2026-10-20",
+      "notes": "Independent Reflection Beam rendition, authored from scratch with its own interface, time engine, SVG drawing kit, and 62 reference-led timepieces, with per-face movement cadences, live date and moon complications, a board sorted west to east by UTC offset, duplicate-aware face shuffling, and a filterable collection."
+    },
+    {
       "id": "gemini-4-argon",
       "label": "Gemini 4 Argon",
       "file": "versions/gemini-4-argon.html",
