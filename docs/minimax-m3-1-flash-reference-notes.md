@@ -57,9 +57,37 @@ The pixel route was attempted first and abandoned for a structural reason: the s
 
 Two defects were found and fixed while splicing the finished Royal Oak renderer into the build: a missing `wg` gold gradient, and a minute track that had been placed inside the `dialclip` path and was therefore being cut off.
 
-## The Twin Bell proportion check
+## The Twin Bell face
 
-The `twinbell` case was measured against its supplied photographs at a height-to-width ratio of approximately 1.50, and the rendition matches that ratio. The active build's proportion was measured against the same photographs and found to be less accurate, so no change was made in either direction. This is recorded here because a "parity" argument would have moved this face in the wrong direction.
+The `twinbell` renderer was rebuilt from scratch against the supplied photographs. Every dimension below is a pixel measurement from the reference archive, converted at 8.69 px per SVG unit, with the dial centre at (50, 82) in a `0 0 100 132` view box.
+
+- **Case:** a chromed steel **disc**, drawn as an ellipse at (50, 76) with radii 39 × 35.5, over a dark offset shadow and a soft ground-shadow ellipse. The photographs show a circular, not rectangular, case.
+- **Bells:** two chrome domes, mirrored about x = 50, with the outer edge running (34.4, 30) → (13.4, 51.2) and the inner flank returning through (24.8, 41.8) → (38, 34.2). Each carries a white 0.9-unit outer rim, a white 0.55-unit specular strip, and a dark 0.5-unit inner-flank stroke.
+- **Handle:** a chrome bail **behind** the bells — two tapered struts, a flat top plate with a dark edge strip, and a boss ellipse at (50, 10.4).
+- **Top-centre element:** a chrome **plaque on a short post**, not an alarm disc — a post at x 50.2 from y 36.2 to 41.6 carrying a 7.2 × 3.7 rounded plate with a darker inset.
+- **Dial stack (outside in):** black outer ring r 30.2 → chrome ring r 28.9 → light bevel r 28.2 → white field r 27.2 (#eeedf0) with a faint inner edge ring. The photographs show **no minute ticks and no hour dots** on this dial.
+- **Numerals:** large black Arabic numerals in a serif face, cap height ≈ 5.9 units, on a ring of radius 24.2 about (50, 82).
+- **Brand:** **"Westcllox"** — the brand is printed **above the pivot**, centred on the 12 axis at y 70.4, ≈ 15.2 units wide in a bold serif. The previous draft carried an "ALARM" label in that position, which does not appear in the photographs.
+- **Hands:** plain tapered black blades with no spade bulb, plus a live centre seconds needle. The photographs show the hands posed at **10:10:30**, which is the standard display pose and the pose the watch was photographed in.
+
+The `twinbell` case was also measured against its supplied photographs at a height-to-width ratio of approximately 1.50, and the rendition matches that ratio. The active build's proportion was measured against the same photographs and found to be less accurate, so no change was made in either direction. This is recorded here because a "parity" argument would have moved this face in the wrong direction.
+
+## Claims that were tested and rejected
+
+The reference-photo study produced several assertions about the twin-bell face. Each was checked against the pixels rather than accepted on the strength of the note, and three of them did not survive.
+
+- **Rejected — "the dial has an alarm-set disc."** No such disc is visible in any of the seven supplied photographs. The element above the pivot is a chrome plaque on a post, and the alarm indication in this design is the twin-bell strike, not a sub-dial.
+- **Rejected — "there is no text above the pivot."** The wordmark sits plainly above the pivot; a 9-glyph word is legible on the 12 axis between px x 499–614, y 547–568.
+- **Rejected — "the dial reads 'Westcllox' and 'MADE IN CHINA' below the pivot."** The wordmark reading is confirmed, but no second line of text is resolvable below the pivot. Only one wordmark is drawn.
+- **Unverified — numeral radius.** The study proposed 0.741 R. Direct measurement of the printed numerals gives ≈ 0.87 R horizontally and ≈ 0.80 R vertically, and the drawing follows the measurement rather than the study.
+- **Corrected — movement.** The face is a **quartz** alarm clock, not a mechanical one, so the spec now reads "Quartz movement with a twin-bell alarm strike" and the case, dial, and complication strings were rewritten to match the photographed object.
+
+## Defects found during validation
+
+Two bugs surfaced only because the faces were re-rendered and measured rather than assumed.
+
+- **Invalid gradient paint references.** The twin-bell chrome case, bell domes, and dome highlight were filled with `url(##<id>)` — a doubled hash, because `S.ref()` already returns a `#`-prefixed id. Browsers silently paint nothing for an unresolvable paint server, so the case and bells rendered as completely empty outlines. The fix is to use `S.url(name)`, which returns the full `url(#<id>)` value. Every other face in the rendition already used the correct form.
+- **Default dial centre in the drawing kit.** `S.numbers()` and `S.arcText()` default to a dial centre of (50, 50). Faces whose dial is not centred inherited that default, which placed the whole numeral ring 32 units high — clustered across the upper half of the dial and colliding with the bells and handle. This affected the numeral rings of `bigben` (centre 50, 60), `grandfather` (50, 70), `orloj` (50, 46), and `twinbell` (50, 82), and the arc text of `howardmiller` (50, 78). All five now pass their own centre explicitly.
 
 ## Faces
 
