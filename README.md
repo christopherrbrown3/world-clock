@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Twenty-five perspectives.**
+**One brief. Twenty-six perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
+**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
 
 </div>
 
@@ -30,6 +30,7 @@ Models with verified release dates are listed newest first. **Model release** li
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
+| [Recursive Flint](versions/recursive-flint.html) | 2026-10-22 (maintainer-supplied) | 2026-10-22 |
 | [MiniMax M3.1 Flash](versions/minimax-m3-1-flash.html) | [2026-10-19](https://www.minimax.io/blog/minimax-m31f) | 2026-10-21 |
 | [Reflection Beam](versions/reflection-beam.html) | [2026-10-05](https://reflection.ai/blog/introducing-beam) | 2026-10-20 |
 | [Claude Haiku 5.5](versions/claude-haiku-5.5.html) | [2026-10-07](https://www.anthropic.com/claude-haiku-5-5) | 2026-10-08 |
@@ -67,6 +68,12 @@ MiniMax M3.1 Flash implements all 62 faces in a standalone page written from scr
 ![MiniMax M3.1 Flash’s 62 independently drawn SVG timepieces](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/minimax-m3-1-flash-faces.png)
 
 [Desktop view](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/minimax-m3-1-flash-desktop.png) · [Phone view](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/minimax-m3-1-flash-mobile.png)
+
+Recursive Flint implements all 62 faces in a standalone page authored from scratch with its own interface, time engine, SVG drawing kit, and all 62 reference-led timepieces, each moving at its catalog cadence with live date and moon complications, a Lume Mode, a filterable 62-piece collection, and an inspector dialog. [Read its reference and approximation notes](docs/recursive-flint-reference-notes.md).
+
+![Recursive Flint’s 62 independently drawn SVG timepieces](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/recursive-flint-faces.png)
+
+[Desktop view](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/recursive-flint-desktop.png) · [Phone view](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/recursive-flint-mobile.png)
 
 GitHub Copilot Hydrafusion implements all 62 faces in a clean-room standalone page with an original bioluminescent interface, independent city and SVG engines, saved city settings, collection search and filtering, fixed inspection poses, and a global lume study. [Read its reference and approximation notes](docs/hydrafusion-reference-notes.md).
 
