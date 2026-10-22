@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Eighteen perspectives.**
+**One brief. Twenty-five perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -30,6 +30,7 @@ Models with verified release dates are listed newest first. **Model release** li
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
+| [MiniMax M3.1 Flash](versions/minimax-m3-1-flash.html) | [2026-10-19](https://www.minimax.io/blog/minimax-m31f) | 2026-10-21 |
 | [Reflection Beam](versions/reflection-beam.html) | [2026-10-05](https://reflection.ai/blog/introducing-beam) | 2026-10-20 |
 | [Claude Haiku 5.5](versions/claude-haiku-5.5.html) | [2026-10-07](https://www.anthropic.com/claude-haiku-5-5) | 2026-10-08 |
 | [Muse Glimmer](versions/muse-glimmer.html) | [2026-08-10](https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model) | 2026-10-05 |
@@ -60,6 +61,12 @@ The [active development build](world-clock.html) remains available separately. I
 ## Inside a collection
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
+
+MiniMax M3.1 Flash implements all 62 faces in a standalone page written from scratch, with its own interface, `Intl` time engine, 150-city timezone atlas, and SVG drawing kit. Each face moves at its catalog cadence, cities can be added, removed, and shuffled, Lume Mode lights the lume plots across the catalog, the collection can be searched and filtered, and pieces can be inspected up close with working chronographs. [Read its reference and approximation notes](docs/minimax-m3-1-flash-reference-notes.md).
+
+![MiniMax M3.1 Flash’s 62 independently drawn SVG timepieces](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/minimax-m3-1-flash-faces.png)
+
+[Desktop view](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/minimax-m3-1-flash-desktop.png) · [Phone view](https://raw.githubusercontent.com/christopherrbrown3/world-clock/main/docs/assets/minimax-m3-1-flash-mobile.png)
 
 GitHub Copilot Hydrafusion implements all 62 faces in a clean-room standalone page with an original bioluminescent interface, independent city and SVG engines, saved city settings, collection search and filtering, fixed inspection poses, and a global lume study. [Read its reference and approximation notes](docs/hydrafusion-reference-notes.md).
 

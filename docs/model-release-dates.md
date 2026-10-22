@@ -1,5 +1,7 @@
 # Model release dates
 
+MiniMax M3.1 Flash’s release date, **October 19, 2026**, was verified against [MiniMax’s own announcement](https://www.minimax.io/blog/minimax-m31f), “MiniMax M3.1 Flash: Redefining Agent Performance and Cost,” which is dated October 19, 2026 and introduces the model under the official name `MiniMax-M3.1-Flash` and the standard-API model ID `minimax-m3.1-flash`. The [Anthropic-SDK-compatible API reference](https://platform.minimax.io/docs/api-reference/text-anthropic-api) documents the same model ID. The rendition was captured on **October 21, 2026**, the snapshot date recorded in `versions.json`.
+
 Claude Haiku 5.5’s release date, **October 7, 2026**, was verified against [Anthropic’s announcement](https://www.anthropic.com/claude-haiku-5-5), which is dated October 7, 2026 and introduces the model under the API model ID `claude-haiku-5-5`. The rendition was captured on **October 8, 2026**, the snapshot date recorded in `versions.json`.
 
 GitHub Copilot Hydrafusion’s directory release date, **September 30, 2026**, was supplied by the maintainer. No public vendor release source exists to verify it against, so it is recorded here as maintainer-supplied rather than externally confirmed. The rendition was captured on the same day, and the snapshot date in `versions.json` records that repository checkpoint separately.
@@ -22,6 +24,7 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 
 | Repository model label | Release date | Evidence |
 | --- | --- | --- |
+| MiniMax M3.1 Flash | 2026-10-19 | [MiniMax’s announcement](https://www.minimax.io/blog/minimax-m31f) is dated October 19, 2026 and introduces the model as `MiniMax-M3.1-Flash`; the [API reference](https://platform.minimax.io/docs/api-reference/text-anthropic-api) documents the `minimax-m3.1-flash` model ID. |
 | Claude Haiku 5.5 | 2026-10-07 | [Anthropic’s announcement](https://www.anthropic.com/claude-haiku-5-5) is dated October 7, 2026 and introduces the model. |
 | GitHub Copilot Hydrafusion | 2026-09-30 | Maintainer-supplied. No public vendor release source exists, so this date is not externally verified. |
 | Gemini 4 Argon | 2026-09-30 | [Google’s announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/) is dated September 30, 2026 and introduces Gemini 4 Argon. GitHub Copilot Hydrafusion stays ahead for this tied date. |
@@ -47,6 +50,7 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 
 ## Rollout and source distinctions
 
+- **MiniMax M3.1 Flash:** October 19 is the vendor’s own announcement date, and it is the same date the blog post carries as its publication timestamp. October 21 is this repository’s snapshot date, not a model release date.
 - **GPT 6.1 Sol:** September 29 is the API release date and the project snapshot date. They are recorded separately despite matching.
 - **GPT 6 Sol:** September 22 is the API release and Work/Codex introduction date, verified on September 29. The project snapshot also falls on September 22 and is recorded separately.
 - **Claude Opus 5.5:** September 22 is the announcement and availability date; September 24 is this repository’s snapshot date. The `/news/claude-opus-5-5` address redirects to the announcement page linked above.

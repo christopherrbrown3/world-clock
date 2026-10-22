@@ -14,6 +14,8 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 - `index.html`: project introduction and release-ordered model directory for GitHub Pages and local browsing.
 
 ## Current Model Pages
+- `versions/minimax-m3-1-flash.html`: MiniMax M3.1 Flash checkpoint, authored from scratch with its own interface, Intl time engine, 150-city atlas, SVG drawing kit, Lume Mode, and all 62 faces.
+
 - `versions/reflection-beam.html`: Reflection Beam checkpoint, authored from scratch with its own interface, time engine, SVG drawing kit, and all 62 faces.
 
 - `versions/gemini-4-argon.html`: Gemini 4 Argon checkpoint, authored from scratch with its own Spectral Horological Atelier interface, time engine, SVG drawing kit, 192-city atlas, and all 62 faces.
@@ -59,6 +61,8 @@ When a new model version is ready:
    ```
 
 The index and README use model release dates documented in [Model Release Dates](model-release-dates.md), and the index records verified dates in `data-release-date` attributes. The manifest uses `snapshotDate`, which is the project checkpoint date. Do not treat that date as a model release date. GPT 6 Sol and GPT 6 Luna were released and captured on September 22, 2026; their release dates were verified against OpenAI’s API changelog and ChatGPT release notes on September 29. Claude Opus 5.5 was released on September 22, 2026 and captured on September 24, 2026. Grok 4.7 was released on September 21, 2026 and captured on September 25, 2026. Claude Sonnet 5.5 was released and captured on September 28, 2026.
+
+MiniMax M3.1 Flash was released on October 19, 2026 and captured on October 21, 2026. Its release date was verified against MiniMax’s own blog post; the release and snapshot dates are recorded separately even though they are close together.
 
 Promoting a rendition to the active build is a separate, explicit operation. A new model entry does not require copying it into `world-clock.html`.
 

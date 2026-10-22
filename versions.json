@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "minimax-m3-1-flash",
+      "label": "MiniMax M3.1 Flash",
+      "file": "versions/minimax-m3-1-flash.html",
+      "snapshotDate": "2026-10-21",
+      "notes": "Independent MiniMax M3.1 Flash rendition, authored from scratch with its own interface, time engine, SVG drawing kit, and 62 reference-led timepieces, with per-face movement cadences, live date and moon complications, working chronographs, a Lume Mode, a west-to-east UTC board, duplicate-aware face shuffling, and a filterable collection."
+    },
+    {
       "id": "reflection-beam",
       "label": "Reflection Beam",
       "file": "versions/reflection-beam.html",
