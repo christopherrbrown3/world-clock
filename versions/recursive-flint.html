@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Recursive Flint's independent World Clock: 62 live SVG watches and clocks drawn from photographic references.">
+<meta name="theme-color" content="#06070f">
+<meta name="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2713%27 fill=%27%230b0e1d%27 stroke=%27%238b7bff%27 stroke-width=%272%27/%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%275%27 fill=%27%238b7bff%27/%3E%3C/svg%3E">
+<title>World Clock — Recursive Flint</title>
+<style>
+:root{color-scheme:dark;--void:#06070f;--deep:#0b0e1d;--panel:#10142a;--panel2:#151a36;--line:#2a3057;--ink:#eef0ff;--muted:#9aa3c7;--accent:#8b7bff;--mint:#7ee0ff;--amber:#ffc767;--rose:#ff7c91;--serif:Georgia,"Times New Roman",serif;--sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(circle at 82% 0,#1b1550 0,transparent 31rem),linear-gradient(145deg,#07070f,#0b0e1d 58%,#06070f);color:var(--ink);font-family:var(--sans);font-size:14px}button,input,select{font:inherit}button{cursor:pointer}
+.shell{width:min(1480px,calc(100% - 48px));margin:auto}.top{min-height:86px;display:flex;align-items:center;gap:22px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:13px;text-decoration:none}.sigil{width:40px;height:40px;border:1px solid #4a3f9e;border-radius:12px;display:grid;place-items:center;color:var(--accent)}
+.top-meta{margin-left:auto;display:flex;gap:18px;color:var(--muted);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,430px);gap:50px;align-items:end;padding:52px 0 36px}.eyebrow{color:var(--accent);font-size:10px;letter-spacing:.2em;text-transform:uppercase;margin:0 0 13px}.hero h1{font:clamp(42px,6vw,78px)/0.98 var(--serif);letter-spacing:-.055em;margin:0}.hero h1 em{font-style:normal;color:var(--accent)}
+.hero-copy{color:var(--muted);font-size:13px;line-height:1.85;max-width:52ch;margin:18px 0 0}.hero-copy strong{color:var(--ink)}.hero-intro{min-width:0}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:13px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:sticky;top:0;background:#07070fdd;backdrop-filter:blur(14px);z-index:12}.views,.actions{display:flex;align-items:center;gap:8px}
+.status{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:10px;padding:20px 2px 14px;letter-spacing:.04em}.pulse{display:flex;align-items:center;gap:7px}.pulse::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.card{background:linear-gradient(145deg,var(--panel),var(--deep));border:1px solid #22305e;border-radius:18px;overflow:hidden;position:relative;min-width:0;box-shadow:0 18px 50px #0006}.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:18px 18px 0}.city{font-size:21px;font-weight:600;letter-spacing:-.02em}
+.catalog-tools{display:flex;gap:10px;margin-bottom:18px}.search{position:relative;flex:1}.search input{width:100%;min-height:46px;border-radius:999px;border:1px solid #2c3a75;background:#0a0e20;color:var(--ink);padding:11px 18px}.catalog-tools select{min-height:46px;border-radius:999px;border:1px solid #2c3a75;background:#0a0e20;color:var(--ink);padding:0 16px}
+.dialog{position:fixed;inset:0;z-index:40;display:none;place-items:center;padding:20px}.dialog.open{display:grid}.dialog::backdrop{background:#030308cc;backdrop-filter:blur(5px)}.dialog-panel{width:min(1040px,calc(100vw - 28px));max-height:92dvh;padding:0;border:1px solid #35407a;border-radius:20px;background:#0b0e1d;color:var(--ink);box-shadow:0 28px 100px #000c}
+.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line)}.dialog-head h2{font:24px/1 var(--serif);letter-spacing:-.03em;margin:0}
+.dialog-body{padding:22px;overflow:auto}
+.dialog-body .close{min-width:40px;min-height:40px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--muted)}
+.dialog-body .close:hover{color:var(--ink);border-color:#3d4a8c}
+.city-search{margin-bottom:16px}.city-search input{width:100%;min-height:46px;border-radius:999px;border:1px solid #2c3a75;background:#0a0e20;color:var(--ink);padding:11px 18px}
+.city-results{margin:0;padding:0;list-style:none;display:grid;gap:6px;max-height:46dvh;overflow:auto}.city-results button{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;min-height:44px;padding:10px 14px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--ink);text-align:left}.city-results button:hover{background:#141a38;border-color:#2c3a75}
+.city-results .ccity{font-size:13px;font-weight:600}.city-results .cregion{font-size:11px;color:var(--muted)}
+.dialog-foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 22px;border-top:1px solid var(--line)}
+.btn{min-height:44px;padding:10px 18px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:12px;letter-spacing:.02em}
+.btn:hover{border-color:#3d4a8c;color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#0a0618;font-weight:700}
+.btn[aria-pressed="true"]{background:#1b2150;border-color:#4a3f9e;color:var(--accent)}
+.footer{display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:10px;line-height:1.8;border-top:1px solid var(--line);margin-top:38px;padding:23px 0 30px}
+.footer a{text-underline-offset:3px}
+.lume .stage,.lume .inspect-stage{background:radial-gradient(circle,#241c63,#06070f 62%)}.lume .lume-fill{fill:#b9a6ff!important;filter:drop-shadow(0 0 5px #7b68ff)}.lume .dial-base{filter:brightness(.42)}.lume [data-lcd]{filter:drop-shadow(0 0 4px #8f7bff)}
+.hero-clock{position:relative;border:1px solid var(--line);border-radius:22px;background:radial-gradient(circle at 50% 42%,#1a1440 0,#0b0e1d 68%);overflow:hidden}
+.hero-clock .stage,.stage{position:relative;width:100%;height:auto;display:block}
+.watch-svg{width:100%;height:auto;display:block}
+.hero-clock .watch-svg{height:420px}
+.empty{border:1px dashed #2c3a75;border-radius:16px;padding:34px;text-align:center;color:var(--muted);font-size:12px}
+.empty h2{font:20px/1.4 var(--serif);color:var(--ink);margin:0 0 8px}
+.empty p{margin:0}
+.city-card{background:linear-gradient(145deg,var(--panel),var(--deep));border:1px solid #22305e;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.city-card-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.city-name{font-size:15px;font-weight:600;letter-spacing:-.02em}
+.city-zone{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.city-time{font-size:30px;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.city-sub{font-size:11px;color:var(--muted)}
+.city-off{font-size:10px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase}
+.coll-card{background:linear-gradient(145deg,var(--panel),var(--deep));border:1px solid #22305e;border-radius:18px;overflow:hidden;position:relative;min-width:0;box-shadow:0 18px 50px #0006;cursor:pointer;transition:border-color .2s,transform .2s}
+.coll-card:hover{border-color:#3d4a8c;transform:translateY(-2px)}
+.coll-svg{display:block;width:100%;background:radial-gradient(circle at 50% 42%,#141a38,#0b0e1d 75%);padding:18px}
+.coll-meta{padding:14px 18px 18px;display:flex;flex-direction:column;gap:3px}
+.coll-maker{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.coll-name{font-size:15px;font-weight:600;letter-spacing:-.02em}
+.coll-cat{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.chip{min-height:38px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font-size:11px}
+.chip:hover{color:var(--ink);border-color:#3d4a8c}
+.chip[aria-pressed="true"],.chip[aria-pressed="true"]{background:#1b2150;border-color:#4a3f9e;color:var(--accent)}
+.count{font-size:10px;color:var(--muted);letter-spacing:.06em}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);background:#151a36;border:1px solid #35407a;color:var(--ink);padding:12px 20px;border-radius:999px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:60}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast[hidden]{display:none}
+.inspect{display:flex;flex-direction:column;gap:18px}
+.inspect-stage{background:radial-gradient(circle,#141a38,#0b0e1d 70%);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;justify-content:center}
+.inspect-stage .watch-svg{height:420px}
+.inspect-copy{display:flex;flex-direction:column;gap:12px}
+.inspect-copy h3{font:22px/1 var(--serif);letter-spacing:-.03em;margin:0}
+.inspect-copy p{margin:0;color:var(--muted);font-size:12px;line-height:1.8}
+.inspect-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.inspect-meta div{display:flex;justify-content:space-between;gap:12px;font-size:11px}
+.inspect-meta span{color:var(--muted)}
+.inspect-meta b{color:var(--ink);font-weight:600}
+.inspect-note{border-top:1px solid var(--line);padding-top:12px;color:var(--muted);font-size:11px;line-height:1.8}
+.inspect-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.inspect-head h3{font:22px/1 var(--serif);letter-spacing:-.03em;margin:0}
+.inspect-maker{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.inspect-name{font-size:17px;font-weight:600;letter-spacing:-.02em}
+@media(max-width:1050px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{grid-template-columns:1fr 300px}.stage{height:350px}.inspect-copy{padding:28px 24px}}
+@media(max-width:700px){.shell{width:min(100% - 28px,1480px)}.top{min-height:72px}.top-meta a,.top-meta span:first-child{display:none}.hero{display:block;padding:35px 0 26px}.hero h1{font-size:46px}.hero-copy{margin-top:18px}.toolbar{position:static;flex-wrap:wrap}.views,.actions{width:100%}.views,.actions{flex-wrap:wrap}.status{flex-direction:column;gap:8px}.grid{grid-template-columns:1fr}.catalog-tools{flex-direction:column}.catalog-tools select{width:100%}}
+@media(max-width:420px){.shell{width:min(100% - 20px,1480px)}.brand strong{font-size:16px}.hero h1{font-size:39px}.btn{font-size:10px}.stage,.catalog-card .stage{height:340px}.card-head{padding:18px 18px 0}.city{font-size:23px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to clocks</a>
+<div class="shell">
+<header class="top">
+  <a class="brand" href="../index.html"><span class="sigil"><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" aria-hidden="true"><path d="M5 10c3-6 9-6 12-1s7 5 9 1M4 18c4-5 8-5 12 0s7 4 10 0M8 25c3-4 7-4 10 0" stroke-width="1.7"/><circle cx="7" cy="7" r="2" fill="currentColor" stroke="none"/></svg></span><strong>World Clock</strong></a>
+  <div class="top-meta"><a href="../index.html">All renditions</a><span>62 reference studies</span><span>UTC <time class="utc" id="utc">—</time></span></div>
+</header>
+<main id="main">
+  <section class="hero"><div class="hero-intro"><p class="eyebrow">Recursive Flint</p><h1>Timepieces, drawn as <em>living instruments.</em></h1><p class="hero-copy">An independent study of <strong>62 watches and clocks</strong>. Every object is assembled from inline SVG, then animated with each city's local time.</p></div><div class="hero-clock" id="hero-clock"></div></section>
+  <div class="toolbar">
+    <div class="views" role="group" aria-label="Choose view"><button class="btn" id="world-tab" type="button" aria-pressed="true">World clocks <span class="count" id="city-count">6</span></button><button class="btn" id="collection-tab" type="button" aria-pressed="false">Collection <span class="count" id="collection-count">62</span></button></div>
+    <div class="actions"><button class="btn" id="lume" type="button" aria-pressed="false">Lume</button><button class="btn" id="shuffle-all" type="button">Shuffle all</button><button class="btn primary" id="add-city" type="button">Add city</button></div>
+  </div>
+  <section id="world-view" aria-label="World clocks"><div class="status"><span class="pulse">Live browser time · west to east</span><span id="world-status">6 cities</span><span id="world-time">—</span></div><div class="grid" id="city-grid"></div><div class="empty" id="empty-cities" hidden><h2>No cities yet.</h2><p>Add a city to start the board.</p></div></section>
+  <section id="collection-view" aria-label="Timepiece collection" hidden><div class="status"><span class="pulse">Reference-led SVG collection</span><span id="collection-count">62 pieces</span></div><div class="catalog-tools"><div class="search"><input id="piece-search" type="search" placeholder="Search maker or model…"></div><select id="category" aria-label="Filter by category"><option value="all">All categories</option><option value="sport">Sport</option><option value="dress">Dress</option><option value="chrono">Chronograph</option><option value="everyday">Everyday</option><option value="clock">Clock</option></select></div><div class="grid" id="collection-grid"></div><div class="empty" id="empty-collection" hidden><h2>No matches.</h2><p>Try another search.</p></div></section>
+</main>
+<footer><span>Recursive Flint · Independently authored from the project catalog and supplied photographs. Brand names identify depicted objects and do not imply affiliation.</span><span><a href="../docs/recursive-flint-reference-notes.md">References &amp; approximations</a> · <a href="../docs/watch-face-catalog.md">Watch face catalog</a></span></footer>
+<div class="dialog" id="city-dialog" role="dialog" aria-modal="true" aria-labelledby="city-dialog-title"><div class="dialog-panel"><div class="dialog-head"><h2 id="city-dialog-title">Add a city</h2><button class="close" type="button" data-close="city-dialog" aria-label="Close">×</button></div><div class="dialog-body"><div class="city-search"><input id="city-search" type="search" placeholder="Search cities or countries…" autocomplete="off"></div><ul class="city-results" id="city-results"></ul></div><div class="dialog-foot"><button class="btn" type="button" data-close="city-dialog">Cancel</button><button class="btn primary" id="city-add" type="button">Add city</button></div></div></div>
+<div class="dialog" id="inspect-dialog" role="dialog" aria-modal="true" aria-labelledby="inspect-dialog-title"><div class="dialog-panel"><div class="dialog-head"><h2 id="inspect-dialog-title">A closer orbit</h2><button class="close" type="button" data-close="inspect-dialog" aria-label="Close">×</button></div><div class="inspect"><div class="inspect-stage" id="inspect-stage"></div><div class="inspect-copy" id="inspect-copy"></div></div></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<noscript><p style="padding:30px">Enable JavaScript to draw the collection and update local times.</p></noscript>
+<script>
+'use strict';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const polar=(r,a,c=150)=>[c+r*Math.sin(a*Math.PI/180),c-r*Math.cos(a*Math.PI/180)];
+const pt=p=>p.map(n=>n.toFixed(2)).join(',');
+const el=(tag,a={},body='')=>`<${tag}${Object.entries(a).filter(([,v])=>v!==undefined).map(([k,v])=>` ${k}="${esc(v)}"`).join('')}>${body}</${tag}>`;
+const circ=(cx,cy,r,fill,stroke='none',sw=1,a={})=>el('circle',{cx,cy,r,fill,stroke,'stroke-width':sw,...a});
+const rect=(x,y,w,h,fill,rx=0,a={})=>el('rect',{x,y,width:w,height:h,rx,fill,...a});
+const path=(d,fill='none',stroke='none',sw=1,a={})=>el('path',{d,fill,stroke,'stroke-width':sw,...a});
+const line=(x1,y1,x2,y2,stroke,sw=1,a={})=>el('line',{x1,y1,x2,y2,stroke,'stroke-width':sw,...a});
+const label=(s,x,y,size=8,fill='#17221e',a={})=>el('text',{x,y,'font-size':size,fill,'font-family':'Arial,Helvetica,sans-serif','text-anchor':'middle','dominant-baseline':'middle',...a},esc(s));
+const group=(body,a={})=>el('g',a,body);
+let uid=0;
+const FACES={
+submariner:{maker:'Rolex',name:'Submariner Date 126610LN',category:'sport',shape:'round',dial:'#0d0f0c',accent:'#e8eee8',bezel:'#0a0c0a',marker:'dot',date:'3',bracelet:'steel',cadence:'sweep',note:'Black Cerachrom timing bezel, Maxi markers, Mercedes hour hand, Cyclops date.'},
+speedmaster:{maker:'Omega',name:'Speedmaster Moonwatch Professional',category:'chrono',shape:'round',dial:'#111211',accent:'#eee9dc',bezel:'#111211',marker:'baton',subs:3,bracelet:'steel',cadence:'sweep',note:'Asymmetric Moonwatch case, tachymeter bezel, stepped dial, running seconds.'},
+nautilus:{maker:'Patek Philippe',name:'Nautilus 5811/1G-001',category:'sport',shape:'porthole',dial:'#173344',accent:'#dbe8e8',marker:'baton',date:'3',bracelet:'integrated',texture:'lines',cadence:'sweep',note:'Rounded-octagonal white-gold case, lateral ears, blue-black dial.'},
+royaloak:{maker:'Audemars Piguet',name:'Royal Oak Selfwinding',category:'sport',shape:'octagon',dial:'#233b4b',accent:'#e6edef',marker:'baton',date:'3',bracelet:'integrated',texture:'grid',screws:true,cadence:'sweep',note:'Eight-sided bezel with exposed screws, Grande Tapisserie dial.'},
+calatrava:{maker:'Patek Philippe',name:'Calatrava 5227G',category:'dress',shape:'round',dial:'#f0ead9',accent:'#a79568',marker:'baton',date:'3',strap:'#342219',bezel:'#c6c9c8',cadence:'sweep',note:'Quiet ivory dress dial, faceted markers, leaf hands, small seconds.'},
+tank:{maker:'Cartier',name:'Tank Louis Cartier',category:'dress',shape:'rect',dial:'#eee7d3',accent:'#1f3568',marker:'roman',strap:'#2a1713',case:'#d7aa45',cadence:'tick',note:'Gold brancards, silvered Roman dial, chemin-de-fer track, blued sword hands.'},
+reverso:{maker:'Jaeger-LeCoultre',name:'Reverso Classic',category:'dress',shape:'rect',dial:'#e6dfc9',accent:'#24406c',marker:'arabic',strap:'#3a241a',case:'#aeb8b7',smallSeconds:true,cadence:'sweep',note:'Reversible rectangular steel case, triple gadroons, Arab numerals.'},
+seamaster:{maker:'Omega',name:'Seamaster Diver 300M',category:'sport',shape:'round',dial:'#155785',accent:'#e8f5ed',bezel:'#124f7e',marker:'dot',date:'6',bracelet:'steel',texture:'wave',cadence:'sweep',note:'Blue ceramic wave dial, scalloped bezel, skeleton hands.'},
+lange1:{maker:'A. Lange & Söhne',name:'Lange 1',category:'dress',shape:'round',dial:'#e9e2cf',accent:'#9b7440',marker:'none',strap:'#513126',case:'#b88958',lange:true,cadence:'sweep',note:'Asymmetric regulator layout, outsize date, 72-hour reserve.'},
+portugieser:{maker:'IWC',name:'Portugieser Chronograph',category:'chrono',shape:'round',dial:'#f4f0e6',accent:'#27629d',marker:'arabic',subs:2,strap:'#18375b',cadence:'sweep',note:'Open white dial, blue Arabic numerals, feuille hands, twin registers.'},
+daytona:{maker:'Rolex',name:'Cosmograph Daytona',category:'chrono',shape:'round',dial:'#f0eee5',accent:'#171918',bezel:'#111312',marker:'baton',subs:3,bracelet:'steel',cadence:'sweep',note:'White panda dial, black Cerachrom tachymeter bezel, three registers.'},
+gmt:{maker:'Rolex',name:'GMT-Master II',category:'sport',shape:'round',dial:'#111512',accent:'#f0f2ed',bezel:'split',marker:'dot',date:'3',gmt:true,bracelet:'steel',cadence:'sweep',note:'Red-and-blue 24-hour bezel, Cyclops date, red GMT arrow.'},
+datejust:{maker:'Rolex',name:'Datejust 36',category:'everyday',shape:'round',dial:'#d3ad5d',accent:'#f7efcf',marker:'baton',date:'3',bracelet:'jubilee',fluted:true,cadence:'sweep',note:'Champagne sunray dial, fluted bezel, Jubilee bracelet, magnified date.'},
+snowflake:{maker:'Grand Seiko',name:'Snowflake SBGA211',category:'dress',shape:'round',dial:'#f1f1eb',accent:'#3474b5',marker:'baton',date:'3',bracelet:'steel',power:true,texture:'snow',cadence:'glide',note:'Textured white Spring Drive dial, razor facets, gliding seconds.'},
+gshock:{maker:'Casio',name:'G-Shock DW-5600UE-1',category:'digital',shape:'digital',dial:'#9aab93',accent:'#131714',strap:'#171918',case:'#171918',digital:true,cadence:'digital',note:'Square resin bumper, compact positive LCD, aqua and gold accents.'},
+f91w:{maker:'Casio',name:'F-91W',category:'digital',shape:'digital',dial:'#a8b5a4',accent:'#15201c',strap:'#17201e',case:'#18211f',digital:true,blueLine:true,cadence:'digital',note:'Slim black resin case, blue pinstripes, compact weekday/date LCD.'},
+apple:{maker:'Apple',name:'Watch — Activity Analog',category:'digital',shape:'rounded',dial:'#050606',accent:'#ff765f',strap:'#111413',case:'#383d3d',rings:true,cadence:'glide',note:'Rounded black display, concentric activity rings, corner complications.'},
+swatch:{maker:'Swatch',name:'Once Again',category:'everyday',shape:'round',dial:'#f0eee3',accent:'#141414',marker:'arabic',daydate:true,strap:'#181818',case:'#222',cadence:'tick',note:'Compact black polymer case, crisp Arabic dial, split day/date.'},
+braun:{maker:'Braun',name:'BN0021',category:'everyday',shape:'round',dial:'#171817',accent:'#f0f0e9',marker:'baton',strap:'#171717',case:'#a9aeaa',yellowSecond:true,cadence:'tick',note:'Minimal matte-black dial, simple white sticks, hairline yellow seconds.'},
+mondaine:{maker:'Mondaine',name:'Swiss Railway stop2go',category:'everyday',shape:'round',dial:'#f4f2e9',accent:'#1a1d1c',marker:'rail',strap:'#191919',case:'#aeb5b2',lollipop:true,cadence:'mondaine',note:'Swiss railway dial, block hands, red lollipop seconds, 58-second sweep.'},
+monaco:{maker:'TAG Heuer',name:'Monaco Calibre 11',category:'chrono',shape:'square',dial:'#18528a',accent:'#e7eee9',marker:'baton',subs:2,date:'6',strap:'#203f68',leftCrown:true,cadence:'sweep',note:'Blue square racing dial, left crown, right pushers, silver registers.'},
+panerai:{maker:'Panerai',name:'Luminor Marina',category:'sport',shape:'cushion',dial:'#111512',accent:'#d9e8c9',marker:'sandwich',date:'3',strap:'#31231a',guard:true,smallSeconds:true,cadence:'sweep',note:'Large cushion case, crown-lock bridge, black sandwich dial.'},
+f1:{maker:'Rolex',name:'Trackside Clock',category:'clock',shape:'clock',dial:'#111512',accent:'#e7eee7',marker:'dot',bezel:'#0b6b45',clockStand:true,cadence:'sweep',note:'Oversized green trackside timing clock with luminous markers.'},
+bigben:{maker:'Westminster',name:'Big Ben — Elizabeth Tower',category:'clock',shape:'tower',dial:'#f0dfb0',accent:'#17170f',marker:'roman',case:'#b79558',cadence:'tick',note:'Gothic tower section with gilded Roman clock face.'},
+seiko5:{maker:'Seiko',name:'5 Sports SRPD51',category:'sport',shape:'round',dial:'#165080',accent:'#eaf3e9',bezel:'#123e6a',marker:'dot',daydate:true,bracelet:'steel',crown:true,cadence:'sweep',note:'Blue diver-style dial and bezel, chunky luminous markers.'},
+moonphase:{maker:'Blancpain',name:'Villeret Quantième Complet',category:'dress',shape:'round',dial:'#f1ead8',accent:'#ad8052',marker:'roman',moon:true,strap:'#4b2c20',case:'#b88e61',cadence:'sweep',note:'Warm dress dial with complete calendar, pointer date, moon phase.'},
+richardmille:{maker:'Richard Mille',name:'RM 011 Felipe Massa',category:'chrono',shape:'tonneau',dial:'#29312e',accent:'#e7bd74',marker:'arabic',subs:3,strap:'#252625',skeleton:true,cadence:'sweep',note:'Curved tonneau case, exposed spline screws, skeletonized arch.'},
+blackbay58:{maker:'Tudor',name:'Black Bay Fifty-Eight',category:'sport',shape:'round',dial:'#101310',accent:'#e7d8a7',bezel:'#11130f',marker:'dot',bracelet:'steel',snowflakeHand:true,cadence:'sweep',note:'Compact black-and-gilt diver with red bezel pip, snowflake hand.'},
+navitimer:{maker:'Breitling',name:'Navitimer B01 Chronograph 43',category:'chrono',shape:'round',dial:'#efe9d9',accent:'#171918',marker:'baton',subs:3,bezel:'#d4d6d1',slideRule:true,bracelet:'steel',cadence:'sweep',note:'Cream dial crowded with circular slide rule.'},
+elprimero:{maker:'Zenith',name:'Chronomaster Sport',category:'chrono',shape:'round',dial:'#eeeae0',accent:'#1d2524',marker:'baton',subs:3,bezel:'#111',bracelet:'steel',triSubs:true,cadence:'sweep',note:'White dial with overlapping blue, anthracite and silver registers.'},
+overseas:{maker:'Vacheron Constantin',name:'Overseas Self-Winding',category:'sport',shape:'round',dial:'#173e78',accent:'#e9f0eb',marker:'baton',date:'3',bracelet:'integrated',notched:true,cadence:'sweep',note:'Blue lacquer dial, Maltese-cross-inspired bezel notches.'},
+bigbang:{maker:'Hublot',name:'Big Bang Unico Red Magic',category:'chrono',shape:'round',dial:'#261918',accent:'#ff4e48',marker:'arabic',subs:2,strap:'#dd3c36',case:'#ce3b36',skeleton:true,screws:true,cadence:'sweep',note:'Saturated red ceramic case, exposed screws, skeletonized arch.'},
+prx:{maker:'Tissot',name:'PRX Powermatic 80',category:'everyday',shape:'round',dial:'#174a78',accent:'#e8efec',marker:'baton',date:'3',bracelet:'integrated',texture:'grid',cadence:'sweep',note:'Slim tonneau-adjacent steel case, blue waffle dial.'},
+khaki:{maker:'Hamilton',name:'Khaki Field Mechanical',category:'everyday',shape:'round',dial:'#171a17',accent:'#e5e1cc',marker:'field',strap:'#6b5938',case:'#9ca39d',cadence:'sweep',note:'Black military dial with dual hour scales, triangular lume plots.'},
+br03:{maker:'Bell & Ross',name:'BR-03 Black Matte',category:'sport',shape:'square',dial:'#111411',accent:'#d9e3d3',marker:'arabic',strap:'#141615',case:'#171918',screws:true,date:'4',cadence:'sweep',note:'Instrument-panel square ceramic case, four corner screws.'},
+twinbell:{maker:'Westclox',name:'Twin Bell Alarm 70010A',category:'clock',shape:'alarm',dial:'#f0ead6',accent:'#1b1a17',marker:'arabic',case:'#aeb4b0',bells:true,cadence:'tick',note:'Chrome twin bells, white Arabic dial, alarm hand, top hammer.'},
+grandfather:{maker:'Musée du Temps',name:'Comtoise Longcase Clock',category:'clock',shape:'longcase',dial:'#f0e5c2',accent:'#252018',marker:'roman',case:'#744526',pendulum:true,cadence:'tick',note:'Tall timber longcase, ornate brass crest, enamel Roman dial.'},
+orloj:{maker:'Prague',name:'Old Town Astronomical Clock',category:'clock',shape:'astro',dial:'#3b97a5',accent:'#d9b64d',marker:'roman',case:'#65472f',astronomical:true,cadence:'tick',note:'Layered medieval astrolabe, blue sky field, red and black sectors.'},
+marine:{maker:'Ulysse Nardin',name:'Marine Torpilleur',category:'dress',shape:'round',dial:'#eee8d6',accent:'#2c4f76',marker:'roman',smallSeconds:true,power:true,strap:'#1d3151',cadence:'sweep',note:'White marine chronometer dial, elongated blue Roman numerals.'},
+freak:{maker:'Ulysse Nardin',name:'Freak X Carb',category:'sport',shape:'round',dial:'#252b29',accent:'#4ba68a',marker:'baton',strap:'#18201d',carousel:true,cadence:'sweep',note:'No conventional hands: exposed carousel movement sweeps.'},
+patek:{maker:'Patek Philippe',name:'Perpetual Calendar Chronograph 5270J',category:'chrono',shape:'round',dial:'#e9e3d5',accent:'#9d7440',marker:'baton',subs:3,calendar:true,strap:'#503022',case:'#b88945',cadence:'sweep',note:'Yellow-gold perpetual calendar chronograph, three registers.'},
+explorer:{maker:'Rolex',name:'Explorer 36',category:'everyday',shape:'round',dial:'#101310',accent:'#e8eee7',marker:'explorer',bracelet:'steel',cadence:'sweep',note:'Compact black dial with luminous 3-6-9 numerals, Mercedes handset.'},
+santos:{maker:'Cartier',name:'Santos de Cartier',category:'dress',shape:'rounded',dial:'#eee8d8',accent:'#244172',marker:'roman',bracelet:'integrated',case:'#aab2ae',screws:true,cadence:'sweep',note:'Rounded-square steel case and bezel screws, Roman dial.'},
+bigpilot:{maker:'IWC',name:"Big Pilot's Watch 43",category:'sport',shape:'round',dial:'#101311',accent:'#e8e4d6',marker:'field',strap:'#33251d',crown:true,bigCrown:true,cadence:'sweep',note:'Oversized black aviation dial, broad luminous hands, triangle at twelve.'},
+fiftyfathoms:{maker:'Blancpain',name:'Fifty Fathoms Automatique',category:'sport',shape:'round',dial:'#111613',accent:'#e3dfbd',marker:'arabic',bezel:'#111512',bracelet:'steel',cadence:'sweep',note:'Domed black sapphire bezel, broad luminous numerals, deeply luminous.'},
+typexx:{maker:'Breguet',name:'Type XX Chronographe 2067',category:'chrono',shape:'round',dial:'#171918',accent:'#e8e4d8',marker:'arabic',subs:3,bracelet:'steel',cadence:'sweep',note:'Black military chronograph dial, oversized Arabic numerals.'},
+radiomir:{maker:'Panerai',name:'Radiomir Black Seal Logo',category:'sport',shape:'cushion',dial:'#111411',accent:'#dbe4c8',marker:'sandwich',strap:'#513223',wireLugs:true,cadence:'sweep',note:'Cushion steel case with wire lugs, black sandwich dial.'},
+carrera:{maker:'TAG Heuer',name:'Carrera Chronograph',category:'chrono',shape:'round',dial:'#1d5a78',accent:'#e8eeec',marker:'baton',subs:3,bracelet:'steel',date:'6',cadence:'sweep',note:'Blue sunray dial, polished baton markers, three azurage registers.'},
+snoopy:{maker:'Omega',name:'Speedmaster Silver Snoopy Award',category:'chrono',shape:'round',dial:'#e8e5d9',accent:'#1b4f88',marker:'baton',subs:3,bezel:'#174a7d',strap:'#174272',snoopy:true,cadence:'sweep',note:'Silver-and-blue Speedmaster with blue ceramic bezel, Snoopy patch.'},
+milgauss:{maker:'Rolex',name:'Milgauss Z-Blue',category:'everyday',shape:'round',dial:'#2b7d96',accent:'#e7f0e9',marker:'baton',bracelet:'steel',orangeBolt:true,greenGlass:true,cadence:'sweep',note:'Electric-blue sunburst dial under green sapphire, orange marker.'},
+yachtmaster2:{maker:'Rolex',name:'Yacht-Master II',category:'sport',shape:'round',dial:'#eeeae0',accent:'#1752a0',marker:'baton',bezel:'#1750a2',regatta:true,bracelet:'steel',cadence:'sweep',note:'Blue regatta bezel, white dial, red countdown hand.'},
+jorggray:{maker:'Jorg Gray',name:'JGC6500 Secret Service',category:'chrono',shape:'round',dial:'#efece1',accent:'#1d2524',marker:'arabic',subs:3,bezel:'#a9afac',strap:'#2b211c',date:'4',cadence:'tick',note:'Large white chronograph dial, black numerals, three registers.'},
+rainbow:{maker:'Rolex',name:'Cosmograph Daytona Rainbow',category:'chrono',shape:'round',dial:'#24170f',accent:'#f5d7ad',marker:'gem',subs:3,bezel:'rainbow',bracelet:'gold',case:'#b56d50',cadence:'sweep',note:'Everose case, full-spectrum sapphire bezel, gem markers.'},
+railroad:{maker:'Norfolk Southern',name:'Railroad Pocket Watch',category:'clock',shape:'pocket',dial:'#eee8d5',accent:'#151716',marker:'arabic',case:'#b5bab6',smallSeconds:true,chain:true,cadence:'tick',note:'Open-face railroad pocket watch, bold Arabic numerals.'},
+nomosmetro:{maker:'NOMOS Glashütte',name:'Metro date power reserve',category:'dress',shape:'round',dial:'#e9e7dc',accent:'#e84f51',marker:'dot',date:'6',power:true,strap:'#28211d',cadence:'sweep',note:'Minimal white dial with mint minute dots, red accents, power reserve.'},
+grandcentral:{maker:'New York',name:'Grand Central Information Booth Clock',category:'clock',shape:'clock',dial:'#e8dbc0',accent:'#222017',marker:'roman',case:'#a66e3c',orb:true,cadence:'tick',note:'Four-faced opal clock in a brass orb above the terminal.'},
+howardmiller:{maker:'Howard Miller',name:'Chateau 610-520',category:'clock',shape:'longcase',dial:'#e8ddbd',accent:'#251d15',marker:'roman',case:'#6b3c24',pendulum:true,moon:true,cadence:'tick',note:'Cherry-finish grandfather cabinet, arched moon dial, brass weight.'},
+mickey:{maker:'Ingersoll',name:'Mickey Mouse (1933)',category:'everyday',shape:'round',dial:'#e9dfb4',accent:'#141414',marker:'arabic',strap:'#241913',mickey:true,smallSeconds:true,cadence:'tick',note:'Aged cream character dial, Mickey yellow-gloved arms, small seconds.'},
+kingkhaki:{maker:'Hamilton',name:'Khaki Field King Auto',category:'everyday',shape:'round',dial:'#171a17',accent:'#e3ddc7',marker:'field',daydate:true,strap:'#5a3926',cadence:'sweep',note:'Black field dial with concentric 24-hour scale, broad day/date.'},
+casiomq24:{maker:'Casio',name:'MQ-24-7B2LL',category:'everyday',shape:'round',dial:'#f0eee4',accent:'#161817',marker:'arabic',strap:'#171918',case:'#222522',cadence:'tick',note:'Ultra-simple white dial, black Arabic numerals, slim resin case.'},
+bigtic:{maker:'Fossil',name:'Big Tic JR-7845',category:'digital',shape:'round',dial:'#e4e0d3',accent:'#20211f',marker:'none',strap:'#503324',bigDigital:true,cadence:'tick',note:'Analog outer hands orbit oversized central digital seconds.'},
+timexindiglo:{maker:'Timex',name:'Easy Reader Day Date',category:'everyday',shape:'round',dial:'#f0ecdf',accent:'#17201d',marker:'arabic',daydate:true,strap:'#4c2f24',indiglo:true,cadence:'tick',note:'High-legibility cream dial, full Arabic numerals, day/date, INDIGLO.'},
+};
+const FACE_KEYS=Object.keys(FACES);
+const CITIES=[
+['Honolulu','United States','Pacific/Honolulu'],['Anchorage','United States','America/Anchorage'],['Vancouver','Canada','America/Vancouver'],['San Francisco','United States','America/Los_Angeles'],['Los Angeles','United States','America/Los_Angeles'],['New York','United States','America/New_York'],['London','United Kingdom','Europe/London'],['Paris','France','Europe/Paris'],['Prague','Czech Republic','Europe/Prague'],['Tokyo','Japan','Asia/Tokyo'],['Sydney','Australia','Australia/Sydney']
+];
+const DEFAULTS=[['San Francisco','submariner'],['New York','speedmaster'],['London','tank'],['Prague','orloj'],['Tokyo','snowflake'],['Sydney','nautilus']];
+function cityByName(n){return CITIES.find(c=>c[0]===n);}
+let cities=loadCities(), inspected=null, pose=null, lume=false;
+function loadCities(){try{const v=JSON.parse(localStorage.getItem('recursive-flint-cities'));if(Array.isArray(v)&&v.length)return v.filter(x=>cityByName(x.name)&&FACES[x.face]);}catch{}return DEFAULTS.map(([name,face])=>({name,face}));}
+function saveCities(){localStorage.setItem('recursive-flint-cities',JSON.stringify(cities));}
+function zoneParts(zone,date=new Date()){const parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:zone,year:'numeric',month:'2-digit',day:'2-digit',weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23',timeZoneName:'shortOffset'}).formatToParts(date).map(p=>[p.type,p.value]));return {...parts,h:+parts.hour,m:+parts.minute,s:+parts.second};}
+function offsetMinutes(zone,date=new Date()){const p=zoneParts(zone,date),m=p.timeZoneName.match(/GMT([+-])?(\d{1,2})?(?::(\d{2}))?/);if(!m||!m[1])return 0;return (m[1]==='-'?-1:1)*((+(m[2]||0))*60+(+(m[3]||0)));}
+function offsetLabel(zone){const n=offsetMinutes(zone),sign=n<0?'−':'+',a=Math.abs(n);return `UTC${n===0?'':sign+Math.floor(a/60)+(a%60?':'+String(a%60).padStart(2,'0'):'')}`;}
+function angles(p,cadence){let sec=p.s+(cadence==='tick'?0:p.ms||0)/1000;if(cadence==='mondaine')sec=Math.min(p.s*60/58,60);return {h:(p.h%12+p.m/60)*30,m:(p.m+sec/60)*6,s:sec*6,g:(p.h+p.m/60)*15};}
+function defs(id){
+const g=el('defs',{},el('linearGradient',{'x1':'0',x2:'1',id:id+'steel'},el('stop',{'offset':'0',stopColor:'#697674'})+el('stop',{'offset':'.18',stopColor:'#eef5f0'})+el('stop',{'offset':'.42',stopColor:'#899391'})+el('stop',{'offset':'.7',stopColor:'#f6faf5'})+el('stop',{'offset':'1',stopColor:'#596461'})));
+const r=el('radialGradient',{'cx':'.3',cy:'.18',id:id+'glass'},el('stop',{'offset':'0',stopColor:'#fff',stopOpacity:'.42'})+el('stop',{'offset':'.4',stopColor:'#fff',stopOpacity:'0'})+el('stop',{'offset':'1',stopColor:'#0a1714',stopOpacity:'.18'}));
+const pat=el('pattern',{id:id+'grid',width:'8',height:'8',patternUnits:'userSpaceOnUse'},rect(0,0,8,8,'none')+rect(.8,.8,6.3,6.3,'none',.8,{stroke:'#fff',strokeOpacity:'.12',strokeWidth:'.8'}))+el('pattern',{id:id+'lines',width:'4',height:'8',patternUnits:'userSpaceOnUse'},line(0,1,4,1,'#fff',.8,{strokeOpacity:'.13'}));
+const f=el('filter',{id:id+'soft'},el('feGaussianBlur',{stdDeviation:'1.1'}));
+return el('defs',{},g+r+pat+f);
+}
+function band(f,id){const steel=`url(#${id}steel)`;if(['tower','clock','astro','alarm','longcase','pocket'].includes(f.shape))return '';const color=f.strap||((f.bracelet||'').includes('steel')||f.bracelet?'url(#'+id+'steel)':'#28342f');if(['digital','rounded','square','rect','cushion','tonneau'].includes(f.shape))return rect(105,0,90,300,color,30,{stroke:'#09120f',strokeWidth:3});let body=rect(116,0,68,300,color,8);if(f.bracelet){for(let y=0;y<300;y+=24)body+=rect(117,y+1,66,21,steel,4,{stroke:'#69726f',strokeWidth:.7});}return body;}
+function caseShape(f,id){const steel=`url(#${id}steel)`,fill=f.case||steel,stroke='#465551';if(f.shape==='rect')return rect(72,42,156,216,fill,20,{stroke,strokeWidth:5})+rect(82,52,136,196,'#101a17',14);if(f.shape==='square')return rect(58,48,184,204,fill,28,{stroke,strokeWidth:5});if(f.shape==='rounded')return rect(57,43,186,214,fill,45,{stroke,strokeWidth:5});if(f.shape==='cushion')return path('M78 48 Q150 28 222 48 Q250 118 234 230 Q150 270 66 230 Q50 118 78 48Z',fill,stroke,5);if(f.shape==='tonneau')return path('M86 34 Q150 48 214 34 Q242 86 228 150 Q242 214 214 266 Q150 252 86 266 Q58 214 72 150 Q58 86 86 34Z',fill,stroke,5);if(f.shape==='porthole')return path('M72 70 Q96 38 150 40 Q204 38 228 70 L238 112 Q250 150 238 188 L228 230 Q204 262 150 260 Q96 262 72 230 L62 188 Q50 150 62 112Z',fill,stroke,5);if(f.shape==='octagon')return path('M92 42 L208 42 L258 92 L258 208 L208 258 L92 258 L42 208 L42 92Z',fill,stroke,5);return circ(150,150,113,fill,stroke,5);}
+function texture(f,id){if(f.texture==='grid')return circ(150,150,84,`url(#${id}grid)`);if(f.texture==='lines')return circ(150,150,84,`url(#${id}lines)`);if(f.texture==='wave'){let s='';for(let y=96;y<210;y+=13)s+=path(`M76 ${y} Q105 ${y-10} 134 ${y} T192 ${y} T224 ${y}`,'none','#fff',1.4,{strokeOpacity:.16});return s;}if(f.texture==='snow'){let s='';for(let i=0;i<42;i++){const x=79+(i*37)%143,y=78+(i*53)%144;s+=path(`M${x} ${y}q8 -5 16 1`,'none','#9aa6a0',.65,{strokeOpacity:.45});}return s;}return '';}
+function markers(f){let out='';const kind=f.marker||'baton';for(let i=0;i<12;i++){const a=i*30,p=polar(70,a),major=i%3===0;if(kind==='none')continue;if(kind==='roman'){out+=label(['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'][i],p[0],p[1],major?13:10,f.accent,{'font-family':'Georgia,serif'});continue;}if(kind==='arabic'||kind==='field'||kind==='explorer'){let txt=kind==='explorer'&&[3,6,9].includes(i)?String(i||12):String(i||12);if(kind==='explorer'&&![3,6,9].includes(i))txt='';if(txt)out+=label(txt,p[0],p[1],major?13:10,f.accent,{'font-weight':major?'700':'500'});if(kind==='field'){const p2=polar(51,a);out+=label(String((i||12)+12),p2[0],p2[1],6,f.accent,{'fillOpacity':.7});}continue;}if(kind==='dot'||kind==='gem'){const colors=['#ef3340','#ff7a24','#ffd43b','#72d64a','#27d5d1','#3b7cff','#8655e9','#d943d4','#ef3340','#ff7a24','#ffd43b','#72d64a'];out+=circ(p[0],p[1],major?7:5,kind==='gem'?colors[i]:f.accent,'#cfd8d2',1,{class:'lume-fill'});continue;}if(kind==='rail'){const q1=polar(76,a-1.8),q2=polar(64,a-1.8),q3=polar(76,a+1.8),q4=polar(64,a+1.8);out+=line(...q1,...q2,f.accent,2)+line(...q3,...q4,f.accent,2);continue;}if(kind==='sandwich'){out+=major?label(i===0?'12':String(i),p[0],p[1],15,f.accent,{'fontWeight':'700',class:'lume-fill'}):rect(p[0]-2,p[1]-7,4,14,f.accent,2,{class:'lume-fill',transform:`rotate(${a} ${p[0]} ${p[1]})`});continue;}const q1=polar(78,a),q2=polar(62,a);out+=line(...q1,...q2,f.accent,major?5:3,{'strokeLinecap':'round',class:'lume-fill'});}return out;}
+function bezel(f){if(!f.bezel&&!f.fluted&&!f.notched&&!f.slideRule)return '';let o='';if(f.bezel==='split'){o+=path('M150 46 A104 104 0 0 1 150 254 A104 104 0 0 1 150 46Z','#a9222e')+path('M150 46 A104 104 0 0 0 150 254 A104 104 0 0 0 150 46Z','#174878');}else if(f.bezel==='rainbow'){const cols=['#f33','#ff7a22','#ffd323','#4fd05d','#2cc7cf','#3977ef','#874de5','#e23ec1'];for(let i=0;i<48;i++){const a=i*7.5,q1=polar(105,a),q2=polar(94,a);o+=line(...q1,...q2,cols[Math.floor(i/6)],7);}}else if(f.bezel)o+=circ(150,150,104,f.bezel,'#444',2);if(f.fluted||f.notched){for(let i=0;i<(f.fluted?60:12);i++){const a=i*(f.fluted?6:30),q1=polar(108,a),q2=polar(f.fluted?98:93,a);o+=line(...q1,...q2,'#f2f1e7',f.fluted?2:5,{'strokeOpacity':.65});}}if(f.slideRule){for(let i=0;i<60;i++){const a=i*6,q1=polar(91,a),q2=polar(i%5?87:83,a);o+=line(...q1,...q2,'#242a27',i%5?.7:1.2);}}if(f.bezel){for(let i=0;i<12;i++){const p=polar(93,i*30);if(i%3===0)o+=label(i===0?'▲':String(i*5),p[0],p[1],9,'#e8eee8',{transform:`rotate(${i*30} ${p[0]} ${p[1]})`});}}return o;}
+function subdials(f){if(!f.subs&&!f.smallSeconds)return '';const n=f.subs||1,pos=n===3?[[105,150],[150,196],[195,150]]:n===2?[[150,105],[150,195]]:[[105,150]];return pos.map((p,i)=>{let o=circ(p[0],p[1],25,f.dial,'#65706b',1.3);for(let j=0;j<12;j++){const q1=polar(21,j*30,p[0]),q2=polar(18,j*30,p[0]);q1[1]+=p[1]-p[0];q2[1]+=p[1]-p[0];o+=line(...q1,...q2,f.accent,.8);}o+=line(p[0],p[1],p[0],p[1]-17,(i===0&&f.snoopy?'#234e88':f.accent),1.2,{transform:`rotate(${i*83+35} ${p[0]} ${p[1]})`})+circ(p[0],p[1],2,f.accent);if(i===0&&f.snoopy)o+=label('SNOOPY',p[0],p[1]+8,4,'#234e88',{'fontWeight':'700'});return o;}).join('');}
+function complications(f,p){let o='';if(f.date){const x=f.date==='3'?196:150,y=f.date==='6'?199:150;o+=rect(x-14,y-9,28,18,'#f4f0e3',2,{stroke:'#777',strokeWidth:1})+label(p.day,x,y+1,11,'#181b19',{'fontWeight':'700'});}if(f.daydate)o+=rect(166,137,50,22,'#f3efe2',2,{stroke:'#777',strokeWidth:1})+label(`${p.weekday.toUpperCase()} ${p.day}`,191,149,8,'#171a18',{'fontWeight':'700'});if(f.moon||f.calendar){o+=path('M124 190 Q150 221 176 190 L176 211 Q150 231 124 211Z','#1c4772','#987241',1)+circ(150,204,15,'#e7d5a2')+circ(157,199,14,'#1c4772');}if(f.power){o+=path('M94 177 A42 42 0 0 0 125 212','none',f.accent,2)+line(109,196,98,183,f.accent,1.2);}if(f.lange){o+=circ(112,150,55,'#eee8d8','#9e8d68',1)+circ(196,190,31,'#eee8d8','#9e8d68',1)+rect(174,84,47,27,'#efe9d8',2,{stroke:'#9e8d68',strokeWidth:1})+label(p.day,186,98,15,'#171918')+label(p.month,209,98,15,'#171918');}if(f.regatta){o+=path('M105 126 A52 52 0 0 1 195 126','none','#1752a0',10)+label('10   8   6   4   2',150,111,8,'#1752a0',{'fontWeight':'700'});}if(f.rings){for(const [r,c,v] of [[52,'#ff4a54',.78],[39,'#8be54b',.62],[26,'#43bbed',.86]])o+=circ(150,150,r,'none','#26312d',8)+path(`M150 ${150-r} A${r} ${r} 0 ${v>.5?1:0} 1 ${150+r*Math.sin(v*Math.PI*2)} ${150-r*Math.cos(v*Math.PI*2)}`,'none',c,8,{'strokeLinecap':'round'});}if(f.bigDigital)o+=label(String(p.s).padStart(2,'0'),150,158,67,'#242624',{'fontWeight':'700','fontFamily':'Arial Narrow,Arial'});if(f.mickey){o+=circ(150,125,35,'#111')+circ(122,96,18,'#111')+circ(178,96,18,'#111')+circ(150,135,28,'#efd2a3')+circ(140,128,3,'#111')+circ(160,128,3,'#111')+path('M138 142 Q150 151 162 142','none','#c33',3)+path('M120 153 Q150 179 180 153 L176 202 Q150 218 124 202Z','#d43b31');}return o;}
+function hands(f,a){if(f.carousel)return group(path('M84 154 Q125 126 150 68 Q175 126 216 154 Q176 174 150 232 Q124 174 84 154Z','#50635c','#9de4c3',3)+circ(150,150,18,'#d7e8df')+circ(150,92,11,'#bfe6d3'),{class:'minute-hand',transform:`rotate(${a.m} 150 150)`});let hourColor=f.accent,minuteColor=f.accent,sec=f.yellowSecond?'#f2c500':f.orangeBolt?'#ff7a24':f.lollipop?'#df2a34':f.accent;const h=path('M144 157 L147 145 L149 92 L151 92 L153 145 L156 157Z',hourColor,'#303a36',1,{class:'lume-fill'}),m=path('M145 157 L148 142 L149 67 L151 67 L152 142 L155 157Z',minuteColor,'#303a36',1,{class:'lume-fill'});let s=f.orangeBolt?path('M148 165 L154 145 L149 133 L153 114 L148 99 L152 78','none',sec,3):line(150,169,150,70,sec,1.5);if(f.gmt)s+=path('M150 55 L143 70 L157 70Z','#e33')+line(150,150,150,64,'#e33',2);if(f.lollipop)s+=circ(150,78,7,sec);return group(h,{class:'hour-hand',transform:`rotate(${a.h} 150 150)`})+group(m,{class:'minute-hand',transform:`rotate(${a.m} 150 150)`})+group(s,{class:'second-hand',transform:`rotate(${a.s} 150 150)`})+circ(150,150,5,'#d8ded9','#59625f',1);}
+function digitalFace(f,p,id){const display=rect(78,101,144,91,f.dial,7,{stroke:'#4a5751',strokeWidth:3,class:'dial-base'});return band(f,id)+caseShape(f,id)+rect(68,82,164,136,'#111714',12,{stroke:'#39443f',strokeWidth:3})+label(f.maker.toUpperCase(),150,94,9,f.blueLine?'#4ca7ff':'#d9c268',{'fontWeight':'700'})+display+label(p.weekday.toUpperCase(),108,120,9,f.accent,{'fontWeight':'700'})+label(`${p.month}-${p.day}`,190,120,8,f.accent)+label(`${String(p.h).padStart(2,'0')}:${String(p.m).padStart(2,'0')}`,144,157,31,f.accent,{'fontFamily':'monospace','fontWeight':'700','letterSpacing':-2,'data-lcd':'true'})+label(String(p.s).padStart(2,'0'),204,167,12,f.accent,{'fontFamily':'monospace','data-lcd':'true'})+label('WATER  RESIST',150,184,6,'#67c9c6');}
+function clockFace(f,p,a,id){if(f.shape==='tower'){let o=rect(95,25,110,250,'#a68957',8,{stroke:'#493a26',strokeWidth:5})+path('M83 50 L150 4 L217 50Z','#665236','#372c1f',3)+circ(150,122,68,'#e8d9ad','#67532f',8)+markers(f)+hands(f,a)+rect(116,192,68,70,'#725b3b',2);return o;}if(f.shape==='longcase'){let o=path('M105 18 Q150 0 195 18 L205 91 L190 108 L195 282 L105 282 L110 108 L95 91Z',f.case,'#321d12',5)+circ(150,74,53,f.dial,'#9b7a43',5)+markers(f)+hands(f,a)+rect(122,133,56,118,'#392517',25,{stroke:'#9c6f38',strokeWidth:3})+circ(150,209,15,'#d9b44e')+line(150,130,150,205,'#d9b44e',4);if(f.moon)o+=path('M121 55 Q150 26 179 55 L174 72 Q150 50 126 72Z','#264d70')+circ(150,54,13,'#d8bd6e');return o;}if(f.shape==='alarm'){return rect(82,70,136,150,f.case,36,{stroke:'#4d5552',strokeWidth:5})+circ(105,60,35,f.case,'#4d5552',4)+circ(195,60,35,f.case,'#4d5552',4)+line(111,36,189,36,'#656e6a',6)+circ(150,145,59,f.dial,'#777',2)+markers(f)+hands(f,a)+line(105,214,91,257,'#656e6a',6)+line(195,214,209,257,'#656e6a',6);}if(f.shape==='pocket'){return circ(150,157,105,f.case,'#5d6662',6)+circ(150,157,105,f.case,'#5d6662',6)+circ(150,157,105,f.case,'#5d6662',6)+circ(150,157,105,f.case,'#5d6662',6);return '';}
+if(f.shape==='clock'){let o=rect(70,40,160,220,f.case,10,{stroke:'#4d5552',strokeWidth:4})+circ(150,150,80,f.dial,'#9b7a43',4)+markers(f)+hands(f,a)+rect(116,192,68,70,'#725b3b',2);if(f.orb)o+=circ(150,150,52,'#e8dbc0','#a66e3c',4)+circ(150,150,40,'#222017','#a66e3c',2);return o;}
+if(f.shape==='astro'){let o=rect(70,40,160,220,f.case,10,{stroke:'#4d5552',strokeWidth:4})+circ(150,150,80,f.dial,'#9b7a43',4)+markers(f)+hands(f,a)+rect(116,192,68,70,'#725b3b',2);if(f.astronomical)o+=path('M150 60 L150 120 M150 180 L150 240 M60 150 L120 150 M180 150 L240 150','#d9b64d',2);return o;}
+return '';}
+function watchSvg(key,parts,large){const f=FACES[key],id='rf'+(++uid)+'-',p={...parts,ms:new Date().getMilliseconds()},a=angles(p,f.cadence||'sweep');return `<svg class="watch-svg" data-face="${key}" viewBox="0 0 300 300" role="img" aria-label="${esc(f.maker+' '+f.name)}">${watchBody(f,p,a,id)}</svg>`;}
+function watchBody(f,p,a,id){
+if(['tower','longcase','alarm','pocket','astro','clock'].includes(f.shape))return clockFace(f,p,a,id);
+if(f.digital||f.bigDigital)return digitalFace(f,p,id);
+return group(caseShape(f,id)+texture(f,id)+markers(f)+bezel(f)+subdials(f)+complications(f,p)+hands(f,a));
+}
+function cityCard(c){
+const f=FACES[c.face],zone=cityByName(c.name)?.[2]||'UTC',z=offsetLabel(zone),off=offsetMinutes(zone),p=zoneParts(zone);
+const t=`${String(p.h).padStart(2,'0')}:${String(p.m).padStart(2,'0')}:${String(p.s).padStart(2,'0')}`;
+return `<div class="city-card" data-city="${esc(c.name)}">
+  <div class="city-card-top"><span class="city-name">${esc(c.name)}</span><span class="city-zone">${esc(zone)}</span></div>
+  <div class="city-time">${t}</div>
+  <div class="city-sub">${esc(f.maker)} · ${esc(f.name)}</div>
+  <div class="city-off">${esc(z)}</div>
+</div>`;
+}
+function sortCities(){return [...cities].sort((x,y)=>x.name.localeCompare(y.name));}
+function renderWorld(){
+const sorted=[...cities].sort((a,b)=>offsetMinutes(cityByName(a.name)?.[2]||'UTC')-offsetMinutes(cityByName(b.name)?.[2]||'UTC'));
+const grid=$('#city-grid');
+grid.innerHTML=sorted.map(cityCard).join('');
+grid.querySelectorAll('.city-card').forEach(card=>{
+card.addEventListener('click',()=>{
+const c=cities.find(x=>x.name===card.dataset.city);
+if(c)openInspect(c.face);
+});
+});
+const status=$('#world-status');if(status)status.textContent=cities.length+' cities';
+const cityCount=$('#city-count');if(cityCount)cityCount.textContent=cities.length;
+const q=$('#world-search');
+if(q){q.addEventListener('input',()=>{
+const v=q.value.toLowerCase();
+grid.innerHTML=cities.filter(c=>c.name.toLowerCase().includes(v)).map(cityCard).join('');
+grid.querySelectorAll('.city-card').forEach(card=>card.addEventListener('click',()=>{const c=cities.find(x=>x.name===card.dataset.city);if(c)openInspect(c.face);}));
+});}
+const chips=$('#world-chips');
+if(chips){chips.innerHTML=Object.keys(FACES).map(f=>`<button class="chip" data-face="${f}">${esc(f)}</button>`).join('');chips.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>openInspect(b.dataset.face)));}
+};
+
+function renderCollection(){
+const grid=$('#collection-grid');
+const q=$('#piece-search'),cat=$('#category');
+const v=(q?q.value.toLowerCase():''),c=cat?cat.value:'all';
+grid.innerHTML=Object.keys(FACES).filter(f=>{const F=FACES[f];return (!v||F.maker.toLowerCase().includes(v)||F.name.toLowerCase().includes(v))&&(!c||c==='all'||F.category===c);}).map(f=>`<div class="coll-card" data-face="${f}">
+  <div class="coll-svg">${watchSvg(f,zoneParts('America/New_York'))}</div>
+  <div class="coll-meta"><div class="coll-maker">${esc(f.maker)}</div><div class="coll-name">${esc(f.name)}</div><div class="coll-cat">${esc(f.category)}</div></div>
+</div>`).join('');
+grid.querySelectorAll('.coll-card').forEach(c=>c.addEventListener('click',()=>openInspect(c.dataset.face)));
+const empty=$('#empty-collection');if(empty)empty.hidden=!grid.children.length;
+const collCount=$('#collection-count');if(collCount)collCount.textContent=grid.children.length+' pieces';
+};
+function openInspect(key){
+const f=FACES[key];if(!f)return;
+inspected=key;
+const d=$('#inspect-dialog');
+const panel=d.querySelector('.dialog-panel');
+panel.innerHTML=`
+  <div class="dialog-head"><h2 id="inspect-dialog-title">A closer orbit</h2><button class="close" type="button" data-close="inspect-dialog" aria-label="Close">×</button></div>
+  <div class="inspect">
+    <div class="inspect-stage" id="inspect-stage"></div>
+    <div class="inspect-copy" id="inspect-copy"></div>
+  </div>
+  <div class="inspect-meta"><div><span>Shape</span><b>${esc(f.shape)}</b></div><div><span>Dial</span><b>${esc(f.dial)}</b></div><div><span>Bezel</span><b>${esc(f.bezel||'—')}</b></div><div><span>Marker</span><b>${esc(f.marker||'—')}</b></div><div><span>Subs</span><b>${esc(f.subs||0)}</b></div><div><span>Bracelet</span><b>${esc(f.bracelet||'—')}</b></div></div>
+  <div class="inspect-note">${esc(f.note)}</div>`;
+const stage=$('#inspect-stage');
+stage.innerHTML=watchSvg(key,zoneParts('UTC'));
+d.classList.add('open');
+d.addEventListener('click',e=>{if(e.target===d)d.classList.remove('open');});
+const prev=$('#inspect-prev'),next=$('#inspect-next');
+if(prev)prev.addEventListener('click',()=>{const i=(FACE_KEYS.indexOf(inspected)+1)%FACE_KEYS.length;openInspect(FACE_KEYS[i]);});
+if(next)next.addEventListener('click',()=>{const i=(FACE_KEYS.indexOf(inspected)-1+FACE_KEYS.length)%FACE_KEYS.length;openInspect(FACE_KEYS[i]);});
+};
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200);}
+function tick(){
+const now=new Date();
+const t=$('#world-time');
+if(t)t.textContent=new Intl.DateTimeFormat('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).format(now);
+const utc=$('#utc');
+if(utc)utc.textContent=new Intl.DateTimeFormat('en-US',{timeZone:'UTC',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).format(now);
+const grid=$('#city-grid');
+if(grid)for(const card of grid.querySelectorAll('.city-card')){
+const c=cities.find(x=>x.name===card.dataset.city);if(!c)continue;
+const f=FACES[c.face],p=zoneParts(cityByName(c.name)?.[2]||'UTC');
+card.querySelector('.city-time').textContent=`${String(p.h).padStart(2,'0')}:${String(p.m).padStart(2,'0')}:${String(p.s).padStart(2,'0')}`;
+};
+};
+function init(){
+const world=$('#city-grid');if(world)renderWorld();
+const coll=$('#collection-grid');if(coll)renderCollection();
+const wt=$('#world-tab'),ct=$('#collection-tab');
+if(wt)wt.addEventListener('click',()=>{document.querySelectorAll('#main section').forEach(sec=>sec.hidden=sec.id==='collection-view');wt.setAttribute('aria-pressed','true');ct.setAttribute('aria-pressed','false');});
+if(ct)ct.addEventListener('click',()=>{document.querySelectorAll('#main section').forEach(sec=>sec.hidden=sec.id==='world-view');ct.setAttribute('aria-pressed','true');wt.setAttribute('aria-pressed','false');});
+const clock=$('#hero-clock');if(clock)clock.innerHTML=watchSvg('submariner',zoneParts('UTC'));
+const btn=$('#lume');if(btn)btn.addEventListener('click',()=>{lume=!lume;document.body.classList.toggle('lume',lume);document.querySelectorAll('.watch-svg').forEach(s=>{if(lume)s.setAttribute('data-lume','1');else s.removeAttribute('data-lume');});});
+const shuffle=$('#shuffle-all');if(shuffle)shuffle.addEventListener('click',()=>{cities=cities.map(c=>({...c,face:['submariner','speedmaster','nautilus','tank','orloj','snowflake'][Math.floor(Math.random()*6)]}));saveCities();renderWorld();});
+const addCity=$('#add-city');
+if(addCity)addCity.addEventListener('click',()=>{
+const dlg=$('#city-dialog');
+dlg.classList.add('open');
+const ci=$('#city-search');
+if(ci){ci.value='';}
+const cr=$('#city-results');
+if(cr){
+cr.innerHTML='';
+cr.classList.add('open');
+const q=ci?ci.value.toLowerCase():'';
+const list=CITIES.filter(c=>c[0].toLowerCase().includes(q));
+cr.innerHTML=list.map(c=>'<li><button type="button" data-city="'+esc(c[0])+'">'+esc(c[0])+'</button></li>').join('');
+}
+});
+const dlg=$('#city-dialog');if(dlg)dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.classList.remove('open');});
+const cr=$('#city-results');if(cr)cr.addEventListener('click',e=>{const b=e.target.closest('button[data-city]');if(!b)return;const c=CITIES.find(x=>x[0]===b.dataset.city);if(!c)return;const ex=cities.find(x=>x.name===c[0]);if(ex){toast('Already in your world');return;}cities.push({name:c[0],face:c[2]});saveCities();renderWorld();toast('Added '+c[0]);dlg.classList.remove('open');});
+const toastEl=$('#toast');if(toastEl)toastEl.addEventListener('click',()=>toastEl.classList.remove('show'));
+document.addEventListener('click',e=>{const b=e.target.closest('[data-close]');if(!b)return;const dd=$('#'+b.dataset.close);dd.classList.remove('open');if(b.dataset.close==='inspect-dialog')inspected=null;});
+const idg=$('#inspect-dialog');if(idg)idg.addEventListener('click',e=>{if(e.target===idg)idg.classList.remove('open');});
+setInterval(tick,1000);
+};
+document.addEventListener('DOMContentLoaded',init);
+
+</script>
+</body>
+</html>
