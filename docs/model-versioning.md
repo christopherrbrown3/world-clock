@@ -14,6 +14,8 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 - `index.html`: project introduction and release-ordered model directory for GitHub Pages and local browsing.
 
 ## Current Model Pages
+
+- `versions/gpt-6.1-terra.html`: GPT 6.1 Terra checkpoint, authored from scratch with its own interface, time engine, SVG drawing system and all 62 faces.
 - `versions/recursive-flint.html`: Recursive Flint checkpoint, authored from scratch with its own interface, time engine, SVG drawing kit, and all 62 faces.
 
 - `versions/minimax-m3-1-flash.html`: MiniMax M3.1 Flash checkpoint, authored from scratch with its own interface, Intl time engine, 150-city atlas, SVG drawing kit, Lume Mode, and all 62 faces.

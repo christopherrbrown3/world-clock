@@ -6,6 +6,7 @@ Use this index to find the right project guide.
 
 - [Model Release Dates](model-release-dates.md): verified vendor launch dates, source links, and rollout distinctions.
 
+- [GPT 6.1 Terra Reference Notes](gpt-6.1-terra-reference-notes.md): sources, variant choices, and limitations for the independent rendition.
 - [Recursive Flint Reference Notes](recursive-flint-reference-notes.md): reference basis for all 62 faces, variant choices, intentional approximations, and validation for the from-scratch rendition.
 
 - [MiniMax M3.1 Flash Reference Notes](minimax-m3-1-flash-reference-notes.md): reference basis for all 62 faces, variant choices, intentional approximations, and validation for the from-scratch rendition.

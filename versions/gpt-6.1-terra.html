@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="A world clock of 62 independently drawn watches and clocks, by GPT 6.1 Terra.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%232e5f4c'/%3E%3Cpath d='M16 6v10l7 4' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+<title>World Clock — GPT 6.1 Terra</title>
+<style>
+:root{color-scheme:light;--paper:#f2f0e9;--sheet:#fffefa;--ink:#1d2826;--muted:#52625c;--line:#cbcfc3;--accent:#2e5f4c;--tint:#e4ebe1;--focus:#ab5229;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-size:15px}::selection{background:#b8d7c1;color:#10261b}button,input,select{font:inherit;color:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offset:3px}a{color:inherit;text-underline-offset:.2em}button{border:0}svg{display:block}.skip{position:fixed;top:-100px;left:1rem;background:var(--sheet);padding:.8rem;z-index:30}.skip:focus{top:1rem}.top{padding:20px clamp(20px,4vw,64px) 0;max-width:1800px;margin:auto}.mast{display:flex;justify-content:space-between;gap:24px;align-items:center;border-bottom:1px solid var(--ink);padding-bottom:16px}.identity{display:flex;align-items:baseline;gap:18px;min-width:0}.identity a{font-family:Georgia,serif;font-size:22px;font-weight:600;letter-spacing:-.02em;text-decoration:none;white-space:nowrap}.identity span,.top-link{font-size:12px;color:var(--muted)}.top-link{min-height:44px;display:flex;align-items:center}.intro{display:flex;justify-content:space-between;gap:28px;align-items:end;padding:34px 0 28px}.intro h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(34px,4.3vw,58px);line-height:1.05;letter-spacing:-.025em;margin:0}.intro p{color:var(--muted);max-width:35ch;line-height:1.5;margin:0}.main{max-width:1800px;margin:auto;padding:0 clamp(20px,4vw,64px) 80px}.bar{display:flex;justify-content:space-between;align-items:end;gap:18px;border-bottom:1px solid var(--line);padding-bottom:0}.tabs{display:flex;gap:25px}.tab{padding:14px 0;min-height:48px;background:none;border-bottom:3px solid transparent;color:var(--muted);font-weight:650}.tab[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding-bottom:7px}.btn{min-height:44px;padding:0 16px;background:transparent;border:1px solid #a4b2a6;border-radius:3px;font-weight:650}.btn:hover{background:var(--tint)}.btn.primary{background:var(--accent);color:white;border-color:var(--accent)}.btn.primary:hover{background:#244c3c}.summary{display:flex;justify-content:space-between;gap:15px;align-items:baseline;margin:20px 0 10px;color:var(--muted);font-size:13px}.summary p{margin:0}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,285px),1fr));gap:1px;background:var(--line);border:1px solid var(--line)}.clock-card,.collection-card{background:var(--sheet);min-width:0}.clock-head{display:flex;justify-content:space-between;gap:12px;align-items:start;padding:19px 19px 0}.place{font-family:Georgia,serif;font-size:22px;line-height:1.15;margin:0;font-weight:400;overflow-wrap:anywhere}.zone{font-size:11px;color:var(--muted);margin:5px 0 0;letter-spacing:.04em}.digital-time{text-align:right;white-space:nowrap;font-size:14px;font-variant-numeric:tabular-nums;font-weight:700}.date-line{font-size:11px;font-weight:400;color:var(--muted);margin-top:5px}.watch-button{display:block;width:100%;padding:0;border:0;background:none;min-height:0;text-align:inherit}.watch-button:hover .watch-art{transform:scale(1.015)}.watch-art{width:100%;max-height:310px;height:auto;transition:transform .2s ease}.clock-card .watch-art{height:260px}.watch-caption{padding:0 19px 14px;min-height:52px}.watch-name{display:block;font-size:13px;font-weight:700;line-height:1.3}.watch-reference{display:block;color:var(--muted);font-size:11px;margin-top:3px;line-height:1.3}.card-actions{border-top:1px solid #e4e7df;display:flex}.card-actions button{flex:1;min-height:45px;background:transparent;color:var(--muted);font-size:12px;font-weight:650}.card-actions button+button{border-left:1px solid #e4e7df}.card-actions button:hover{background:var(--tint);color:var(--ink)}.empty{background:var(--sheet);padding:36px;line-height:1.5}.add-panel{background:var(--sheet);padding:22px;border:1px solid var(--line);border-top:0}.add-panel[hidden],[hidden]{display:none!important}.add-panel label,.search-label{display:block;font-size:13px;font-weight:700;margin-bottom:8px}.search-box{width:min(100%,540px);min-height:48px;padding:10px 13px;background:#fff;border:1px solid #9eaca1;border-radius:3px}.suggestions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:6px;margin:12px 0 0;max-width:1000px}.suggestions button{min-height:48px;background:#f1f5ed;border:1px solid #d5ddd0;border-radius:3px;text-align:left;padding:8px 11px}.suggestions button:hover{background:#dfebdd}.suggestions small{display:block;color:var(--muted);margin-top:2px}.collection-search{max-width:540px;margin:22px 0 12px}.collection-card{padding:0;position:relative}.collection-card .watch-art{height:250px}.collection-card .watch-button{height:100%}.collection-card .watch-caption{padding:0 16px 20px;min-height:74px}.collection-index{position:absolute;top:15px;left:17px;color:#708079;font-size:11px;font-variant-numeric:tabular-nums;pointer-events:none}.no-results{padding:32px;background:var(--sheet)}dialog{width:min(960px,calc(100% - 32px));max-height:calc(100% - 32px);border:1px solid var(--line);padding:0;background:var(--sheet);color:var(--ink);box-shadow:0 16px 55px #0b1e1740}dialog::backdrop{background:#0d1a17b8}.dialog-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;border-bottom:1px solid var(--line)}.dialog-top p{margin:0;font-size:12px;color:var(--muted)}.close{background:transparent;min-width:44px;min-height:44px;border:1px solid var(--line);font-size:22px}.detail{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(250px,.95fr);align-items:center}.detail-art{background:#edf0e8;padding:10px}.detail-art .watch-art{height:min(64vh,550px);max-height:none}.detail-copy{padding:28px}.detail-copy h2{font:400 clamp(26px,3vw,36px)/1.1 Georgia,serif;margin:0 0 10px}.detail-copy p{color:var(--muted);line-height:1.55}.detail-copy label{font-weight:700;display:block;margin:24px 0 7px;font-size:12px}.detail-copy select{width:100%;min-height:46px;border:1px solid #9eaca1;background:#fff;padding:8px}.chrono{border-top:1px solid var(--line);margin-top:22px;padding-top:15px}.chrono p{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:700}.chrono-controls{display:flex;gap:8px;flex-wrap:wrap}.footer{padding:28px clamp(20px,4vw,64px);border-top:1px solid var(--line);color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:20px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}noscript{display:block;padding:20px;background:#fff3db}.icon{width:15px;height:15px;display:inline-block;vertical-align:-2px;margin-right:5px;fill:none;stroke:currentColor;stroke-width:1.7}.status{font-size:12px;color:var(--muted);min-height:1.2em;margin:8px 0 0}@media(max-width:680px){.identity{display:block}.identity span{display:block;margin-top:5px}.intro{display:block;padding:28px 0 20px}.intro p{margin-top:12px}.bar{display:block}.actions{padding-bottom:12px}.tabs{gap:20px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.clock-head{padding:13px 12px 0;display:block}.place{font-size:19px}.digital-time{text-align:left;margin-top:8px}.clock-card .watch-art,.collection-card .watch-art{height:190px}.watch-caption{padding:0 12px 12px}.watch-reference{font-size:10px}.detail{grid-template-columns:1fr}.detail-art .watch-art{height:300px}.detail-copy{padding:20px}.footer{display:block}.footer a{display:inline-block;margin-top:12px}}@media(max-width:360px){.grid{grid-template-columns:1fr}.clock-card .watch-art{height:250px}.bar .actions .btn{flex:1}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+.watch-caption{display:block}.clock-card{display:flex;flex-direction:column}.clock-card .card-actions{margin-top:auto}@media(max-width:680px){.watch-reference{font-size:11px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to clocks</a>
+<header class="top">
+  <div class="mast"><div class="identity"><a href="../index.html">World Clock</a><span>OpenAI GPT 6.1 Terra</span></div><a class="top-link" href="../index.html">All renditions</a></div>
+  <div class="intro"><h1>Time, around the world.</h1><p>A collection of 62 watches and clocks, drawn in SVG and set to the time wherever you choose.</p></div>
+</header>
+<main id="main" class="main">
+  <div class="bar"><div class="tabs" role="tablist" aria-label="Clock views"><button class="tab" id="tab-cities" role="tab" aria-selected="true" aria-controls="cities-panel">Your cities</button><button class="tab" id="tab-collection" role="tab" aria-selected="false" aria-controls="collection-panel" tabindex="-1">The collection</button></div><div class="actions" id="city-actions"><button class="btn" id="shuffle-all">Shuffle watches</button><button class="btn primary" id="add-toggle" aria-expanded="false" aria-controls="add-panel">Add a city</button></div></div>
+  <section id="add-panel" class="add-panel" hidden aria-label="Add a city"><label for="city-search">Find a city or time zone</label><input class="search-box" id="city-search" type="search" autocomplete="off" placeholder="Try Paris, Kathmandu, or America/Chicago"><div class="suggestions" id="city-results"></div><p class="status" id="city-status" role="status"></p></section>
+  <section id="cities-panel" role="tabpanel" aria-labelledby="tab-cities"><div class="summary"><p>Current local time, ordered west to east</p><p id="clock-count"></p></div><div class="grid" id="city-grid"></div></section>
+  <section id="collection-panel" role="tabpanel" aria-labelledby="tab-collection" hidden><div class="collection-search"><label class="search-label" for="face-search">Find a watch or clock</label><input class="search-box" id="face-search" type="search" placeholder="Search by name or brand" autocomplete="off"></div><div class="summary"><p>Choose a piece to look closer</p><p id="face-count"></p></div><div class="grid" id="collection-grid"></div><p class="no-results" id="no-faces" hidden>No matching watches. Try another name.</p></section>
+  <noscript>JavaScript is needed to draw the watches and keep their time.</noscript>
+</main>
+<dialog id="detail-dialog" aria-labelledby="detail-title"><div class="dialog-top"><p>Timepiece details</p><button class="close" id="close-detail" aria-label="Close details">×</button></div><div class="detail"><div class="detail-art" id="detail-art"></div><div class="detail-copy"><h2 id="detail-title"></h2><p id="detail-description"></p><label for="detail-zone">Show the time in</label><select id="detail-zone"></select><label for="detail-pose">Hand position</label><select id="detail-pose"><option value="live">Live time</option><option value="10:10">10:10</option><option value="12:00">12:00</option><option value="03:15">03:15</option><option value="06:30">06:30</option><option value="23:59">23:59</option></select><div class="chrono" id="chrono" hidden><p>Chronograph <span id="chrono-readout">00:00.0</span></p><div class="chrono-controls"><button class="btn" id="chrono-toggle">Start</button><button class="btn" id="chrono-reset">Reset</button></div></div></div></div></dialog>
+<footer class="footer"><span>Drawn in SVG · Time from your device</span><a href="../docs/gpt-6.1-terra-reference-notes.md">References &amp; approximations</a></footer>
+<script>
+'use strict';
+/* Catalog metadata and independent drawings for this edition. */
+const PIECES = {
+  submariner:{name:'Rolex Submariner Date',ref:'126610LN',brand:'ROLEX',line:'SUBMARINER',case:'round',strap:'steel',dial:'#101414',indices:'diver',bezel:'dive',hand:'mercedes',date:'date',cadence:'sweep'},
+  speedmaster:{name:'Omega Speedmaster Moonwatch Professional',ref:'310.30.42.50.01.001',brand:'Ω OMEGA',line:'Speedmaster',strap:'steel',dial:'#131719',indices:'baton',bezel:'tachy',hand:'stick',chrono:true,sub:'tri',cadence:'sweep'},
+  nautilus:{name:'Patek Philippe Nautilus',ref:'5811/1G-001',brand:'PATEK PHILIPPE',line:'GENÈVE',case:'nautilus',strap:'integrated',dial:'#152e3e',texture:'horizontal',indices:'baton',date:'date',cadence:'sweep'},
+  royaloak:{name:'Audemars Piguet Royal Oak Selfwinding',ref:'15510ST.OO.1320ST.06',brand:'AUDEMARS PIGUET',line:'AUTOMATIC',case:'octagon',strap:'integrated',dial:'#18394d',texture:'waffle',indices:'baton',date:'date',cadence:'sweep'},
+  calatrava:{name:'Patek Philippe Calatrava',ref:'5227G-015',brand:'PATEK PHILIPPE',line:'GENÈVE',strap:'brown',dial:'#e6bca5',indices:'baton',hand:'dauphine',date:'date',cadence:'sweep'},
+  tank:{name:'Cartier Tank Louis Cartier',ref:'WGTA0342',brand:'CARTIER',case:'tank',strap:'black',dial:'#f7f1e3',indices:'roman',hand:'blue',cadence:'tick'},
+  reverso:{name:'Jaeger-LeCoultre Reverso',ref:'Classic',brand:'JAEGER-LECOULTRE',case:'reverso',strap:'brown',dial:'#e9e6db',indices:'arabic',hand:'blue',cadence:'sweep'},
+  seamaster:{name:'Omega Seamaster Diver 300M',ref:'Diver 300M',brand:'Ω OMEGA',line:'SEAMASTER',strap:'steel',dial:'#173c61',texture:'waves',indices:'diver',bezel:'diveblue',hand:'skeleton',date:'date6',cadence:'sweep'},
+  lange1:{name:'A. Lange & Söhne Lange 1',ref:'Lange 1',brand:'A. LANGE & SÖHNE',case:'lange',strap:'black',dial:'#efeee6',indices:'none',hand:'blue',cadence:'sweep'},
+  portugieser:{name:'IWC Portugieser',ref:'Automatic',brand:'IWC',line:'SCHAFFHAUSEN',strap:'black',dial:'#f2eee4',indices:'arabic',hand:'blue',sub:'portugieser',date:'date6',cadence:'sweep'},
+  daytona:{name:'Rolex Cosmograph Daytona',ref:'Cosmograph',brand:'ROLEX',line:'COSMOGRAPH',strap:'steel',dial:'#efefe9',indices:'baton',bezel:'tachy',hand:'stick',chrono:true,sub:'panda',cadence:'sweep'},
+  gmt:{name:'Rolex GMT-Master II',ref:'GMT-Master II',brand:'ROLEX',line:'GMT-MASTER II',strap:'steel',dial:'#111519',indices:'diver',bezel:'gmt',hand:'mercedes',date:'date',gmt:true,cadence:'sweep'},
+  datejust:{name:'Rolex Datejust',ref:'Datejust',brand:'ROLEX',line:'DATEJUST',strap:'jubilee',dial:'#989c96',indices:'baton',bezel:'fluted',hand:'stick',date:'date',cadence:'sweep'},
+  snowflake:{name:'Grand Seiko Snowflake',ref:'Spring Drive',brand:'GRAND SEIKO',line:'SPRING DRIVE',strap:'steel',dial:'#eff0e8',texture:'snow',indices:'baton',hand:'dauphine',date:'date',extra:'reserve',second:'#19558b',cadence:'glide'},
+  gshock:{name:'Casio G-Shock',ref:'DW-5600UE-1',case:'gshock',strap:'rubber',cadence:'digital'},
+  f91w:{name:'Casio F-91W',ref:'F-91W-1',case:'f91w',strap:'rubber',cadence:'digital'},
+  apple:{name:'Apple Watch',ref:'Activity Analog',case:'apple',strap:'rubber',cadence:'glide'},
+  swatch:{name:'Swatch Once Again',ref:'Once Again',brand:'swatch',case:'resin',strap:'rubber',dial:'#f6f4ea',indices:'arabic',hand:'black',date:'daydate',cadence:'tick'},
+  braun:{name:'Braun BN0021',ref:'Classic',brand:'BRAUN',strap:'black',dial:'#f7f6ef',indices:'fine',hand:'black',second:'#e6b12b',cadence:'tick'},
+  mondaine:{name:'Mondaine Swiss Railway',ref:'Classic',brand:'MONDAINE',strap:'black',dial:'#f8f8f1',indices:'railway',hand:'black',second:'#d5282d',cadence:'mondaine'},
+  monaco:{name:'TAG Heuer Monaco Calibre 11',ref:'CAW211P',brand:'HEUER',case:'monaco',strap:'black',dial:'#1f496b',indices:'baton',hand:'stick',chrono:true,sub:'monaco',cadence:'sweep'},
+  panerai:{name:'Panerai Luminor Marina',ref:'PAM03312',brand:'LUMINOR',line:'MARINA',case:'luminor',strap:'black',dial:'#151715',indices:'panerai',hand:'sword',date:'date',sub:'leftsmall',cadence:'sweep'},
+  f1:{name:'Rolex Trackside Clock',ref:'Formula 1',brand:'ROLEX',case:'trackside',cadence:'sweep'},
+  bigben:{name:'Big Ben',ref:'Elizabeth Tower',brand:'',case:'bigben',cadence:'tick'},
+  seiko5:{name:'Seiko 5 Sports',ref:'SRPD51',brand:'SEIKO',line:'AUTOMATIC',strap:'steel',dial:'#1c456a',indices:'diver',bezel:'diveblue',hand:'sword',date:'daydate',cadence:'sweep'},
+  moonphase:{name:'Blancpain Villeret Quantième Complet',ref:'Complete calendar',brand:'BLANCPAIN',strap:'black',dial:'#f4f1e8',indices:'roman',hand:'blue',extra:'moon',date:'calendar',cadence:'sweep'},
+  richardmille:{name:'Richard Mille RM 011 Felipe Massa',ref:'RM 011',brand:'RICHARD MILLE',case:'tonneau',strap:'rubber',dial:'#262d2c',indices:'sparse',hand:'sword',chrono:true,sub:'tri',extra:'skeleton',cadence:'sweep'},
+  blackbay58:{name:'TUDOR Black Bay Fifty-Eight',ref:'M79030N',brand:'TUDOR',line:'GENEVE',strap:'steel',dial:'#151819',indices:'diver',bezel:'divegold',hand:'snowflake',cadence:'sweep'},
+  navitimer:{name:'Breitling Navitimer B01 Chronograph 43',ref:'B01 Chronograph 43',brand:'BREITLING',strap:'steel',dial:'#15191b',indices:'baton',bezel:'slide',hand:'stick',chrono:true,sub:'white',cadence:'sweep'},
+  elprimero:{name:'Zenith Chronomaster Sport',ref:'03.3100.3600/69.M3100',brand:'ZENITH',line:'EL PRIMERO',strap:'steel',dial:'#f0f0eb',indices:'baton',bezel:'tachy',hand:'stick',chrono:true,chronoSeconds:10,sub:'zenith',date:'date430',cadence:'sweep'},
+  overseas:{name:'Vacheron Constantin Overseas',ref:'4520V/210A-B128',brand:'VACHERON CONSTANTIN',line:'GENÈVE',case:'overseas',strap:'integrated',dial:'#144e87',indices:'baton',date:'date',cadence:'sweep'},
+  bigbang:{name:'Hublot Big Bang Unico Red Magic 42',ref:'Red Magic 42',brand:'HUBLOT',case:'bigbang',strap:'red',dial:'#292a29',indices:'arabic',hand:'sword',extra:'skeleton',chrono:true,sub:'hublot',cadence:'sweep'},
+  prx:{name:'Tissot PRX Powermatic 80',ref:'T137.407.11.041.00',brand:'TISSOT',line:'PRX',case:'prx',strap:'integrated',dial:'#174165',texture:'waffle',indices:'baton',date:'date',cadence:'sweep'},
+  khaki:{name:'Hamilton Khaki Field Mechanical',ref:'H69439931',brand:'HAMILTON',strap:'canvas',dial:'#151815',indices:'field',hand:'sword',cadence:'sweep'},
+  br03:{name:'Bell & Ross BR-03 Black Matte',ref:'BR03A-BL-CE/SRB',brand:'Bell & Ross',case:'br03',strap:'rubber',dial:'#111414',indices:'br03',hand:'sword',date:'date430',cadence:'sweep'},
+  twinbell:{name:'Westclox Twin Bell Alarm Clock',ref:'70010A',case:'twinbell',cadence:'tick'},
+  grandfather:{name:'Comtoise Longcase Clock',ref:'Musée du Temps, c. 1850',case:'comtoise',cadence:'tick'},
+  orloj:{name:'Prague Astronomical Clock',ref:'Old Town Hall',case:'orloj',cadence:'tick'},
+  marine:{name:'Ulysse Nardin Marine Torpilleur',ref:'1182-310/42',brand:'ULYSSE NARDIN',line:'MARINE',strap:'steel',dial:'#f0f0e8',indices:'roman',hand:'blue',sub:'marine',date:'date6',cadence:'sweep'},
+  freak:{name:'Ulysse Nardin Freak X Carb',ref:'2303-270/CARB',brand:'ULYSSE NARDIN',case:'freak',strap:'rubber',dial:'#171c1d',indices:'baton',cadence:'sweep'},
+  patek:{name:'Patek Philippe Perpetual Calendar Chronograph',ref:'5270J-001',brand:'PATEK PHILIPPE',line:'GENÈVE',strap:'brown',metal:'gold',dial:'#f5eddb',indices:'baton',hand:'gold',date:'calendar',extra:'moon',chrono:true,sub:'patek',cadence:'sweep'},
+  explorer:{name:'Rolex Explorer 36',ref:'124270',brand:'ROLEX',line:'EXPLORER',strap:'steel',dial:'#101514',indices:'explorer',hand:'mercedes',cadence:'sweep'},
+  santos:{name:'Cartier Santos de Cartier Large',ref:'WSSA0018',brand:'CARTIER',case:'santos',strap:'integrated',dial:'#f5f1e7',indices:'roman',hand:'blue',date:'date6',cadence:'sweep'},
+  bigpilot:{name:"IWC Big Pilot's Watch 43",ref:'IW329301',brand:'IWC',line:'SCHAFFHAUSEN',strap:'brown',dial:'#121719',indices:'aviator',hand:'sword',extra:'pilot',cadence:'sweep'},
+  fiftyfathoms:{name:'Blancpain Fifty Fathoms Automatique',ref:'5015 1130 71S',brand:'BLANCPAIN',line:'Fifty Fathoms',strap:'black',dial:'#111617',indices:'fifty',bezel:'fifty',hand:'sword',date:'date430',cadence:'sweep'},
+  typexx:{name:'Breguet Type XX Chronographe 2067',ref:'2067ST/92/3WU',brand:'BREGUET',strap:'black',dial:'#161919',indices:'arabic',bezel:'typexx',hand:'sword',chrono:true,sub:'tri',date:'date430',cadence:'sweep'},
+  radiomir:{name:'Panerai Radiomir Black Seal Logo',ref:'PAM00754',brand:'RADIOMIR',line:'BLACK SEAL',case:'cushion',strap:'brown',dial:'#151716',indices:'panerai',hand:'sword',sub:'leftsmall',cadence:'sweep'},
+  carrera:{name:'TAG Heuer Carrera Chronograph',ref:'CBN2011.BA0642',brand:'TAG HEUER',line:'CARRERA',strap:'steel',dial:'#183e5b',indices:'baton',hand:'stick',chrono:true,sub:'tri',date:'date6',cadence:'sweep'},
+  snoopy:{name:'Omega Speedmaster Silver Snoopy Award',ref:'50th Anniversary',brand:'Ω OMEGA',line:'Speedmaster',strap:'blue',dial:'#f1f0e9',indices:'baton',bezel:'tachyblue',hand:'blue',chrono:true,sub:'snoopy',cadence:'sweep'},
+  milgauss:{name:'Rolex Milgauss Z-Blue',ref:'116400GV-0002',brand:'ROLEX',line:'MILGAUSS',strap:'steel',dial:'#116392',indices:'baton',hand:'stick',second:'#f58228',extra:'greencrystal',cadence:'sweep'},
+  yachtmaster2:{name:'Rolex Yacht-Master II',ref:'126680',brand:'ROLEX',line:'YACHT-MASTER II',strap:'steel',dial:'#f2f1e8',indices:'baton',bezel:'yacht',hand:'blue',extra:'regatta',chrono:true,sub:'yacht',cadence:'sweep'},
+  jorggray:{name:'Jorg Gray JGC6500 Secret Service Edition',ref:'JGC6500',brand:'JORG GRAY',strap:'black',dial:'#171b1b',indices:'baton',hand:'stick',chrono:true,sub:'tri',date:'date430',extra:'shield',cadence:'tick'},
+  rainbow:{name:'Rolex Cosmograph Daytona Rainbow',ref:'116595RBOW-0001',brand:'ROLEX',line:'COSMOGRAPH',strap:'rosegold',metal:'rose',dial:'#121314',indices:'jewels',bezel:'rainbow',hand:'gold',chrono:true,sub:'rose',cadence:'sweep'},
+  railroad:{name:'Norfolk Southern Railroad Pocket Watch',ref:'1994',case:'pocket',cadence:'tick'},
+  nomosmetro:{name:'NOMOS Glashütte Metro',ref:'date power reserve 1101',brand:'NOMOS',line:'GLASHÜTTE',strap:'black',dial:'#eeeee7',indices:'dots',hand:'black',sub:'bottomsmall',date:'date6',extra:'reserve',second:'#d54a35',cadence:'sweep'},
+  grandcentral:{name:'Grand Central Terminal Information Booth Clock',ref:'1913',case:'grandcentral',cadence:'tick'},
+  howardmiller:{name:'Howard Miller Chateau Grandfather Clock',ref:'610-520',case:'howardmiller',cadence:'tick'},
+  mickey:{name:'Ingersoll Mickey Mouse',ref:'1933',case:'mickey',strap:'black',cadence:'tick'},
+  kingkhaki:{name:'Hamilton Khaki Field King Auto',ref:'H64455533',brand:'HAMILTON',strap:'brown',dial:'#151916',indices:'field',hand:'sword',date:'daytop',cadence:'sweep'},
+  casiomq24:{name:'CASIO MQ-24',ref:'MQ-24-7B2LL',brand:'CASIO',case:'resin',strap:'rubber',dial:'#f7f7ee',indices:'arabic',hand:'black',cadence:'tick'},
+  bigtic:{name:'Fossil Big Tic',ref:'JR-7845',case:'bigtic',strap:'steel',cadence:'tick'},
+  timexindiglo:{name:'Timex Easy Reader Day Date',ref:'T20041',brand:'TIMEX',line:'INDIGLO',strap:'brown',dial:'#f5f4ee',indices:'arabic',hand:'black',second:'#bb3c31',date:'daydate',cadence:'tick'}
+};
+const KEYS=Object.keys(PIECES), TAU=Math.PI*2;
+let svgSerial=0;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const xy=(cx,cy,r,n,total=60)=>[cx+Math.sin(TAU*n/total)*r,cy-Math.cos(TAU*n/total)*r];
+const circle=(x,y,r,fill,stroke='none',sw=1)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+const rect=(x,y,w,h,fill,rx=0,stroke='none',sw=1)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+const path=(d,fill,stroke='none',sw=1)=>`<path d="${d}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+const textSvg=(x,y,value,size=7,fill='#fff',extra='')=>`<text x="${x}" y="${y}" text-anchor="middle" fill="${fill}" font-size="${size}" ${extra}>${esc(value)}</text>`;
+const line=(x1,y1,x2,y2,color,width=1)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="${width}"/>`;
+const rot=(markup,a,cx=160,cy=200)=>`<g transform="rotate(${a} ${cx} ${cy})">${markup}</g>`;
+function faceIsDark(color){if(!/^#[0-9a-f]{6}$/i.test(color||''))return true;return (parseInt(color.slice(1,3),16)*.299+parseInt(color.slice(3,5),16)*.587+parseInt(color.slice(5,7),16)*.114)<132}
+function defs(id){return `<defs>
+ <linearGradient id="${id}-steel" x1="0" x2="1" y1="0" y2="0"><stop stop-color="#626b6a"/><stop offset=".17" stop-color="#f4f6f1"/><stop offset=".38" stop-color="#a4adab"/><stop offset=".62" stop-color="#f6f7f1"/><stop offset=".84" stop-color="#828d8a"/><stop offset="1" stop-color="#d3dad4"/></linearGradient>
+ <linearGradient id="${id}-gold" x1="0" x2="1" y1="0" y2=".3"><stop stop-color="#76511c"/><stop offset=".2" stop-color="#f1dc8e"/><stop offset=".5" stop-color="#b68631"/><stop offset=".78" stop-color="#f9e9ae"/><stop offset="1" stop-color="#95702d"/></linearGradient>
+ <linearGradient id="${id}-rose" x1="0" x2="1" y1="0" y2=".2"><stop stop-color="#6d4437"/><stop offset=".22" stop-color="#e7b79a"/><stop offset=".5" stop-color="#a86f58"/><stop offset=".78" stop-color="#f5c5a4"/><stop offset="1" stop-color="#845642"/></linearGradient>
+ <linearGradient id="${id}-red" x1="0" x2="1"><stop stop-color="#750d18"/><stop offset=".26" stop-color="#ec3438"/><stop offset=".68" stop-color="#b31422"/><stop offset="1" stop-color="#ef5352"/></linearGradient>
+ <linearGradient id="${id}-glass" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff" stop-opacity=".24"/><stop offset=".32" stop-color="#fff" stop-opacity=".02"/><stop offset=".72" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".12"/></linearGradient>
+ <radialGradient id="${id}-blue"><stop stop-color="#295b7c"/><stop offset="1" stop-color="#0c1b28"/></radialGradient>
+ <pattern id="${id}-waffle" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 0H6V6H0Z M0 0L6 6 M6 0L0 6" fill="none" stroke="#d3edf0" stroke-opacity=".15" stroke-width=".5"/><rect x="1" y="1" width="3.5" height="3.5" fill="#cfe6ed" fill-opacity=".09"/></pattern>
+ <pattern id="${id}-horizontal" width="12" height="8" patternUnits="userSpaceOnUse"><path d="M0 0H12 M0 5H12" stroke="#c2deee" stroke-opacity=".19" stroke-width="1.1"/></pattern>
+ <pattern id="${id}-waves" width="18" height="8" patternUnits="userSpaceOnUse"><path d="M-9 5Q-4 0 0 5T9 5T18 5T27 5" fill="none" stroke="#b4d9ef" stroke-opacity=".22" stroke-width="1.3"/></pattern>
+ <pattern id="${id}-snow" width="13" height="11" patternUnits="userSpaceOnUse"><path d="M-2 7l5-2 2 1 4-3 5 1 M2 1l3 1 M8 9l4-1" fill="none" stroke="#9caea8" stroke-opacity=".24" stroke-width=".6"/></pattern>
+ <clipPath id="${id}-dialclip"><circle cx="160" cy="200" r="87"/></clipPath>
+ </defs>`}
+function strap(kind,id){
+ const metal=`url(#${id}-${kind==='rosegold'?'rose':'steel'})`;
+ if(['steel','integrated','jubilee','rosegold'].includes(kind)){
+  let out=path('M120 0H200L212 104H108Z',metal,'#68716d',1)+path('M108 296H212L200 400H120Z',metal,'#68716d',1);
+  function link(x,y,w){let q=rect(x,y,w,14,'#929e98',1,'#65736b',.7)+rect(x+1,y+1,w*.30-1,11,metal,1)+rect(x+w*.30,y+1,w*.40,11,metal,1,'#718078',.45)+rect(x+w*.70,y+1,w*.30-1,11,metal,1)+line(x+2,y+1,x+w-2,y+1,'#ffffff',.45)+line(x+2,y+13,x+w-2,y+13,'#4d5a53',.6);if(kind==='jubilee')q+=line(x+w*.42,y+1,x+w*.42,y+12,'#69756f',.55)+line(x+w*.58,y+1,x+w*.58,y+12,'#f1f3e9',.55);return q}
+  for(let i=0;i<7;i++){let y=i*15-2,w=75+i*2;out+=link(160-w/2,y,w)}
+  for(let i=0;i<7;i++){let y=298+i*15,w=86-i*2;out+=link(160-w/2,y,w)}
+  return out;
+ }
+ const c=kind==='brown'?'#58372c':kind==='blue'?'#263c57':kind==='canvas'?'#555d3a':kind==='red'?'#b6111f':'#1d2220';
+ let out=path('M120 0H200L211 115H109Z',c,'#101713',1)+path('M109 285H211L200 400H120Z',c,'#101713',1);
+ if(kind==='rubber'||kind==='red'){for(let y=10;y<95;y+=13)out+=line(124,y,196,y,'#ffffff',.5);for(let y=310;y<400;y+=13)out+=line(124,y,196,y,'#ffffff',.5)}
+ if(['black','brown','blue','canvas'].includes(kind)){for(let y=8;y<95;y+=9)out+=line(126,y,126,y+4,'#dbd1bb',.8)+line(194,y,194,y+4,'#dbd1bb',.8);for(let y=310;y<400;y+=9)out+=line(126,y,126,y+4,'#dbd1bb',.8)+line(194,y,194,y+4,'#dbd1bb',.8)}
+ return out;
+}
+function ticks(cx,cy,r,ink='#d8ddd4',count=60,inner=3,outer=6){let s='';for(let i=0;i<count;i++){let a=i*360/count,[x1,y1]=xy(cx,cy,r-(i%5===0?outer:inner),i,count),[x2,y2]=xy(cx,cy,r,i,count);s+=line(x1.toFixed(2),y1.toFixed(2),x2.toFixed(2),y2.toFixed(2),ink,i%5===0?1.2:.55)}return s}
+function numerals(cx,cy,r,values,fill,size=10,font='sans-serif',weight=600){return values.map((v,i)=>{if(!v)return '';let [x,y]=xy(cx,cy,r,i,12);return textSvg(x.toFixed(2),(y+size*.34).toFixed(2),v,size,fill,`font-family="${font}" font-weight="${weight}"`)}).join('')}
+function indices(piece,cx=160,cy=200,r=75){
+ const kind=piece.indices||'baton',dark=faceIsDark(piece.dial),ink=dark?'#f1eee3':'#222a28',rim=dark?'#aebcb5':'#777e79';let out=ticks(cx,cy,r+10,kind==='field'?'#e5e4cf':rim,60,2.5,5);
+ const has3=piece.date==='date'||piece.date==='daydate';
+ if(['arabic','field','roman','aviator','explorer','panerai','br03'].includes(kind)){
+  let list=kind==='roman'?['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI']:['12','1','2','3','4','5','6','7','8','9','10','11'];
+  if(kind==='aviator')list=['','1','2','3','4','5','6','7','8','9','10','11'];
+  if(kind==='explorer')list=['','', '', '3','','','6','','','9','',''];
+  if(kind==='br03')list=['12','','','3','','','6','','','9','',''];
+  if(kind==='panerai')list=['12','','','','','','6','','','9','',''];
+  if(has3)list[3]='';if(piece.date==='date6')list[6]='';if(piece.sub==='leftsmall')list[9]='';if(piece.sub==='tri'||piece.sub==='patek')for(const i of [3,6,9])list[i]='';
+  out+=numerals(cx,cy,r-5,list,ink,kind==='roman'?10.5:kind==='panerai'?17:kind==='field'?10:12,kind==='roman'?'Georgia,serif':'sans-serif',kind==='roman'?400:600);
+  if(kind==='field')out+=numerals(cx,cy,r-21,['24','13','14','15','16','17','18','19','20','21','22','23'],'#b9c1aa',5.8,'sans-serif',500);
+ }
+ for(let i=0;i<12;i++){
+  if((i===3&&has3)||(i===6&&piece.date==='date6')||(i===9&&piece.sub==='leftsmall'))continue;
+  let a=i*30;
+  if(kind==='fifty'){
+    if(i%3===0){const vals=['12','3','6','9'];const [x,y]=xy(cx,cy,r-1,i,12);out+=textSvg(x,y+4,vals[i/3],13,'#e5e7cb','font-family="sans-serif" font-weight="700"')}
+    else out+=rot(circle(cx,cy-r+1,4.5,'#e5e7cb','#bbc7ba',1),a,cx,cy);
+  }else if(kind==='diver'){
+    const fill=piece.bezel==='divegold'?'#e5d5a1':'#edf1df';let marker=i===0?path(`M${cx} ${cy-r-4}l-7 12h14z`,fill,'#b8c4bf',1):[3,6,9].includes(i)?rect(cx-3.8,cy-r-4,7.6,12,fill,1,'#bac8c1',1):circle(cx,cy-r+1,4.5,fill,'#bdc8c2',1.3);out+=rot(marker,a,cx,cy);
+  }else if(kind==='baton'||kind==='jewels'||kind==='explorer'){
+    if(kind==='explorer'&&[3,6,9].includes(i))continue;
+    if(kind==='explorer'&&i===0){out+=path(`M${cx-5} ${cy-r-4}h10l-5 11z`,ink);continue}
+    const col=kind==='jewels'?`hsl(${(i*29+5)%360} 75% 56%)`:ink;
+    let marker=rect(cx-(i===0?4.5:2.4),cy-r-4,i===0?9:4.8,i%3===0?13:10,col,1,rim,.8);out+=rot(marker,a,cx,cy);
+  }else if(kind==='fine'||kind==='railway'){
+    let marker=rect(cx-(i%3===0?2.2:1.3),cy-r-3,i%3===0?4.4:2.6,i%3===0?12:8,ink);out+=rot(marker,a,cx,cy);
+  }else if(kind==='dots'){const [x,y]=xy(cx,cy,r,i,12);out+=circle(x,y,i%3===0?3:1.5,i%3===0?'#8ebeb4':'#303937');}
+  else if(kind==='aviator'&&i===0)out+=path(`M${cx} ${cy-r-8}l-6 10h12z`,ink);
+  else if(kind==='panerai'&&![0,3,6,9].includes(i))out+=rot(rect(cx-2.3,cy-r-4,4.6,12,ink,1),a,cx,cy);
+  else if(kind==='br03'&&i%3!==0)out+=rot(rect(cx-2,cy-r-3,4,10,ink,1),a,cx,cy);
+ }
+ return out;
+}
+function bezel(piece,id){
+ const b=piece.bezel;if(!b)return '';
+ let s='',ring=b==='gmt'?'#17447a':b==='diveblue'||b==='tachyblue'||b==='yacht'?'#15518b':b==='rainbow'?'#1e2020':'#151a1a';
+ if(b==='fluted'){for(let i=0;i<72;i++)s+=rot(line(160,88,160,98,i%2?'#f7f8f3':'#6e7674',2),i*5);return s}
+ s+=circle(160,200,105,ring,'#b7c1b8',1)+circle(160,200,89,piece.dial,'#868e88',.6);
+ if(b==='gmt')s+=path('M55 200a105 105 0 0 1 210 0l-16 0a89 89 0 0 0-178 0Z','#111c25');
+ if(b==='rainbow'){for(let i=0;i<36;i++){let c=`hsl(${(i*10+330)%360} 78% 58%)`;s+=rot(rect(157,97,6,10,c,1,'#f3d59c',.5),i*10)}return s}
+ if(['dive','diveblue','divegold','fifty','typexx'].includes(b)){
+  for(let i=0;i<60;i++){if(i%5===0||i<15){let col=b==='divegold'?'#ddc891':'#d8e1db';s+=rot(line(160,98,160,i%5===0?105:102,col,i%5===0?1.4:.7),i*6)}}
+  const vals=b==='fifty'?['','15','','','30','','','45','','','', '']:['','10','20','30','40','50'];
+  if(b==='fifty'){for(let i=1;i<4;i++){const [x,y]=xy(160,200,96,i,4);s+=textSvg(x,y+3,String(i*15),8.5,'#e5e9d4','font-family="sans-serif" font-weight="700"')}}
+  else for(let i=1;i<6;i++){const [x,y]=xy(160,200,96,i,6);s+=textSvg(x.toFixed(1),(y+2.8).toFixed(1),String(i*10),8,b==='divegold'?'#e2d0a0':'#e7ece5','font-family="sans-serif" font-weight="600"')}
+  s+=path('M155 98h10l-5 9z',b==='divegold'?'#e3d4a1':'#e4eee3');
+ }else if(b==='gmt'){
+  for(let i=0;i<12;i++){const [x,y]=xy(160,200,97,i,12);s+=textSvg(x,(y+2.5),i===0?'24':String(i*2),7,'#edf2ec','font-family="sans-serif" font-weight="700"')}
+ }else if(b==='yacht'){
+  for(let i=0;i<10;i++){const [x,y]=xy(160,200,98,i,10);s+=textSvg(x,y+3,i===0?'10':String(i),8,'#f2f2e7','font-family="sans-serif" font-weight="600"')}
+  s+=textSvg(160,281,'YACHT-MASTER II',5.5,'#f6f5ec','font-family="sans-serif" font-weight="700"');
+ }else{
+  const labels=b==='slide'?['10','12','14','16','18','20','25','30','40','60','80','90']:['60','70','80','90','100','120','140','160','200','250','300','400'];
+  s+=ticks(160,200,104,'#e4e8df',60,2,4)+numerals(160,200,97,labels,'#e5e8e0',5.8,'sans-serif',500);
+  if(b.startsWith('tachy'))s+=textSvg(160,110,'TACHYMÈTRE',4.7,'#e5e8e0','font-family="sans-serif"');
+ }
+ return s;
+}
+function subdial(cx,cy,r,fill,stroke,kind='second',label=''){
+ let s=circle(cx,cy,r,fill,stroke,1)+circle(cx,cy,r-2,'none',stroke,.45)+ticks(cx,cy,r-2,stroke,60,1.5,3);
+ if(label)s+=textSvg(cx,cy+r*.58,label,4.5,stroke,'font-family="sans-serif"');
+ s+=`<g data-hand="${kind}" data-cx="${cx}" data-cy="${cy}">${path(`M${cx-1} ${cy+3}L${cx} ${cy-r+4}L${cx+1} ${cy+3}Z`,stroke)}</g>`+circle(cx,cy,1.5,stroke);return s;
+}
+function subdials(piece){
+ const type=piece.sub;if(!type)return '';let s='',dark=faceIsDark(piece.dial),ink=dark?'#d9e1d9':'#334345',base=dark?'#202b2d':'#e5e4db';
+ if(type==='leftsmall')return subdial(116,205,16,piece.dial,ink,'seconds');
+ if(type==='bottomsmall')return subdial(160,244,19,piece.dial,ink,'seconds');
+ if(type==='portugieser')return subdial(116,201,19,'#f2f0e8','#37618b','seconds','60')+subdial(204,201,19,'#f2f0e8','#37618b','reserve','7 DAYS');
+ if(type==='marine')return subdial(160,151,17,piece.dial,ink,'reserve','POWER')+subdial(160,237,22,piece.dial,ink,'seconds','60');
+ if(type==='yacht')return subdial(160,244,19,piece.dial,'#245a8d','seconds','60');
+ if(type==='monaco')return subdial(121,209,21,'#e7e9e4','#314d5b','seconds')+subdial(199,209,21,'#e7e9e4','#314d5b','chronoMinute');
+ if(type==='patek')return subdial(119,211,19,piece.dial,'#545b52','seconds')+subdial(201,211,19,piece.dial,'#545b52','chronoMinute');
+ if(type==='hublot')return subdial(206,202,22,'#25292a','#e9e7dc','chronoMinute')+subdial(116,207,17,'#25292a','#d9ded6','seconds');
+ const colors=type==='panda'?['#f4f3ee','#f4f3ee','#f4f3ee']:type==='white'?['#e9ece5','#e9ece5','#e9ece5']:type==='zenith'?['#9dabad','#4d6582','#c5ccd0']:type==='snoopy'?['#204e79','#204e79','#204e79']:type==='rose'?['#b8846f','#b8846f','#b8846f']:[base,base,base];
+ const stroke=type==='panda'||type==='white'?'#202b2c':type==='snoopy'?'#e7ece8':ink;
+ s+=subdial(119,205,20,colors[0],stroke,'seconds')+subdial(201,205,20,colors[1],stroke,'chronoMinute')+subdial(160,243,20,colors[2],stroke,'chronoHour');
+ if(type==='snoopy')s+=circle(119,205,9,'#e7e9e3')+circle(116,203,3,'#223348')+path('M113 207q8-5 12 1l-4 3h-7z','#1d3042')+circle(120,207,1,'#1d3042');
+ return s;
+}
+function dateWindow(piece){const d=piece.date;if(!d)return '';let x=212,y=197,w=22,h=13;if(d==='daydate')x=197,w=37;if(d==='date6')x=149,y=255,w=22;if(d==='date430')x=200,y=242,w=18;if(d==='daytop')x=133,y=135,w=54,h=17;if(d==='calendar')return rect(128,151,28,10,'#f8f5e7',1,'#777b72',.7)+rect(164,151,28,10,'#f8f5e7',1,'#777b72',.7)+`<text data-value="weekday" x="142" y="158.5" text-anchor="middle" font-size="6" fill="#24312d">MON</text><text data-value="month" x="178" y="158.5" text-anchor="middle" font-size="6" fill="#24312d">JAN</text>`;
+ let out=rect(x,y,w,h,'#f6f4e7',1,'#92978e',1);
+ out+=`<text data-value="${d==='daydate'?'daydate':d==='daytop'?'daytop':'date'}" x="${x+w/2}" y="${y+h*.72}" text-anchor="middle" font-family="sans-serif" font-weight="600" font-size="${d==='daytop'?6:8}" fill="#17201c">${d==='daydate'?'MON 8':d==='daytop'?'MONDAY 8':'8'}</text>`;
+ if(piece.name.startsWith('Rolex')&&d==='date')out+=`<ellipse cx="${x+w/2}" cy="${y+h/2}" rx="${w*.63}" ry="${h*.7}" fill="none" stroke="#eef8f3" stroke-opacity=".65" stroke-width="2"/>`;
+ return out;
+}
+function handShape(kind,which,color,cx=160,cy=200,length=65){
+ const w=which==='hour'?4.4:3.2,L=which==='hour'?length*.68:length;let d;
+ if(kind==='mercedes'&&which==='hour')d=`M${cx-4} ${cy+7}L${cx-4} ${cy-L+17}L${cx} ${cy-L}L${cx+4} ${cy-L+17}L${cx+4} ${cy+7}Z`;
+ else if(kind==='snowflake'&&which==='hour')d=`M${cx-4} ${cy+8}L${cx-4} ${cy-25}L${cx-9} ${cy-32}L${cx} ${cy-42}L${cx+9} ${cy-32}L${cx+4} ${cy-25}L${cx+4} ${cy+8}Z`;
+ else if(kind==='dauphine')d=`M${cx} ${cy-L}L${cx-w} ${cy+4}L${cx} ${cy+8}L${cx+w} ${cy+4}Z`;
+ else if(kind==='sword'||kind==='blue'||kind==='gold')d=`M${cx} ${cy-L}L${cx-w} ${cy-8}L${cx-w/2} ${cy+8}L${cx+w/2} ${cy+8}L${cx+w} ${cy-8}Z`;
+ else d=`M${cx-w} ${cy+7}L${cx-w} ${cy-L+8}L${cx} ${cy-L}L${cx+w} ${cy-L+8}L${cx+w} ${cy+7}Z`;
+ let hand=path(d,color,kind==='skeleton'?'#e2e7dc':'#68746e',kind==='black'?0:.65);
+ if(kind==='skeleton')hand=path(d,'none','#e5e9df',2);
+ if(kind==='mercedes'&&which==='hour')hand+=circle(cx,cy-L+18,5,'none','#929d98',1.3)+line(cx,cy-L+13,cx,cy-L+22,'#8c9a93',.8)+line(cx-4,cy-L+18,cx+4,cy-L+18,'#8c9a93',.8);
+ return hand;
+}
+function hands(piece,cx=160,cy=200,length=66){
+ const dark=faceIsDark(piece.dial),kind=piece.hand||'stick';let color=kind==='blue'?'#295783':kind==='gold'?'#c49a50':kind==='black'?'#1b2523':dark?'#edf0df':'#34413c';
+ let s='';
+ if(piece.gmt)s+=`<g data-hand="gmt" data-cx="${cx}" data-cy="${cy}">${path(`M${cx-1} ${cy+8}L${cx-1} ${cy-56}L${cx-6} ${cy-56}L${cx} ${cy-67}L${cx+6} ${cy-56}L${cx+1} ${cy-56}L${cx+1} ${cy+8}Z`,'#62b2d9','#b6c8c7',.7)}</g>`;
+ s+=`<g data-hand="hour" data-cx="${cx}" data-cy="${cy}">${handShape(kind,'hour',color,cx,cy,length)}</g>`;
+ s+=`<g data-hand="minute" data-cx="${cx}" data-cy="${cy}">${handShape(kind,'minute',color,cx,cy,length)}</g>`;
+ if(!piece.sub||['portugieser','marine','leftsmall','bottomsmall','yacht'].includes(piece.sub)){
+  if(!['portugieser','marine','leftsmall','bottomsmall','yacht'].includes(piece.sub)){
+   let sec=piece.second||(dark?'#dbe1d5':'#414d49');let secondShape=path(`M${cx-.75} ${cy+17}L${cx-.75} ${cy-length}L${cx+.75} ${cy-length}L${cx+.75} ${cy+17}Z`,sec);
+   if(piece.name==='Rolex Milgauss Z-Blue')secondShape=path(`M${cx-1} ${cy+17}L${cx-1} ${cy-8}L${cx-7} ${cy-15}L${cx+4} ${cy-24}L${cx-3} ${cy-31}L${cx+1} ${cy-60}L${cx+2} ${cy-30}L${cx+9} ${cy-23}L${cx-2} ${cy-14}L${cx+1} ${cy-9}L${cx+1} ${cy+17}Z`,sec);
+   if(piece.cadence==='mondaine')secondShape+=circle(cx,cy-length+8,5,sec);
+   s+=`<g data-hand="seconds" data-cx="${cx}" data-cy="${cy}">${secondShape}</g>`;
+  }
+ }
+ if(piece.chrono){let chronoColor=piece.name.includes('Yacht-Master')||piece.name.includes('Zenith')?'#c33431':dark?'#e1e5db':'#303b37';s+=`<g data-hand="chrono" data-cx="${cx}" data-cy="${cy}">${line(cx,cy+15,cx,cy-length,chronoColor,1.3)}${piece.name.includes('Yacht-Master')?path(`M${cx-4} ${cy-length+9}L${cx} ${cy-length}L${cx+4} ${cy-length+9}Z`,chronoColor):''}</g>`}
+ s+=circle(cx,cy,3,color,'#5e6b64',.8)+circle(cx,cy,1.1,'#1c2421');return s;
+}
+function moon(){return `<g><path d="M132 241a28 20 0 0 1 56 0v5h-56z" fill="#213b68" stroke="#b2b6aa" stroke-width="1"/><circle cx="160" cy="241" r="8" fill="#e6d7a3"/><circle data-moon-shadow cx="164" cy="241" r="8" fill="#213b68"/><circle cx="140" cy="235" r=".9" fill="#e8dfbb"/><circle cx="181" cy="236" r=".9" fill="#e8dfbb"/></g>`}
+function extras(piece,id){let s='';
+ if(piece.extra==='reserve')s+=`<path d="M96 222q15-13 30-4" fill="none" stroke="#8fa7a2" stroke-width="2"/><g data-hand="reserve" data-cx="111" data-cy="223">${line(111,223,110,210,'#576b6a',1)}</g>`;
+ if(piece.extra==='greencrystal')s+=circle(160,200,91,'none','#77cf9f',4);
+ if(piece.extra==='skeleton'){
+  for(const [x,y,r] of [[135,175,15],[183,180,11],[154,228,15],[200,221,9]]){s+=circle(x,y,r,'none','#a7a8a0',2)+circle(x,y,r-5,'none','#737c76',1);for(let a=0;a<360;a+=45)s+=rot(line(x,y-r,x,y+r,'#7d8981',.7),a,x,y)}
+  s+=path('M111 175L207 214 M121 227L199 168','none','#b9b7aa',3);
+ }
+ if(piece.extra==='moon'){
+  s+=moon();
+  if(piece.name.startsWith('Blancpain')){
+   for(let n=1;n<=31;n++){let [x,y]=xy(160,200,80,n-1,31);s+=textSvg(x,y+1.5,String(n),3.8,'#46514c','font-family="sans-serif"')}
+   s+=`<g data-hand="dateHand" data-cx="160" data-cy="200">${line(160,205,160,128,'#9b4a41',1)}${path('M157 131l3-5 3 5z','#9b4a41')}</g>`;
+  }else if(piece.date==='calendar')s+=`<g data-hand="dateHand" data-cx="160" data-cy="241">${line(160,244,160,224,'#485346',1)}</g>`;
+ }
+ if(piece.extra==='regatta'){s+=`<path d="M100 198A60 60 0 0 1 220 198" fill="none" stroke="#3685b7" stroke-width="4"/>`;for(let i=0;i<11;i++){let [x,y]=xy(160,200,59,(45+i*3)%60,60);s+=textSvg(x,y+2,String(10-i),5,'#1d5882','font-family="sans-serif"')}}
+ if(piece.extra==='shield')s+=path('M153 144l7-5 7 5-2 9-5 4-5-4z','#d0d9d0','#e8eee7',.5);
+ return s;
+}
+function dialBase(piece,id){
+ let dark=faceIsDark(piece.dial),shape=piece.case==='nautilus'?'M100 126 Q160 116 220 126 Q235 143 235 200 Q235 257 220 274 Q160 284 100 274 Q85 257 85 200 Q85 143 100 126Z':null;
+ let fill=piece.case==='nautilus'?`url(#${id}-blue)`:piece.dial;
+ let s=shape?path(shape,fill,'#596769',1):circle(160,200,88,fill,'#8b9690',.7);
+ if(piece.texture)s+=shape?path(shape,`url(#${id}-${piece.texture})`):circle(160,200,87,`url(#${id}-${piece.texture})`);
+ if(piece.extra==='skeleton')s+=extras({...piece,extra:'skeleton'},id);
+ s+=indices(piece)+subdials(piece)+dateWindow(piece);
+ if(piece.extra&&piece.extra!=='skeleton')s+=extras(piece,id);
+ let ink=dark?'#e8ede2':'#26332f';
+ if(piece.brand){
+  if(piece.brand==='ROLEX')s+=path('M154 142l1-6 3 3 2-6 2 6 3-3 1 6z',ink)+line(155,143,165,143,ink,1);
+  s+=textSvg(160,154,piece.brand,piece.brand.length>15?4.8:6.3,ink,`font-family="${piece.brand.includes('PATEK')?'Georgia,serif':'sans-serif'}" font-weight="700" letter-spacing=".3"`);if(piece.line)s+=textSvg(160,163,piece.line,4.6,ink,'font-family="sans-serif" letter-spacing=".35"')
+ }
+ if(piece.name==='Rolex Submariner Date'||piece.name==='TUDOR Black Bay Fifty-Eight')s+=textSvg(160,238,piece.name.startsWith('Rolex')?'300m = 1000ft':'200m:660ft',4.6,ink,'font-family="sans-serif"')+textSvg(160,244,piece.name.startsWith('Rolex')?'SUPERLATIVE CHRONOMETER':'CHRONOMETER',3.6,ink,'font-family="sans-serif"')+textSvg(160,249,piece.name.startsWith('Rolex')?'OFFICIALLY CERTIFIED':'OFFICIALLY CERTIFIED',3.6,ink,'font-family="sans-serif"');
+ return s+hands(piece)+circle(160,200,88,`url(#${id}-glass)`);
+}
+function roundCase(piece,id){
+ const metal=`url(#${id}-${piece.metal||'steel'})`;let s=strap(piece.strap||'black',id);
+ s+=path('M94 121L106 83Q112 78 123 83L137 106M226 121L214 83Q208 78 197 83L183 106M94 279L106 317Q112 322 123 317L137 294M226 279L214 317Q208 322 197 317L183 294',metal,'#69746e',1.3);
+ if(piece.case==='nautilus'){
+  s+=path('M66 151L56 151Q51 151 51 160V240Q51 249 56 249H66M254 151H264Q269 151 269 160V240Q269 249 264 249H254',metal,'#65706d',1);
+  s+=path('M83 101 Q160 88 237 101 Q262 117 265 145 L265 255 Q262 283 237 299 Q160 312 83 299 Q58 283 55 255 L55 145 Q58 117 83 101Z',metal,'#606e69',2);
+  s+=path('M96 113 Q160 104 224 113 Q250 125 251 150 L251 250 Q250 275 224 287 Q160 296 96 287 Q70 275 69 250 L69 150 Q70 125 96 113Z','#9da9a6','#eff3ed',2);
+ }else if(piece.case==='octagon'){
+  s+=path('M109 89H211L270 148V252L211 311H109L50 252V148Z',metal,'#697773',2)+path('M115 103H205L256 154V246L205 297H115L64 246V154Z',metal,'#f2f3ed',2);
+  for(let i=0;i<8;i++){const [x,y]=xy(160,200,100,i,8);s+=circle(x,y,4,'#d3d8d1','#52605b',1)+rot(line(x-2,y,x+2,y,'#53605b',.8),i*45,x,y)}
+ }else if(piece.case==='cushion'||piece.case==='luminor'){
+  s+=path('M90 105Q160 82 230 105Q263 123 265 160L265 240Q263 277 230 295Q160 318 90 295Q57 277 55 240L55 160Q57 123 90 105Z',metal,'#5c6764',2);
+  if(piece.case==='luminor')s+=path('M261 163q30 4 30 37t-30 37l-4-12q16-4 16-25t-16-25z',metal,'#6d7770',2)+rect(275,187,6,26,'#727e77',2);
+ }else if(piece.case==='overseas'){
+  s+=circle(160,200,111,metal,'#53635d',2)+circle(160,200,102,'#8b9691','#ecf1e9',2);
+  for(let i=0;i<6;i++)s+=rot(path('M149 91L151 106H169L171 91Z',metal,'#78837c',.7),i*60);
+ }else if(piece.case==='prx'){
+  s+=path('M95 96H225L266 143V257L225 304H95L54 257V143Z',metal,'#697773',2)+circle(160,200,103,metal,'#edf0e9',2);
+ }else if(piece.case==='bigbang'){
+  s+=circle(160,200,113,`url(#${id}-red)`,'#80101b',2)+circle(160,200,101,`url(#${id}-red)`,'#fa6260',1.6);
+  for(let i=0;i<6;i++){const [x,y]=xy(160,200,98,i,6);s+=circle(x,y,4,'#292d29','#8c4542',1)+line(x-2,y-2,x+2,y+2,'#ad9a8b',1)}
+ }else if(piece.case==='resin'){
+  s+=circle(160,200,108,'#242c27','#151b17',1.5)+circle(160,200,97,'#39433d','#68746b',.8);
+ }else{
+  s+=circle(160,200,112,metal,'#66736d',1.5)+circle(160,200,104,metal,'#e8ece5',1.5);
+ }
+ if(['submariner','gmt','seamaster','seiko5','blackbay58','fiftyfathoms'].includes(Object.keys(PIECES).find(k=>PIECES[k]===piece))){for(let i=0;i<120;i++)s+=rot(line(160,88,160,91,i%2?'#dbe2dc':'#7d8881',.5),i*3);s+=path('M260 180q8-7 13-5l-3 12h-10M260 220q8 7 13 5l-3-12h-10',metal,'#75827a',.8)}
+ if(piece.case!=='luminor'){s+=rect(265,190,12,20,piece.case==='resin'?'#303a33':metal,2,'#66756d',1);for(let y=193;y<210;y+=3)s+=line(266,y,276,y,'#7c8880',.7)}
+ if(piece.chrono)s+=rect(260,151,15,10,metal,2,'#707e77',1)+rect(260,239,15,10,metal,2,'#707e77',1);
+ if(piece.bezel)s+=bezel(piece,id);
+ return s+dialBase(piece,id);
+}
+function rectIndices(piece,x,y,w,h){
+ const dark=faceIsDark(piece.dial),ink=dark?'#eaf0e8':'#29302d',roman=piece.indices==='roman';
+ let positions=[[x+w/2,y+17],[x+w*.74,y+25],[x+w*.91,y+45],[x+w*.93,y+h/2],[x+w*.9,y+h-40],[x+w*.73,y+h-20],[x+w/2,y+h-12],[x+w*.27,y+h-20],[x+w*.1,y+h-40],[x+w*.07,y+h/2],[x+w*.1,y+45],[x+w*.26,y+25]];
+ let vals=roman?['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI']:['12','1','2','3','4','5','6','7','8','9','10','11'];
+ if(piece.date==='date6')vals[6]='';
+ return positions.map(([px,py],i)=>textSvg(px,py,vals[i],roman?11:10,ink,`font-family="${roman?'Georgia,serif':'sans-serif'}" font-weight="${roman?500:700}"`)).join('');
+}
+function rectangular(piece,id){
+ const metal=`url(#${id}-${piece.case==='tank'?'gold':'steel'})`;let s=strap(piece.strap||'black',id),c=piece.case;
+ if(c==='tonneau'){
+  s+=path('M94 87Q160 69 226 87Q247 110 251 144L251 256Q247 290 226 313Q160 331 94 313Q73 290 69 256L69 144Q73 110 94 87Z',metal,'#4c5752',2)+path('M104 101Q160 88 216 101Q232 122 235 150V250Q232 278 216 299Q160 312 104 299Q88 278 85 250V150Q88 122 104 101Z','#252d2a','#a6aea2',2);
+  for(let i=0;i<8;i++){let a=TAU*i/8;s+=circle(160+81*Math.sin(a),200-98*Math.cos(a),3.5,'#c3cbc1','#5c675f',1)}
+  s+=rect(247,188,14,24,'#424c44',3)+extras(piece,id)+indices(piece,160,200,68)+subdials(piece)+textSvg(160,139,piece.brand,5,'#ecf0e9','font-family="sans-serif" font-weight="700"')+hands(piece,160,200,62);return s;
+ }
+ if(c==='monaco'||c==='br03'){
+  let outer=c==='br03'?'#202623':metal;
+  s+=rect(53,93,214,214,outer,c==='br03'?18:15,'#6d7971',2)+rect(61,101,198,198,c==='br03'?'#353d38':'#b9c2bd',12,'#e2e7de',1);
+  if(c==='br03')for(const [x,y] of [[69,109],[251,109],[69,291],[251,291]])s+=circle(x,y,4,'#2b302d','#68736b',.8)+line(x-2,y-2,x+2,y+2,'#a6afa4',.8);
+  s+=rect(c==='monaco'?48:262,189,13,20,metal,2,'#58645d',1);if(piece.chrono)s+=rect(260,145,14,10,metal,2)+rect(260,245,14,10,metal,2);
+  if(c==='monaco')s+=rect(74,116,172,168,piece.dial,5,'#3e5861',1);else s+=circle(160,200,90,piece.dial,'#7a857e',1);
+  s+=indices(piece)+subdials(piece)+dateWindow(piece)+textSvg(160,153,piece.brand,6,'#ecf0e9','font-family="sans-serif" font-weight="700"')+hands(piece)+rect(65,105,190,190,`url(#${id}-glass)`,10);return s;
+ }
+ let x=c==='santos'?72:92,y=c==='santos'?104:86,w=c==='santos'?176:136,h=c==='santos'?192:228;
+ s+=rect(x,y,w,h,metal,c==='santos'?22:5,'#67736c',2)+rect(x+8,y+9,w-16,h-18,piece.dial,c==='santos'?15:1,'#a9b0a2',1);
+ if(c==='tank')s+=rect(x,y,12,h,metal,2)+rect(x+w-12,y,12,h,metal,2)+circle(x+w+4,200,5,'#234e80',metal,2);
+ else s+=rect(x+w,190,10,20,metal,2,'#6f7a70',1)+circle(x+w+7,200,3,c==='santos'?'#315f86':'#aab5ad');
+ if(c==='reverso')for(const yy of [96,101,106,294,299,304])s+=line(x+9,yy,x+w-9,yy,'#7c8881',1.2);
+ if(c==='santos')for(const [xx,yy] of [[84,116],[160,116],[236,116],[84,200],[236,200],[84,284],[160,284],[236,284]])s+=circle(xx,yy,2,'#6c7970')+line(xx-1,yy-1,xx+1,yy+1,'#e8ece4',.6);
+ s+=rectIndices(piece,x+9,y+8,w-18,h-16);
+ s+=rect(135,172,50,56,'none',0,faceIsDark(piece.dial)?'#b2c3ba':'#59605a',.6);
+ s+=textSvg(160,163,piece.brand,piece.brand.length>12?5:6,faceIsDark(piece.dial)?'#edf0e9':'#26312e','font-family="serif"');
+ s+=dateWindow(piece)+hands(piece,160,200,c==='santos'?56:53);return s;
+}
+function digit(x,y,scale,slot){
+ const segs=[`M2 0H12L10 2H4Z`,`M12 1L12 8L10 7L10 3Z`,`M12 10L12 17L10 15L10 11Z`,`M2 18H12L10 16H4Z`,`M0 10L2 11L2 15L0 17Z`,`M0 1L2 3L2 7L0 8Z`,`M2 9L4 8H10L12 9L10 10H4Z`];
+ return `<g transform="translate(${x} ${y}) scale(${scale})" data-digit="${slot}">${segs.map((d,i)=>`<path data-seg="${i}" d="${d}" fill="#222e29" opacity=".12"/>`).join('')}</g>`;
+}
+function lcd(piece,id){
+ const large=piece.case==='gshock',metal=`url(#${id}-steel)`;let s=strap('rubber',id);
+ s+=rect(57,100,206,200,large?'#171c1a':'#222824',large?30:18,'#505b53',2);
+ if(large){s+=rect(66,108,188,184,'#2d342f',22,'#101613',2);for(const [x,y] of [[74,118],[246,118],[74,282],[246,282]])s+=circle(x,y,4,'#101613','#67746a',1);s+=textSvg(160,132,'PROTECTION',10,'#d5ddd3','font-family="sans-serif" font-weight="700"');s+=textSvg(160,280,'G-SHOCK',13,'#dce3d8','font-family="sans-serif" font-weight="800"')}
+ else{s+=rect(67,111,186,178,'#0e191e',13,'#687680',1)+rect(74,118,172,164,'none',9,'#29639a',2);s+=textSvg(125,138,'CASIO',8,'#f5f4ec','font-family="sans-serif" font-weight="700"')+textSvg(200,138,'F-91W',7,'#e8c34b','font-family="sans-serif" font-weight="700"');s+=textSvg(160,271,'WATER  WR  RESIST',7,'#e8edec','font-family="sans-serif" font-weight="700"')}
+ s+=rect(79,150,162,93,'#aab5a0',3,'#46554c',3)+rect(83,154,154,85,'#b9c5ab',2);
+ s+=`<text data-value="lcdDay" x="115" y="171" font-size="10" fill="#28372e" font-family="monospace">MON</text><text data-value="lcdDate" x="220" y="171" text-anchor="end" font-size="10" fill="#28372e" font-family="monospace">10-26</text>`;
+ for(const [x,key] of [[94,'h1'],[116,'h2'],[151,'m1'],[173,'m2']])s+=digit(x,183,1.45,key);
+ s+=circle(143,191,1.5,'#26352c')+circle(143,204,1.5,'#26352c')+digit(204,193,.8,'s1')+digit(216,193,.8,'s2');
+ s+=textSvg(160,253,large?'ILLUMINATOR':'ALARM CHRONOGRAPH',5.5,'#dce3dc','font-family="sans-serif"');
+ for(const [x,y] of [[51,155],[51,236],[263,155],[263,236]])s+=rect(x,y,6,13,metal,2);return s;
+}
+function appleWatch(id){let s=strap('rubber',id),metal=`url(#${id}-steel)`;s+=rect(62,91,196,218,metal,48,'#454f49',2)+rect(69,98,182,204,'#080c0b',43,'#2e3732',1)+rect(256,155,12,29,'#65716a',5);
+ for(const [r,col] of [[48,'#ff315c'],[38,'#a4ed33'],[28,'#36c9d6']])s+=`<circle cx="160" cy="200" r="${r}" fill="none" stroke="${col}" stroke-width="7" stroke-dasharray="${r*4.2} ${r*2.1}" transform="rotate(-90 160 200)" opacity=".9"/>`;
+ s+=ticks(160,200,71,'#e7ece7',60,2,5)+hands({dial:'#090d0b',hand:'stick',cadence:'glide'},160,200,65)+rect(70,99,180,202,`url(#${id}-glass)`,42);return s}
+function clockHands(cx,cy,len,color='#252c28',second=false){let s=`<g data-hand="hour" data-cx="${cx}" data-cy="${cy}">${handShape('sword','hour',color,cx,cy,len)}</g><g data-hand="minute" data-cx="${cx}" data-cy="${cy}">${handShape('sword','minute',color,cx,cy,len)}</g>`;if(second)s+=`<g data-hand="seconds" data-cx="${cx}" data-cy="${cy}">${line(cx,cy+8,cx,cy-len,'#a33e30',1.2)}</g>`;return s+circle(cx,cy,2.5,color)}
+function clockDial(cx,cy,r,options={}){const fill=options.fill||'#f2eedf',ink=options.ink||'#2a3029';let s=circle(cx,cy,r,fill,options.rim||'#9d8b57',3)+circle(cx,cy,r-5,'none',ink,.8)+ticks(cx,cy,r-7,ink,60,2,4);let vals=options.roman?['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI']:['12','1','2','3','4','5','6','7','8','9','10','11'];s+=numerals(cx,cy,r-21,vals,ink,Math.max(7,r*.14),options.roman?'Georgia,serif':'sans-serif',options.roman?500:650);s+=clockHands(cx,cy,r*.57,ink,options.second);return s}
+function special(piece,id){const metal=`url(#${id}-steel)`,gold=`url(#${id}-gold)`;let s='';
+ if(piece.case==='gshock'||piece.case==='f91w')return lcd(piece,id);
+ if(piece.case==='apple')return appleWatch(id);
+ if(piece.case==='bigtic'){s=strap('steel',id)+circle(160,200,111,metal,'#53605c',2)+circle(160,200,91,'#202a2c','#dfe8e0',2)+circle(160,200,84,'#444f4f');s+=`<text data-value="secondsBig" x="160" y="222" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="70" fill="#d6ded5" opacity=".72">00</text>`+textSvg(160,265,'FOSSIL',6,'#f5f5ec','font-family="sans-serif"')+hands({dial:'#151b1a',hand:'stick',cadence:'tick'},160,200,66);return s}
+ if(piece.case==='lange'){
+  s=strap('black',id)+circle(160,200,112,metal,'#68736d',2)+circle(160,200,98,piece.dial,'#f3f4eb',2)+rect(267,190,13,20,metal,2);
+  s+=textSvg(160,131,piece.brand,6,'#26302d','font-family="Georgia,serif"')+textSvg(160,139,'GLASHÜTTE I/SA',4.5,'#26302d','font-family="sans-serif"');
+  s+=circle(133,202,54,'none','#a2a9a0',.7)+ticks(133,202,50,'#293531',60,2,4)+numerals(133,202,39,['XII','','','III','','','VI','','','IX','',''],'#25302b',10,'Georgia,serif',500)+clockHands(133,202,36,'#425868');
+  s+=rect(184,143,31,17,'#faf9ee',0,'#657068',1)+line(199,143,199,160,'#9ca49a',.7)+`<text data-value="date" x="199.5" y="155.5" text-anchor="middle" font-size="12" fill="#17211e">8</text>`+subdial(198,240,24,piece.dial,'#52605c','seconds')+`<path d="M211 178Q222 199 212 219" fill="none" stroke="#495a54" stroke-width="1"/><g data-hand="reserve" data-cx="208" data-cy="200">${line(208,200,219,181,'#53645d',1)}</g>`;return s;
+ }
+ if(piece.case==='freak'){
+  s=strap('rubber',id)+circle(160,200,112,'#333d39','#101714',2)+circle(160,200,100,'#171d1b','#5b6861',2)+circle(160,200,87,'#1b2522','#a2ada3',1)+indices({...piece,dial:'#1b2522'});
+  s+=textSvg(160,250,'ULYSSE NARDIN',5.5,'#d6ddd1','font-family="sans-serif"');
+  s+=`<g data-hand="hour" data-cx="160" data-cy="200">${path('M155 135L160 125L165 135Z','#e8eadb')}</g>`;
+  s+=`<g data-hand="minute" data-cx="160" data-cy="200">${path('M154 235Q151 198 146 175L160 135L174 175Q168 198 166 235Z','#aab4a8','#e5eadf',1)}${path('M158 224L156 176L160 146L164 176L162 224Z','#23312d')}${circle(160,193,13,'#616f65','#cbd4c8',1)}${circle(160,193,8,'none','#222e28',2)}${line(150,193,170,193,'#d6dfd3',1)}${line(160,183,160,203,'#d6dfd3',1)}</g>`+circle(160,200,3,'#dce2d7');return s;
+ }
+ if(piece.case==='mickey'){
+  s=strap('black',id)+circle(160,200,108,metal,'#71776e',2)+circle(160,200,94,'#e8d8ad','#6b6d5e',2)+ticks(160,200,89,'#303329',60,2,4)+numerals(160,200,76,['12','1','2','3','4','5','6','7','8','9','10','11'],'#252c26',12,'sans-serif',700);
+  s+=circle(146,165,12,'#1b201c')+circle(172,165,12,'#1b201c')+circle(159,176,15,'#1b201c')+path('M150 172q11-8 20 0l-1 12q-9 9-18 0z','#eee2bd')+circle(156,176,1,'#171d19')+circle(164,176,1,'#171d19')+circle(162,181,2,'#171d19');
+  s+=path('M151 187Q160 182 169 187L175 214H145Z','#1d231d')+path('M145 207h30l-3 17h-24z','#ba2d2a')+circle(154,215,2,'#f5efdc')+circle(166,215,2,'#f5efdc')+path('M149 222l-7 20 9 2 9-16 9 16 9-2-7-20','#1b211c');
+  for(const [name,length] of [['hour',43],['minute',63]])s+=`<g data-hand="${name}" data-cx="160" data-cy="196">${path(`M157 199L157 ${196-length+10}L153 ${196-length+5}L156 ${196-length}L160 ${196-length+3}L164 ${196-length}L167 ${196-length+5}L163 ${196-length+10}L163 199Z`,'#ece6cf','#222a22',1.5)}</g>`;
+  s+=subdial(160,247,11,'#e7d9b5','#474b3c','seconds');return s;
+ }
+ if(piece.case==='trackside'){
+  s=rect(22,120,276,170,'#0c4933',10,'#c7a857',2)+rect(27,126,266,158,'#115a3d',6,'#244e36',1)+textSvg(66,165,'ROLEX',14,'#e2c474','font-family="Georgia,serif" font-weight="700"')+textSvg(255,165,'ROLEX',14,'#e2c474','font-family="Georgia,serif" font-weight="700"');
+  s+=circle(160,205,73,gold,'#755e33',2)+circle(160,205,62,'#e9eddd','#a88c4e',2)+ticks(160,205,58,'#2a5d40',60,2,4);
+  for(let i=0;i<12;i++)s+=rot(rect(158,152,4,9,'#2a5d40',1),i*30,160,205);
+  s+=textSvg(160,175,'ROLEX',7,'#285b3f','font-family="Georgia,serif" font-weight="700"')+clockHands(160,205,43,'#2a5d40',true)+textSvg(160,269,'FORMULA 1',6,'#e4c67e','font-family="sans-serif" font-weight="700"');return s;
+ }
+ if(piece.case==='bigben'){
+  s=rect(47,55,226,290,'#ad9270',2,'#5e4f3d',2)+rect(57,65,206,270,'#d2b88c',0,'#725b3c',3);
+  for(let x=65;x<260;x+=23)s+=rect(x,73,14,50,'#68563f',7)+line(x+7,73,x+7,123,'#cfb889',2);
+  s+=rect(62,129,196,158,'#c5a673',0,'#6d5c44',4)+circle(160,208,77,'#eee9d7','#947d4a',6)+circle(160,208,72,'#eeeae0','#2a4a70',3)+clockDial(160,208,66,{fill:'#edeae1',ink:'#1a3859',rim:'#c7b27d',roman:true});
+  s+=rect(60,292,200,30,'#9b815d',1,'#6c573c',1);for(let x=68;x<253;x+=14)s+=rect(x,299,8,14,'#6c593e',1);return s;
+ }
+ if(piece.case==='twinbell'){
+  s=path('M103 115Q72 70 61 113Q76 130 111 125M217 115Q248 70 259 113Q244 130 209 125',metal,'#79847d',2)+path('M121 104Q122 75 160 74Q198 75 199 104','none','#77847c',4)+circle(160,93,5,metal,'#616d65',1)+path('M103 274l-19 37M217 274l19 37','none','#707e75',6)+circle(160,199,103,metal,'#64726b',2)+clockDial(160,199,91,{second:true});s+=textSvg(160,159,'WESTCLOX',6,'#3a453c','font-family="sans-serif" font-weight="700"');return s;
+ }
+ if(piece.case==='pocket'){
+  s=path('M145 87v-18q0-12 15-12t15 12v18','none','#a88444',5)+rect(147,84,26,15,gold,4,'#826729',1)+circle(160,211,111,gold,'#755a2d',2)+circle(160,211,99,'#f4eddb','#866f46',2)+clockDial(160,211,91,{fill:'#f5efdf',ink:'#242f29',second:false});s+=textSvg(160,173,'NORFOLK SOUTHERN',5.5,'#2c3730','font-family="sans-serif" font-weight="700"')+subdial(160,261,17,'#f5efdf','#3b453b','seconds');return s;
+ }
+ if(piece.case==='grandcentral'){
+  s=path('M141 264L128 304L118 314H202L192 304L179 264Z',gold,'#765729',2)+rect(107,314,106,14,gold,3,'#765729',1)+circle(160,186,88,gold,'#836829',2)+circle(160,186,77,'#e8dab0','#80652e',2)+clockDial(160,186,70,{fill:'#eee3c6',ink:'#332b1d',rim:'#a2864c'});s+=path('M156 97v-16l4-5 4 5v16',gold);return s;
+ }
+ if(piece.case==='comtoise'||piece.case==='howardmiller'){
+  let isH=piece.case==='howardmiller',wood=isH?'#70462d':'#a75d29',edge=isH?'#39291e':'#663a1c';
+  s=path('M106 356L110 86Q109 65 124 58Q160 42 196 58Q211 65 210 86L214 356Z',wood,edge,3)+path('M116 111H204L201 336H119Z',isH?'#9b6945':'#be7b40',edge,2)+path('M125 214Q160 197 195 214V313Q160 327 125 313Z','#3b2a20','#c39261',3);
+  s+=`<g data-hand="pendulum" data-cx="160" data-cy="222">${line(160,222,160,292,'#d7b36b',3)}${circle(160,296,13,gold,'#73572a',1)}</g>`;
+  if(isH){s+=path('M114 119Q112 66 160 64Q208 66 206 119Z','#3c2d25','#c3a16a',2)+circle(160,105,29,'#1d3459','#b79a60',1)+circle(160,101,9,'#e5d6a6');s+=rect(119,118,82,90,'#ddcb9c',2,'#a67e42',3)+clockDial(160,165,38,{fill:'#e8dcbf',ink:'#3a3022'});}
+  else{s+=path('M122 87Q125 56 160 60Q195 56 198 87L192 103H128Z',gold,'#755f36',2)+clockDial(160,155,53,{fill:'#f4ead2',ink:'#2c3029',roman:true});}
+  return s;
+ }
+ if(piece.case==='orloj'){
+  s=rect(35,77,250,247,'#6a6250',4,'#302d25',3)+circle(160,200,111,'#17252b','#a8874b',5)+circle(160,200,99,'#3e8c9e','#d4ae5f',2);
+  s+=path('M61 200A99 99 0 0 1 259 200L160 200Z','#8ebec5')+path('M61 200A99 99 0 0 0 259 200L160 200Z','#6d4029')+circle(160,200,74,'none','#ddbb73',2)+circle(160,200,54,'#276a82','#d5af66',2);
+  s+=numerals(160,200,92,['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'],'#e0c786',8,'Georgia,serif',600)+numerals(160,200,66,['12','1','2','3','4','5','6','7','8','9','10','11'],'#e6ca83',7,'serif',600);
+  s+=`<g data-hand="hour" data-cx="160" data-cy="200">${circle(160,200,42,'none','#e4be68',2)}${line(160,200,160,110,'#e2c377',3)}${circle(160,121,7,'#e7be50','#805b25',1)}</g>`;
+  s+=`<g data-hand="minute" data-cx="160" data-cy="200">${line(160,200,160,128,'#d5bc84',1.5)}${path('M160 117l-3 8h6z','#f1d986')}</g>`+circle(160,200,4,'#e0bf70');return s;
+ }
+ return s;
+}
+function makeWatch(key,zone){const piece=PIECES[key],id='t'+(++svgSerial),specialCases=['gshock','f91w','apple','bigtic','lange','freak','mickey','trackside','bigben','twinbell','pocket','grandcentral','comtoise','howardmiller','orloj'];let body=specialCases.includes(piece.case)?special(piece,id):['tank','reverso','santos','monaco','br03','tonneau'].includes(piece.case)?rectangular(piece,id):roundCase(piece,id);return `<svg class="watch-art" viewBox="0 0 320 400" role="img" aria-label="${esc(piece.name)} showing the local time" data-piece="${key}" data-zone="${esc(zone)}" xmlns="http://www.w3.org/2000/svg">${defs(id)}${body}</svg>`}
+/* Time, city selection and interaction are kept local to this page. */
+const START_CITIES=[
+ {name:'Los Angeles',zone:'America/Los_Angeles',key:'submariner'},
+ {name:'New York',zone:'America/New_York',key:'speedmaster'},
+ {name:'London',zone:'Europe/London',key:'tank'},
+ {name:'Paris',zone:'Europe/Paris',key:'nautilus'},
+ {name:'Tokyo',zone:'Asia/Tokyo',key:'snowflake'},
+ {name:'Sydney',zone:'Australia/Sydney',key:'seamaster'}
+];
+const EXTRA_CITIES=[['Anchorage','America/Anchorage'],['Honolulu','Pacific/Honolulu'],['Chicago','America/Chicago'],['Denver','America/Denver'],['Mexico City','America/Mexico_City'],['São Paulo','America/Sao_Paulo'],['Buenos Aires','America/Argentina/Buenos_Aires'],['Reykjavík','Atlantic/Reykjavik'],['UTC','Etc/UTC'],['Berlin','Europe/Berlin'],['Rome','Europe/Rome'],['Cairo','Africa/Cairo'],['Johannesburg','Africa/Johannesburg'],['Dubai','Asia/Dubai'],['Mumbai','Asia/Kolkata'],['Kathmandu','Asia/Kathmandu'],['Singapore','Asia/Singapore'],['Hong Kong','Asia/Hong_Kong'],['Beijing','Asia/Shanghai'],['Seoul','Asia/Seoul'],['Auckland','Pacific/Auckland']];
+function buildCityAtlas(){const result=[],seen=new Set();for(const x of [...START_CITIES.map(c=>[c.name,c.zone]),...EXTRA_CITIES]){if(!seen.has(x[1])){seen.add(x[1]);result.push({name:x[0],zone:x[1]})}}
+ let zones=[];try{zones=Intl.supportedValuesOf('timeZone')}catch(e){}
+ for(const zone of zones){if(seen.has(zone))continue;const parts=zone.split('/');if(parts.length<2)continue;let name=parts.at(-1).replaceAll('_',' ');if(name==='St Johns')name="St. John's";result.push({name,zone});seen.add(zone)}
+ return result.sort((a,b)=>a.name.localeCompare(b.name)||a.zone.localeCompare(b.zone));}
+const ATLAS=buildCityAtlas(),formatCache=new Map(),storeKey='world-clock-gpt-6.1-terra-v1';
+const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+function validZone(zone){try{new Intl.DateTimeFormat('en',{timeZone:zone});return true}catch(e){return false}}
+function loadCities(){try{const parsed=JSON.parse(localStorage.getItem(storeKey));if(!Array.isArray(parsed))return START_CITIES.map(c=>({...c}));return parsed.filter(c=>c&&typeof c.name==='string'&&c.name.length<100&&typeof c.zone==='string'&&validZone(c.zone)&&PIECES[c.key]).map(c=>({name:c.name,zone:c.zone,key:c.key})).filter((c,i,a)=>a.findIndex(x=>x.zone===c.zone)===i)}catch(e){return START_CITIES.map(c=>({...c}))}}
+let cities=loadCities(),currentTab='cities',inspected=null,chronoElapsed=0,chronoStarted=null,lastOrder='';
+function saveCities(){try{localStorage.setItem(storeKey,JSON.stringify(cities))}catch(e){}}
+function formatter(zone){if(!formatCache.has(zone))formatCache.set(zone,new Intl.DateTimeFormat('en-US',{timeZone:zone,year:'numeric',month:'2-digit',day:'2-digit',weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}));return formatCache.get(zone)}
+function clockParts(zone,now){const p={};for(const part of formatter(zone).formatToParts(now))if(part.type!=='literal')p[part.type]=part.value;const timestamp=Date.UTC(+p.year,+p.month-1,+p.day,+p.hour,+p.minute,+p.second);p.offset=Math.round((timestamp-Math.floor(now.getTime()/1000)*1000)/60000);p.millisecond=now.getMilliseconds();return p}
+function offsetLabel(minutes){if(minutes===0)return 'UTC±00:00';const sign=minutes<0?'−':'+';const n=Math.abs(minutes);return `UTC${sign}${String(Math.floor(n/60)).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`}
+function sortedCities(now=new Date()){return [...cities].sort((a,b)=>clockParts(a.zone,now).offset-clockParts(b.zone,now).offset||a.name.localeCompare(b.name)||a.zone.localeCompare(b.zone))}
+function chooseFace(excluded,previous){let pool=KEYS.filter(k=>!excluded.has(k)&&k!==previous);if(!pool.length)pool=KEYS.filter(k=>!excluded.has(k));if(!pool.length)pool=KEYS.filter(k=>k!==previous);return pool[Math.floor(Math.random()*pool.length)]}
+function shuffleAll(){let pool=[...KEYS];for(let i=pool.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}if(cities.length>1&&cities.every((c,i)=>pool[i%pool.length]===c.key))pool.push(pool.shift());cities.forEach((c,i)=>{c.key=pool[i%pool.length]});saveCities();renderCities()}
+function renderCities(){const now=new Date(),sorted=sortedCities(now);lastOrder=sorted.map(x=>x.zone).join('|');const target=document.getElementById('city-grid');document.getElementById('clock-count').textContent=`${cities.length} ${cities.length===1?'city':'cities'}`;
+ if(!sorted.length){target.innerHTML='<div class="empty">No cities yet. Add one to start your world clock.</div>';return}
+ target.innerHTML=sorted.map(c=>{const p=clockParts(c.zone,now),watch=PIECES[c.key];return `<article class="clock-card" data-city-zone="${esc(c.zone)}"><div class="clock-head"><div><h2 class="place">${esc(c.name)}</h2><p class="zone">${esc(offsetLabel(p.offset))}</p></div><div class="digital-time"><span data-city-time>--:--:--</span><div class="date-line" data-city-date></div></div></div><button class="watch-button" data-inspect="${c.key}" data-zone="${esc(c.zone)}" aria-label="Inspect ${esc(watch.name)} in ${esc(c.name)}">${makeWatch(c.key,c.zone)}<span class="watch-caption"><span class="watch-name">${esc(watch.name)}</span><span class="watch-reference">${esc(watch.ref)}</span></span></button><div class="card-actions"><button data-shuffle="${esc(c.zone)}" aria-label="Shuffle ${esc(c.name)} watch">Shuffle watch</button><button data-remove="${esc(c.zone)}" aria-label="Remove ${esc(c.name)}">Remove city</button></div></article>`}).join('');updateClocks();}
+function renderCollection(){const query=document.getElementById('face-search').value.trim().toLocaleLowerCase(),keys=KEYS.filter(k=>`${PIECES[k].name} ${PIECES[k].ref}`.toLocaleLowerCase().includes(query));document.getElementById('face-count').textContent=`${keys.length} of ${KEYS.length} pieces`;document.getElementById('no-faces').hidden=keys.length>0;const zone=cities[0]?.zone||'Etc/UTC';document.getElementById('collection-grid').innerHTML=keys.map(k=>{const p=PIECES[k],index=String(KEYS.indexOf(k)+1).padStart(2,'0');return `<article class="collection-card"><span class="collection-index">${index}</span><button class="watch-button" data-inspect="${k}" data-zone="${esc(zone)}" aria-label="Inspect ${esc(p.name)}">${makeWatch(k,zone)}<span class="watch-caption"><span class="watch-name">${esc(p.name)}</span><span class="watch-reference">${esc(p.ref)}</span></span></button></article>`}).join('');updateClocks()}
+function renderSuggestions(){const q=document.getElementById('city-search').value.trim().toLocaleLowerCase();const matches=(q?ATLAS.filter(c=>`${c.name} ${c.zone}`.toLocaleLowerCase().includes(q)):ATLAS.filter(c=>['London','Tokyo','New York','Sydney','Paris','Chicago'].includes(c.name))).filter(c=>!cities.some(x=>x.zone===c.zone)).slice(0,10);document.getElementById('city-results').innerHTML=matches.map(c=>`<button type="button" data-add="${esc(c.zone)}"><strong>${esc(c.name)}</strong><small>${esc(c.zone.replaceAll('_',' '))}</small></button>`).join('');document.getElementById('city-status').textContent=matches.length?'':q?'No available matching city. Try a different spelling.':'All suggested cities are already on your clock.';}
+function showTab(tab){currentTab=tab;for(const name of ['cities','collection']){const button=document.getElementById(`tab-${name}`),selected=tab===name;button.setAttribute('aria-selected',String(selected));button.tabIndex=selected?0:-1;document.getElementById(`${name}-panel`).hidden=!selected}document.getElementById('city-actions').hidden=tab!=='cities';if(tab==='collection'){document.getElementById('add-panel').hidden=true;document.getElementById('add-toggle').setAttribute('aria-expanded','false');renderCollection()}else renderCities()}
+function openDetails(key,zone){inspected=key;chronoElapsed=0;chronoStarted=null;document.getElementById('chrono-toggle').textContent='Start';document.getElementById('detail-pose').value='live';document.getElementById('detail-title').textContent=PIECES[key].name;document.getElementById('detail-description').textContent=PIECES[key].ref+' · '+(PIECES[key].cadence==='digital'?'Digital display':PIECES[key].cadence==='tick'?'Seconds advance in steps':PIECES[key].cadence==='mondaine'?'Railway-style stop at the minute':'Mechanical-style movement');document.getElementById('chrono').hidden=!PIECES[key].chrono;
+ const selected=validZone(zone)?zone:'Etc/UTC';document.getElementById('detail-zone').innerHTML=ATLAS.map(c=>`<option value="${esc(c.zone)}"${c.zone===selected?' selected':''}>${esc(c.name)} — ${esc(c.zone.replaceAll('_',' '))}</option>`).join('');document.getElementById('detail-art').innerHTML=makeWatch(key,selected);const dialog=document.getElementById('detail-dialog');if(!dialog.open)dialog.showModal();updateClocks();}
+const DIGITS=['abcdef','bc','abged','abgcd','fgbc','afgcd','afgecd','abc','abcdefg','abfgcd'];
+function updateDigits(svg,p){const values={h1:p.hour[0],h2:p.hour[1],m1:p.minute[0],m2:p.minute[1],s1:p.second[0],s2:p.second[1]};for(const group of svg.querySelectorAll('[data-digit]')){const active=DIGITS[+values[group.dataset.digit]]||'';for(const seg of group.children)seg.setAttribute('opacity',active.includes('abcdefg'[+seg.dataset.seg])?'.96':'.10')}}
+function updateClocks(){const now=new Date(),cache=new Map(),get=zone=>{if(!cache.has(zone))cache.set(zone,clockParts(zone,now));return cache.get(zone)};let elapsed=chronoElapsed+(chronoStarted===null?0:performance.now()-chronoStarted);document.getElementById('chrono-readout').textContent=`${String(Math.floor(elapsed/60000)).padStart(2,'0')}:${String(Math.floor(elapsed/1000)%60).padStart(2,'0')}.${Math.floor(elapsed/100)%10}`;
+ for(const card of document.querySelectorAll('#cities-panel .clock-card')){const p=get(card.dataset.cityZone);card.querySelector('[data-city-time]').textContent=`${p.hour}:${p.minute}:${p.second}`;card.querySelector('[data-city-date]').textContent=`${p.weekday} ${+p.day}/${p.month}`;card.querySelector('.zone').textContent=offsetLabel(p.offset)}
+ const svgs=document.querySelectorAll((currentTab==='cities'?'#cities-panel':'#collection-panel')+' svg[data-piece], #detail-dialog[open] svg[data-piece]');
+ for(const svg of svgs){const isDetail=Boolean(svg.closest('#detail-dialog')),pose=isDetail?document.getElementById('detail-pose').value:'live';let p=get(svg.dataset.zone);if(pose!=='live'){const [hour,minute]=pose.split(':');p={...p,hour,minute,second:'00',millisecond:0}}const piece=PIECES[svg.dataset.piece];let sec=+p.second+(piece.cadence==='tick'||piece.cadence==='digital'||reducedMotion.matches?0:p.millisecond/1000);if(piece.cadence==='sweep')sec=Math.floor(sec*8)/8;const secondsAngle=piece.cadence==='mondaine'?Math.min(360,sec/58.5*360):sec*6;const hour=(+p.hour%12+ +p.minute/60+sec/3600)*30,minute=(+p.minute+sec/60)*6;const e=isDetail?elapsed:0;
+  for(const h of svg.querySelectorAll('[data-hand]')){let a=0;switch(h.dataset.hand){case'hour':a=hour;break;case'minute':a=minute;break;case'seconds':a=secondsAngle;break;case'gmt':a=(+p.hour+ +p.minute/60)*15;break;case'chrono':a=e/1000*360/(piece.chronoSeconds||60);break;case'chronoMinute':a=e/60000*6;break;case'chronoHour':a=e/3600000*30;break;case'dateHand':a=(+p.day-1)*360/31;break;case'reserve':a=50;break;case'pendulum':a=reducedMotion.matches?0:Math.sin(now.getTime()/1000*Math.PI)*4;break}h.setAttribute('transform',`rotate(${a.toFixed(3)} ${h.dataset.cx} ${h.dataset.cy})`)}
+  const month=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][+p.month-1],weekday=p.weekday.toUpperCase(),values={date:String(+p.day),daydate:`${weekday} ${+p.day}`,daytop:`${weekday} ${+p.day}`,weekday,month,lcdDay:weekday,lcdDate:`${+p.month}-${+p.day}`,secondsBig:p.second};for(const el of svg.querySelectorAll('[data-value]'))el.textContent=values[el.dataset.value]||'';
+  updateDigits(svg,p);const shadow=svg.querySelector('[data-moon-shadow]');if(shadow){let phase=(((now.getTime()-Date.UTC(2000,0,6,18,14))/86400000)/29.53058867%1+1)%1;shadow.setAttribute('cx',(160+(phase<=.5?phase*32:-(1-phase)*32)).toFixed(2))}
+ }
+}
+document.getElementById('tab-cities').addEventListener('click',()=>showTab('cities'));document.getElementById('tab-collection').addEventListener('click',()=>showTab('collection'));document.querySelector('[role="tablist"]').addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();showTab(currentTab==='cities'?'collection':'cities');document.getElementById(`tab-${currentTab}`).focus()}});
+document.getElementById('add-toggle').addEventListener('click',()=>{const panel=document.getElementById('add-panel');panel.hidden=!panel.hidden;document.getElementById('add-toggle').setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden){renderSuggestions();document.getElementById('city-search').focus()}});
+document.getElementById('city-search').addEventListener('input',renderSuggestions);document.getElementById('city-results').addEventListener('click',e=>{const button=e.target.closest('[data-add]');if(!button)return;const city=ATLAS.find(c=>c.zone===button.dataset.add);if(!city||cities.some(c=>c.zone===city.zone))return;cities.push({...city,key:chooseFace(new Set(cities.map(c=>c.key)))});saveCities();renderCities();renderSuggestions();document.getElementById('city-status').textContent=`${city.name} added.`;document.getElementById('city-search').focus()});
+document.getElementById('shuffle-all').addEventListener('click',shuffleAll);document.getElementById('city-grid').addEventListener('click',e=>{const shuffle=e.target.closest('[data-shuffle]'),remove=e.target.closest('[data-remove]'),inspect=e.target.closest('[data-inspect]');if(shuffle){const city=cities.find(c=>c.zone===shuffle.dataset.shuffle);if(!city)return;city.key=chooseFace(new Set(cities.filter(c=>c!==city).map(c=>c.key)),city.key);saveCities();renderCities();document.querySelector(`[data-shuffle="${CSS.escape(city.zone)}"]`)?.focus()}else if(remove){cities=cities.filter(c=>c.zone!==remove.dataset.remove);saveCities();renderCities();document.getElementById('add-toggle').focus()}else if(inspect)openDetails(inspect.dataset.inspect,inspect.dataset.zone)});
+document.getElementById('collection-grid').addEventListener('click',e=>{const b=e.target.closest('[data-inspect]');if(b)openDetails(b.dataset.inspect,b.dataset.zone)});document.getElementById('face-search').addEventListener('input',renderCollection);
+document.getElementById('close-detail').addEventListener('click',()=>document.getElementById('detail-dialog').close());document.getElementById('detail-dialog').addEventListener('close',()=>{chronoStarted=null;inspected=null});document.getElementById('detail-zone').addEventListener('change',e=>{const svg=document.querySelector('#detail-art svg');if(svg)svg.dataset.zone=e.target.value;updateClocks()});document.getElementById('detail-pose').addEventListener('change',updateClocks);
+document.getElementById('chrono-toggle').addEventListener('click',e=>{if(chronoStarted===null){chronoStarted=performance.now();e.currentTarget.textContent='Stop'}else{chronoElapsed+=performance.now()-chronoStarted;chronoStarted=null;e.currentTarget.textContent='Start'}updateClocks()});document.getElementById('chrono-reset').addEventListener('click',()=>{chronoElapsed=0;chronoStarted=null;document.getElementById('chrono-toggle').textContent='Start';updateClocks()});
+renderCities();renderSuggestions();let pulse=setInterval(()=>{if(!document.hidden){updateClocks();const order=sortedCities().map(c=>c.zone).join('|');if(order!==lastOrder&&currentTab==='cities')renderCities()}},125);document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderCities();updateClocks()}});
+</script>
+</body>
+</html>

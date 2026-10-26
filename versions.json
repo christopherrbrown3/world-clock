@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "gpt-6.1-terra",
+      "label": "GPT 6.1 Terra",
+      "file": "versions/gpt-6.1-terra.html",
+      "snapshotDate": "2026-10-26",
+      "notes": "Independent GPT 6.1 Terra rendition, authored from scratch with 62 reference-led inline SVG timepieces, its own time and city controls, a searchable collection, inspection view, and chronographs."
+    },
+    {
       "id": "recursive-flint",
       "label": "Recursive Flint",
       "file": "versions/recursive-flint.html",
