@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Twenty-six perspectives.**
+**One brief. Twenty-seven perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
+**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
 
 </div>
 
@@ -30,12 +30,11 @@ Models with verified release dates are listed newest first. **Model release** li
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
+| [GPT 6.1 Terra](versions/gpt-6.1-terra.html) | [2026-10-26](https://developers.openai.com/api/docs/changelog) | 2026-10-26 |
 | [Recursive Flint](versions/recursive-flint.html) | 2026-10-22 (maintainer-supplied) | 2026-10-22 |
 | [MiniMax M3.1 Flash](versions/minimax-m3-1-flash.html) | [2026-10-19](https://www.minimax.io/blog/minimax-m31f) | 2026-10-21 |
-| [Reflection Beam](versions/reflection-beam.html) | [2026-10-05](https://reflection.ai/blog/introducing-beam) | 2026-10-20 |
 | [Claude Haiku 5.5](versions/claude-haiku-5.5.html) | [2026-10-07](https://www.anthropic.com/claude-haiku-5-5) | 2026-10-08 |
-| [Muse Glimmer](versions/muse-glimmer.html) | [2026-08-10](https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model) | 2026-10-05 |
-| [Qwen 3.8:27b](versions/qwen-3.8.html) | [2026-08-14](https://datanorth.ai/news/alibaba-releases-qwen3-8-27b) | 2026-10-05 |
+| [Reflection Beam](versions/reflection-beam.html) | [2026-10-05](https://reflection.ai/blog/introducing-beam) | 2026-10-20 |
 | [GitHub Copilot Hydrafusion](versions/hydrafusion.html) | 2026-09-30 (maintainer-supplied) | 2026-09-30 |
 | [Gemini 4 Argon](versions/gemini-4-argon.html) | [2026-09-30](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/) | 2026-10-13 |
 | [GPT 6.1 Sol](versions/gpt-6.1-sol.html) | [2026-09-29](https://developers.openai.com/api/docs/changelog) | 2026-09-29 |
@@ -48,6 +47,8 @@ Models with verified release dates are listed newest first. **Model release** li
 | [Gemini 3.8 Flash](versions/gemini-3.8-flash.html) | [2026-09-02](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/) | 2026-09-03 |
 | [Muse Spark 1.3](versions/muse-spark-1.3.html) | [2026-09-02](https://en.wikipedia.org/wiki/Muse_Spark) | 2026-09-14 |
 | [Claude Fable 5.1](versions/fable-5.1.html) | [2026-09-01](https://support.claude.com/en/articles/12138966-release-notes) | 2026-09-02 |
+| [Qwen 3.8:27b](versions/qwen-3.8.html) | [2026-08-14](https://datanorth.ai/news/alibaba-releases-qwen3-8-27b) | 2026-10-05 |
+| [Muse Glimmer](versions/muse-glimmer.html) | [2026-08-10](https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model) | 2026-10-05 |
 | [Claude Opus 5](versions/claude-opus-5.html) | [2026-07-24](https://www.anthropic.com/news/claude-opus-5) | 2026-07-28 |
 | [Codex 5.6 Sol](versions/codex-5.6-sol.html) | [2026-07-09](https://openai.com/index/gpt-5-6/) | 2026-07-28 |
 | [Codex 5.6 Terra](versions/codex-5.6.html) | [2026-07-09](https://openai.com/index/gpt-5-6/) | 2026-07-09 |
@@ -62,6 +63,12 @@ The [active development build](world-clock.html) remains available separately. I
 ## Inside a collection
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
+
+GPT 6.1 Terra offers an independently written collection of 62 working SVG watches and clocks, with local city settings, a searchable collection, enlarged inspection, fixed hand positions, and chronograph controls. [Read its reference and approximation notes](docs/gpt-6.1-terra-reference-notes.md).
+
+![GPT 6.1 Terra’s independently drawn collection of watches and clocks](docs/assets/gpt-6.1-terra-faces.png)
+
+[Desktop view](docs/assets/gpt-6.1-terra-desktop.png) · [Phone view](docs/assets/gpt-6.1-terra-mobile.png) · [Inspection view](docs/assets/gpt-6.1-terra-inspection.png)
 
 MiniMax M3.1 Flash implements all 62 faces in a standalone page written from scratch, with its own interface, `Intl` time engine, 150-city timezone atlas, and SVG drawing kit. Each face moves at its catalog cadence, cities can be added, removed, and shuffled, Lume Mode lights the lume plots across the catalog, the collection can be searched and filtered, and pieces can be inspected up close with working chronographs. [Read its reference and approximation notes](docs/minimax-m3-1-flash-reference-notes.md).
 

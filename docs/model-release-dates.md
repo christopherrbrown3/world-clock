@@ -1,5 +1,7 @@
 # Model release dates
 
+GPT 6.1 Terra was released on **October 26, 2026**, as recorded in [OpenAI’s API changelog](https://developers.openai.com/api/docs/changelog). This rendition was captured on the same date; its snapshot date is recorded separately in `versions.json`.
+
 Recursive Flint’s release date, **October 22, 2026**, was supplied by the maintainer. No public vendor release source exists to verify it against, so it is recorded here as maintainer-supplied rather than externally confirmed. The rendition was captured on the same day, and the snapshot date in `versions.json` records that repository checkpoint separately.
 
 MiniMax M3.1 Flash’s release date, **October 19, 2026**, was verified against [MiniMax’s own announcement](https://www.minimax.io/blog/minimax-m31f), “MiniMax M3.1 Flash: Redefining Agent Performance and Cost,” which is dated October 19, 2026 and introduces the model under the official name `MiniMax-M3.1-Flash` and the standard-API model ID `minimax-m3.1-flash`. The [Anthropic-SDK-compatible API reference](https://platform.minimax.io/docs/api-reference/text-anthropic-api) documents the same model ID. The rendition was captured on **October 21, 2026**, the snapshot date recorded in `versions.json`.
