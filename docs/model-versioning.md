@@ -54,7 +54,7 @@ When a new model version is ready:
 2. Preserve finalized model pages. Do not change `world-clock.html` unless the task explicitly includes the active build.
 3. Finish and validate the new standalone page against the catalog and required app behavior.
 4. Add its actual snapshot date and file to `versions.json`.
-5. Add a linked row to `index.html` in model release order, newest first. Preserve the order of existing tied dates. Update the visible rendition count and introduction when the count changes. Keep the index about the project and model links, without specific watch previews.
+5. Add a linked row to `index.html` in model release order, newest first. Preserve the order of existing tied dates. Keep a single “Latest” marker on the newest verified release and leave other rows unbadged. Update the visible rendition count and introduction when the count changes. Keep the index about the project and model links, without specific watch previews.
 6. Update the README model table, this page’s current-model list, and the changelog. Include reference notes and rendered screenshots for the new rendition.
 7. Run `npm test` and the relevant browser checks, then commit and push checkpoints through a pull request.
 8. Merge after the checks pass and the maintainer authorizes it. Optionally tag the model checkpoint:
