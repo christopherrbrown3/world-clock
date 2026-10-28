@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Twenty-seven perspectives.**
+**One brief. Twenty-eight perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
+**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open Copilot Fusion Max](versions/copilot-fusion-max.html) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
 
 </div>
 
@@ -57,12 +57,19 @@ Models with verified release dates are listed newest first. **Model release** li
 | [Claude Opus 4.8](versions/claude-opus-4.8.html) | [2026-05-28](https://www.anthropic.com/news/claude-opus-4-8) | 2026-06-30 |
 | [Codex 5.5](versions/codex-5.5.html) | [2026-04-23](https://openai.com/index/introducing-gpt-5-5/) | 2026-07-09 |
 | [Qwen 3.6](versions/qwen-3.6.html) | [2026-04-16](https://github.com/QwenLM/Qwen3.6) | 2026-10-07 |
+| [Copilot Fusion Max](versions/copilot-fusion-max.html) | Unverified | 2026-10-28 |
 
 The [active development build](world-clock.html) remains available separately. It is not automatically replaced by the newest model entry. [versions.json](versions.json) records the available snapshots.
 
 ## Inside a collection
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
+
+Copilot Fusion Max is an independent standalone rendition with 62 original SVG faces, a live city board, saved city settings, face shuffling, a lume study, and a poseable dial inspector. Its project snapshot is October 28, 2026; no model-release date is claimed. [Read the reference and approximation notes](docs/copilot-fusion-max-reference-notes.md).
+
+![Copilot Fusion Max’s independently drawn collection of 62 timepieces](docs/assets/copilot-fusion-max-faces.png)
+
+[Desktop view](docs/assets/copilot-fusion-max-desktop.png) · [Phone view](docs/assets/copilot-fusion-max-mobile.png)
 
 GPT 6.1 Terra offers an independently written collection of 62 working SVG watches and clocks, with local city settings, a searchable collection, enlarged inspection, fixed hand positions, and chronograph controls. [Read its reference and approximation notes](docs/gpt-6.1-terra-reference-notes.md).
 

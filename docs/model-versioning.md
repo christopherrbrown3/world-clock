@@ -15,6 +15,7 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
+- `versions/copilot-fusion-max.html`: Copilot Fusion Max checkpoint, authored from scratch with its own city board, SVG drawing system, 62 reference-informed faces, search, shuffling, lume study, and poseable inspection.
 - `versions/gpt-6.1-terra.html`: GPT 6.1 Terra checkpoint, authored from scratch with its own interface, time engine, SVG drawing system and all 62 faces.
 - `versions/recursive-flint.html`: Recursive Flint checkpoint, authored from scratch with its own interface, time engine, SVG drawing kit, and all 62 faces.
 

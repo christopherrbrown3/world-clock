@@ -1,5 +1,7 @@
 # Model release dates
 
+Copilot Fusion Max has no verified public model-release date for this directory. The index marks its release date as unverified; its project snapshot was captured on **October 28, 2026**.
+
 GPT 6.1 Terra was released on **October 26, 2026**, as recorded in [OpenAI’s API changelog](https://developers.openai.com/api/docs/changelog). This rendition was captured on the same date; its snapshot date is recorded separately in `versions.json`.
 
 Recursive Flint’s release date, **October 22, 2026**, was supplied by the maintainer. No public vendor release source exists to verify it against, so it is recorded here as maintainer-supplied rather than externally confirmed. The rendition was captured on the same day, and the snapshot date in `versions.json` records that repository checkpoint separately.
@@ -28,6 +30,7 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 
 | Repository model label | Release date | Evidence |
 | --- | --- | --- |
+| Copilot Fusion Max | Unverified | No vendor-published release date was established for the October 28, 2026 project snapshot. |
 | Recursive Flint | 2026-10-22 | Maintainer-supplied. No public vendor release source exists, so this date is not externally verified. |
 | MiniMax M3.1 Flash | 2026-10-19 | [MiniMax’s announcement](https://www.minimax.io/blog/minimax-m31f) is dated October 19, 2026 and introduces the model as `MiniMax-M3.1-Flash`; the [API reference](https://platform.minimax.io/docs/api-reference/text-anthropic-api) documents the `minimax-m3.1-flash` model ID. |
 | Claude Haiku 5.5 | 2026-10-07 | [Anthropic’s announcement](https://www.anthropic.com/claude-haiku-5-5) is dated October 7, 2026 and introduces the model. |

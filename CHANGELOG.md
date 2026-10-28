@@ -4,6 +4,8 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added Copilot Fusion Max as an independent standalone rendition, authored from scratch with 62 custom SVG timepieces, live city controls, duplicate-aware face shuffling, a searchable dial library, lume study, and poseable inspection. Added its index and manifest entries, README documentation, reference notes, and screenshots. The project snapshot is October 28, 2026; no model-release date is claimed.
+
 - Added GPT 6.1 Terra as an independent standalone rendition with 62 SVG timepieces, local city management, a searchable collection, inspection, and chronograph controls. Added the index and manifest entries, reference notes, and rendered screenshots. The model release and project snapshot are both dated October 26, 2026.
 
 - Added Recursive Flint as a new standalone rendition, authored from scratch with its own interface, time engine, SVG drawing kit, and all 62 reference-led timepieces, each moving at its catalog cadence with live date and moon complications, a Lume Mode, a west-to-east UTC board, duplicate-aware face shuffling, and a filterable collection, plus an inspector dialog. Added it to the project index as the newest entry (with a Recursive provider filter), the README model table, the snapshot manifest, the release-date notes, and reference notes with screenshots. Its release date, October 22, 2026, is maintainer-supplied; its snapshot date is October 22, 2026. Earlier model pages and the active build are unchanged.

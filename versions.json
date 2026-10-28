@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "copilot-fusion-max",
+      "label": "Copilot Fusion Max",
+      "file": "versions/copilot-fusion-max.html",
+      "snapshotDate": "2026-10-28",
+      "notes": "Independent Copilot Fusion Max rendition, authored from scratch with its own city board, SVG drawing system, 62 reference-informed faces, search, shuffling, lume study, and poseable inspection."
+    },
+    {
       "id": "gpt-6.1-terra",
       "label": "GPT 6.1 Terra",
       "file": "versions/gpt-6.1-terra.html",
