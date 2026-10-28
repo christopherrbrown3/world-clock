@@ -24,7 +24,7 @@ The page provides live browser-time updates, a west-to-east UTC-sorted city boar
 - A limited city atlas is bundled for offline use; daylight-saving behavior and displayed local times use the browser's IANA time-zone data.
 - The supplied photo archive covers 35 catalog objects, so the remaining 27 faces are informed by their named references and public design signatures, not by photographs in that archive.
 
-The project checkpoint date is October 28, 2026. No model-release date is claimed.
+The model release date, October 28, 2026, is maintainer-supplied and recorded in [the release-date notes](model-release-dates.md). The project checkpoint date is the same day and is recorded separately in `versions.json`.
 
 ## Regression coverage
 

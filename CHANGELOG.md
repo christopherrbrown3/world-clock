@@ -4,7 +4,9 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
-- Added Copilot Fusion Max as an independent standalone rendition, authored from scratch with 62 custom SVG timepieces, live city controls, duplicate-aware face shuffling, a searchable dial library, lume study, and poseable inspection. Added its index and manifest entries, README documentation, reference notes, and screenshots. The project snapshot is October 28, 2026; no model-release date is claimed.
+- Set Copilot Fusion Max’s directory release date to the maintainer-supplied October 28, 2026, moving it to the top of the index as the latest rendition and updating the README table, release-date notes, reference notes, and index screenshots accordingly.
+
+- Added Copilot Fusion Max as an independent standalone rendition, authored from scratch with 62 custom SVG timepieces, live city controls, duplicate-aware face shuffling, a searchable dial library, lume study, and poseable inspection. Added its index and manifest entries, README documentation, reference notes, and screenshots. The project snapshot is October 28, 2026.
 
 - Added GPT 6.1 Terra as an independent standalone rendition with 62 SVG timepieces, local city management, a searchable collection, inspection, and chronograph controls. Added the index and manifest entries, reference notes, and rendered screenshots. The model release and project snapshot are both dated October 26, 2026.
 

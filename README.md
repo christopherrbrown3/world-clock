@@ -30,6 +30,7 @@ Models with verified release dates are listed newest first. **Model release** li
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
+| [Copilot Fusion Max](versions/copilot-fusion-max.html) | 2026-10-28 (maintainer-supplied) | 2026-10-28 |
 | [GPT 6.1 Terra](versions/gpt-6.1-terra.html) | [2026-10-26](https://developers.openai.com/api/docs/changelog) | 2026-10-26 |
 | [Recursive Flint](versions/recursive-flint.html) | 2026-10-22 (maintainer-supplied) | 2026-10-22 |
 | [MiniMax M3.1 Flash](versions/minimax-m3-1-flash.html) | [2026-10-19](https://www.minimax.io/blog/minimax-m31f) | 2026-10-21 |
@@ -57,7 +58,6 @@ Models with verified release dates are listed newest first. **Model release** li
 | [Claude Opus 4.8](versions/claude-opus-4.8.html) | [2026-05-28](https://www.anthropic.com/news/claude-opus-4-8) | 2026-06-30 |
 | [Codex 5.5](versions/codex-5.5.html) | [2026-04-23](https://openai.com/index/introducing-gpt-5-5/) | 2026-07-09 |
 | [Qwen 3.6](versions/qwen-3.6.html) | [2026-04-16](https://github.com/QwenLM/Qwen3.6) | 2026-10-07 |
-| [Copilot Fusion Max](versions/copilot-fusion-max.html) | Unverified | 2026-10-28 |
 
 The [active development build](world-clock.html) remains available separately. It is not automatically replaced by the newest model entry. [versions.json](versions.json) records the available snapshots.
 
@@ -65,7 +65,7 @@ The [active development build](world-clock.html) remains available separately. I
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
 
-Copilot Fusion Max is an independent standalone rendition with 62 original SVG faces, a live city board, saved city settings, face shuffling, a lume study, and a poseable dial inspector. Its project snapshot is October 28, 2026; no model-release date is claimed. [Read the reference and approximation notes](docs/copilot-fusion-max-reference-notes.md).
+Copilot Fusion Max is an independent standalone rendition with 62 original SVG faces, a live city board, saved city settings, face shuffling, a lume study, and a poseable dial inspector. Its maintainer-supplied model release date and project snapshot are both October 28, 2026. [Read the reference and approximation notes](docs/copilot-fusion-max-reference-notes.md).
 
 ![Copilot Fusion Max’s independently drawn collection of 62 timepieces](docs/assets/copilot-fusion-max-faces.png)
 
