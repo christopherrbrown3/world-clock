@@ -9,7 +9,7 @@
     "url": "https://github.com/christopherrbrown3/world-clock.git"
   },
   "scripts": {
-    "test": "node scripts/validate.js",
+    "test": "node scripts/validate.js && node --test scripts/test-copilot-fusion-max.js",
     "validate": "node scripts/validate.js"
   },
   "engines": {
