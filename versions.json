@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "nemotron-3-ultra",
+      "label": "Nemotron 3 Ultra",
+      "file": "versions/nemotron-3-ultra.html",
+      "snapshotDate": "2026-10-29",
+      "notes": "Independent Nemotron 3 Ultra rendition, authored from scratch with a unique void-and-teal aesthetic, Intl-based time engine with 96-city atlas, reusable SVG drawing kit, and 54 reference-led timepieces across eleven categories (Divers, GMTs, Chronographs, Navigators, Dress, Field, Pilots, Digital, Smart, Clocks, Pocket) with per-face movement cadences, working chronographs, Lume Mode, saved city cards, a filterable collection, and a posable inspection dialog."
+    },
+    {
       "id": "copilot-fusion-max",
       "label": "Copilot Fusion Max",
       "file": "versions/copilot-fusion-max.html",
