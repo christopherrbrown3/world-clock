@@ -427,7 +427,7 @@
   ];
 
   const ORDER = [
-    'sub-steel','sub-black','sub-blue','sub-gilt','sub-bronze','sub-titanium','sub-white',
+    'submariner','yachtmaster2','sub-steel','sub-black','sub-blue','sub-gilt','sub-bronze','sub-titanium','sub-white',
     'gmt-pepsi','gmt-batman','gmt-rootbeer','gmt-coke','gmt-blue','gmt-green','gmt-sprite',
     'chrono-panda','chrono-reverse','chrono-blue','chrono-gold','chrono-white','chrono-black',
     'nav-breguet','nav-flieger','nav-type20','nav-bigeye',
@@ -437,11 +437,12 @@
     'digital-casio','digital-gshock','digital-timex','digital-seiko',
     'smart-apple','smart-galaxy','smart-pixel','smart-garmin',
     'clock-railway','clock-mondaine','clock-flip','clock-nixie','clock-word',
+    'bigben','grandcentral','mickey',
     'pocket-hunter','pocket-savonnette','pocket-openface','pocket-chronograph'
   ];
 
   const CATS = {
-    'sub-steel':'Diver','sub-black':'Diver','sub-blue':'Diver','sub-gilt':'Diver','sub-bronze':'Diver','sub-titanium':'Diver','sub-white':'Diver',
+    'submariner':'Diver','yachtmaster2':'Diver','sub-steel':'Diver','sub-black':'Diver','sub-blue':'Diver','sub-gilt':'Diver','sub-bronze':'Diver','sub-titanium':'Diver','sub-white':'Diver',
     'gmt-pepsi':'GMT','gmt-batman':'GMT','gmt-rootbeer':'GMT','gmt-coke':'GMT','gmt-blue':'GMT','gmt-green':'GMT','gmt-sprite':'GMT',
     'chrono-panda':'Chronograph','chrono-reverse':'Chronograph','chrono-blue':'Chronograph','chrono-gold':'Chronograph','chrono-white':'Chronograph','chrono-black':'Chronograph',
     'nav-breguet':'Nav/Flier','nav-flieger':'Nav/Flier','nav-type20':'Nav/Flier','nav-bigeye':'Nav/Flier',
@@ -451,11 +452,12 @@
     'digital-casio':'Digital','digital-gshock':'Digital','digital-timex':'Digital','digital-seiko':'Digital',
     'smart-apple':'Smart','smart-galaxy':'Smart','smart-pixel':'Smart','smart-garmin':'Smart',
     'clock-railway':'Clock','clock-mondaine':'Clock','clock-flip':'Clock','clock-nixie':'Clock','clock-word':'Clock',
+    'bigben':'Clock','grandcentral':'Clock','mickey':'Field',
     'pocket-hunter':'Pocket','pocket-savonnette':'Pocket','pocket-openface':'Pocket','pocket-chronograph':'Pocket'
   };
 
   const MAKERS = {
-    'sub-steel':'Rolex','sub-black':'Rolex','sub-blue':'Rolex','sub-gilt':'Rolex','sub-bronze':'Rolex','sub-titanium':'Rolex','sub-white':'Rolex',
+    'submariner':'Rolex','yachtmaster2':'Rolex','sub-steel':'Rolex','sub-black':'Rolex','sub-blue':'Rolex','sub-gilt':'Rolex','sub-bronze':'Rolex','sub-titanium':'Rolex','sub-white':'Rolex',
     'gmt-pepsi':'Rolex','gmt-batman':'Rolex','gmt-rootbeer':'Rolex','gmt-coke':'Rolex','gmt-blue':'Rolex','gmt-green':'Rolex','gmt-sprite':'Rolex',
     'chrono-panda':'Rolex','chrono-reverse':'Rolex','chrono-blue':'Rolex','chrono-gold':'Rolex','chrono-white':'Rolex','chrono-black':'Rolex',
     'nav-breguet':'Breguet','nav-flieger':'Laco','nav-type20':'Breguet','nav-bigeye':'Omega',
@@ -465,6 +467,7 @@
     'digital-casio':'Casio','digital-gshock':'Casio','digital-timex':'Timex','digital-seiko':'Seiko',
     'smart-apple':'Apple','smart-galaxy':'Samsung','smart-pixel':'Google','smart-garmin':'Garmin',
     'clock-railway':'SBB','clock-mondaine':'Mondaine','clock-flip':'Solari','clock-nixie':'Burroughs','clock-word':'Qlocktwo',
+    'bigben':'Elizabeth Tower','grandcentral':'Grand Central Terminal','mickey':'Ingersoll',
     'pocket-hunter':'Patek Philippe','pocket-savonnette':'Vacheron Constantin','pocket-openface':'Breguet','pocket-chronograph':'Longines'
   };
 
@@ -519,11 +522,18 @@
     'clock-flip':'Solari Udine split-flap. Mechanical digits flip. Airport/train station heritage. Kinetic poetry.',
     'clock-nixie':'IN-14 Nixie tubes. Neon glow, cathode numerals. Soviet era, modern recreation. Warm light.',
     'clock-word':'Qlocktwo. Words not numbers. "IT IS HALF PAST THREE". Typography as time. German engineering.',
+    'submariner':'The archetype. 40mm Oystersteel case, black ceramic bezel, Chromalight lume. The reference against which all divers are measured.',
+    'yachtmaster2':'Regatta chronograph with programmable countdown. 44mm Oystersteel, Cerachrom bezel, mechanical memory. The skipper\'s instrument.',
+    'bigben':'Elizabeth Tower, Palace of Westminster. Four 7m dials, Great Bell strikes the hour. 1859 Victorian Gothic icon.',
+    'grandcentral':'Main Concourse information booth clock. Opal face, gilt hands, four faces. 1913 Vanderbilt jewel. "Meet me at the clock."',
+    'mickey':'Ingersoll 1933 original. Mickey points the hours, red shorts, yellow shoes. First licensed character watch. Pop culture history.',
     'pocket-hunter':'Open-face hunter case. Enamel dial, Breguet hands, subsidiary seconds. Patek 974 lineage.',
     'pocket-savonnette':'Hunter case, sprung cover. Guilloché enamel, Roman numerals. Vacheron 1920s elegance.',
     'pocket-openface':'Open face, no cover. Breguet numerals, blued hands, railroad track. Breguet No. 160 spirit.',
     'pocket-chronograph':'Rattrapante split-seconds. Two second hands, one pusher. Longines 13ZN heritage. Complication peak.'
   };
+
+  const visualAnchors = {submariner:"diver",bigben:"roman",grandcentral:"simple",mickey:"character",yachtmaster2:"regatta"};
 
   function isLeap(y){return y%4===0&&(y%100!==0||y%400===0)}
   function dimInMonth(y,m){return [31,isLeap(y)?29:28,31,30,31,30,31,31,30,31,30,31][m]}
@@ -3299,6 +3309,252 @@
     return g
   }
   faces['pocket-chronograph'] = drawPocketChronograph;
+
+  function drawSubmariner(K,now,lume){
+    K.reset();
+    const cx=200, cy=250, R=180;
+    const {grad,radGrad,disc,ring,rect,roundRect,line,path,txt,pt,hand,tickRing,numeralRing,lumeDot,begin,end}=K;
+    let g=begin();
+    const caseGrad = grad(['#1a1f1c','#2d3531','#1a1f1c'], 90);
+    const bezelGrad = grad(['#0d110f','#1a1f1c','#0d110f'], 90);
+    const dialGrad = radGrad(['#0a0f0d','#111814','#0a0f0d']);
+    const metal = grad(['#c9d1cd','#9ab0a6','#6b8076','#9ab0a6','#c9d1cd'], 135);
+    const gold = grad(['#f0c84c','#d4a83a','#b88a2a','#d4a83a','#f0c84c'], 135);
+    const lumeCol = lume?'#00e6a0':'#b8e8d0';
+
+    g+=disc(cx,cy,R,caseGrad);
+    g+=ring(cx,cy,R,2,metal);
+    g+=disc(cx,cy,R-2,bezelGrad);
+    g+=ring(cx,cy,R-2,1,grad(['#2a352e','#1a221b']));
+    g+=disc(cx,cy,R-14,dialGrad);
+
+    g+=tickRing(cx,cy,R-22,60,5,14,7,metal,1.5,{opacity:'.8'});
+    [12,3,6,9].forEach((n,i)=>{
+      const a=i*Math.PI/2-Math.PI/2;
+      const p=pt(cx,cy,R-50,a);
+      g+=txt(p[0],p[1]+5,n===12?'12':n===3?'3':n===6?'6':'9',{'font':'var(--font-mono)','font-size':22,'font-weight':'700','fill':metal,'text-anchor':'middle','dominant-baseline':'middle'})
+    });
+    [1,2,4,5,7,8,10,11].forEach((n,i)=>{
+      const a=(n%12)*Math.PI/6-Math.PI/2;
+      const p=pt(cx,cy,R-48,a);
+      g+=disc(p[0],p[1],3.5,metal);
+    });
+
+    if(lume){
+      [0,5,10,15,20,25,30,35,40,45,50,55].forEach(i=>{
+        if(i%5!==0)return;
+        const a=i*2*Math.PI/60-Math.PI/2;
+        const p=pt(cx,cy,R-36,a);
+        g+=lumeDot(p[0],p[1],3)
+      })
+    }
+
+    g+=disc(cx+90,cy-10,14,radGrad(['#0a0f0d','#111814']));
+    g+=ring(cx+90,cy-10,14,1,metal);
+    const d = now.day.toString().padStart(2,'0');
+    g+=txt(cx+90,cy-6,d[0],{'font':'var(--font-mono)','font-size':12,'font-weight':'700','fill':metal,'text-anchor':'middle','dominant-baseline':'middle'});
+    g+=txt(cx+90,cy+4,d[1],{'font':'var(--font-mono)','font-size':12,'font-weight':'700','fill':metal,'text-anchor':'middle','dominant-baseline':'middle'});
+
+    const h = now.h%12 + now.m/60;
+    const m = now.m + now.s/60;
+    const s = now.s;
+
+    g+=hand(cx,cy,R-52,4.5,h*Math.PI/30-Math.PI/2,'mercedes',metal);
+    g+=hand(cx,cy,R-38,3,m*Math.PI/30-Math.PI/2,'paddle',metal);
+    g+=hand(cx,cy,R-28,1.5,s*Math.PI/30-Math.PI/2,'lollipop',gold);
+
+    g+=disc(cx,cy,6,grad(['#1a1f1c','#2d3531']));
+    g+=disc(cx,cy,3,metal);
+    g+=end();
+    return g
+  }
+  faces['submariner'] = drawSubmariner;
+
+  function drawYachtmaster2(K,now,lume){
+    K.reset();
+    const cx=200, cy=250, R=180;
+    const {grad,radGrad,disc,ring,rect,roundRect,line,path,txt,pt,hand,tickRing,numeralRing,lumeDot,begin,end}=K;
+    let g=begin();
+    const caseGrad = grad(['#1a1f1c','#2d3531','#1a1f1c'], 90);
+    const bezelGrad = grad(['#0d1a2b','#142d4a','#0d1a2b'], 90);
+    const dialGrad = radGrad(['#0a1628','#142d4a','#0a1628']);
+    const metal = grad(['#c9d1cd','#9ab0a6','#6b8076','#9ab0a6','#c9d1cd'], 135);
+    const blue = grad(['#003d7a','#005aa3','#003d7a'], 135);
+    const red = grad(['#c82828','#a02020','#c82828'], 135);
+    const lumeCol = lume?'#00e6a0':'#b8e8d0';
+
+    g+=disc(cx,cy,R,caseGrad);
+    g+=ring(cx,cy,R,2,metal);
+    g+=disc(cx,cy,R-2,bezelGrad);
+    g+=ring(cx,cy,R-2,1,grad(['#1a2a3a','#0a1628']));
+    g+=disc(cx,cy,R-14,dialGrad);
+
+    for(let i=0;i<60;i++){
+      const a=i*2*Math.PI/60-Math.PI/2;
+      const isMajor = i%5===0;
+      const r1 = isMajor ? R-22 : R-28;
+      const r2 = isMajor ? R-36 : R-32;
+      const p1=pt(cx,cy,r1,a), p2=pt(cx,cy,r2,a);
+      g+=line(p1[0],p1[1],p2[0],p2[1],metal, isMajor?1.5:0.8, {opacity:'.8'});
+    }
+    [10,20,30,40,50,60].forEach(n=>{
+      const a=n*2*Math.PI/60-Math.PI/2;
+      const p=pt(cx,cy,R-48,a);
+      g+=txt(p[0],p[1]+5,n.toString(),{'font':'var(--font-mono)','font-size':14,'font-weight':'700','fill':metal,'text-anchor':'middle','dominant-baseline':'middle'})
+    });
+
+    if(lume){
+      [0,5,10,15,20,25,30,35,40,45,50,55].forEach(i=>{
+        if(i%5!==0)return;
+        const a=i*2*Math.PI/60-Math.PI/2;
+        const p=pt(cx,cy,R-36,a);
+        g+=lumeDot(p[0],p[1],3)
+      })
+    }
+
+    g+=disc(cx+90,cy-10,14,radGrad(['#0a1628','#142d4a']));
+    g+=ring(cx+90,cy-10,14,1,metal);
+    const d = now.day.toString().padStart(2,'0');
+    g+=txt(cx+90,cy-6,d[0],{'font':'var(--font-mono)','font-size':12,'font-weight':'700','fill':metal,'text-anchor':'middle','dominant-baseline':'middle'});
+    g+=txt(cx+90,cy+4,d[1],{'font':'var(--font-mono)','font-size':12,'font-weight':'700','fill':metal,'text-anchor':'middle','dominant-baseline':'middle'});
+
+    const h = now.h%12 + now.m/60;
+    const m = now.m + now.s/60;
+    const s = now.s;
+
+    g+=hand(cx,cy,R-52,4.5,h*Math.PI/30-Math.PI/2,'mercedes',metal);
+    g+=hand(cx,cy,R-38,3,m*Math.PI/30-Math.PI/2,'paddle',metal);
+    g+=hand(cx,cy,R-28,1.5,s*Math.PI/30-Math.PI/2,'lollipop',blue);
+
+    g+=disc(cx,cy,6,grad(['#1a1f1c','#2d3531']));
+    g+=disc(cx,cy,3,metal);
+    g+=end();
+    return g
+  }
+  faces['yachtmaster2'] = drawYachtmaster2;
+
+  function drawBigBen(K,now,lume){
+    K.reset();
+    const cx=200, cy=250, R=180;
+    const {grad,radGrad,disc,ring,rect,roundRect,line,path,txt,pt,hand,tickRing,numeralRing,lumeDot,begin,end}=K;
+    let g=begin();
+    const stoneGrad = grad(['#c4b8a8','#b8aa98','#a89a88','#b8aa98','#c4b8a8'], 135);
+    const darkGrad = grad(['#3a3530','#2d2824','#3a3530'], 90);
+    const dialGrad = radGrad(['#f5f0e8','#ebe6dc','#f5f0e8']);
+    const gold = grad(['#c8a840','#b89838','#a88830','#b89838','#c8a840'], 135);
+    const black = '#1a1a1a';
+    const lumeCol = lume?'#ffe880':'#fff8d0';
+
+    g+=disc(cx,cy,R,stoneGrad);
+    g+=ring(cx,cy,R,4,grad(['#887868','#786858']));
+    g+=disc(cx,cy,R-8,darkGrad);
+    g+=ring(cx,cy,R-8,2,gold);
+    g+=disc(cx,cy,R-18,dialGrad);
+
+    g+=tickRing(cx,cy,R-26,60,5,12,8,gold,1.5,{opacity:'.9'});
+    [12,1,2,3,4,5,6,7,8,9,10,11].forEach((n,i)=>{
+      const a=i*2*Math.PI/12-Math.PI/2;
+      const p=pt(cx,cy,R-44,a);
+      g+=txt(p[0],p[1]+6,n===12?'XII':['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'][n-1],{'font':'var(--font-serif)','font-size':28,'font-weight':'600','fill':gold,'text-anchor':'middle','dominant-baseline':'middle'})
+    });
+
+    const h = now.h%12 + now.m/60;
+    const m = now.m + now.s/60;
+    const s = now.s;
+
+    g+=hand(cx,cy,R-50,6,h*Math.PI/30-Math.PI/2,'sword',black);
+    g+=hand(cx,cy,R-35,4,m*Math.PI/30-Math.PI/2,'sword',black);
+    if(!lume){
+      g+=hand(cx,cy,R-25,2,s*Math.PI/30-Math.PI/2,'point',red);
+    }
+
+    g+=disc(cx,cy,8,gold);
+    g+=disc(cx,cy,4,black);
+    g+=end();
+    return g
+  }
+  faces['bigben'] = drawBigBen;
+
+  function drawGrandCentral(K,now,lume){
+    K.reset();
+    const cx=200, cy=250, R=180;
+    const {grad,radGrad,disc,ring,rect,roundRect,line,path,txt,pt,hand,tickRing,numeralRing,lumeDot,begin,end}=K;
+    let g=begin();
+    const frameGrad = grad(['#b8a058','#d4b860','#c8a050','#d4b860','#b8a058'], 135);
+    const dialGrad = radGrad(['#fff8e0','#fff1cb','#fff8e0']);
+    const black = '#1a1a1a';
+    const gold = grad(['#b8a058','#d4b860','#b8a058'], 135);
+    const lumeCol = lume?'#ffe880':'#fff8d0';
+
+    g+=disc(cx,cy,R,frameGrad);
+    g+=ring(cx,cy,R,5,grad(['#887038','#a89048']));
+    g+=disc(cx,cy,R-10,grad(['#2a2520','#1a1510']));
+    g+=ring(cx,cy,R-10,2,gold);
+    g+=disc(cx,cy,R-22,dialGrad);
+
+    [12,1,2,3,4,5,6,7,8,9,10,11].forEach((n,i)=>{
+      const a=i*2*Math.PI/12-Math.PI/2;
+      const p=pt(cx,cy,R-40,a);
+      g+=txt(p[0],p[1]+5,n.toString(),{'font':'var(--font-serif)','font-size':26,'font-weight':'400','fill':black,'text-anchor':'middle','dominant-baseline':'middle'})
+    });
+
+    const h = now.h%12 + now.m/60;
+    const m = now.m + now.s/60;
+    const s = now.s;
+
+    g+=hand(cx,cy,R-50,5,h*Math.PI/30-Math.PI/2,'gilt',black);
+    g+=hand(cx,cy,R-35,3,m*Math.PI/30-Math.PI/2,'gilt',black);
+
+    g+=disc(cx,cy,7,gold);
+    g+=disc(cx,cy,3,black);
+    g+=end();
+    return g
+  }
+  faces['grandcentral'] = drawGrandCentral;
+
+  function drawMickey(K,now,lume){
+    K.reset();
+    const cx=200, cy=250, R=180;
+    const {grad,radGrad,disc,ring,rect,roundRect,line,path,txt,pt,hand,tickRing,numeralRing,lumeDot,begin,end}=K;
+    let g=begin();
+    const caseGrad = grad(['#2a2a2a','#1a1a1a','#2a2a2a'], 90);
+    const bezelGrad = grad(['#3a3a3a','#2a2a2a','#3a3a3a'], 90);
+    const dialGrad = radGrad(['#f5f0e8','#ebe6dc','#f5f0e8']);
+    const metal = grad(['#c9d1cd','#9ab0a6','#6b8076','#9ab0a6','#c9d1cd'], 135);
+    const black = '#1a1a1a';
+    const red = '#c82828';
+    const yellow = '#f0c84c';
+    const lumeCol = lume?'#ffe880':'#fff8d0';
+
+    g+=disc(cx,cy,R,caseGrad);
+    g+=ring(cx,cy,R,3,metal);
+    g+=disc(cx,cy,R-4,bezelGrad);
+    g+=disc(cx,cy,R-16,dialGrad);
+
+    [12,1,2,3,4,5,6,7,8,9,10,11].forEach((n,i)=>{
+      const a=i*2*Math.PI/12-Math.PI/2;
+      const p=pt(cx,cy,R-38,a);
+      g+=txt(p[0],p[1]+5,n.toString(),{'font':'var(--font-serif)','font-size':20,'font-weight':'600','fill':black,'text-anchor':'middle','dominant-baseline':'middle'})
+    });
+
+    const h = now.h%12 + now.m/60;
+    const m = now.m + now.s/60;
+    const s = now.s;
+
+    g+=hand(cx,cy,R-50,5,h*Math.PI/30-Math.PI/2,'sword',black);
+    g+=hand(cx,cy,R-35,3,m*Math.PI/30-Math.PI/2,'sword',black);
+    g+=hand(cx,cy,R-25,2,s*Math.PI/30-Math.PI/2,'point',red);
+
+    g+=path(`M${cx-25},${cy-40} Q${cx-10},${cy-55} ${cx+5},${cy-45}`, 'none', {stroke:black,'stroke-width':4,'stroke-linecap':'round','fill':'none'});
+    g+=disc(cx-30,cy-45,5,yellow);
+    g+=disc(cx+5,cy-40,5,yellow);
+
+    g+=disc(cx,cy,6,metal);
+    g+=disc(cx,cy,3,black);
+    g+=end();
+    return g
+  }
+  faces['mickey'] = drawMickey;
 window.K = K;
 window.faces = faces;
 window.ORDER = ORDER;
