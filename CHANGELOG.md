@@ -4,6 +4,7 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Refined the Claude Fable 5.2 faces in a fidelity pass. Each of the 35 photographed pieces was rendered beside a reference photograph and corrected, and 26 of the other 27 were checked against looked-up photographs. Steel tones, lug shapes, bezel and dial proportions and lettering changed across the collection; the Villeret, Monaco, Luminor, Radiomir, Chronomaster Sport, Fifty Fathoms, BR 03 and Swatch faces were corrected from those lookups. The reference notes and screenshots are updated.
 - Added Claude Fable 5.2 as a new standalone rendition, authored from scratch with its own `Intl` time engine, 136-city atlas, two-layer SVG drawing kit and all 62 reference-led timepieces, each moving at its catalog cadence. City cards follow the local sky and stay ordered west to east; faces shuffle without duplicates; the collection can be filtered and searched; and the inspector poses hands, runs fifteen chronographs and assigns a piece to a city. Added it to the project index as the newest entry, the README model table, the snapshot manifest, the release-date notes, and reference notes with screenshots. Its release date, November 9, 2026, is verified against Anthropic’s Claude Fable page; its snapshot date is November 10, 2026. Earlier model pages and the active build are unchanged.
 - Brought the index counts in line with its thirty rows: the heading, the rendition total and the provider filters now include Nemotron 3 Ultra, which had a row but no NVIDIA filter, and the README headline matches.
 
