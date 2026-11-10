@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "gemini-4-carbon",
+      "label": "Gemini 4 Carbon",
+      "file": "versions/gemini-4-carbon.html",
+      "snapshotDate": "2026-11-10",
+      "notes": "Independent Gemini 4 Carbon rendition, authored from scratch as the Carbon Allotrope Observatory with its own Intl timezone engine, 174-city atlas, 24-hour solar meridian strip, instance-scoped SVG horological kit, and all 62 reference-led timepieces moving at their catalog cadences, with live date, weekday, month, astronomical moonphase, 24-hour and power-reserve complications, fifteen working chronographs, photoluminescent Lume Study, duplicate-free face shuffling, a filterable collection, and a poseable inspection loupe."
+    },
+    {
       "id": "fable-5.2",
       "label": "Claude Fable 5.2",
       "file": "versions/fable-5.2.html",
