@@ -507,17 +507,18 @@ FACES.explorer={name:'Rolex Explorer 36 124270',cadence:'sweep',bps:8,cat:'Field
     return s+HND+G(k.hands(k.hand('h',mercedes(k,64))+k.hand('m',rxSword(k,100))+k.hand('s',rxSec(k,103))+k.cap(CX,CY,5.2,'wg'))+k.glass(CX,CY,110),Z)}};
 
 FACES.milgauss={name:'Rolex Milgauss 116400GV-0002 "Z-Blue"',cadence:'sweep',bps:8,cat:'Classic',mv:'Calibre 3131 · 28,800 vph · anti-magnetic shield',
-  note:'Electric-blue sunray dial under a green-tinted sapphire, with the orange lightning-bolt seconds hand.',
-  draw(k){const wg=k.met('wg','f',135),or='#ff7a1a';let s=oyster(k,{pcl:1});
-    s+=C(CX,CY,151,'#33373c')+k.sheen(CX,CY,116,150.5,'steel',{ph:50})+ring(CX,CY,149,150.5,'#fff','opacity=".5"')+ring(CX,CY,108.5,116,k.lg('0:#6fd79a,.5:#2c9a63,1:#0e5a39',120))+ring(CX,CY,108.5,110.2,'#b7ffd9','opacity=".7"');
-    s+=C(CX,CY,108.5,k.rg('0:#35b6e0,.55:#1687c2,1:#0b4f86'))+k.sun(CX,CY,108.5,{a:.07,sh:.26,dk:.2,th:32})+k.vig(CX,CY,108.5,.28,.74);
-    s+=ticks(CX,CY,102.6,107.4,60,'#fff',.8)+each(12,i=>R(CX-2.6,CY-107.6,5.2,5,or),CX,CY);
-    s+=G(each(12,i=>R(CX-4,CY-99,8,i%3?21:25,wg,.8)+R(CX-2.3,CY-97.2,4.6,i%3?17.4:21.4,i&&i%3===0?'#ffb37a':lumeG(k),.5)),k.ds(.5,1.2,.8,.5));
-    s+=rxLogo(k,CY-56,'#fff')+T(CX,CY-30.5,'OYSTER PERPETUAL',5.4,{w:500,ls:.3})+T(CX,CY-22,'MILGAUSS',7.6,{w:700,c:or,ls:.5});
-    s+=rxText(CY+47,['SUPERLATIVE CHRONOMETER','OFFICIALLY CERTIFIED'],'#fff',4.5)+k.arcT(CX,CY,104.6,'SWISS',189,2.8,{in:1,w:600,ls:.3})+k.arcT(CX,CY,104.6,'MADE',171,2.8,{in:1,w:600,ls:.3});
-    const hh=P(mir([[3.6,13],[3.6,-55],[0,-62]]),k.met('wg','f',0))+P(mir([[1.7,-8],[1.7,-54],[0,-58]]),lume),mh=P(mir([[3.2,14],[3.2,-91],[0,-98]]),k.met('wg','f',0))+P(mir([[1.5,-8],[1.5,-90],[0,-94]]),lume);
-    const bolt=P('M-1,26L1,26L1,-34L6.5,-38L1.4,-58L.8,-93L7,-93L0,-104L-7,-93L-.8,-93L-1.4,-54L-6.5,-50L-1,-30Z',or);
-    return s+HND+k.hands(k.hand('h',hh)+k.hand('m',mh)+k.hand('s',bolt)+k.cap(CX,CY,5,'wg'))+C(CX,CY,108.5,'#34d58a','opacity=".05"')+k.glass(CX,CY,108.5)}};
+  note:'Electric-blue sunray dial under a green-tinted sapphire, orange minute numerals and the orange lightning-bolt seconds hand.',
+  draw(k){const wg=k.met('wg','f',135),or='#ff7a1a',Z='transform="translate(200 250) scale(1.1) translate(-200 -250)"';let s=oyster(k,{pcl:1});
+    s+=C(CX,CY,151,'#33373c')+k.sheen(CX,CY,127,150.5,'steel',{ph:50})+ring(CX,CY,149,150.5,'#fff','opacity=".5"');
+    let dz=ring(CX,CY,108.5,116,k.lg('0:#6fd79a,.5:#2c9a63,1:#0e5a39',120))+ring(CX,CY,108.5,110.2,'#b7ffd9','opacity=".7"');
+    dz+=C(CX,CY,108.5,k.rg('0:#35b6e0,.55:#1687c2,1:#0b4f86'))+k.sun(CX,CY,108.5,{a:.07,sh:.26,dk:.2,th:32})+k.vig(CX,CY,108.5,.28,.74);
+    dz+=ticks(CX,CY,101.6,107.2,60,'#fff',.8,{skip:i=>i%5===0})+C(CX,CY,107.4,'none','stroke="#fff" stroke-width=".5"')+nums(CX,CY,104.3,['60','5','10','15','20','25','30','35','40','45','50','55'],7.6,{rot:'out',c:or,w:700,sx:.9});
+    dz+=G(each(12,i=>R(CX-4,CY-98,8,i%3?21:25,wg,.8)+R(CX-2.3,CY-96.2,4.6,i%3?17.4:21.4,i&&i%3===0?'#ffb37a':lumeG(k),.5)),k.ds(.5,1.2,.8,.5));
+    dz+=rxLogo(k,CY-56,'#fff')+T(CX,CY-30.5,'OYSTER PERPETUAL',5.4,{w:500,ls:.3})+T(CX,CY-22,'MILGAUSS',7.6,{w:700,c:or,ls:.5});
+    dz+=rxText(CY+47,['SUPERLATIVE CHRONOMETER','OFFICIALLY CERTIFIED'],'#fff',4.5)+T(CX-17,CY+99.6,'SWISS',2.6,{w:600,ls:.3})+T(CX+17,CY+99.6,'MADE',2.6,{w:600,ls:.3});
+    const hh=P(mir([[3.8,13],[3.8,-55],[0,-62]]),k.met('wg','f',0))+P(mir([[1.9,-8],[1.9,-54],[0,-58]]),lume),mh=P(mir([[3.4,14],[3.4,-88],[0,-95]]),k.met('wg','f',0))+P(mir([[1.6,-8],[1.6,-87],[0,-91]]),lume);
+    const bolt=P('M-1,26L1,26L1,-34L6.5,-38L1.4,-58L.8,-88L7,-88L0,-99L-7,-88L-.8,-88L-1.4,-54L-6.5,-50L-1,-30Z',or);
+    return s+G(dz,Z)+HND+G(k.hands(k.hand('h',hh)+k.hand('m',mh)+k.hand('s',bolt)+k.cap(CX,CY,5,'wg'))+C(CX,CY,108.5,'#34d58a','opacity=".05"')+k.glass(CX,CY,108.5),Z)}};
 
 /* Daytona chronograph furniture shared by the steel and rainbow references */
 function daytonaSet(k,o){const m=o.m,g=k.met(m,'p',0);let s='';
@@ -646,7 +647,7 @@ FACES.snoopy={name:'Omega Speedmaster "Silver Snoopy Award" 50th Anniversary 310
 
 FACES.seamaster={name:'Omega Seamaster Diver 300M',cadence:'sweep',bps:7,cat:'Dive',mv:'Co-Axial Master Chronometer 8800 · 25,200 vph',ref:'210.30.42.20.03.001, blue ceramic dial',
   note:'Laser-engraved wave dial, scalloped ceramic bezel, skeleton hands and the helium escape valve at ten o’clock.',
-  draw(k){const st=k.met('steel','f',135),bl=['#2457ad','#153a82','#0b2254'];let s=ro(-60,R(CX-7,CY-163,14,14,k.met('steel','p',0))+P(pts([[CX-10,CY-162],[CX+10,CY-162],[CX+7.5,CY-177],[CX-7.5,CY-177]]),k.met('steel','p',0))+[-6,-3,0,3,6].map(x=>Ln(CX+x,CY-176,CX+x*1.25,CY-163,'#000',.7,'opacity=".3"')).join(''),CX,CY);
+  draw(k){const st=k.met('steel','f',135),bl=['#1d4590','#112f6c','#081c47'];let s=ro(-60,R(CX-7,CY-163,14,14,k.met('steel','p',0))+P(pts([[CX-10,CY-162],[CX+10,CY-162],[CX+7.5,CY-177],[CX-7.5,CY-177]]),k.met('steel','p',0))+[-6,-3,0,3,6].map(x=>Ln(CX+x,CY-176,CX+x*1.25,CY-163,'#000',.7,'opacity=".3"')).join(''),CX,CY);
     s+=oyster(k,{bw:142,L:172,lt:14,e:1.5,bev:4,guard:1,sh:{tw:27,b:.66,q:.9},band:mkBand([[.3,'b',0],[.07,'p',1],[.26,'b',1],[.07,'p',1],[.3,'b',0]],22,{n:3})});
     let bz='';for(let i=0;i<360;i+=2){const p=pol(CX,CY,150.4+2.3*Math.cos(i*12*RAD),i);bz+=(i?'L':'M')+p[0]+','+p[1]}
     s+=P(bz+'Z',k.met('steel','d',90))+k.sheen(CX,CY,140,148,'steel',{ph:30})+ring(CX,CY,115,143.5,k.rg(`0:${bl[0]},.86:${bl[1]},1:${bl[2]}`))+G(P(sect(CX,CY,117,141,-58,-20),'#fff')+P(sect(CX,CY,117,141,122,160),'#fff'),`opacity=".2" filter="${k.blur(4)}"`);
@@ -703,7 +704,7 @@ FACES.seiko5={name:'Seiko 5 Sports SRPD51',cadence:'sweep',bps:6,cat:'Dive',mv:'
     s+=G(mk,k.ds(.5,1.2,.8,.5))+R(CX+50.7,CY-9.5,43.6,19,st,1.5)+k.win(CX+52,CY-8.2,25,16.4,{key:'dow3',z:10.2,sx:.86,wt:700,sh:0})+k.win(CX+77.6,CY-8.2,15.4,16.4,{z:11.6,sx:.9,sh:0})+Ln(CX+77.3,CY-8.2,CX+77.3,CY+8.2,'#111',.7);
     s+=T(CX,CY-52,'SEIKO',14,{w:700,ls:1.4,c:'#eef1f4',x:'stroke="#8d949b" stroke-width=".3"'})+tr(CX,CY-36,P('M-6.6,-7.6H6.6V2Q6.6,7.4 0,10.4Q-6.6,7.4 -6.6,2Z',st)+T(.2,5.4,'5',12.5,{w:700,c:'#16306b',it:1}));
     s+=T(CX,CY+50,'Automatic',10.5,{f:F.scr,w:700,it:1,c:'#fff'})+k.arcT(CX,CY,103.4,'MOV’T JAPAN',199,2.6,{in:1,w:600,ls:.3})+k.arcT(CX,CY,103.4,'4R36-07G0',161,2.6,{in:1,w:600,ls:.3});
-    const g=k.met('wg','f',0),hh=P(mir([[3.4,9],[6.2,-34],[0,-58]]),g)+P(mir([[2,-8],[4,-33],[0,-51]]),lume),mhd=P(mir([[2.9,10],[4.6,-72],[0,-99]]),g)+P(mir([[1.5,-8],[2.9,-71],[0,-91]]),lume);
+    const g=k.met('wg','f',0),hh=P(mir([[3.4,9],[6.2,-34],[0,-58]]),g)+P(mir([[2,-8],[4,-33],[0,-51]]),lume),mhd=P(mir([[2.6,10],[2.6,-64],[7.4,-64],[0,-100]]),g)+P(mir([[1.3,-8],[1.3,-62]]),lume)+P(mir([[5,-66],[0,-93]]),lume);
     return s+HND+k.hands(k.hand('h',hh)+k.hand('m',mhd)+k.hand('s',P(mir([[.9,30],[.5,-100]]),g)+C(0,23,4,g)+C(0,23,2.7,lume))+k.cap(CX,CY,4.6,'wg'))+k.glass(CX,CY,107.5)}};
 
 FACES.snowflake={name:'Grand Seiko Snowflake',cadence:'glide',cat:'Classic',mv:'Spring Drive 9R65 · glide-motion seconds · 72 h',ref:'SBGA211, high-intensity titanium',
@@ -753,25 +754,25 @@ const satin=(k,d,m='steel',o={})=>{const [h,l,dd,kk]=MET[m];return P(d,k.lg(`0:$
 const bevel=(k,d,w,m='steel',a=100)=>G(P(d,'none',`stroke="${k.met(m,'p',a)}" stroke-width="${w*2}"`),k.clip(d));
 const capsule=(w,y0,y1)=>rr(-w,y0,w*2,y1-y0,w);
 
-FACES.nautilus={name:'Patek Philippe Nautilus 5811/1G-001',cadence:'sweep',bps:8,cat:'Integrated',mv:'Calibre 26‑330 S C · 28,800 vph',ref:'Drawn as the 5711/1A-018 “Tiffany Blue” shown in the reference photographs',
-  note:'Porthole case with hinged ears, satin-brushed bezel, horizontally embossed dial and the polished-centre bracelet.',
-  draw(k){const ink='#17292d',fr='#31454b',wg=k.met('wg','f',135);
-    const band=dir=>{const y0=CY+dir*118,len=140;let b=k.links(CX,y0,dir,{w0:178,w1:150,len,rh:36,cols:[[1,'b',0]],gap:1.8});
+FACES.nautilus={name:'Patek Philippe Nautilus 5811/1G-001',cadence:'sweep',bps:8,cat:'Integrated',mv:'Calibre 26‑330 S C · 28,800 vph',
+  note:'White gold porthole case with hinged ears, satin-brushed bezel, blue sunburst dial shading to black with horizontal embossing, and the polished-centre bracelet.',
+  draw(k){const ink='#f2f4f6',wg=k.met('wg','f',135),M='wg';
+    const band=dir=>{const y0=CY+dir*118,len=140;let b=k.links(CX,y0,dir,{w0:178,w1:150,len,rh:36,m:M,cols:[[1,'b',0]],gap:1.8});
       for(let q=36;q<len;q+=36){const w=(178-28*q/len)*.46,y=y0+dir*q;b+=R(CX-w/2,y-11.5,w,23,k.lg('0:#7d848b,.16:#ffffff,.45:#cdd1d6,.75:#767c83,1:#3b3f44'),7)+R(CX-w/2,y-11.5,w,23,'none',7,'stroke="#000" stroke-opacity=".35" stroke-width=".8"')}return b};
     const ear=q=>pts([[CX+q*138,CY-50],[CX+q*155,CY-44],[CX+q*163,CY-32],[CX+q*163,CY+32],[CX+q*155,CY+44],[CX+q*138,CY+50]]);
-    let s=k.crown(CX+160,CY,17,24,'steel',{capw:3.5})+k.fade(band(-1)+band(1));
-    for(const q of [-1,1])s+=satin(k,ear(q),'steel',{g:'bh'})+P(ear(q),'none','stroke="#fff" stroke-opacity=".7" stroke-width="1.2"')+Ln(CX+q*150,CY-46,CX+q*150,CY+46,'#000',.8,'opacity=".25"');
+    let s=k.crown(CX+160,CY,17,24,M,{capw:3.5})+k.fade(band(-1)+band(1));
+    for(const q of [-1,1])s+=satin(k,ear(q),M,{g:'bh'})+P(ear(q),'none','stroke="#fff" stroke-opacity=".7" stroke-width="1.2"')+Ln(CX+q*150,CY-46,CX+q*150,CY+46,'#000',.8,'opacity=".25"');
     const body=sqD(CX,CY,151,150,2.65),bz=sqD(CX,CY,146.5,145,2.6),op=sqD(CX,CY,108.5,106.5,2.7),dl=sqD(CX,CY,104.5,102.5,2.7);
-    s+=P(body,caseGrad(k,'steel',153))+P(sqD(CX,CY,149,148,2.62),'#000',`opacity=".3" filter="${k.blur(2.4)}"`)+satin(k,bz,'steel',{t:.24})+bevel(k,bz,3.4)+P(bz,k.lg('0:#fff@.35,.45:#fff@0,1:#000@.16',60));
-    s+=P(op,k.met('steel','p',120))+P(sqD(CX,CY,106,104,2.7),'#1a2224')+P(dl,k.lg('0:#96e0db,.5:#84d8d3,1:#70cbc6',80));
-    let lines='';for(let y=CY-99;y<CY+102;y+=6.5)lines+=Ln(CX-106,y,CX+106,y,'#2f8f8b',1.1,'opacity=".26"')+Ln(CX-106,y+1.4,CX+106,y+1.4,'#e3fffc',.8,'opacity=".4"');
-    s+=G(lines,k.clip(dl))+P(dl,k.rg('.72:#000@0,1:#000@.2'));
-    for(let i=0;i<60;i++)if(i%5){const p=pol(CX,CY,sqR(98,96,2.7,i*6),i*6);s+=C(p[0],p[1],.95,ink)}
-    let mk='';for(let h=0;h<12;h++){if(h===3)continue;const a=h*30,ro_=sqR(98,96,2.7,a)-5,L=h%3?21:24,one=x=>R(CX+x-4.2,CY-ro_,8.4,L,fr,2.6)+R(CX+x-2.5,CY-ro_+1.7,5,L-3.4,'#f7faf6',1.6);mk+=ro(a,h?one(0):one(-5)+one(5),CX,CY)}
-    s+=G(mk,k.ds(.5,1.2,.8,.35))+k.win(CX+63,CY-9.5,23,19,{bg:'#22363d',c:'#fff',fr:'#f3f6f5',z:13.5,wt:600,sh:0});
-    s+=T(CX,CY-35,'PATEK PHILIPPE',10.8,{w:700,c:ink,sx:.86})+T(CX,CY-24,'GENEVE',6.2,{w:700,c:ink,ls:.6})+T(CX,CY+47,'T<tspan font-size="5.8">IFFANY</tspan> &amp; C<tspan font-size="5.8">O.</tspan>',7.6,{f:F.did,w:500,c:ink,ls:.4})+T(CX,CY+97,'SWISS',3,{w:600,c:ink,ls:.6});
-    const hh=P(capsule(4.7,-55,8),wg,`stroke="${fr}" stroke-width=".9"`)+P(capsule(2.6,-52,-12),'#f7faf6'),mh=P(capsule(4.3,-86,8),wg,`stroke="${fr}" stroke-width=".9"`)+P(capsule(2.3,-83,-14),'#f7faf6');
-    return s+HND+k.hands(k.hand('h',hh)+k.hand('m',mh)+k.hand('s',P(mir([[.8,26],[.4,-90]]),fr)+C(0,0,3.4,fr))+k.cap(CX,CY,5,'wg'))+P(dl,k.lg('0:#fff@.2,.4:#fff@0,1:#fff@.04',50))}};
+    s+=P(body,caseGrad(k,M,153))+P(sqD(CX,CY,149,148,2.62),'#000',`opacity=".3" filter="${k.blur(2.4)}"`)+satin(k,bz,M,{t:.24})+P(bz,'#59626c','opacity=".13"')+bevel(k,bz,3.4,M)+P(bz,k.lg('0:#fff@.3,.45:#fff@0,1:#000@.2',60));
+    s+=P(op,k.met(M,'p',120))+P(sqD(CX,CY,106,104,2.7),'#05080f')+P(dl,k.rgu('0:#4a86d2,.4:#2a5a9e,.75:#102a52,1:#050c1c',CX,CY-6,118));
+    let lines='';for(let y=CY-97;y<CY+102;y+=9.6)lines+=Ln(CX-106,y,CX+106,y,'#030812',2.6,'opacity=".4"')+Ln(CX-106,y+2.2,CX+106,y+2.2,'#9cc0f2',1,'opacity=".3"');
+    s+=G(lines+k.sun(CX,CY,112,{a:.02,sh:.14,dk:.05,th:40}),k.clip(dl))+P(dl,k.rg('.7:#000@0,1:#000@.3'));
+    for(let i=0;i<60;i++)if(i%5){const p=pol(CX,CY,sqR(98,96,2.7,i*6),i*6);s+=C(p[0],p[1],.9,ink)}
+    let mk='';for(let h=0;h<12;h++){if(h===3)continue;const a=h*30,ro_=sqR(98,96,2.7,a)-5,L=h%3?21:24,one=x=>R(CX+x-4.2,CY-ro_,8.4,L,wg,2.6)+R(CX+x-2.5,CY-ro_+1.7,5,L-3.4,'#f7faf6',1.6);mk+=ro(a,h?one(0):one(-5)+one(5),CX,CY)}
+    s+=G(mk,k.ds(.5,1.2,.8,.5))+k.win(CX+63,CY-9.5,23,19,{bg:'#f7f7f4',c:'#111',fr:wg,z:13.5,wt:600});
+    s+=T(CX,CY-35,'PATEK PHILIPPE',10.8,{w:700,c:ink,sx:.86})+T(CX,CY-24,'GENEVE',6.2,{w:700,c:ink,ls:.6})+T(CX-13,CY+97,'SWISS',2.8,{w:600,c:ink,ls:.5})+T(CX+13,CY+97,'MADE',2.8,{w:600,c:ink,ls:.5});
+    const hh=P(capsule(4.7,-55,8),wg)+P(capsule(2.6,-52,-12),'#f7faf6'),mh=P(capsule(4.3,-86,8),wg)+P(capsule(2.3,-83,-14),'#f7faf6');
+    return s+HND+k.hands(k.hand('h',hh)+k.hand('m',mh)+k.hand('s',P(mir([[.8,26],[.4,-90]]),k.met('wg','f',0))+C(0,0,3.4,'#d9dcdf'))+k.cap(CX,CY,5,'wg'))+P(dl,k.lg('0:#fff@.18,.4:#fff@0,1:#fff@.03',50))}};
 
 FACES.royaloak={name:'Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06',cadence:'sweep',bps:8,cat:'Integrated',mv:'Calibre 4302 · 28,800 vph · 70 h',
   note:'Octagonal bezel with eight white-gold hexagonal screws over a “Bleu Nuit, Nuage 50” Grande Tapisserie dial.',
@@ -839,15 +840,15 @@ const blued=k=>k.lg('0:#3f6fe0,.5:#17389c,1:#0a1c5e',0);
 
 FACES.santos={name:'Cartier Santos de Cartier Large WSSA0018',cadence:'sweep',bps:8,cat:'Classic',mv:'Calibre 1847 MC · 28,800 vph',
   note:'Square bezel with eight exposed screws, radial Roman numerals around a square railway track, blued sword hands.',
-  draw(k){const bz=rr(CX-118,CY-118,236,236,21),dl=rr(CX-88,CY-88,176,176,7),body=`M${CX-116},${CY-152}L${CX+116},${CY-152}C${CX+136},${CY-110} ${CX+136},${CY+110} ${CX+116},${CY+152}L${CX-116},${CY+152}C${CX-136},${CY+110} ${CX-136},${CY-110} ${CX-116},${CY-152}Z`;
+  draw(k){const bz=rr(CX-118,CY-118,236,236,21),dl=rr(CX-88,CY-88,176,176,7),body=`M${CX-116},${CY-152}L${CX+116},${CY-152}C${CX+130},${CY-110} ${CX+130},${CY+110} ${CX+116},${CY+152}L${CX-116},${CY+152}C${CX-130},${CY+110} ${CX-130},${CY-110} ${CX-116},${CY-152}Z`;
     const band=dir=>{const y0=CY+dir*100,len=158;let b=k.links(CX,y0,dir,{w0:166,w1:148,len,rh:31,cols:[[1,'b',0]],gap:2});for(let q=15.5;q<len;q+=31){const w=166-18*q/len;for(const e of [-1,1])b+=k.screw(CX+e*(w/2-17),y0+dir*q,4.4,e*38+q,'steel')}return b};
     let s=P(rpoly(off([[128,-15],[144,-15],[151,-8],[151,8],[144,15],[128,15]]),2),k.met('steel','p',90))+C(CX+152,CY,6.4,k.rg('0:#6f9bff,.5:#1f47c4,1:#0a1c6b',.35,.3,.8))+P(`M${CX+122},${CY-36}Q${CX+140},${CY-30} ${CX+141},${CY-17}L${CX+122},${CY-17}ZM${CX+122},${CY+36}Q${CX+140},${CY+30} ${CX+141},${CY+17}L${CX+122},${CY+17}Z`,k.met('steel','s',90));
     s+=satin(k,body,'steel',{t:.22})+bevel(k,body,4)+k.fade(band(-1)+band(1));
     s+=P(rr(CX-120,CY-120,240,240,22),'#000',`opacity=".34" filter="${k.blur(3)}"`)+P(bz,k.lg('0:#f6f7f8,.12:#ffffff,.3:#b9bec4,.5:#8b9198,.62:#c9cdd2,.82:#f1f2f3,1:#9aa0a6',100))+bevel(k,bz,3)+P(rr(CX-92,CY-92,184,184,9),k.met('steel','d',100));
     s+=[[58,-103],[-58,-103],[58,103],[-58,103],[103,-58],[103,58],[-103,-58],[-103,58]].map((q,i)=>k.screw(CX+q[0],CY+q[1],5,i*47+20,'steel')).join('');
     s+=P(dl,k.rg('0:#ffffff,.7:#f3f3f1,1:#dfe0de'))+k.tex(dl,k.noise('fine',1.2),.18);
-    s+=boxNums(ROMAN.map((t,i)=>i===6?'':t),66.5,66.5,34,{f:F.did,w:700,c:'#141416',sx:.74,pw:1.1})+boxTrack(45,45,4.6,'#141416',{w:.7});
-    s+=T(CX,CY-22,'CARTIER',8.6,{f:F.fut,w:500,c:'#141416',ls:1.2})+T(CX,CY+30,'AUTOMATIC',4.6,{c:'#141416',w:500,ls:1})+R(CX-9.6,CY+57.4,19.2,15.2,'#141416',1)+k.win(CX-8.4,CY+58.6,16.8,12.8,{bg:'#f6f6f3',z:10,wt:600,sh:1});
+    s+=boxNums(ROMAN.map((t,i)=>i===6?'':t),68.5,68.5,30,{f:F.did,w:700,c:'#141416',sx:.74,pw:1.1})+boxTrack(50,50,4.6,'#141416',{w:.7});
+    s+=T(CX,CY-25,'CARTIER',8.6,{f:F.fut,w:500,c:'#141416',ls:1.2})+T(CX,CY+34,'AUTOMATIC',4.6,{c:'#141416',w:500,ls:1})+R(CX-9.6,CY+57.4,19.2,15.2,'#141416',1)+k.win(CX-8.4,CY+58.6,16.8,12.8,{bg:'#f6f6f3',z:10,wt:600,sh:1});
     s+=T(CX-36,CY+84.6,'SWISS',2.8,{c:'#141416',w:600,ls:.4})+T(CX+36,CY+84.6,'MADE',2.8,{c:'#141416',w:600,ls:.4});
     const b=blued(k),hh=P(mir([[1.3,9],[4.4,-20],[0,-43]]),b),mh=P(mir([[1.2,11],[3.9,-30],[0,-66]]),b);
     return s+HND+k.hands(k.hand('h',hh)+k.hand('m',mh)+k.hand('s',P(mir([[.7,20],[.4,-70]]),b)+C(0,14,2.4,b))+C(CX,CY,3.6,b)+C(CX,CY,1.2,'#9db4f0'))+P(dl,k.lg('0:#fff@.22,.35:#fff@0,1:#000@.06',50))}};
@@ -957,7 +958,7 @@ FACES.patek={name:'Patek Philippe Perpetual Calendar Chronograph 5270J-001',cade
     s+=C(CX,CY,128.6,'none',`stroke="${ink}" stroke-width=".5"`)+C(CX,CY,117,'none',`stroke="${ink}" stroke-width=".5"`)+[500,400,350,300,250,225,200,180,170,160,150,140,130,120,110,100,95,90,85,80,75,70,65].map(v=>{const a=21600/v,p=pol(CX,CY,122.6,a),rt=(a>110&&a<250)?a+180:a;return `<g transform="translate(${p[0]} ${p[1]}) rotate(${r2(rt)})">${T(0,2.3,v,6.5,{c:ink,w:600,sx:.86})}</g>`+ro(a,Ln(CX,CY-128.6,CX,CY-126.4,ink,.6),CX,CY)}).join('');
     s+=k.arcT(CX,CY,120.6,'60 BASE 1000',14,5.6,{c:ink,w:500,ls:.3})+C(CX,CY,114.6,'none',`stroke="${ink}" stroke-width=".4"`)+C(CX,CY,108.6,'none',`stroke="${ink}" stroke-width=".4"`)+ticks(CX,CY,108.6,114.6,60,ink,.8)+ticks(CX,CY,111,114.6,300,ink,.35);
     s+=G(each(12,i=>i===6?'':i===0?R(CX-6,CY-104,4.6,19,gd,.5)+R(CX+1.4,CY-104,4.6,19,gd,.5):i%3===0?R(CX-2.3,CY-104,4.6,8,gd,.5):R(CX-2.3,CY-104,4.6,19,gd,.5)+R(CX-2.3,CY-104,2.3,19,'#fff',.5,'opacity=".35"')),k.ds(.4,1.1,.6,.4));
-    for(const [x,key] of [[CX-27.5,'dow3'],[CX+1.5,'mon3']])s+=R(x-1.2,CY-80.2,28.4,15.4,gd,1)+k.win(x,CY-79,26,13,{key,bg:'#1d1c1a',c:'#f6f3e6',z:8.8,wt:700,sx:.88,sh:0});
+    for(const [x,key] of [[CX-27.5,'dow3'],[CX+1.5,'mon3']])s+=R(x-1.2,CY-80.2,28.4,15.4,gd,1)+k.win(x,CY-79,26,13,{key,bg:'#fbf9ef',c:'#1b1a17',z:8.8,wt:700,sx:.88,sh:1});
     s+=T(CX,CY-50,'PATEK PHILIPPE',8.4,{w:700,c:ink,sx:.86})+T(CX,CY-41,'GENEVE',5.2,{w:700,c:ink,ls:.6});
     const sub=(x,y,t)=>C(x,y,31,'#f1efe4','stroke="#1b1a17" stroke-width=".5"')+k.azur(x,y,30,{c:'#8f8a7a',op:.18,st:1.6})+ticks(x,y,26.4,30.4,60,ink,.4)+ticks(x,y,24.6,30.4,12,ink,.8)+nums(x,y,18.6,t,6.6,{c:ink,w:500});
     s+=sub(CX-57,CY+4,['60','10','20','30','40','50'])+sub(CX+57,CY+4,['30','5','10','15','20','25']);
@@ -972,8 +973,8 @@ FACES.nomosmetro={name:'NOMOS Glashütte Metro date power reserve 1101',cadence:
   note:'Wire lugs, mint and red power-reserve disc, oversized date at six and needle-fine hands.',
   calc:T=>({pr:-150+250*((T.dfrac*1.6)%1)}),
   draw(k){const ink='#16171a',mint='#8ed3c2',red='#e23a2e',wire=k.lg('0:#8d939a,.3:#ffffff,.6:#b9bec4,1:#5b6168',0);
-    let s=k.fade(k.strap(CX,CY-120,-1,{w0:126,w1:118,len:136,c:'#34373b',tex:k.noise('gr',2.2),top:.4})+k.strap(CX,CY+120,1,{w0:126,w1:118,len:136,c:'#34373b',tex:k.noise('gr',2.2),top:.4}));
-    for(const q of [-1,1])for(const e of [-1,1])s+=P(`M${CX+q*69},${CY+e*128}L${CX+q*69},${CY+e*172}Q${CX+q*69},${CY+e*180} ${CX+q*60},${CY+e*180}`,'none',`stroke="${wire}" stroke-width="6" stroke-linecap="round"`);
+    let s=k.fade(k.strap(CX,CY-120,-1,{w0:144,w1:134,len:136,c:'#34373b',tex:k.noise('gr',2.2),top:.4})+k.strap(CX,CY+120,1,{w0:144,w1:134,len:136,c:'#34373b',tex:k.noise('gr',2.2),top:.4}));
+    for(const q of [-1,1])for(const e of [-1,1])s+=P(`M${CX+q*80},${CY+e*120}L${CX+q*80},${CY+e*168}Q${CX+q*80},${CY+e*178} ${CX+q*70},${CY+e*178}`,'none','stroke="#000" stroke-opacity=".3" stroke-width="7" stroke-linecap="round" transform="translate(1.4 1.6)"')+P(`M${CX+q*80},${CY+e*120}L${CX+q*80},${CY+e*168}Q${CX+q*80},${CY+e*178} ${CX+q*70},${CY+e*178}`,'none',`stroke="${wire}" stroke-width="5.4" stroke-linecap="round"`);
     s+=k.crown(CX+149,CY,13,22,'steel',{capw:0,n:9})+C(CX,CY,153,'#000',`opacity=".3" filter="${k.blur(3)}"`)+C(CX,CY,150.5,k.met('steel','d',100))+k.sheen(CX,CY,141,150.5,'steel',{ph:60})+ring(CX,CY,139,141.6,k.met('steel','d',100));
     s+=C(CX,CY,139,k.rg('0:#f6f5f0,.7:#eeede7,1:#dad8cf'))+k.texC(CX,CY,139,k.noise('fine',1.1),.16);
     s+=each(60,i=>C(CX,CY-129,i%5?1:1.3,ink))+nums(CX,CY,116,['60','05','10','15','20','25','','35','40','45','50','55'],8.6,{f:F.fut,c:ink,w:400,ls:.3})+each(12,i=>i===6?'':C(CX,CY-97,2.7,i%3?ink:mint));
@@ -1030,18 +1031,18 @@ FACES.elprimero={name:'Zenith Chronomaster Sport 03.3100.3600/69.M3100',cadence:
 
 const tagShield=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M-9,-8H9V3Q9,8 0,11Q-9,8 -9,3Z" fill="#111" stroke="#e9ebed" stroke-width=".8"/><rect x="-7.4" y="-6.4" width="14.8" height="5.6" fill="#0b7a3b"/><rect x="-7.4" y="-.2" width="14.8" height="5.6" fill="#d2202a"/><text y="-2" font-size="4.6" font-family="${F.sans}" font-weight="700" fill="#fff" text-anchor="middle">TAG</text><text y="4.2" font-size="4" font-family="${F.sans}" font-weight="700" fill="#fff" text-anchor="middle">HEUER</text></g>`;
 FACES.carrera={name:'TAG Heuer Carrera Chronograph CBN2011.BA0642',cadence:'sweep',bps:8,cat:'Chronograph',chrono:1,mv:'Calibre Heuer 02 · 28,800 vph · 80 h',
-  note:'Blue sunray dial with azuré counters, date inside the running seconds, and a slim polished bezel.',
+  note:'Blue sunray dial with azuré counters, an open running-seconds hand above the date at six, and a slim polished bezel.',
   draw(k){const st=k.met('wg','f',135);
     let s=k.pump(CX,CY,152,60,'steel',{sw:10,sl:10,cw:15,ch:9})+k.pump(CX,CY,152,120,'steel',{sw:10,sl:10,cw:15,ch:9})+oyster(k,{bw:140,L:176,lt:25,e:1,bev:5,cw:23,ch:27,sh:{tw:14,b:.6,q:.84},band:mkBand([[.3,'b',1],[.4,'b',0],[.3,'b',1]],23,{n:4})});
     s+=C(CX,CY,151,k.met('steel','d',100))+k.sheen(CX,CY,134,151,'steel',{ph:60})+ring(CX,CY,149.6,151,'#fff','opacity=".5"')+ring(CX,CY,124,134.6,'#0d2152')+ticks(CX,CY,126,131,60,'#fff',.8)+ticks(CX,CY,126,132.4,12,'#fff',1.4)+ticks(CX,CY,128.6,131,300,'#fff',.35);
     s+=C(CX,CY,124,k.rg('0:#2d5fc4,.6:#1b3f93,1:#0d2259'))+k.sun(CX,CY,124,{a:.06,sh:.26,dk:.2,th:36})+k.vig(CX,CY,124,.3,.74);
-    const sub=(x,y,t,n)=>C(x,y,29,'#132f73')+k.azur(x,y,28.6,{c:'#9dbcff',op:.16,st:1.5})+C(x,y,29,'none','stroke="#000" stroke-opacity=".3" stroke-width=".7"')+ticks(x,y,24,27.6,n,'#fff',.6)+ticks(x,y,22,27.6,t.length,'#fff',1,{a0:360/t.length})+nums(x,y,16.4,t,6.8,{c:'#fff',w:600,a0:360/t.length});
-    s+=sub(CX+52,CY,['10','20','30'],30)+sub(CX-52,CY,['3','6','9','12'],12)+sub(CX,CY+52,['20','40','60'],60)+k.win(CX-7.6,CY+65,15.2,10.6,{bg:'#f6f6f3',z:8.6,wt:700,sh:0});
+    const sub=(x,y,t,n)=>C(x,y,35,'#112a69')+k.azur(x,y,34.6,{c:'#9dbcff',op:.16,st:1.5})+C(x,y,35,'none','stroke="#000" stroke-opacity=".34" stroke-width=".8"')+ticks(x,y,29.6,33.4,n,'#fff',.6)+ticks(x,y,27.4,33.4,t.length,'#fff',1.1,{a0:360/t.length})+nums(x,y,20.4,t,8.6,{c:'#fff',w:600,a0:360/t.length});
+    s+=sub(CX+57,CY,['10','20','30'],30)+sub(CX-57,CY,['4','8','12'],12)+[-1,1].map(e=>Ln(CX+e*14,CY+54,CX+e*27,CY+54,'#fff',1.2,'opacity=".9"')).join('')+Ln(CX,CY+26,CX,CY+31,'#fff',1.2,'opacity=".9"')+R(CX-9,CY+89.6,18,13.4,st,1)+k.win(CX-7.6,CY+91,15.2,10.6,{bg:'#f6f6f3',z:8.6,wt:700,sh:0})+k.arcT(CX,CY,99,'HEUER 02',201,5,{in:1,w:600,ls:.5})+k.arcT(CX,CY,99,'80 HOURS',159,5,{in:1,w:600,ls:.5});
     const bt=(x,L)=>R(CX+x-2.6,CY-116,5.2,L,st,.6)+R(CX+x-1.1,CY-114.4,2.2,L-3.2,lume,.4);
     s+=G(each(12,i=>i===0?bt(-3.6,24)+bt(3.6,24):i%3===0?R(CX-2.6,CY-116,5.2,8,st,.6):bt(0,26)),k.ds(.4,1.1,.7,.5));
     s+=T(CX,CY-80,'CARRERA',6.4,{w:600,ls:1.4})+tagShield(CX,CY-60,1)+T(CX-12,CY+115,'SWISS',2.6,{w:600,ls:.4})+T(CX+12,CY+115,'MADE',2.6,{w:600,ls:.4});
     const g=k.met('wg','f',0),hh=P(mir([[3.2,10],[3.2,-62],[0,-69]]),g)+P(mir([[1.3,-10],[1.3,-60],[0,-64]]),lume),mh=P(mir([[2.8,11],[2.8,-102],[0,-110]]),g)+P(mir([[1.1,-10],[1.1,-100],[0,-104]]),lume);
-    return s+HND+k.hands(subHand(k,'cm30',CX+52,CY,23,'#eef0f2')+subHand(k,'ch12',CX-52,CY,23,'#eef0f2')+subHand(k,'s',CX,CY+52,23,'#eef0f2'),{dy:1.2,sd:.7})+k.hands(k.hand('h',hh)+k.hand('m',mh)+k.hand('cs',P(mir([[.9,28],[.45,-118]]),g)+C(0,0,3.4,g))+k.cap(CX,CY,2.4,'steel'))+k.glass(CX,CY,134,{a:.2,e:.26})}};
+    return s+HND+k.hands(subHand(k,'cm30',CX+57,CY,28,'#eef0f2')+subHand(k,'ch12',CX-57,CY,28,'#eef0f2')+subHand(k,'s',CX,CY+54,22,'#eef0f2'),{dy:1.2,sd:.7})+k.hands(k.hand('h',hh)+k.hand('m',mh)+k.hand('cs',P(mir([[.9,28],[.45,-118]]),g)+C(0,0,3.4,g))+k.cap(CX,CY,2.4,'steel'))+k.glass(CX,CY,134,{a:.2,e:.26})}};
 
 FACES.monaco={name:'TAG Heuer Monaco Calibre 11',cadence:'sweep',bps:8,cat:'Chronograph',chrono:1,mv:'Calibre 11 · 28,800 vph · left-hand crown',ref:'CAW211P “Steve McQueen”, blue dial',
   note:'Square water-resistant case, crown at nine, horizontal indexes and two square counters.',
@@ -1083,10 +1084,10 @@ FACES.typexx={name:'Breguet Type XX Chronographe 2067 2067ST/92/3WU',cadence:'sw
     const Z='transform="translate(200 250) scale(1.085) translate(-200 -250)"';s+=C(CX,CY,152.5,k.met('steel','d',90))+k.teeth(CX,CY,145,152.5,110,'steel',{duty:.5,dip:1.4})+ring(CX,CY,124,145.5,k.lg('0:#f1f2f3,.5:#c9cdd2,1:#9aa0a6',100))+k.tex(ringD(CX,CY,124,145.5),k.noise('gr',1.2),.2)+ring(CX,CY,124,126.4,k.met('steel','p',110));
     s+=nums(CX,CY,135,['','1','2','3','4','5','6','7','8','9','10','11'],12.5,{rot:'out',c:ink,w:500,sx:1.02})+P(pts([[CX-7,CY-143],[CX+7,CY-143],[CX,CY-128]]),ink)+each(12,i=>C(CX,CY-135,1.3,ink),CX,CY,15);
     let dz=C(CX,CY,113,'#060606')+C(CX,CY,111,k.rg('0:#1c1c1d,.8:#0f0f10,1:#050505'))+k.texC(CX,CY,111,k.noise('gr',1.6),.3)+ticks(CX,CY,104,109.6,60,iv,.8)+ticks(CX,CY,106.6,109.6,300,iv,.35);
-    dz+=nums(CX,CY,88,['12','1','2','','4','5','','7','8','','10','11'],23,{c:iv,w:600,f:F.sans,sx:.92}).replace(/>5</,' opacity="0">5<');
+    dz+=nums(CX,CY,88,['12','1','2','','4','5','','7','8','','10','11'],23,{c:iv,w:600,f:F.sans,sx:.92});
     const sub=(x,y,r,t,n,z=6.4)=>C(x,y,r,'#0a0a0b')+k.azur(x,y,r-.4,{op:.06,st:1.5})+C(x,y,r,'none','stroke="#000" stroke-width=".8"')+ticks(x,y,r-5.4,r-1.6,n,iv,.6)+ticks(x,y,r-7,r-1.6,t.length,iv,1,{a0:360/t.length})+nums(x,y,r-13,t,z,{c:iv,w:600,a0:360/t.length});
     dz+=sub(CX-48,CY,25,['20','40','60'],60)+sub(CX,CY+50,25,['3','6','9','12'],12)+sub(CX+48,CY,30,['5','10','15'],15,9.4);
-    dz+=ro(48,k.win(CX+76,CY-6,15,12,{bg:'#f1ecd9',c:ink,z:9,wt:700,sh:0}),CX,CY)+T(CX,CY-46,'Breguet',15,{f:F.scr,c:'#f4f4f0',w:700,it:1})+k.arcT(CX,CY,106.4,'SWISS MADE',180,2.6,{in:1,c:iv,w:600,ls:.5});
+    dz+=ro(45,k.win(CX+88.5,CY-5.5,13,11,{bg:'#f1ecd9',c:ink,z:8.4,wt:700,sh:0}),CX,CY)+T(CX,CY-46,'Breguet',15,{f:F.scr,c:'#f4f4f0',w:700,it:1})+k.arcT(CX,CY,106.4,'SWISS MADE',180,2.6,{in:1,c:iv,w:600,ls:.5});
     s+=G(dz,Z);
     const g='#e8eaec',hh=P(mir([[1.6,9],[1.6,-14],[4.2,-18],[4.2,-50],[0,-60]]),g)+P(mir([[2.6,-20],[2.6,-49],[0,-55]]),iv),mh=P(mir([[1.5,10],[1.5,-18],[3.6,-22],[3.6,-88],[0,-99]]),g)+P(mir([[2.1,-24],[2.1,-87],[0,-93]]),iv);
     return s+HND+G(k.hands(subHand(k,'s',CX-48,CY,20,g)+subHand(k,'ch12',CX,CY+50,20,g)+subHand(k,'cm30',CX+48,CY,25,g),{dy:1.2,sd:.7})+k.hands(k.hand('h',hh)+k.hand('m',mh)+k.hand('cs',P(mir([[.9,26],[.45,-104]]),g)+P(pts([[0,-78],[2.6,-70],[0,-62],[-2.6,-70]]),iv))+k.cap(CX,CY,4,'steel'))+k.glass(CX,CY,114,{a:.22,e:.34}),Z)}};
@@ -1111,8 +1112,8 @@ FACES.jorggray={name:'Jorg Gray JGC6500 Secret Service Edition',cadence:'tick',c
 FACES.bigbang={name:'Hublot Big Bang Unico Red Magic 42',cadence:'sweep',bps:8,cat:'Chronograph',chrono:1,mv:'Unico HUB1280 · 28,800 vph · flyback · 72 h',
   note:'Vivid red ceramic case and bezel, six H-shaped titanium screws and an openworked dial. Layout follows the Unico 42 reference photographs.',
   draw(k){const rc=k.met('red','b',100),rp=k.lg('0:#ff8a7c,.25:#e8392c,.7:#b81c14,1:#7e100a',100),w='#f4f1ee',ti=k.met('ti','f',135);
-    const hscr=(x,y,a)=>C(x,y,6.6,'#000','opacity=".4"')+C(x,y,5.8,k.rg('0:#fff,.6:#b9b8b3,1:#6c6b67',.4,.35,.7))+ro(a,P(`M${x-3.4},${y-2.6}h1.9v1.8h3v-1.8h1.9v5.2h-1.9v-1.8h-3v1.8h-1.9Z`,'#33332f'),x,y);
-    const band=dir=>{let b=k.strap(CX,CY+dir*150,dir,{w0:124,w1:112,len:106,c:'#c22218'});for(let x=-48;x<=48;x+=12)b+=R(CX+x-3.6,CY+dir*150+(dir>0?0:-106),7.2,106,'#000',0,'opacity=".28"');return b+R(CX-12,CY+dir*150+(dir>0?0:-106),24,106,'#111',0,'opacity=".75"')};
+    const hscr=(x,y,a)=>C(x,y,6.6,'#000','opacity=".4"')+C(x,y,5.8,k.rg('0:#6d6e72,.6:#2c2d30,1:#0c0c0d',.4,.35,.7))+ro(a,P(`M${x-3.4},${y-2.6}h1.9v1.8h3v-1.8h1.9v5.2h-1.9v-1.8h-3v1.8h-1.9Z`,'#000'),x,y);
+    const band=dir=>{let b=k.strap(CX,CY+dir*150,dir,{w0:124,w1:112,len:106,c:'#c22218'});for(let x=-48;x<=48;x+=12)b+=R(CX+x-3.6,CY+dir*150+(dir>0?0:-106),7.2,106,'#000',0,'opacity=".26"');return b};
     let s=k.fade(band(-1)+band(1));
     /* pushers, crown and black composite ears */
     for(const a of [58,122])s+=ro(a,R(CX-9,CY-168,18,18,rp,3)+E(CX,CY-174,11.5,7,rp)+E(CX,CY-176,8,3.4,'#fff','opacity=".25"'),CX,CY);
@@ -1127,10 +1128,10 @@ FACES.bigbang={name:'Hublot Big Bang Unico Red Magic 42',cadence:'sweep',bps:8,c
     const gear=(x,y,r,n,c)=>{let d='';for(let i=0;i<n*2;i++){const p=pol(x,y,i%2?r:r-2.6,i*180/n);d+=(i?'L':'M')+p[0]+','+p[1]}return P(d+'Z',c,'stroke="#000" stroke-opacity=".5" stroke-width=".5"')+C(x,y,r*.62,'#19191b')+each(5,i=>R(x-1.2,y-r*.62,2.4,r*.62,c),x,y)+C(x,y,r*.2,c)};
     s+=G(gear(CX+18,CY+44,30,36,'#5d5e62')+gear(CX-30,CY-34,24,30,'#55565a')+gear(CX+40,CY-46,18,22,'#66676b')+gear(CX-22,CY+62,15,18,'#6d6e72')+P(`M${CX-70},${CY+10}Q${CX},${CY-28} ${CX+74},${CY+26}L${CX+70},${CY+38}Q${CX},${CY-10} ${CX-66},${CY+24}Z`,'#2f3033','stroke="#6d6e72" stroke-width=".8"')+each(3,i=>C(CX,CY-78,3.2,'#b8262a'),CX,CY,50),k.clipC(CX,CY,99));
     s+=ring(CX-50,CY,22,28,k.lg('0:#f5d0c9,.5:#e8392c,1:#8c120c',120))+C(CX-50,CY,22,'#17171a','opacity=".55"')+ticks(CX-50,CY,23,27,12,'#111',.9)+C(CX+50,CY,30,'#101011','stroke="#e8392c" stroke-width="2.2"')+ticks(CX+50,CY,24,28,60,w,.5)+nums(CX+50,CY,19,['60','15','30','45'],7,{c:w,w:600})+k.win(CX+67,CY-6,13,12,{bg:'#f1eeea',z:9,wt:700,sh:0});
-    const bar=(L)=>R(CX-3.6,CY-97,7.2,L,'#e8392c',1,'stroke="#7e100a" stroke-width=".5"')+R(CX-1.9,CY-95,3.8,L-4,w,.6);
-    s+=G(each(12,i=>i%2&&i!==3&&i!==9?bar(22):'')+[['12',0,-73],['2',67,-36],['4',67,42],['6',0,81],['8',-67,42],['10',-66,-36]].map(q=>T(CX+q[1],CY+q[2]+8,q[0],25,{w:700,c:w,f:F.sans,x:'stroke="#e8392c" stroke-width="1.3" paint-order="stroke"'})).join(''),k.ds(.5,1.3,.8,.6));
+    const bar=(L)=>R(CX-3.6,CY-97,7.2,L,'#e8392c',1,'stroke="#7e100a" stroke-width=".5"')+R(CX-1.9,CY-95,3.8,L-4,'#ff7a6e',.6);
+    s+=G(each(12,i=>i%2&&i!==3&&i!==9?bar(22):'')+[['12',0,-73],['2',67,-36],['4',67,42],['6',0,81],['8',-67,42],['10',-66,-36]].map(q=>T(CX+q[1],CY+q[2]+8,q[0],25,{w:700,c:'#e8392c',f:F.sans,x:'stroke="#7e100a" stroke-width=".8" paint-order="stroke"'})).join(''),k.ds(.5,1.3,.8,.6));
     s+=T(CX,CY-45,'HUBLOT',8.6,{w:700,c:w,ls:1.4})+tr(CX,CY-58,P('M-3.6,-5h2.2v3.6h2.8v-3.6h2.2v10h-2.2v-3.8h-2.8v3.8h-2.2Z',w))+k.arcT(CX,CY,92,'SWISS MADE',180,3.4,{in:1,c:w,w:600,ls:1.4});
-    const hd=(L,wd)=>P(mir([[wd,12],[wd,-L+8],[0,-L]]),'#e8392c','stroke="#7e100a" stroke-width=".6"')+P(mir([[wd-1.9,-L*.36],[wd-1.9,-L+9],[0,-L+4]]),w);
+    const hd=(L,wd)=>P(mir([[wd,12],[wd,-L+8],[0,-L]]),'#e8392c','stroke="#7e100a" stroke-width=".6"')+P(mir([[wd-1.9,-L*.36],[wd-1.9,-L+9],[0,-L+4]]),'#ff8a7e');
     return s+HND+k.hands(subHand(k,'s',CX-50,CY,20,'#e8392c',{w:1.4})+subHand(k,'cm60',CX+50,CY,24,'#e8392c',{w:1.4}),{dy:1.2,sd:.7})+k.hands(k.hand('h',hd(58,4.6))+k.hand('m',hd(92,4))+k.hand('cs',P(mir([[1,26],[.5,-98]]),'#e8392c')+tr(0,24,P('M-3,-4h1.8v2.8h2.4v-2.8h1.8v8h-1.8v-3h-2.4v3h-1.8Z','#e8392c')))+C(CX,CY,5,'#e8392c')+C(CX,CY,2,'#2a2a2c'))+k.glass(CX,CY,112,{a:.2})}};
 
 FACES.richardmille={name:'Richard Mille RM 011 Felipe Massa',cadence:'sweep',bps:8,cat:'Chronograph',chrono:1,mv:'Calibre RMAC1 · 28,800 vph · flyback, annual calendar',ref:'RM 011 FM in titanium, as photographed',
@@ -1170,7 +1171,7 @@ const LUM2='#e6ddb0';
 FACES.panerai={name:'Panerai Luminor Marina PAM03312',cadence:'sweep',bps:8,cat:'Dive',mv:'Calibre P.9010 · 28,800 vph · 72 h',
   note:'Cushion case with the crown-protecting bridge and lever, black sandwich dial, small seconds at nine and date at three.',
   draw(k){const st='steel';
-    let s=k.fade(croc(k,-1,{y0:CY-130,len:126,w0:142,w1:126,c:'#151516',st:'#d9cfb0',seed:4})+croc(k,1,{y0:CY+130,len:126,w0:142,w1:126,c:'#151516',st:'#d9cfb0',seed:6}));
+    const rub=dir=>k.strap(CX,CY+dir*130,dir,{w0:142,w1:126,len:126,c:'#18191b'})+[26,40,54,68].map(q=>R(CX-60,CY+dir*(130+q)-1.2,120,2.4,'#000',1,'opacity=".3"')).join('');let s=k.fade(rub(-1)+rub(1));
     for(const q of [-1,1])for(const e of [-1,1])s+=P(rr(CX+q*84-13,CY+e*158-22,26,44,6),k.met(st,'p',0))+C(CX+q*84,CY+e*166,4,k.rg('0:#fff,.6:#b9bec4,1:#6a7077',.4,.35,.7));
     /* crown bridge */
     const br=`M${CX+134},${CY-58}L${CX+158},${CY-58}Q${CX+184},${CY-44} ${CX+184},${CY}Q${CX+184},${CY+44} ${CX+158},${CY+58}L${CX+134},${CY+58}Z`;
@@ -1207,9 +1208,9 @@ FACES.bigpilot={name:"IWC Big Pilot's Watch 43 IW329301",cadence:'sweep',bps:8,c
     let s=P(pts([[CX+146,CY-12],[CX+158,CY-15],[CX+182,CY-24],[CX+186,CY-15],[CX+186,CY+15],[CX+182,CY+24],[CX+158,CY+15],[CX+146,CY+12]]),k.met(st,'p',90))+[-15,-10,-5,0,5,10,15].map(y=>Ln(CX+160,CY+y*.9,CX+184,CY+y*1.4,'#000',.9,'opacity=".34"')).join('');
     s+=rcase(k,{bw:136,lt:22,L:184,a2:44,crown:0,fin:'b',band})+k.sheen(CX,CY,134,148,st,{ph:60})+ring(CX,CY,146.6,148,'#fff','opacity=".6"')+ring(CX,CY,130.5,134.6,k.met(st,'d',100));
     s+=C(CX,CY,130.5,k.rg('0:#1d1d1f,.8:#0f0f10,1:#050505'))+k.texC(CX,CY,130.5,k.noise('gr',1.4),.24);
-    s+=ticks(CX,CY,116,126.5,60,w,1.5,{skip:i=>i%5===0})+ticks(CX,CY,108,126.5,12,w,3.4,{skip:i=>i===0});
-    s+=nums(CX,CY,88,['','1','2','3','4','5','6','7','8','9','10','11'],31,{c:w,w:600,f:F.din,sx:.95})+P(pts([[CX-11,CY-107],[CX+11,CY-107],[CX,CY-125]]),w)+C(CX-15.5,CY-121,2.3,w)+C(CX+15.5,CY-121,2.3,w);
-    s+=T(CX,CY-62,'IWC',10.6,{f:F.serif,c:w,w:500,ls:1.2})+T(CX,CY-53.4,'SCHAFFHAUSEN',4.3,{c:w,w:500,ls:.9})+T(CX,CY+62,'AUTOMATIC',4.6,{c:w,w:500,ls:1.2});
+    s+=ticks(CX,CY,116,126.5,60,w,1.5,{skip:i=>i%5===0||i===1||i===59})+ticks(CX,CY,108,126.5,12,w,3.4,{skip:i=>i===0});
+    s+=nums(CX,CY,88,['','1','2','3','4','5','6','7','8','9','10','11'],31,{c:w,w:600,f:F.din,sx:.95})+P(pts([[CX-11,CY-107],[CX+11,CY-107],[CX,CY-125]]),w)+C(CX-15.5,CY-120,2.9,w)+C(CX+15.5,CY-120,2.9,w);
+    s+=T(CX,CY-55,'IWC',17.5,{f:F.serif,c:w,w:500,ls:1.6})+T(CX,CY-43.6,'SCHAFFHAUSEN',5.8,{c:w,w:500,ls:1.7})+T(CX,CY+62,'AUTOMATIC',4.6,{c:w,w:500,ls:1.2});
     const g=k.met('wg','f',0),hh=P(mir([[2,10],[2,-10],[6.6,-20],[6.6,-50],[0,-66]]),g)+P(mir([[2,-10],[4.4,-21]]),'#111')+P(mir([[4.4,-22.6],[4.4,-49],[0,-59.6]]),w),mh=P(mir([[1.9,11],[1.9,-12],[5.4,-22],[5.4,-102],[0,-118]]),g)+P(mir([[1.9,-12],[3.4,-23]]),'#111')+P(mir([[3.4,-24.6],[3.4,-101],[0,-111.6]]),w);
     return s+HND+k.hands(k.hand('h',hh)+k.hand('m',mh)+k.hand('s',P(mir([[.9,34],[.45,-122]]),w)+P(mir([[2,18],[2,34]]),w))+k.cap(CX,CY,5,'wg'))+k.glass(CX,CY,130.5,{a:.22,e:.28})}};
 
@@ -1280,23 +1281,23 @@ FACES.freak={name:'Ulysse Nardin Freak X Carb 2303-270/CARB',cadence:'sweep',bps
       tr(0,30,`<g data-a="bal" data-p="0,0">${C(0,0,23,'none','stroke="#c9cdd2" stroke-width="2.6"')+each(4,i=>Ln(0,0,0,-22,'#c9cdd2',1.6),0,0)+[0,90,180,270].map(a=>ro(a+45,R(-3,-25.4,6,4,'#e9e9e4',1),0,0)).join('')+C(0,0,4,'#8d9399')+C(0,0,1.8,'#c8262c')}</g>`)+P('M-14,30Q0,22 14,30','none','stroke="#8d8e92" stroke-width="2"');
     return s+HND+k.hands(k.hand('h',hd),{dy:1.5,sd:1.2,op:.5})+k.hands(k.hand('m',car),{dy:3,sd:1.8,op:.5})+k.glass(CX,CY,113,{a:.2,e:.34})}};
 
-FACES.marine={name:'Ulysse Nardin Marine Torpilleur 1182-310/42',cadence:'sweep',bps:8,cat:'Classic',mv:'Calibre UN‑118 · 28,800 vph · 60 h · silicium escapement',ref:'Drawn as the white-dial Torpilleur on bracelet, 1183-310-7M/40, as photographed',
-  note:'Marine-chronometer layout: power reserve at twelve, large small-seconds with date at six, Roman numerals and blued pear hands.',
+FACES.marine={name:'Ulysse Nardin Marine Torpilleur 1182-310/42',cadence:'sweep',bps:8,cat:'Classic',mv:'Calibre UN‑118 · 28,800 vph · 60 h · silicium escapement',
+  note:'Rose gold with a black dial. Marine-chronometer layout: power reserve at twelve, large small seconds with date at six, Roman numerals and pear hands.',
   calc:T=>({pr:-62+124*(.9-.6*T.dfrac)}),
-  draw(k){const ink='#131417',red='#c0202a',bl=k.lg('0:#4a82f0,.5:#1c4bb8,1:#0b2a78',0),py=CY-56,sy=CY+56;
-    let s=oyster(k,{bw:134,L:176,lt:26,bev:4,cw:23,ch:27,sh:{tw:14,b:.6,q:.84},band:mkBand([[.24,'b',1],[.52,'b',0],[.24,'b',1]],34,{n:3})});
-    s+=C(CX,CY,151,k.met('steel','d',90))+k.teeth(CX,CY,143,151,120,'steel',{duty:.5,dip:1.2})+k.sheen(CX,CY,133,143.6,'steel',{ph:60})+ring(CX,CY,129.6,133.6,k.met('steel','d',100));
-    s+=C(CX,CY,129.6,k.rg('0:#ffffff,.75:#f8f8f5,1:#e2e2de'))+C(CX,CY,126,'none',`stroke="${ink}" stroke-width=".5"`)+C(CX,CY,119.6,'none',`stroke="${ink}" stroke-width=".5"`)+ticks(CX,CY,119.6,126,60,ink,.8)+ticks(CX,CY,118,126,12,ink,2);
+  draw(k){const ink='#f3f1ec',red='#e29a66',bl=k.lg('0:#ffe6d2,.5:#dca282,1:#96573c',0),py=CY-56,sy=CY+56;
+    let s=oyster(k,{m:'rg',bw:134,L:176,lt:26,bev:4,cw:23,ch:27,sh:{tw:14,b:.6,q:.84},band:(k,dir,c)=>croc(k,dir,{y0:CY+dir*(c.L-70),len:322-c.L,w0:c.bw,w1:c.bw-16,c:'#141415',seed:4})});
+    s+=C(CX,CY,151,k.met('rg','d',90))+k.teeth(CX,CY,143,151,120,'rg',{duty:.5,dip:1.2})+k.sheen(CX,CY,133,143.6,'rg',{ph:60})+ring(CX,CY,129.6,133.6,k.met('rg','d',100));
+    s+=C(CX,CY,129.6,k.rg('0:#232325,.75:#131314,1:#050505'))+k.texC(CX,CY,129.6,k.noise('gr',1.3),.2)+C(CX,CY,126,'none',`stroke="${ink}" stroke-width=".5"`)+C(CX,CY,119.6,'none',`stroke="${ink}" stroke-width=".5"`)+ticks(CX,CY,119.6,126,60,ink,.8)+ticks(CX,CY,118,126,12,ink,2);
     s+=nums(CX,CY,93,ROMAN.map((t,i)=>i===0||i===6?'':t),39,{rot:'out',f:F.did,w:700,c:ink,sx:.66,cap:.34});
     s+=T(CX-46,CY-4,'ULYSSE',10.6,{f:F.serif,w:700,c:ink,ls:.5})+T(CX+46,CY-4,'NARDIN',10.6,{f:F.serif,w:700,c:ink,ls:.5})+T(CX-46,CY+7.6,'LE LOCLE',5.6,{w:600,c:ink,ls:.5})+T(CX+46,CY+7.6,'SUISSE',5.6,{w:600,c:ink,ls:.5});
     /* power reserve */
-    s+=C(CX,py,30,'#f4f4f1','stroke="#131417" stroke-width=".6"')+k.azur(CX,py,29.6,{c:'#8f9095',op:.22,st:1.5})+P(arc(CX,py,25,-70,-12),'none',`stroke="${red}" stroke-width="1.8"`)+nums(CX,py,19.6,['48','','','36','24','12'],6.2,{c:ink,w:600,a0:62,step:59.2})+k.arcT(CX,py,21,'BAS',-40,4,{c:red,w:700})+k.arcT(CX,py,21,'HAUT',30,4,{c:red,w:700});
+    s+=C(CX,py,30,'#0c0c0d','stroke="#f3f1ec" stroke-opacity=".5" stroke-width=".6"')+k.azur(CX,py,29.6,{c:'#ffffff',op:.06,st:1.5})+P(arc(CX,py,25,-70,-12),'none',`stroke="${red}" stroke-width="1.8"`)+nums(CX,py,19.6,['48','','','36','24','12'],6.2,{c:ink,w:600,a0:62,step:59.2})+k.arcT(CX,py,21,'BAS',-40,4,{c:red,w:700})+k.arcT(CX,py,21,'HAUT',30,4,{c:red,w:700});
     /* small seconds with date */
-    s+=C(CX,sy,42,'#f4f4f1','stroke="#131417" stroke-width=".6"')+k.azur(CX,sy,41.6,{c:'#8f9095',op:.18,st:1.6})+ticks(CX,sy,36.4,41,60,ink,.5)+ticks(CX,sy,34.2,41,12,ink,1)+nums(CX,sy,28.4,['60','10','20','','40','50'],7.4,{c:ink,w:600});
-    s+=T(CX,sy-8,'1846',10.6,{f:F.serif,w:700,c:red})+T(CX,sy+13.6,'CHRONOMETRE',4,{w:600,c:ink,ls:.3})+C(CX,sy+27.4,9.2,'#cfcfca')+C(CX,sy+27.4,8,'#fbfbf8')+`<text data-t="dd" x="${CX}" y="${sy+31}" font-size="10" font-family="${F.sans}" font-weight="700" fill="${ink}" text-anchor="middle">28</text>`;
+    s+=C(CX,sy,42,'#0c0c0d','stroke="#f3f1ec" stroke-opacity=".5" stroke-width=".6"')+k.azur(CX,sy,41.6,{c:'#ffffff',op:.06,st:1.6})+ticks(CX,sy,36.4,41,60,ink,.5)+ticks(CX,sy,34.2,41,12,ink,1)+nums(CX,sy,28.4,['60','10','20','','40','50'],7.4,{c:ink,w:600});
+    s+=T(CX,sy-8,'1846',10.6,{f:F.serif,w:700,c:red})+T(CX,sy+13.6,'CHRONOMETRE',4,{w:600,c:ink,ls:.3})+C(CX,sy+27.4,9.2,'#6b3a26')+C(CX,sy+27.4,8,'#fbfbf8')+`<text data-t="dd" x="${CX}" y="${sy+31}" font-size="10" font-family="${F.sans}" font-weight="700" fill="#131417" text-anchor="middle">28</text>`;
     s+=T(CX-26,CY+121.4,'SWISS',2.7,{c:ink,w:600,ls:.4})+T(CX+26,CY+121.4,'MADE',2.7,{c:ink,w:600,ls:.4});
-    const pear=(L,r,y)=>P(mir([[1,10],[1.5,-y+r],[r,-y],[1.2,-y-r],[.5,-L]]),bl,'stroke="#0b2a78" stroke-width=".35"');
-    return s+HND+k.hands(subHand(k,'pr',CX,py,21,'#1c4bb8',{w:1.2})+k.hand('s',P(mir([[.9,9],[.45,-34]]),bl)+C(0,0,2.8,'#1c4bb8'),CX,sy),{dy:1.2,sd:.7})+k.hands(k.hand('h',pear(64,6.6,40))+k.hand('m',pear(112,5.4,60))+C(CX,CY,5,'#1c4bb8')+C(CX,CY,1.8,'#9db4f0'))+k.glass(CX,CY,129.6,{a:.15,e:.2})}};
+    const pear=(L,r,y)=>P(mir([[1,10],[1.5,-y+r],[r,-y],[1.2,-y-r],[.5,-L]]),bl,'stroke="#6b3a26" stroke-width=".35"');
+    return s+HND+k.hands(subHand(k,'pr',CX,py,21,'#dca282',{w:1.2})+k.hand('s',P(mir([[.9,9],[.45,-34]]),bl)+C(0,0,2.8,'#dca282'),CX,sy),{dy:1.2,sd:.7})+k.hands(k.hand('h',pear(64,6.6,40))+k.hand('m',pear(112,5.4,60))+C(CX,CY,5,'#dca282')+C(CX,CY,1.8,'#6b3a26'))+k.glass(CX,CY,129.6,{a:.2,e:.26})}};
 /* ---------- digital, quartz and character watches ---------- */
 const resin=(k,d,o={})=>P(d,k.lg(`0:${o.a||'#3a3b3e'},.5:${o.b||'#222325'},1:${o.c||'#121213'}`,o.ang||75))+k.tex(d,k.noise('gr',1.4),o.t??.22);
 const resinBand=(k,dir,o)=>{const {y0,w0,w1,len=250-Math.abs(y0-CY)+4,c='#1b1c1e'}=o;let b=k.strap(CX,y0,dir,{w0,w1,len,c});for(let q=o.q0||10;q<len;q+=o.step||13)b+=Ln(CX-w0/2+5,y0+dir*q,CX+w0/2-5,y0+dir*q,'#000',1.6,'opacity=".4"')+Ln(CX-w0/2+5,y0+dir*q+1.4,CX+w0/2-5,y0+dir*q+1.4,'#fff',.6,'opacity=".08"');return b};
@@ -1340,22 +1341,25 @@ FACES.f91w={name:'Casio F-91W',cadence:'digital',cat:'Digital',mv:'Module 593 ·
     s+=[0,1].map(i=>k.seg7(CX-74+i*27,CY-20,22,50,'lt',i,{t:5.4})).join('')+[2,3].map(i=>k.seg7(CX-70+i*27,CY-20,22,50,'lt',i,{t:5.4})).join('')+R(CX-21.6,CY-6,5,5,ink)+R(CX-23,CY+12,5,5,ink)+[0,1].map(i=>k.seg7(CX+42+i*17,CY-2,13,32,'lss',i,{t:3.4})).join('');
     return s+HND+P(fp,k.lg('0:#fff@.14,.4:#fff@0,1:#fff@.03',50))}};
 
-FACES.apple={name:'Apple Watch',cadence:'glide',cat:'Smart',mv:'watchOS analog face · sweeping seconds',ref:'Aluminium case with an analog face, date and Activity rings',
-  note:'Rounded-rectangle case, Digital Crown and side button; the Activity rings fill through the local day.',
-  calc:T=>({apd:T.dow3+' '+T.dd}),
-  tick(root,T){const f=T.dfrac,v=[Math.min(1,f*1.25),Math.min(1,Math.max(0,(f-.3)*2.2)),Math.min(1,Math.floor(T.H-6>0?T.H-6:0)/12)];root.querySelectorAll('[data-ring]').forEach((e,i)=>{const L=+e.dataset.ring;e.setAttribute('stroke-dasharray',`${r2(Math.max(.01,v[i])*L)} ${L}`)})},
-  draw(k){const cs=rr(CX-116,CY-140,232,280,66),gl=rr(CX-106,CY-130,212,260,58),al=k.lg('0:#f1f2f4,.3:#d3d6da,.7:#aeb3b9,1:#878d94',100),or='#ff9f0a';
+FACES.apple={name:'Apple Watch',cadence:'glide',cat:'Smart',mv:'watchOS Activity Analog face · sweeping seconds',ref:'Aluminium case showing the Activity Analog face',
+  note:'Rounded-rectangle case, Digital Crown and side button. Move, Exercise and Stand each have their own ring, with the day and date at three; the rings fill through the local day.',
+  calc(T){const f=T.dfrac,r0=Math.min(1,f*1.25),r1=Math.min(1,Math.max(0,(f-.3)*2.2)),r2_=Math.min(1,Math.max(0,T.H-6)/12),u=new Date(T.utc);
+    return{apd:T.dow3,r0,r1,r2:r2_,v0:String(Math.round(r0*480)),v1:String(Math.round(r1*30)),v2:String(Math.round(r2_*12)),utcs:String(u.getUTCHours()).padStart(2,'0')+':'+String(u.getUTCMinutes()).padStart(2,'0')}},
+  tick(root,T){root.querySelectorAll('[data-ring]').forEach((e,i)=>{const L=+e.dataset.ring;e.setAttribute('stroke-dasharray',`${r2(Math.max(.01,T['r'+i])*L)} ${L}`)})},
+  draw(k){const cs=rr(CX-116,CY-140,232,280,66),gl=rr(CX-106,CY-130,212,260,58),al=k.lg('0:#f1f2f4,.3:#d3d6da,.7:#aeb3b9,1:#878d94',100),ac='#ff453a';
     const band=dir=>k.strap(CX,CY+dir*128,dir,{w0:176,w1:158,len:128,c:'#24406e'})+(dir>0?[0,1,2].map(i=>E(CX,CY+196+i*20,5,6.4,'#132748')+E(CX,CY+197+i*20,5,6.4,'none','stroke="#fff" stroke-opacity=".12" stroke-width=".8"')).join(''):'');
     let s=k.fade(band(-1)+band(1));
-    s+=P(rr(CX+112,CY-74,15,44,6),al)+[-16,-11,-6,-1,4,9,14].map(y=>Ln(CX+116,CY-52+y,CX+126,CY-52+y,'#000',.9,'opacity=".28"')).join('')+C(CX+127,CY-52,0,'none')+P(rr(CX+113,CY+8,7,52,3.5),al);
+    s+=P(rr(CX+112,CY-74,15,44,6),al)+[-16,-11,-6,-1,4,9,14].map(y=>Ln(CX+116,CY-52+y,CX+126,CY-52+y,'#000',.9,'opacity=".28"')).join('')+P(rr(CX+113,CY+8,7,52,3.5),al);
     s+=P(rr(CX-118,CY-138,236,282,67),'#000',`opacity=".32" filter="${k.blur(3.6)}"`)+P(cs,al)+bevel(k,cs,3)+P(gl,'#050506')+P(rr(CX-98,CY-122,196,244,50),'#000');
-    /* analog face */
-    s+=ticks(CX,CY,88,96,60,'#8e8e93',1.2,{skip:i=>i%5===0})+ticks(CX,CY,84,96,12,'#ffffff',2.6,{cap:'round'})+nums(CX,CY,71,['12','1','2','3','4','5','6','7','8','9','10','11'],15,{c:'#ffffff',w:600,f:F.rnd});
-    s+=`<text data-t="apd" x="${CX}" y="${CY-32}" font-size="10.4" font-family="${F.sans}" font-weight="600" fill="${or}" text-anchor="middle" letter-spacing=".6">SAT 28</text>`;
-    const rx=CX,ry=CY+36;for(const [r,c] of [[19,'#fa114f'],[13.4,'#92e82a'],[7.8,'#1eeaef']]){const L=r2(2*Math.PI*r);s+=C(rx,ry,r,'none',`stroke="${c}" stroke-opacity=".22" stroke-width="4.6"`)+`<circle data-ring="${L}" cx="${rx}" cy="${ry}" r="${r}" fill="none" stroke="${c}" stroke-width="4.6" stroke-linecap="round" stroke-dasharray="${r2(L*.6)} ${L}" transform="rotate(-90 ${rx} ${ry})"/>`}
-    s+=T(CX-70,CY-98,'72°',12,{c:'#ffffff',w:600,f:F.rnd})+T(CX+68,CY-98,'UTC',10,{c:or,w:700,f:F.rnd})+C(CX-70,CY+98,9,'none','stroke="#32d74b" stroke-width="3"')+P(`M${CX+62},${CY+104}l5,-12l4,8l5,-14l4,18`,'none','stroke="#0a84ff" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"');
+    /* Activity Analog: tick ring, three activity sub-dials, day and date at three */
+    s+=ticks(CX,CY,89,96,60,'#8e8e93',1.1,{skip:i=>i%5===0})+ticks(CX,CY,85,96,12,'#ffffff',2.6,{cap:'round'});
+    for(const [i,x,y,c] of [[0,CX,CY-45,'#fa114f'],[1,CX-40,CY+26,'#92e82a'],[2,CX+40,CY+26,'#1eeaef']]){const r=17,L=r2(2*Math.PI*r);
+      s+=C(x,y,r,'none',`stroke="${c}" stroke-opacity=".24" stroke-width="5"`)+`<circle data-ring="${L}" cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${r2(L*.6)} ${L}" transform="rotate(-90 ${x} ${y})"/>`+`<text data-t="v${i}" x="${x}" y="${y+3.6}" font-size="10" font-family="${F.rnd}" font-weight="700" fill="#fff" text-anchor="middle">0</text>`}
+    s+=`<text data-t="apd" x="${CX+56}" y="${CY-13}" font-size="9.4" font-family="${F.sans}" font-weight="600" fill="#fff" text-anchor="middle" letter-spacing=".5">SAT</text><text data-t="dd" x="${CX+56}" y="${CY-1.4}" font-size="11.4" font-family="${F.sans}" font-weight="700" fill="${ac}" text-anchor="middle">28</text>`;
+    s+=C(CX-74,CY-99,6,'#e5e5ea')+C(CX-67,CY-102,7.4,'#e5e5ea')+C(CX-60,CY-98.4,5.4,'#e5e5ea')+R(CX-76,CY-99,20,6.6,'#e5e5ea',3.3)+T(CX+66,CY-103,'UTC',7.4,{c:'#8e8e93',w:700,f:F.rnd})+`<text data-t="utcs" x="${CX+66}" y="${CY-93}" font-size="9.4" font-family="${F.rnd}" font-weight="700" fill="#fff" text-anchor="middle">08:35</text>`;
+    s+=P(rr(CX-62,CY+92,124,20,10),'#1c1c1e')+T(CX,CY+105.6,'72° CLEAR',9,{c:'#fff',w:700,f:F.rnd,ls:.4});
     const hd=(L,w0)=>P(mir([[1.5,0],[1.5,-12]]),'#fff')+P(capsule(w0,-L,-10),'#fff');
-    return s+HND+k.hand('h',hd(52,4.2))+k.hand('m',hd(86,3.6))+k.hand('s',P(mir([[.9,16],[.9,-92]]),or)+C(0,0,3.6,or)+C(0,0,1.4,'#000'))+P(gl,k.lg('0:#fff@.16,.35:#fff@0,1:#fff@.05',52))}};
+    return s+HND+k.hand('h',hd(50,4.2))+k.hand('m',hd(84,3.6))+k.hand('s',P(mir([[.9,16],[.9,-92]]),ac)+C(0,0,3.6,ac)+C(0,0,1.4,'#000'))+P(gl,k.lg('0:#fff@.16,.35:#fff@0,1:#fff@.05',52))}};
 
 FACES.swatch={name:'Swatch Once Again',cadence:'tick',cat:'Quartz',mv:'Swiss quartz · day-date',ref:'GB743',
   note:'Matte black plastic, a white dial with full Arabic numerals, luminous black hands and a day-date window.',
@@ -1487,7 +1491,7 @@ FACES.twinbell={name:'Westclox Twin Bell Alarm Clock 70010A',cadence:'tick',cat:
     let dz=C(cx,cy,108,k.rg('0:#ffffff,.8:#fafaf6,1:#dcdcd6'))+ticks(cx,cy,97,104,60,ink,1,{skip:i=>i%5===0})+ticks(cx,cy,96,104,12,ink,2.4)+C(cx,cy,104.6,'none',`stroke="${ink}" stroke-width=".8"`);
     dz+=nums(cx,cy,77,['12','1','2','3','4','5','6','7','8','9','10','11'],29,{f:F.did,w:700,c:ink,sx:.92,cap:.35,x:`stroke="${ink}" stroke-width="1"`})+T(cx,cy-34,'Westclox',10.5,{f:F.cen,w:700,c:ink,it:1})+[0,1].map(i=>C(cx+92,cy-3+i*6,1.5,ink)).join('');s+=G(dz,Z);
     const hh=P(mir([[2.6,10],[2.6,-14],[8,-28],[4,-44],[0,-56]]),ink)+P(mir([[4.4,-28],[2,-42],[0,-49]]),lm),mh=P(mir([[2.4,12],[2.4,-18],[6,-34],[3,-74],[0,-90]]),ink)+P(mir([[3.2,-34],[1.4,-72],[0,-82]]),lm);
-    return s+HND+G(k.hands(ro(180,P(mir([[1.2,0],[1.2,-40],[0,-46]]),'#d8262c'),cx,cy)+k.hand('h',hh,cx,cy)+k.hand('m',mh,cx,cy)+k.hand('s',P(mir([[.8,24],[.45,-96]]),ink),cx,cy)+C(cx,cy,5.4,ink)+C(cx,cy,1.8,'#c9c9c4'),{dy:3,sd:1.8})+k.glass(cx,cy,110,{a:.3,e:.26,flat:1.5}),Z)}};
+    return s+HND+G(k.hands(tr(cx,cy,P(mir([[1.5,-6],[1.5,44],[0,52]]),'#d8262c'))+k.hand('h',hh,cx,cy)+k.hand('m',mh,cx,cy)+k.hand('s',P(mir([[.8,24],[.45,-96]]),ink),cx,cy)+C(cx,cy,5.4,ink)+C(cx,cy,1.8,'#c9c9c4'),{dy:3,sd:1.8})+k.glass(cx,cy,110,{a:.3,e:.26,flat:1.5}),Z)}};
 
 FACES.grandfather={name:'Comtoise Longcase Clock — Musée du Temps, c. 1850',cadence:'tick',cat:'Clock',smooth:1,mv:'Morbier weight-driven movement · seconds pendulum',
   calc:swing(4.2,2),
@@ -1564,8 +1568,8 @@ FACES.grandcentral={name:'Grand Central Terminal Information Booth Clock (1913)'
     return s+HND+k.hands(k.hand('h',hh,cx,cy)+k.hand('m',mh,cx,cy)+C(cx,cy,5.4,ink),{dy:2.6,sd:1.6,op:.4})+k.glass(cx,cy,110,{a:.22,e:.2,flat:1.5})}};
 
 FACES.howardmiller={name:'Howard Miller Chateau 610-520 Grandfather Clock',cadence:'tick',cat:'Clock',smooth:1,mv:'Kieninger cable-driven triple-chime movement',
-  calc:T=>Object.assign(swing(3.2,2)(T),{ss:T.S*6}),
-  note:'Cherry hood with swan-neck pediment; brass and silver dial with applied numerals, a moon arch and small seconds, over a swinging pendulum.',
+  calc:swing(3.2,2),
+  note:'Windsor Cherry hood with swan-neck pediment; brass dial with cast corner spandrels, a silver chapter ring of Roman numerals and a moon arch, over a swinging pendulum.',
   draw(k){const cx=200,cy=222,br=brassG(k),ink='#17120c',c1='#7a3a22',c2='#3c160c',sil=k.rg('0:#f4f4f1,.7:#d6d7d4,1:#a9aba8');
     let s=wood(k,rr(26,0,348,500,0),'#6b2f1b','#3a150b',{a:0})+R(26,0,348,500,k.lg('0:#000@.5,.12:#000@0,.88:#000@0,1:#000@.55',0));
     /* swan-neck pediment and finial */
@@ -1582,13 +1586,14 @@ FACES.howardmiller={name:'Howard Miller Chateau 610-520 Grandfather Clock',caden
     /* moon arch */
     dz+=P(sect(cx,156,44,60,-84,84),sil,'stroke="#5e430e" stroke-width=".6"')+nums(cx,156,52,['5','10','15','20','25','29'],6.4,{a0:-58,step:23.2,rot:'out',f:F.serif,w:700,c:'#6b5320'})+k.moon(cx,158,42,{rim:'#5e430e',ro:.9,sky:k.rgu('0:#26345e,1:#0c1226',cx,130,48)})+T(cx,166.6,'HOWARD MILLER',3.4,{f:F.serif,w:700,c:ink,ls:.4});
     /* corner spandrels, chapter ring, centre */
-    dz+=[[122,174,0],[278,174,90],[278,314,180],[122,314,270]].map(q=>ro(q[2],P(`M${q[0]-10},${q[1]-10}h34q-20,6 -24,14q-4,-8 -10,-14zM${q[0]-10},${q[1]-10}v34q6,-20 14,-24`,'#8a6418','opacity=".75"')+C(q[0]+2,q[1]+2,5,'#fff3c4','stroke="#5e430e" stroke-width=".5"'),q[0],q[1])).join('');
-    dz+=C(cx,244,82,'#000',`opacity=".35" filter="${k.blur(2)}"`)+C(cx,244,80,sil,'stroke="#5e430e" stroke-width=".8"')+k.sun(cx,244,80,{a:.03,sh:.12,dk:.06,th:30})+C(cx,244,47,k.rg('0:#f1e6bd,.6:#cdb777,1:#9a8344'),'stroke="#5e430e" stroke-width=".8"')+k.texC(cx,244,47,k.relief('.2',{sc:2.4,oct:2,s:1.8,seed:9}),.36)+each(8,i=>P(`M${cx},${244-10}Q${cx-9},${244-26} ${cx},${244-42}Q${cx+9},${244-26} ${cx},${244-10}Z`,'none','stroke="#6b5320" stroke-width="1" opacity=".55"'),cx,244);
-    dz+=each(12,i=>C(cx,244-63,14.6,k.rg('0:#fbfbf8,1:#c6c8c4'),'stroke="#8a6418" stroke-width="1"'),cx,244)+ticks(cx,244,76,79,60,ink,.6)+G(nums(cx,244,63,['12','1','2','3','4','5','6','7','8','9','10','11'],17,{f:F.did,w:700,c:k.lg('0:#fff3c4,.5:#d9b043,1:#8a6418',100),cap:.35,x:'stroke="#5e430e" stroke-width=".45"'}),k.ds(.4,1,.6,.5));
-    dz+=C(cx,244-27,13,sil,'stroke="#5e430e" stroke-width=".6"')+ticks(cx,217,10,12.4,60,ink,.3)+ticks(cx,217,9,12.4,12,ink,.6)+C(cx-36,264,3,'#2a2019')+C(cx+36,264,3,'#2a2019')+C(cx,274,3.4,'#2a2019');
+    const scr='M-11,-9q18,-7 30,1q7,7 0,12q-7,3 -9,-3q0,-5 5,-4M-9,-11q-7,18 1,30q7,7 12,0q3,-7 -3,-9q-5,0 -4,5M-8,-8q12,1 17,13q2,9 -5,9M-8,-8q1,12 13,17M9,7q9,-3 14,5M7,9q-3,9 5,14';
+    dz+=[[122,174,0],[278,174,90],[278,314,180],[122,314,270]].map(q=>ro(q[2],tr(q[0],q[1],P(scr,'none','stroke="#4a3710" stroke-opacity=".55" stroke-width="3.2" stroke-linecap="round" transform="translate(.7 .9)"')+P(scr,'none','stroke="#8a6418" stroke-width="2.6" stroke-linecap="round"')+P(scr,'none','stroke="#fff0b8" stroke-width="1" stroke-linecap="round" transform="translate(-.4 -.5)"')+C(-7,-7,3.4,k.rg('0:#fff6cf,.6:#d9b95c,1:#8a6418'),'stroke="#5e430e" stroke-width=".5"')),q[0],q[1])).join('');
+    dz+=C(cx,244,82,'#000',`opacity=".35" filter="${k.blur(2)}"`)+C(cx,244,80,sil,'stroke="#5e430e" stroke-width=".8"')+k.sun(cx,244,80,{a:.03,sh:.12,dk:.06,th:30})+C(cx,244,50,k.rg('0:#f6ebc0,.6:#d9c483,1:#a48a44'),'stroke="#5e430e" stroke-width=".8"')+k.sun(cx,244,50,{a:.04,sh:.16,dk:.08,th:40})+C(cx,244,50,'none','stroke="#fff3c4" stroke-width=".6" opacity=".7"');
+    dz+=C(cx,244,77,'none',`stroke="${ink}" stroke-width=".5"`)+C(cx,244,73,'none',`stroke="${ink}" stroke-width=".5"`)+ticks(cx,244,73,77,60,ink,.6)+ticks(cx,244,72,78,12,ink,1.3)+nums(cx,244,62,ROMAN,17,{rot:'out',f:F.did,w:700,c:ink,sx:.74,cap:.35});
+    dz+=C(cx-30,258,3,'#2a2019')+C(cx+30,258,3,'#2a2019')+C(cx,276,3.2,'#2a2019');
     s+=G(dz,big);
     const orn=(L,w)=>P(`M-1.3,9V${-L*.2}Q${-w},${-L*.3} ${-w*.9},${-L*.46}Q${-w*.3},${-L*.42} 0,${-L*.56}Q${w*.3},${-L*.42} ${w*.9},${-L*.46}Q${w},${-L*.3} 1.3,${-L*.2}V9Z`,ink)+P(`M-1.3,${-L*.5}Q-3.6,${-L*.72} 0,${-L}Q3.6,${-L*.72} 1.3,${-L*.5}Z`,ink)+C(0,-L*.34,w*.34,'#b9a05a','opacity=".8"');
-    return s+HND+G(k.hands(k.hand('ss',P(mir([[.6,3],[.3,-11]]),ink)+C(0,0,1.4,ink),cx,217),{dy:.8,sd:.5})+k.hands(k.hand('h',orn(46,9),cx,244)+k.hand('m',orn(72,7),cx,244)+C(cx,244,4.6,ink)+C(cx,244,1.6,'#b9a05a'),{dy:2.4,sd:1.4}),big)+P(rr(84,100,232,296,0),k.lg('0:#fff@.12,.3:#fff@0,1:#fff@.03',40))}};
+    return s+HND+G(k.hands(k.hand('h',orn(46,9),cx,244)+k.hand('m',orn(72,7),cx,244)+C(cx,244,4.6,ink)+C(cx,244,1.6,'#b9a05a'),{dy:2.4,sd:1.4}),big)+P(rr(84,100,232,296,0),k.lg('0:#fff@.12,.3:#fff@0,1:#fff@.03',40))}};
 
 FACES.railroad={name:'Norfolk Southern Railroad Pocket Watch (1994)',cadence:'tick',cat:'Pocket',mv:'Quartz · commemorative limited edition',
   note:'Gold-tone open-face pocket watch: Roman numerals, a red 13–24 ring, an inner railroad track and the Norfolk Southern mark with a small train.',
