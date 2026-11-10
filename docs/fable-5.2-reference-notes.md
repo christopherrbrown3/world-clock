@@ -25,22 +25,34 @@ This rendition is a new standalone page, [`versions/fable-5.2.html`](../versions
 
 ## References
 
-The supplied photo archive has images for 35 of the 62 catalog objects. For those, case shape, bezel, dial printing, hands and bracelet or strap were checked against the photographs, with close crops where orientation mattered:
+The supplied photo archive has images for 35 of the 62 catalog objects. Each of those was drawn against its photographs and then rendered side by side with one of them, and the drawing was corrected where the two disagreed:
 
 `submariner`, `speedmaster`, `nautilus`, `royaloak`, `seamaster`, `daytona`, `gmt`, `datejust`, `snowflake`, `f1`, `seiko5`, `richardmille`, `blackbay58`, `navitimer`, `overseas`, `bigbang`, `twinbell`, `orloj`, `marine`, `freak`, `patek`, `explorer`, `santos`, `bigpilot`, `typexx`, `carrera`, `snoopy`, `milgauss`, `yachtmaster2`, `jorggray`, `rainbow`, `nomosmetro`, `grandcentral`, `howardmiller` and `mickey`.
 
-One example of what the crops settled: dive-bezel numerals. Rolex, Tudor and Seiko set every numeral with its top outward except an upright 30; the Seamaster 300M and the GMT-Master II bezel turn every numeral outward, so 30 and 12 read inverted at six o'clock.
+What the comparisons changed:
 
-The other 27 folders are empty. For eight of those, public product and auction photographs were looked up before drawing:
+- **Steel.** Brushed cases and bracelets were too pale and polished bezels too flat. Both were retoned against the photographs.
+- **Lugs.** The Speedmaster, Seamaster and Snowflake have slender lugs, not the broad Oyster shoulders they first shared.
+- **Bezel and dial proportions.** The Snowflake, Explorer, Type XX and twin-bell clock had bezels that were too wide and dials that were too small.
+- **Lettering and furniture.** Larger bezel numerals on the GMT-Master II, Yacht-Master II, Daytona and Black Bay; larger Roman numerals and counters on the Marine Torpilleur; a bolder slide rule and larger counters on the Navitimer; larger counters and date ring on the Patek; a squarer bezel and heavier numerals on the Santos.
+- **Dive-bezel numerals.** Rolex, Tudor, Seiko and Blancpain set every numeral with its top outward except an upright 30. The Seamaster 300M and the GMT-Master II turn every numeral outward, so 30 and 12 read inverted at six o'clock.
 
-- `lange1`: the placement of the arced signature, outsize date, AUF/AB scale and small seconds.
-- `calatrava`: the 5227G-015's rose-gilt dial with charcoal markers and hands.
-- `gshock`: the DW-5600UE-1 face printing, including the gold button legends and red-framed SHOCK RESIST.
-- `f91w`, `casiomq24`, `timexindiglo`: dial layout and colours.
-- `bigtic`: the pebble case, black LCD dial and oversize seconds digits.
-- `railroad`: the 1994 limited edition's Roman numerals, red 13–24 ring, inner track, NS mark and train.
+The other 27 folders are empty. For 26 of those, public product and auction photographs were looked up, and the drawing was checked against them:
 
-The remaining nineteen were drawn from the catalog entry and published descriptions of the object: `tank`, `reverso`, `portugieser`, `apple`, `swatch`, `braun`, `mondaine`, `monaco`, `panerai`, `bigben`, `moonphase`, `elprimero`, `prx`, `khaki`, `br03`, `grandfather`, `fiftyfathoms`, `radiomir` and `kingkhaki`.
+- `lange1`, `calatrava`, `tank`, `reverso`, `portugieser`, `moonphase`, `elprimero`, `monaco`, `panerai`, `radiomir`, `fiftyfathoms`, `br03`, `prx`, `khaki`, `braun`, `swatch`, `mondaine`, `gshock`, `f91w`, `casiomq24`, `timexindiglo`, `bigtic`, `railroad`, `bigben`, `grandfather` and `kingkhaki`.
+
+Those lookups corrected several faces that had first been drawn from description:
+
+- **Villeret.** The 31-day ring sits inside the Roman hour numerals, not outside them.
+- **Monaco.** Red hour and minute hands and a round minute track with luminous dots.
+- **Luminor Marina.** A numeral 9 beside the small seconds, the name on two lines, green-toned lume and a black strap. The photographs found were of PAM01312, the same layout as the catalog's PAM03312.
+- **Radiomir.** Steel hands, PANERAI above the OP mark, and a black strap.
+- **Chronomaster Sport.** The bezel counts 10 to 90 with its lettering across the top.
+- **Fifty Fathoms.** An upright 30 on the bezel, a script signature and the depth rating.
+- **BR 03.** The mixed-case signature and the BR 03-A model line.
+- **Swatch.** Luminous black hands, a black seconds hand and a white-on-black day.
+
+Two gaps remain. The `kingkhaki` lookup returned a different Khaki Field model, so its arched day window is still drawn from description. The `apple` face was not looked up; its analog layout is this rendition's own arrangement of standard watchOS elements.
 
 ## Variant choices
 
@@ -91,6 +103,7 @@ Every face keeps its catalog name and cadence. Where the catalog names a family,
 - `npm test` passes.
 - All 62 faces match the catalog's key order, names and cadences.
 - A scripted run in headless Chrome passed all 31 checks on the page: west-to-east ordering with an alphabetical tie-break, adding cities by click and by keyboard, removal, shuffle all, single shuffle, distinct faces across twenty cities, saved state, collection filtering, inspector poses, chronograph start, stop and reset, assigning a face to a city, and reset.
+- The 35 photographed faces were each rendered beside a reference photograph and corrected; 26 of the other 27 were checked against looked-up photographs.
 - All 62 faces were rendered and reviewed at 10:08:37, at 12:00 on 31 December, and at 06:30 on 5 December, covering stacked hands, lower-dial text, and single- and double-digit dates with day and month windows.
 - Checked in a browser at desktop width and at 375 px: hands advance on their own, a phone gets one column with no horizontal overflow, the inspector scrolls inside the viewport, and the console stays clean. The board and the collection both held 60 frames per second.
 - Not tested: Safari and Firefox, and the reduced-motion path, which was only read through in code.
