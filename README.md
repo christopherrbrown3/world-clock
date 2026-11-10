@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Thirty perspectives.**
+**One brief. Thirty-one perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open Claude Fable 5.2](versions/fable-5.2.html) · [Open Copilot Fusion Max](versions/copilot-fusion-max.html) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
+**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open Claude Fable 5.2](versions/fable-5.2.html) · [Open Copilot Fusion Max](versions/copilot-fusion-max.html) · [Open Gemini 4 Carbon](versions/gemini-4-carbon.html) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
 
 </div>
 
@@ -32,6 +32,7 @@ Models with verified release dates are listed newest first. **Model release** li
 | --- | --- | --- |
 | [Claude Fable 5.2](versions/fable-5.2.html) | [2026-11-09](https://www.anthropic.com/claude/fable) | 2026-11-10 |
 | [Copilot Fusion Max](versions/copilot-fusion-max.html) | 2026-10-28 (maintainer-supplied) | 2026-10-28 |
+| [Gemini 4 Carbon](versions/gemini-4-carbon.html) | [2026-10-28](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/) | 2026-11-10 |
 | [GPT 6.1 Terra](versions/gpt-6.1-terra.html) | [2026-10-26](https://developers.openai.com/api/docs/changelog) | 2026-10-26 |
 | [Recursive Flint](versions/recursive-flint.html) | 2026-10-22 (maintainer-supplied) | 2026-10-22 |
 | [MiniMax M3.1 Flash](versions/minimax-m3-1-flash.html) | [2026-10-19](https://www.minimax.io/blog/minimax-m31f) | 2026-10-21 |
@@ -78,6 +79,12 @@ Copilot Fusion Max is an independent standalone rendition with 62 original SVG f
 ![Copilot Fusion Max’s independently drawn collection of 62 timepieces](docs/assets/copilot-fusion-max-faces.png)
 
 [Desktop view](docs/assets/copilot-fusion-max-desktop.png) · [Phone view](docs/assets/copilot-fusion-max-mobile.png)
+
+Gemini 4 Carbon implements all 62 faces in a clean-room standalone page, authored from scratch as the Carbon Allotrope Observatory with its own `Intl` timezone engine, 174-city atlas, 24-hour solar meridian strip, and instance-scoped SVG horological kit. Each piece moves at its catalog cadence, fifteen chronographs run interactively, Lume Study illuminates authentic photoluminescent and electroluminescent compounds across the catalog, and any watch can be posed and assigned to a city. [Read its reference and approximation notes](docs/gemini-4-carbon-reference-notes.md).
+
+![Gemini 4 Carbon’s 62 independently drawn SVG timepieces in catalog order](docs/assets/gemini-4-carbon-faces.png)
+
+[Desktop view](docs/assets/gemini-4-carbon-desktop.png) · [Phone view](docs/assets/gemini-4-carbon-mobile.png) · [Inspection view](docs/assets/gemini-4-carbon-inspection.png)
 
 GPT 6.1 Terra offers an independently written collection of 62 working SVG watches and clocks, with local city settings, a searchable collection, enlarged inspection, fixed hand positions, and chronograph controls. [Read its reference and approximation notes](docs/gpt-6.1-terra-reference-notes.md).
 
