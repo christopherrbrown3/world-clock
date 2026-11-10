@@ -4,6 +4,9 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added Claude Fable 5.2 as a new standalone rendition, authored from scratch with its own `Intl` time engine, 136-city atlas, two-layer SVG drawing kit and all 62 reference-led timepieces, each moving at its catalog cadence. City cards follow the local sky and stay ordered west to east; faces shuffle without duplicates; the collection can be filtered and searched; and the inspector poses hands, runs fifteen chronographs and assigns a piece to a city. Added it to the project index as the newest entry, the README model table, the snapshot manifest, the release-date notes, and reference notes with screenshots. Its release date, November 9, 2026, is verified against Anthropic’s Claude Fable page; its snapshot date is November 10, 2026. Earlier model pages and the active build are unchanged.
+- Brought the index counts in line with its thirty rows: the heading, the rendition total and the provider filters now include Nemotron 3 Ultra, which had a row but no NVIDIA filter, and the README headline matches.
+
 - Set Copilot Fusion Max’s directory release date to the maintainer-supplied October 28, 2026, moving it to the top of the index as the latest rendition and updating the README table, release-date notes, reference notes, and index screenshots accordingly.
 
 - Added Copilot Fusion Max as an independent standalone rendition, authored from scratch with 62 custom SVG timepieces, live city controls, duplicate-aware face shuffling, a searchable dial library, lume study, and poseable inspection. Added its index and manifest entries, README documentation, reference notes, and screenshots. The project snapshot is October 28, 2026.

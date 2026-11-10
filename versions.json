@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "fable-5.2",
+      "label": "Claude Fable 5.2",
+      "file": "versions/fable-5.2.html",
+      "snapshotDate": "2026-11-10",
+      "notes": "Independent Claude Fable 5.2 rendition, authored from scratch with its own Intl time engine, two-layer SVG drawing kit, 136-city atlas and 62 reference-led timepieces, with per-face movement cadences, live date, day, moon and power-reserve displays, fifteen working chronographs, sky-aware city cards ordered west to east, duplicate-aware face shuffling, a filterable collection, and a posable inspector."
+    },
+    {
       "id": "nemotron-3-ultra",
       "label": "Nemotron 3 Ultra",
       "file": "versions/nemotron-3-ultra.html",
