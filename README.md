@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Twenty-eight perspectives.**
+**One brief. Thirty perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open Copilot Fusion Max](versions/copilot-fusion-max.html) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
+**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open Claude Fable 5.2](versions/fable-5.2.html) · [Open Copilot Fusion Max](versions/copilot-fusion-max.html) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
 
 </div>
 
@@ -30,6 +30,7 @@ Models with verified release dates are listed newest first. **Model release** li
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
+| [Claude Fable 5.2](versions/fable-5.2.html) | [2026-11-09](https://www.anthropic.com/claude/fable) | 2026-11-10 |
 | [Copilot Fusion Max](versions/copilot-fusion-max.html) | 2026-10-28 (maintainer-supplied) | 2026-10-28 |
 | [GPT 6.1 Terra](versions/gpt-6.1-terra.html) | [2026-10-26](https://developers.openai.com/api/docs/changelog) | 2026-10-26 |
 | [Recursive Flint](versions/recursive-flint.html) | 2026-10-22 (maintainer-supplied) | 2026-10-22 |
@@ -55,6 +56,7 @@ Models with verified release dates are listed newest first. **Model release** li
 | [Codex 5.6 Terra](versions/codex-5.6.html) | [2026-07-09](https://openai.com/index/gpt-5-6/) | 2026-07-09 |
 | [Grok 4.5](versions/grok-4.5.html) | [2026-07-08](https://docs.x.ai/developers/release-notes) | 2026-09-03 |
 | [Claude Fable 5](versions/fable-5.html) | [2026-06-09](https://www.anthropic.com/news/claude-fable-5-mythos-5) | 2026-07-17 |
+| [Nemotron 3 Ultra](versions/nemotron-3-ultra.html) | 2026-06-04 (as listed in the index) | 2026-10-29 |
 | [Claude Opus 4.8](versions/claude-opus-4.8.html) | [2026-05-28](https://www.anthropic.com/news/claude-opus-4-8) | 2026-06-30 |
 | [Codex 5.5](versions/codex-5.5.html) | [2026-04-23](https://openai.com/index/introducing-gpt-5-5/) | 2026-07-09 |
 | [Qwen 3.6](versions/qwen-3.6.html) | [2026-04-16](https://github.com/QwenLM/Qwen3.6) | 2026-10-07 |
@@ -64,6 +66,12 @@ The [active development build](world-clock.html) remains available separately. I
 ## Inside a collection
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
+
+Claude Fable 5.2 implements all 62 faces in a new standalone page, written from scratch with its own time engine, 136-city atlas and two-layer SVG drawing kit. Each face moves at its catalog cadence, city cards follow the local sky from dawn to night, fifteen chronographs run, and any piece can be posed, inspected up close and assigned to a city. [Read its reference and approximation notes](docs/fable-5.2-reference-notes.md).
+
+![Claude Fable 5.2’s 62 SVG timepieces in catalog order](docs/assets/fable-5.2-faces.png)
+
+[Desktop view](docs/assets/fable-5.2-desktop.png) · [Phone view](docs/assets/fable-5.2-mobile.png) · [Inspection view](docs/assets/fable-5.2-inspection.png)
 
 Copilot Fusion Max is an independent standalone rendition with 62 original SVG faces, a live city board, saved city settings, face shuffling, a lume study, and a poseable dial inspector. Its maintainer-supplied model release date and project snapshot are both October 28, 2026. [Read the reference and approximation notes](docs/copilot-fusion-max-reference-notes.md).
 

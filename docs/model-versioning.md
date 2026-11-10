@@ -15,6 +15,7 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
+- `versions/fable-5.2.html`: Claude Fable 5.2 checkpoint, authored from scratch with its own interface, time engine, 136-city atlas, two-layer SVG drawing kit and all 62 faces.
 - `versions/copilot-fusion-max.html`: Copilot Fusion Max checkpoint, authored from scratch with its own city board, SVG drawing system, 62 reference-informed faces, search, shuffling, lume study, and poseable inspection.
 - `versions/gpt-6.1-terra.html`: GPT 6.1 Terra checkpoint, authored from scratch with its own interface, time engine, SVG drawing system and all 62 faces.
 - `versions/recursive-flint.html`: Recursive Flint checkpoint, authored from scratch with its own interface, time engine, SVG drawing kit, and all 62 faces.
@@ -66,6 +67,8 @@ When a new model version is ready:
    ```
 
 The index and README use model release dates documented in [Model Release Dates](model-release-dates.md), and the index records verified dates in `data-release-date` attributes. The manifest uses `snapshotDate`, which is the project checkpoint date. Do not treat that date as a model release date. GPT 6 Sol and GPT 6 Luna were released and captured on September 22, 2026; their release dates were verified against OpenAI’s API changelog and ChatGPT release notes on September 29. Claude Opus 5.5 was released on September 22, 2026 and captured on September 24, 2026. Grok 4.7 was released on September 21, 2026 and captured on September 25, 2026. Claude Sonnet 5.5 was released and captured on September 28, 2026.
+
+Claude Fable 5.2 was released on November 9, 2026 and captured on November 10, 2026. Its release date was verified against Anthropic’s Claude Fable page; the release and snapshot dates are recorded separately.
 
 MiniMax M3.1 Flash was released on October 19, 2026 and captured on October 21, 2026. Its release date was verified against MiniMax’s own blog post; the release and snapshot dates are recorded separately even though they are close together.
 
