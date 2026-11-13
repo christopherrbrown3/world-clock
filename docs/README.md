@@ -6,6 +6,7 @@ Use this index to find the right project guide.
 
 - [Model Release Dates](model-release-dates.md): verified vendor launch dates, source links, and rollout distinctions.
 
+- [Gemini 4 Hydrogen Reference Notes](gemini-4-hydrogen-reference-notes.md): reference coverage, horological details, intentional approximations, and validation for the from-scratch rendition.
 - [Claude Fable 5.2 Reference Notes](fable-5.2-reference-notes.md): photo coverage, variant choices, intentional approximations, and validation for the from-scratch rendition.
 - [Gemini 4 Carbon Reference Notes](gemini-4-carbon-reference-notes.md): reference coverage, horological details, intentional approximations, and validation for the from-scratch rendition.
 - [GPT 6.1 Terra Reference Notes](gpt-6.1-terra-reference-notes.md): sources, variant choices, and limitations for the independent rendition.
