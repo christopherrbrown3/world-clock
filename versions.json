@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "gemini-4-hydrogen",
+      "label": "Gemini 4 Hydrogen",
+      "file": "versions/gemini-4-hydrogen.html",
+      "snapshotDate": "2026-11-13",
+      "notes": "Independent Gemini 4 Hydrogen rendition, authored from scratch as the Hydrogen Observatory with its own Intl timezone engine, 205-city atlas, 24-hour solar meridian strip, instance-scoped SVG horological kit, and all 62 reference-led timepieces moving at their catalog cadences, with live date, day, month, astronomical moonphase, 24-hour, regatta and power-reserve complications, fifteen working chronographs, photoluminescent and electroluminescent Lume Study, duplicate-free face shuffling, a filterable collection, and a poseable inspection loupe."
+    },
+    {
       "id": "gemini-4-carbon",
       "label": "Gemini 4 Carbon",
       "file": "versions/gemini-4-carbon.html",

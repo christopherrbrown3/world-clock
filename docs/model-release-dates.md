@@ -1,5 +1,7 @@
 # Model release dates
 
+Gemini 4 Hydrogen’s release date, **November 13, 2026**, was supplied by the maintainer. No public vendor release source exists to verify it against, so it is recorded here as maintainer-supplied rather than externally confirmed. The rendition was captured on the same day, and the snapshot date in `versions.json` records that repository checkpoint separately.
+
 Claude Fable 5.2’s release date, **November 9, 2026**, was verified against [Anthropic’s Claude Fable page](https://www.anthropic.com/claude/fable) on November 10, 2026. Its announcements list dates “Introducing Claude Fable 5.2” to November 9, 2026, and the page gives the API model ID `claude-fable-5-2`. The rendition was captured on **November 10, 2026**, the snapshot date recorded in `versions.json`.
 
 Copilot Fusion Max’s release date, **October 28, 2026**, was supplied by the maintainer. No public vendor release source exists to verify it against, so it is recorded here as maintainer-supplied rather than externally confirmed. The rendition was captured on the same day, and the snapshot date in `versions.json` records that repository checkpoint separately.
@@ -34,6 +36,7 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 
 | Repository model label | Release date | Evidence |
 | --- | --- | --- |
+| Gemini 4 Hydrogen | 2026-11-13 | Maintainer-supplied. No public vendor release source exists, so this date is not externally verified. |
 | Claude Fable 5.2 | 2026-11-09 | [Anthropic’s Claude Fable page](https://www.anthropic.com/claude/fable) lists “Introducing Claude Fable 5.2” under November 9, 2026. |
 | Copilot Fusion Max | 2026-10-28 | Maintainer-supplied. No public vendor release source exists, so this date is not externally verified. |
 | Gemini 4 Carbon | 2026-10-28 | [Google’s announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/) is dated October 28, 2026 and introduces Gemini 4 Carbon (`gemini-4-carbon`). Copilot Fusion Max stays ahead for this tied date. |
