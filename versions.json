@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "gpt-6.2-sol",
+      "label": "GPT 6.2 Sol",
+      "file": "versions/gpt-6.2-sol.html",
+      "snapshotDate": "2026-11-17",
+      "notes": "Independent OpenAI GPT 6.2 Sol rendition with 62 reference-led inline SVG timepieces, live city clocks, a searchable collection, and enlarged inspection with chronographs and a regatta countdown."
+    },
+    {
       "id": "gemini-4-hydrogen",
       "label": "Gemini 4 Hydrogen",
       "file": "versions/gemini-4-hydrogen.html",

@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Thirty-two perspectives.**
+**One brief. Thirty-three perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open Gemini 4 Hydrogen](versions/gemini-4-hydrogen.html) · [Open Claude Fable 5.2](versions/fable-5.2.html) · [Open Copilot Fusion Max](versions/copilot-fusion-max.html) · [Open Gemini 4 Carbon](versions/gemini-4-carbon.html) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
+**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open GPT 6.2 Sol](versions/gpt-6.2-sol.html) · [Open Gemini 4 Hydrogen](versions/gemini-4-hydrogen.html) · [Open Claude Fable 5.2](versions/fable-5.2.html) · [Open Copilot Fusion Max](versions/copilot-fusion-max.html) · [Open Gemini 4 Carbon](versions/gemini-4-carbon.html) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
 
 </div>
 
@@ -30,6 +30,7 @@ Models with verified release dates are listed newest first. **Model release** li
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
+| [GPT 6.2 Sol](versions/gpt-6.2-sol.html) | [2026-11-17](https://openai.com/index/introducing-gpt-6-2-astra-sol/) | 2026-11-17 |
 | [Gemini 4 Hydrogen](versions/gemini-4-hydrogen.html) | 2026-11-13 (maintainer-supplied) | 2026-11-13 |
 | [Claude Fable 5.2](versions/fable-5.2.html) | [2026-11-09](https://www.anthropic.com/claude/fable) | 2026-11-10 |
 | [Copilot Fusion Max](versions/copilot-fusion-max.html) | 2026-10-28 (maintainer-supplied) | 2026-10-28 |
@@ -68,6 +69,10 @@ The [active development build](world-clock.html) remains available separately. I
 ## Inside a collection
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
+
+GPT 6.2 Sol pairs a featured city clock with a west-to-east city list. Its searchable collection contains all 62 watches and clocks, with enlarged inspection, chronograph controls, and a programmable regatta countdown. [Reference notes and full collection preview](docs/gpt-6.2-sol-reference-notes.md)
+
+![GPT 6.2 Sol city board presenting the Rolex Submariner Date](docs/assets/gpt-6.2-sol-desktop.webp)
 
 Gemini 4 Hydrogen implements all 62 faces in a clean-room standalone page, authored from scratch as the Hydrogen Observatory with its own `Intl` timezone engine, 205-city atlas, 24-hour solar meridian strip, and instance-scoped SVG horological kit. Each piece moves at its catalog cadence, fifteen chronographs run interactively, Lume Study illuminates authentic photoluminescent and electroluminescent compounds across the catalog, and any watch can be posed and assigned to a city. [Read its reference and approximation notes](docs/gemini-4-hydrogen-reference-notes.md).
 
@@ -158,7 +163,7 @@ git clone https://github.com/christopherrbrown3/world-clock.git
 cd world-clock
 ```
 
-Open `index.html` in a browser, then choose a model. On macOS, `open index.html` does this from the terminal. To go directly to GPT 6.1 Sol, open `versions/gpt-6.1-sol.html`.
+Open `index.html` in a browser, then choose a model. On macOS, `open index.html` does this from the terminal. To go directly to GPT 6.2 Sol, open `versions/gpt-6.2-sol.html`.
 
 Each model app is a standalone HTML file whose clocks work offline. The index uses the local Manrope font in `assets/fonts/`; keep that directory alongside it for the intended typography. No font service is contacted by the index. A static server or GitHub Pages works too.
 

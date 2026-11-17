@@ -15,6 +15,8 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
+- `versions/gpt-6.2-sol.html` includes an independently authored city board, searchable collection, enlarged inspection, and 62 working SVG watches and clocks.
+
 - `versions/gemini-4-hydrogen.html`: Gemini 4 Hydrogen checkpoint, authored from scratch as the Hydrogen Observatory with its own `Intl` timezone engine, 205-city atlas, 24-hour solar meridian strip, instance-scoped SVG horological kit, Lume Study, poseable Loupe & Timebench, fifteen working chronographs, and all 62 faces.
 - `versions/fable-5.2.html`: Claude Fable 5.2 checkpoint, authored from scratch with its own interface, time engine, 136-city atlas, two-layer SVG drawing kit and all 62 faces.
 - `versions/gemini-4-carbon.html`: Gemini 4 Carbon checkpoint, authored from scratch with its own Carbon Allotrope Observatory interface, `Intl` time engine, 174-city atlas, instance-scoped SVG horological kit, Lume Study, poseable Loupe & Timebench, fifteen working chronographs, and all 62 faces.
