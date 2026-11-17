@@ -4,6 +4,7 @@ Use this index to find the right project guide.
 
 ## Project Guides
 
+- [GPT 6.2 Sol Reference Notes](gpt-6.2-sol-reference-notes.md) document the photographs, variant choices, and working details for all 62 timepieces.
 - [Model Release Dates](model-release-dates.md): verified vendor launch dates, source links, and rollout distinctions.
 
 - [Gemini 4 Hydrogen Reference Notes](gemini-4-hydrogen-reference-notes.md): reference coverage, horological details, intentional approximations, and validation for the from-scratch rendition.
