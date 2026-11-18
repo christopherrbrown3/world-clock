@@ -15,6 +15,7 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
+- `versions/mai-code-2.html` is an independent Microsoft MAI Code 2 rendition with 62 scratch-authored SVG timepieces, a 52-city IANA atlas, duplicate-aware shuffling, fixed inspection poses, chronographs, and an adjustable regatta countdown.
 - `versions/gpt-6.2-astra.html` draws 62 independent SVG timepieces with live city time, calendar displays, elapsed-time and countdown controls, and magnified inspection.
 
 - `versions/gpt-6.2-sol.html` includes an independently authored city board, searchable collection, enlarged inspection, and 62 working SVG watches and clocks.

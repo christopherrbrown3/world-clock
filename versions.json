@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "mai-code-2",
+      "label": "Microsoft MAI Code 2",
+      "file": "versions/mai-code-2.html",
+      "snapshotDate": "2026-11-18",
+      "notes": "Independent Microsoft MAI Code 2 rendition with 62 reference-led inline SVG timepieces, a west-to-east IANA city board, searchable collection, poseable inspection, working chronographs and an adjustable Yacht-Master II regatta countdown."
+    },
+    {
       "id": "gpt-6.2-sol",
       "label": "GPT 6.2 Sol",
       "file": "versions/gpt-6.2-sol.html",

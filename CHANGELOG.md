@@ -4,6 +4,8 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added Microsoft MAI Code 2 as an independent, scratch-authored standalone rendition with 62 inline SVG watches and clocks, a west-to-east IANA city board, duplicate-aware face shuffling, a searchable 62-object library, enlarged fixed-time inspection, live digital complications, working chronograph test controls, and an adjustable Yacht-Master II regatta countdown. Registered the maintainer-supplied November 18, 2026 date in the directory, README, manifest, release-date notes, model guide, and reference notes while leaving all prior renditions and the active build unchanged.
+
 - Added the independent OpenAI GPT 6.2 Astra entry with 62 working SVG watches and clocks. Its city board and searchable collection share an inspector with dial magnification, working chronographs, Casio stopwatches and the Yacht-Master II countdown.
 
 - Added GPT 6.2 Sol with 62 independently drawn SVG timepieces, live city clocks, a searchable collection, and inspection with chronographs and an adjustable regatta countdown. Registered the November 17, 2026 snapshot in the model directory and manifest.
