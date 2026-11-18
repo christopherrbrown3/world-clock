@@ -15,6 +15,8 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
+- `versions/gpt-6.2-astra.html` draws 62 independent SVG timepieces with live city time, calendar displays, elapsed-time and countdown controls, and magnified inspection.
+
 - `versions/gpt-6.2-sol.html` includes an independently authored city board, searchable collection, enlarged inspection, and 62 working SVG watches and clocks.
 
 - `versions/gemini-4-hydrogen.html`: Gemini 4 Hydrogen checkpoint, authored from scratch as the Hydrogen Observatory with its own `Intl` timezone engine, 205-city atlas, 24-hour solar meridian strip, instance-scoped SVG horological kit, Lume Study, poseable Loupe & Timebench, fifteen working chronographs, and all 62 faces.

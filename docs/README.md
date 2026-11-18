@@ -4,6 +4,8 @@ Use this index to find the right project guide.
 
 ## Project Guides
 
+- [GPT 6.2 Astra reference notes](gpt-6.2-astra-reference-notes.md) record the photographic references, working complications and rendered collection.
+
 - [GPT 6.2 Sol Reference Notes](gpt-6.2-sol-reference-notes.md) document the photographs, variant choices, and working details for all 62 timepieces.
 - [Model Release Dates](model-release-dates.md): verified vendor launch dates, source links, and rollout distinctions.
 
