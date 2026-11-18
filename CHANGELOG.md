@@ -4,6 +4,8 @@ Notable project changes will be tracked here.
 
 ## Unreleased
 
+- Added the independent OpenAI GPT 6.2 Astra entry with 62 working SVG watches and clocks. Its city board and searchable collection share an inspector with dial magnification, working chronographs, Casio stopwatches and the Yacht-Master II countdown.
+
 - Added GPT 6.2 Sol with 62 independently drawn SVG timepieces, live city clocks, a searchable collection, and inspection with chronographs and an adjustable regatta countdown. Registered the November 17, 2026 snapshot in the model directory and manifest.
 
 - Added Gemini 4 Hydrogen as a new standalone rendition, authored from scratch as the Hydrogen Observatory with its own `Intl` timezone engine, 205-city atlas, 24-hour solar meridian strip, instance-scoped SVG horological kit, and all 62 reference-led timepieces moving at their catalog cadences. Includes sky-phase city cards ordered west to east, duplicate-free face shuffling, photoluminescent and electroluminescent Lume Study, a filterable 62-piece collection, and a poseable Loupe Inspection modal with fifteen working chronographs. Added it to the project index as the newest rendition (bumping the rendition total to 32 and the Google provider filter to 4), the README model table and showcase, the snapshot manifest, the release-date notes, the versioning guide, automated tests, and reference notes with rendered screenshots. Its release date and snapshot date are recorded as November 13, 2026 (maintainer-supplied). Earlier model pages and the active build are unchanged.

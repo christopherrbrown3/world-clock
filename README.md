@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Thirty-three perspectives.**
+**One brief. Thirty-four perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open GPT 6.2 Sol](versions/gpt-6.2-sol.html) · [Open Gemini 4 Hydrogen](versions/gemini-4-hydrogen.html) · [Open Claude Fable 5.2](versions/fable-5.2.html) · [Open Copilot Fusion Max](versions/copilot-fusion-max.html) · [Open Gemini 4 Carbon](versions/gemini-4-carbon.html) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
+**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open GPT 6.2 Astra](versions/gpt-6.2-astra.html) · [Open GPT 6.2 Sol](versions/gpt-6.2-sol.html) · [Open Gemini 4 Hydrogen](versions/gemini-4-hydrogen.html) · [Open Claude Fable 5.2](versions/fable-5.2.html) · [Open Copilot Fusion Max](versions/copilot-fusion-max.html) · [Open Gemini 4 Carbon](versions/gemini-4-carbon.html) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
 
 </div>
 
@@ -31,6 +31,7 @@ Models with verified release dates are listed newest first. **Model release** li
 | Model | Model release | Snapshot |
 | --- | --- | --- |
 | [GPT 6.2 Sol](versions/gpt-6.2-sol.html) | [2026-11-17](https://openai.com/index/introducing-gpt-6-2-astra-sol/) | 2026-11-17 |
+| [GPT 6.2 Astra](versions/gpt-6.2-astra.html) | [2026-11-17](https://openai.com/index/introducing-gpt-6-2-astra-sol/) | 2026-11-17 |
 | [Gemini 4 Hydrogen](versions/gemini-4-hydrogen.html) | 2026-11-13 (maintainer-supplied) | 2026-11-13 |
 | [Claude Fable 5.2](versions/fable-5.2.html) | [2026-11-09](https://www.anthropic.com/claude/fable) | 2026-11-10 |
 | [Copilot Fusion Max](versions/copilot-fusion-max.html) | 2026-10-28 (maintainer-supplied) | 2026-10-28 |
@@ -69,6 +70,10 @@ The [active development build](world-clock.html) remains available separately. I
 ## Inside a collection
 
 The shared brief covers city search, adding and removing cities, individual and all-city face shuffles, ordering by UTC offset, and live local times. The catalog spans mechanical and digital watches, architectural clocks, pocket watches, and character timepieces.
+
+GPT 6.2 Astra draws all 62 timepieces from the catalog. Select a city to see its watch and local time, or open a piece in the collection for a closer look. The inspector runs mechanical chronographs, digital stopwatches and the Yacht-Master II regatta countdown. [Reference notes and collection plate](docs/gpt-6.2-astra-reference-notes.md)
+
+![GPT 6.2 Astra city clocks with the GMT-Master II set to New York time](docs/assets/gpt-6.2-astra-desktop.webp)
 
 GPT 6.2 Sol pairs a featured city clock with a west-to-east city list. Its searchable collection contains all 62 watches and clocks, with enlarged inspection, chronograph controls, and a programmable regatta countdown. [Reference notes and full collection preview](docs/gpt-6.2-sol-reference-notes.md)
 
