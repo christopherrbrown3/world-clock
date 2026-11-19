@@ -1,5 +1,7 @@
 # Model release dates
 
+Gemini 4 Neon’s release date, **November 18, 2026**, was verified against [Google DeepMind’s announcement](https://deepmind.google/blog/introducing-gemini-4-neon/), “Introducing Gemini 4 Neon,” dated November 18, 2026. The rendition was captured on **November 19, 2026**, the snapshot date recorded separately in `versions.json`. Microsoft MAI Code 2 stays ahead for the tied November 18 release date.
+
 Microsoft MAI Code 2’s release date, **November 18, 2026**, was supplied by the maintainer. No public vendor release source was provided, so it is recorded as maintainer-supplied rather than externally confirmed. The rendition was captured on the same day, and the snapshot date in `versions.json` records that repository checkpoint separately.
 
 GPT 6.2 Astra and GPT 6.2 Sol launched together on **November 17, 2026**. The project captured both renditions that day and records their snapshot dates in `versions.json`. Sol was listed first and retains its place within the tied release date. [OpenAI’s launch announcement](https://openai.com/index/introducing-gpt-6-2-astra-sol/)
@@ -41,6 +43,7 @@ Claude Sonnet 5.5’s release date, **September 28, 2026**, was verified against
 | Repository model label | Release date | Evidence |
 | --- | --- | --- |
 | Microsoft MAI Code 2 | 2026-11-18 | Maintainer-supplied. No public vendor release source was provided. |
+| Gemini 4 Neon | 2026-11-18 | [Google DeepMind’s announcement](https://deepmind.google/blog/introducing-gemini-4-neon/) is dated November 18, 2026 and introduces Gemini 4 Neon. Microsoft MAI Code 2 stays ahead for this tied date. |
 | GPT 6.2 Sol | 2026-11-17 | [OpenAI’s launch announcement](https://openai.com/index/introducing-gpt-6-2-astra-sol/) |
 | GPT 6.2 Astra | 2026-11-17 | [OpenAI’s launch announcement](https://openai.com/index/introducing-gpt-6-2-astra-sol/) |
 | Gemini 4 Hydrogen | 2026-11-13 | Maintainer-supplied. No public vendor release source exists, so this date is not externally verified. |

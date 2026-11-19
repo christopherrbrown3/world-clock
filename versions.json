@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "gemini-4-neon",
+      "label": "Gemini 4 Neon",
+      "file": "versions/gemini-4-neon.html",
+      "snapshotDate": "2026-11-19",
+      "notes": "Independent Gemini 4 Neon rendition, authored from scratch with its own Intl timezone engine, 196-city atlas, 24-hour solar meridian strip, instance-scoped horological SVG primitives kit, and all 62 reference-led timepieces moving at their catalog cadences, with live date, day, month, astronomical moonphase, GMT, and power-reserve complications, 16 interactive chronographs, stopwatches, and regatta countdown, photoluminescent and electroluminescent Lume Study, duplicate-free shuffling, a filterable collection, and a poseable optical Loupe & Timebench."
+    },
+    {
       "id": "mai-code-2",
       "label": "Microsoft MAI Code 2",
       "file": "versions/mai-code-2.html",
