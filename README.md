@@ -2,7 +2,7 @@
 
 # World Clock
 
-**One brief. Thirty-six perspectives.**
+**One brief. Thirty-seven perspectives.**
 
 62 watch and clock faces, interpreted by successive AI models as working SVG world clocks.
 
@@ -10,7 +10,7 @@
 [![Faces](https://img.shields.io/badge/faces-62-782c35)](docs/watch-face-catalog.md)
 [![License](https://img.shields.io/badge/code-MIT-666156)](LICENSE)
 
-**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open Microsoft MAI Code 2](versions/mai-code-2.html) · [Open Gemini 4 Neon](versions/gemini-4-neon.html) · [Open GPT 6.2 Astra](versions/gpt-6.2-astra.html) · [Open GPT 6.2 Sol](versions/gpt-6.2-sol.html) · [Open Gemini 4 Hydrogen](versions/gemini-4-hydrogen.html) · [Open Claude Fable 5.2](versions/fable-5.2.html) · [Open Copilot Fusion Max](versions/copilot-fusion-max.html) · [Open Gemini 4 Carbon](versions/gemini-4-carbon.html) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
+**[Explore the project](https://worldclock.christopherbrown.ai/) · [Open Inkling 2 Mini](versions/inkling-2-mini.html) · [Open Microsoft MAI Code 2](versions/mai-code-2.html) · [Open Gemini 4 Neon](versions/gemini-4-neon.html) · [Open GPT 6.2 Astra](versions/gpt-6.2-astra.html) · [Open GPT 6.2 Sol](versions/gpt-6.2-sol.html) · [Open Gemini 4 Hydrogen](versions/gemini-4-hydrogen.html) · [Open Claude Fable 5.2](versions/fable-5.2.html) · [Open Copilot Fusion Max](versions/copilot-fusion-max.html) · [Open Gemini 4 Carbon](versions/gemini-4-carbon.html) · [Open GPT 6.1 Terra](versions/gpt-6.1-terra.html) · [Open Recursive Flint](versions/recursive-flint.html) · [Open Hydrafusion](versions/hydrafusion.html) · [Open GPT 6.1 Sol](versions/gpt-6.1-sol.html) · [Open Claude Sonnet 5.5](versions/claude-sonnet-5.5.html) · [Open Grok 4.7](versions/grok-4.7.html)**
 
 </div>
 
@@ -30,6 +30,7 @@ Models with verified release dates are listed newest first. **Model release** li
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
+| [Inkling 2 Mini](versions/inkling-2-mini.html) | 2026-11-24 (maintainer-supplied) | 2026-11-24 |
 | [Microsoft MAI Code 2](versions/mai-code-2.html) | 2026-11-18 (maintainer-supplied) | 2026-11-18 |
 | [Gemini 4 Neon](versions/gemini-4-neon.html) | [2026-11-18](https://deepmind.google/blog/introducing-gemini-4-neon/) | 2026-11-19 |
 | [GPT 6.2 Sol](versions/gpt-6.2-sol.html) | [2026-11-17](https://openai.com/index/introducing-gpt-6-2-astra-sol/) | 2026-11-17 |
@@ -80,6 +81,14 @@ Gemini 4 Neon implements all 62 faces in a clean-room standalone page authored f
 ![Gemini 4 Neon’s complete 62-piece SVG collection in catalog order](docs/assets/gemini-4-neon-faces.png)
 
 [Phone view](docs/assets/gemini-4-neon-mobile.png) · [Yacht-Master II inspection and regatta bench](docs/assets/gemini-4-neon-inspection.png)
+
+Inkling 2 Mini renders 62 watch and clock faces in an original standalone SVG page, with a live city board, searchable collection, and interactive inspection controls. [Read the reference and approximation notes](docs/inkling-2-mini-reference-notes.md).
+
+![Inkling 2 Mini city board](docs/assets/inkling-2-mini-desktop.png)
+
+![Inkling 2 Mini watch and clock collection](docs/assets/inkling-2-mini-faces.png)
+
+[Phone view](docs/assets/inkling-2-mini-mobile.png)
 
 Microsoft MAI Code 2 presents all 62 timepieces as an original standalone SVG instrument library. Its MAI Timeworks board stays ordered by IANA UTC offset, with duplicate-aware shuffling, a searchable collection, enlarged fixed-time inspection, working chronograph subdials, and a programmable Yacht-Master II countdown. [Read the reference and approximation notes](docs/mai-code-2-reference-notes.md).
 

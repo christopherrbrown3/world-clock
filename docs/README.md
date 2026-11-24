@@ -4,6 +4,7 @@ Use this index to find the right project guide.
 
 ## Project Guides
 
+- [Inkling 2 Mini Reference Notes](inkling-2-mini-reference-notes.md): implementation overview, approximations, and rendered screenshots.
 - [Gemini 4 Neon Reference Notes](gemini-4-neon-reference-notes.md): reference coverage, horological details, intentional approximations, and validation for the from-scratch rendition.
 
 - [GPT 6.2 Astra reference notes](gpt-6.2-astra-reference-notes.md) record the photographic references, working complications and rendered collection.

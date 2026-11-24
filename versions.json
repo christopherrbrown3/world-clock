@@ -8,6 +8,13 @@
   },
   "snapshots": [
     {
+      "id": "inkling-2-mini",
+      "label": "Inkling 2 Mini",
+      "file": "versions/inkling-2-mini.html",
+      "snapshotDate": "2026-11-24",
+      "notes": "Independent Inkling 2 Mini rendition with 62 inline SVG timepieces, live city cards, a searchable collection, and interactive inspection controls."
+    },
+    {
       "id": "gemini-4-neon",
       "label": "Gemini 4 Neon",
       "file": "versions/gemini-4-neon.html",

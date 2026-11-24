@@ -1,0 +1,1698 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Inkling 2 Mini's independent World Clock: 62 reference-led SVG timepieces, live city clocks, and a poseable inspection bench.">
+<meta name="theme-color" content="#101418">
+<meta name="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2713%27 fill=%27%23101418%27 stroke=%27%23d4a24e%27 stroke-width=%272%27/%3E%3Cpath d=%27M15 7v8l6 4%27 stroke=%27%23e8e4d8%27 stroke-width=%272.4%27 fill=%27none%27 stroke-linecap=%27round%27/%3E%3C/svg%3E">
+<title>World Clock — Inkling 2 Mini</title>
+<style>
+:root{color-scheme:dark;--void:#0b0e12;--bg:#101418;--panel:#161b22;--panel2:#1b212b;--line:#2a323d;--line2:#3a4552;--ink:#ece7d8;--muted:#98a0ac;--brass:#d4a24e;--brass2:#f0c876;--teal:#7fd4c0;--danger:#ff7c6b;--serif:Georgia,"Times New Roman",serif;--sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:radial-gradient(1100px 520px at 78% -6%,#1d2733 0,transparent 58%),radial-gradient(900px 480px at 8% 104%,#171d26 0,transparent 55%),var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5}
+button,input,select{font:inherit}button{cursor:pointer}
+.skip{position:absolute;left:-999px;top:8px;background:var(--brass);color:#1a1206;padding:8px 14px;border-radius:8px;z-index:99;text-decoration:none;font-weight:700}
+.skip:focus{left:8px}
+.shell{width:min(1480px,calc(100% - 40px));margin:auto}
+.top{min-height:72px;display:flex;align-items:center;gap:20px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
+.sigil{width:40px;height:40px;border:1px solid #4a3d20;border-radius:12px;display:grid;place-items:center;color:var(--brass);background:#171c24;box-shadow:inset 0 0 0 1px #0006}
+.brand strong{font-size:17px;letter-spacing:-.01em}
+.brand small{display:block;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+.top-meta{margin-left:auto;display:flex;gap:16px;color:var(--muted);font-size:10px;letter-spacing:.1em;text-transform:uppercase;align-items:center}
+.top-meta a{color:var(--muted);text-decoration:none}.top-meta a:hover{color:var(--brass)}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,430px);gap:44px;align-items:end;padding:44px 0 30px}
+.eyebrow{color:var(--brass);font-size:10px;letter-spacing:.26em;text-transform:uppercase;margin:0 0 12px}
+.hero h1{font:clamp(38px,5.4vw,66px)/1.02 var(--serif);letter-spacing:-.035em;margin:0}
+.hero h1 em{font-style:normal;color:var(--brass2)}
+.hero-copy{color:var(--muted);font-size:13px;line-height:1.8;max-width:56ch;margin:16px 0 0}
+.hero-copy strong{color:var(--ink)}
+.hero-clock{position:relative;border:1px solid var(--line);border-radius:22px;background:radial-gradient(circle at 50% 40%,#1c2430 0,#101418 72%);overflow:hidden;box-shadow:0 24px 60px #0008}
+.hero-clock .stage,.stage{position:relative;width:100%;height:auto;display:block}
+.watch-svg{width:100%;height:auto;display:block}
+.hero-clock .watch-svg{height:400px}
+.hero-caption{display:flex;justify-content:space-between;gap:12px;padding:12px 16px;border-top:1px solid var(--line);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:sticky;top:0;background:#0e1216ee;backdrop-filter:blur(12px);z-index:12;flex-wrap:wrap}
+.views,.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.status{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:10px;padding:18px 2px 12px;letter-spacing:.05em;flex-wrap:wrap}
+.pulse{display:flex;align-items:center;gap:7px}
+.pulse::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--brass);box-shadow:0 0 10px var(--brass)}
+.btn{min-height:40px;padding:8px 16px;border-radius:999px;border:1px solid var(--line2);background:transparent;color:var(--ink);font-size:12px;letter-spacing:.02em}
+.btn:hover{border-color:var(--brass);color:var(--brass2)}
+.btn.primary{background:var(--brass);border-color:var(--brass);color:#241703;font-weight:700}
+.btn[aria-pressed="true"]{background:#2a2417;border-color:var(--brass);color:var(--brass2)}
+.count{font-size:10px;color:var(--muted);letter-spacing:.06em}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.city-card{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 18px 44px #0007;min-width:0}
+.city-card .stage{background:radial-gradient(circle at 50% 42%,#1d2632 0,#0f141b 74%);padding:16px}
+.city-card .watch-svg{height:236px}
+.city-meta{padding:14px 16px 16px;display:flex;flex-direction:column;gap:4px}
+.city-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.city-name{font-size:17px;font-weight:600;letter-spacing:-.01em}
+.city-zone{font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.city-time{font-family:var(--mono);font-size:26px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.city-sub{font-size:11px;color:var(--muted)}
+.city-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:6px;border-top:1px solid var(--line);padding-top:10px}
+.city-off{font-size:10px;color:var(--brass);letter-spacing:.08em;text-transform:uppercase}
+.city-actions{display:flex;gap:6px}
+.icon-btn{min-width:34px;min-height:34px;border-radius:9px;border:1px solid var(--line2);background:transparent;color:var(--muted);display:inline-grid;place-items:center;font-size:14px;line-height:1}
+.icon-btn:hover{color:var(--brass2);border-color:var(--brass)}
+.empty{border:1px dashed var(--line2);border-radius:16px;padding:34px;text-align:center;color:var(--muted);font-size:12px;margin-top:16px}
+.empty h2{font:20px/1.4 var(--serif);color:var(--ink);margin:0 0 8px}
+.catalog-tools{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search{position:relative;flex:1;min-width:180px}
+.search input{width:100%;min-height:44px;border-radius:999px;border:1px solid var(--line2);background:#0d1218;color:var(--ink);padding:10px 18px}
+.search input:focus{outline:2px solid var(--brass);outline-offset:1px}
+.catalog-tools select{min-height:44px;border-radius:999px;border:1px solid var(--line2);background:#0d1218;color:var(--ink);padding:0 16px}
+.coll-card{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;transition:border-color .18s,transform .18s;box-shadow:0 14px 36px #0006;min-width:0}
+.coll-card:hover{border-color:var(--brass);transform:translateY(-2px)}
+.coll-svg{display:block;width:100%;background:radial-gradient(circle at 50% 42%,#1d2632 0,#0f141b 76%);padding:14px}
+.coll-svg .watch-svg{height:180px}
+.coll-meta{padding:12px 14px 14px;display:flex;flex-direction:column;gap:3px}
+.coll-maker{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.coll-name{font-size:13px;font-weight:600;letter-spacing:-.01em}
+.coll-cat{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass)}
+.dialog{position:fixed;inset:0;z-index:40;padding:20px}.dialog[open]{display:grid;place-items:center}
+.dialog.open{display:grid}
+.dialog::backdrop{background:#04070ad8;backdrop-filter:blur(6px)}
+.dialog-panel{width:min(1060px,calc(100vw - 28px));max-height:92dvh;border:1px solid var(--line2);border-radius:20px;background:var(--panel);color:var(--ink);box-shadow:0 28px 90px #000d;overflow:auto}
+.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2}
+.dialog-head h2{font:22px/1 var(--serif);letter-spacing:-.02em;margin:0}
+.dialog-head .close{min-width:40px;min-height:40px;border-radius:50%;border:1px solid var(--line2);background:transparent;color:var(--muted)}
+.dialog-head .close:hover{color:var(--ink);border-color:var(--brass)}
+.dialog-body{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0}
+.inspect-stage{background:radial-gradient(circle at 50% 42%,#1d2632 0,#0f141b 76%);padding:22px;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--line)}
+.inspect-stage .watch-svg{height:min(52dvh,420px);max-width:100%}
+.inspect-copy{padding:22px;display:flex;flex-direction:column;gap:14px}
+.inspect-maker{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--brass)}
+.inspect-name{font:22px/1.2 var(--serif);letter-spacing:-.02em;margin:0}
+.inspect-blurb{color:var(--muted);font-size:12.5px;line-height:1.75;margin:0}
+.inspect-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:11px}
+.inspect-meta div{display:flex;justify-content:space-between;gap:12px}
+.inspect-meta span{color:var(--muted)}
+.inspect-meta b{color:var(--ink);font-weight:600;text-align:right}
+.chrono-box{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}.chrono-box[hidden]{display:none}
+.chrono-box h3{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0}
+.chrono-display{font-family:var(--mono);font-size:24px;font-variant-numeric:tabular-nums;letter-spacing:.04em;color:var(--brass2)}
+.chrono-btns{display:flex;gap:8px;flex-wrap:wrap}
+.inspect-note{border-top:1px solid var(--line);padding-top:12px;color:var(--muted);font-size:11px;line-height:1.75}
+.footer{display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:10px;line-height:1.8;border-top:1px solid var(--line);margin-top:34px;padding:20px 0 30px;flex-wrap:wrap}
+.footer a{color:var(--muted);text-decoration:none}.footer a:hover{color:var(--brass2)}
+.lume .stage,.lume .inspect-stage,.lume .hero-clock{background:radial-gradient(circle,#241c4a 0,#0a0a18 70%)}
+.lume .lume-fill{fill:#c8b6ff!important;filter:drop-shadow(0 0 5px #9d86ff)}
+.lume [data-lcd]{filter:drop-shadow(0 0 5px #8f7bff)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);background:#1c232e;border:1px solid var(--line2);color:var(--ink);padding:11px 20px;border-radius:999px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:60}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast[hidden]{display:none}
+.add-panel{display:flex;gap:10px;align-items:center;padding:12px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel);margin:14px 0 0}
+.add-panel[hidden]{display:none}
+.add-panel select{flex:1;min-height:44px;border-radius:999px;border:1px solid var(--line2);background:#0d1218;color:var(--ink);padding:0 16px}
+@media(max-width:1080px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{grid-template-columns:1fr 330px}.dialog-body{grid-template-columns:1fr}.inspect-stage{border-right:none;border-bottom:1px solid var(--line)}}
+@media(max-width:700px){.shell{width:min(100% - 26px,1480px)}.hero{display:block;padding:34px 0 24px}.hero-clock{margin-top:20px}.hero h1{font-size:40px}.toolbar{position:static}.grid{grid-template-columns:1fr}.catalog-tools{flex-direction:column}.catalog-tools select{width:100%}.top-meta a{display:none}.hero-clock .watch-svg{height:300px}.city-card .watch-svg{height:210px}.inspect-stage .watch-svg{height:300px}}
+@media(max-width:420px){.hero h1{font-size:34px}.btn{font-size:10px;padding:7px 12px}.city-time{font-size:22px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to clocks</a>
+<div class="shell">
+<header class="top">
+  <a class="brand" href="../index.html"><span class="sigil" aria-hidden="true"><svg viewBox="0 0 30 30" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="15" cy="15" r="11"/><path d="M15 8v7l5 3"/></svg></span><strong>World Clock<small>Inkling 2 Mini</small></strong></a>
+  <div class="top-meta"><a href="../index.html">All renditions</a><span>62 reference studies</span><span>UTC <time class="utc" id="utc">—</time></span></div>
+</header>
+<main id="main">
+  <section class="hero">
+    <div class="hero-intro">
+      <p class="eyebrow">Inkling 2 Mini</p>
+      <h1>Timepieces, drawn <em>to scale.</em></h1>
+      <p class="hero-copy">An independent study of <strong>62 watches and clocks</strong>. Every object is assembled from inline SVG, then animated with each city's local time — case, bezel, dial, hands and complications included.</p>
+    </div>
+    <div class="hero-clock" id="hero-clock"></div>
+  </section>
+  <div class="toolbar" role="group" aria-label="Views and actions">
+    <div class="views"><button class="btn" id="world-tab" type="button" aria-pressed="true">World clocks <span class="count" id="city-count">0</span></button><button class="btn" id="collection-tab" type="button" aria-pressed="false">Collection <span class="count" id="collection-count">62</span></button></div>
+    <div class="actions"><button class="btn" id="lume" type="button" aria-pressed="false">Lume</button><button class="btn" id="shuffle-all" type="button">Shuffle all</button><button class="btn primary" id="add-city" type="button">Add city</button></div>
+  </div>
+  <div class="add-panel" id="add-panel" hidden>
+    <select id="add-city-select" aria-label="Add a city"><option value="">— add a city —</option></select>
+    <button class="btn primary" id="add-city-confirm" type="button">Add</button>
+  </div>
+  <section id="world-view" aria-label="World clocks">
+    <div class="status"><span class="pulse">Live browser time · west to east</span><span id="world-status">—</span><span id="world-time">—</span></div>
+    <div class="grid" id="city-grid"></div>
+    <div class="empty" id="empty-cities" hidden><h2>No cities yet.</h2><p>Add a city to start the board.</p></div>
+  </section>
+  <section id="collection-view" aria-label="Timepiece collection" hidden>
+    <div class="status"><span class="pulse">Reference-led SVG collection</span><span id="collection-status">62 pieces</span></div>
+    <div class="catalog-tools"><div class="search"><input id="piece-search" type="search" placeholder="Search maker or model…" aria-label="Search timepieces"></div><select id="category" aria-label="Filter by category"><option value="all">All categories</option><option value="sport">Sport</option><option value="dress">Dress</option><option value="chrono">Chronograph</option><option value="everyday">Everyday</option><option value="clock">Clock</option><option value="digital">Digital</option></select></div>
+    <div class="grid" id="collection-grid"></div>
+    <div class="empty" id="empty-collection" hidden><h2>No matches.</h2><p>Try another search.</p></div>
+  </section>
+</main>
+<footer class="footer">
+  <span>Inkling 2 Mini · Independent World Clock rendition · 62 reference-led SVG timepieces</span>
+  <span><a href="../index.html">Project index</a> · <a href="../docs/watch-face-catalog.md">Face catalog</a> · <a href="../README.md">About</a></span>
+</footer>
+</div>
+<dialog class="dialog" id="inspect-dialog" aria-labelledby="inspect-name">
+  <div class="dialog-panel">
+    <div class="dialog-head"><h2 id="inspect-name">—</h2><button class="close" id="close-inspect" type="button" aria-label="Close">✕</button></div>
+    <div class="dialog-body">
+      <div class="inspect-stage" id="inspect-stage"></div>
+      <div class="inspect-copy">
+        <div class="inspect-maker" id="inspect-maker">—</div>
+        <h3 class="inspect-name" id="inspect-title">—</h3>
+        <p class="inspect-blurb" id="inspect-blurb">—</p>
+        <div class="inspect-meta" id="inspect-meta"></div>
+        <div class="chrono-box" id="chrono-box">
+          <h3 id="chrono-title">Chronograph</h3>
+          <div class="chrono-display" id="chrono-display">00:00.0</div>
+          <div class="chrono-btns"><button class="btn primary" id="chrono-toggle" type="button">Start</button><button class="btn" id="chrono-reset" type="button">Reset</button></div>
+        </div>
+        <p class="inspect-note" id="inspect-note">—</p>
+      </div>
+    </div>
+  </div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script>
+"use strict";
+
+/* ---------- shared hand shapes ---------- */
+function swordHand(cx, cy, len, width, color, extra) {
+  const w = width / 2;
+  const d = `M${cx} ${cy - len} L${cx + w} ${cy - len * 0.28} L${cx + w * 0.6} ${cy + 8} L${cx - w * 0.6} ${cy + 8} L${cx - w} ${cy - len * 0.28} Z`;
+  return path(d, color, null, 0, extra || '');
+}
+function batonHand(cx, cy, len, width, color, tail) {
+  return `<line x1="${cx}" y1="${cy + (tail || 8)}" x2="${cx}" y2="${cy - len}" stroke="${color}" stroke-width="${width}" stroke-linecap="round"/>`;
+}
+function dauphineHand(cx, cy, len, width, color) {
+  const w = width / 2;
+  const d = `M${cx} ${cy - len} L${cx + w} ${cy} L${cx} ${cy + 6} L${cx - w} ${cy} Z`;
+  return path(d, color, null, 0);
+}
+function lollipopSecond(cx, cy, len, tail, color) {
+  return `<g><line x1="${cx}" y1="${cy + tail}" x2="${cx}" y2="${cy - len}" stroke="${color}" stroke-width="1.6" stroke-linecap="round"/><circle cx="${cx}" cy="${cy - len * 0.78}" r="4.4" fill="${color}"/></g>`;
+}
+function alphaSecond(cx, cy, len, color) {
+  return `<g><line x1="${cx}" y1="${cy + 14}" x2="${cx}" y2="${cy - len}" stroke="${color}" stroke-width="1.8" stroke-linecap="round"/><circle cx="${cx}" cy="${cy - len * 0.7}" r="3.4" fill="${color}"/></g>`;
+}
+
+/* ---------- shared marker styles ---------- */
+function batonMarkers(cx, cy, rOut, rIn, count, color, w, lume) {
+  let out = '';
+  for (let i = 0; i < count; i++) {
+    const [x1, y1] = pt(cx, cy, rOut, i * (360 / count)), [x2, y2] = pt(cx, cy, rIn, i * (360 / count));
+    out += line(x1, y1, x2, y2, color, w);
+    if (lume) { const [lx, ly] = pt(cx, cy, (rOut + rIn) / 2, i * (360 / count)); out += circle(lx, ly, w * 0.9, '#c9f2ff', null, 0, 'class="lume-fill"'); }
+  }
+  return out;
+}
+function dotMarkers(cx, cy, r, count, color, lume) {
+  let out = '';
+  for (let i = 0; i < count; i++) {
+    const [x, y] = pt(cx, cy, r, i * (360 / count));
+    out += circle(x, y, 3.2, color);
+    if (lume) out += circle(x, y, 2.1, '#c9f2ff', null, 0, 'class="lume-fill"');
+  }
+  return out;
+}
+function numeralMarkers(cx, cy, r, count, color, fontSize, family) {
+  let out = '';
+  for (let i = 0; i < count; i++) {
+    const [x, y] = pt(cx, cy, r, i * (360 / count));
+    const n = i === 0 ? 12 : i;
+    out += txt(x, y + 1, String(n), fontSize, color, `font-family="${family || 'Georgia,serif'}" font-weight="700"`);
+  }
+  return out;
+}
+function romanMarkers(cx, cy, r, color, fontSize, family) {
+  const romans = ['XII', 'I', 'II', 'III', 'IIII', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
+  let out = '';
+  for (let i = 0; i < 12; i++) {
+    const [x, y] = pt(cx, cy, r, i * 30);
+    out += txt(x, y + 1, romans[i], fontSize, color, `font-family="${family || 'Georgia,serif'}" font-weight="700"`);
+  }
+  return out;
+}
+
+/* ---------- shared watch assembler ---------- */
+function roundWatch(u, s) {
+  const cx = 150, cy = 150, R = s.R || 118;
+  const dial = s.dial || '#101418', bezelC = s.bezel || '#1c232e', accent = s.accent || '#e8e4d8';
+  const handColor = s.hand || '#e8e4d8', secondColor = s.second || '#d4a24e';
+  let out = '';
+  const defPairs = [
+    ['case', [['0%', '#e9edf2'], ['35%', '#b9c0c9'], ['70%', '#7d858f'], ['100%', '#4a515a']]],
+    ['bezel', [['0%', s.bezelHi || '#d7dce2'], ['50%', s.bezelMid || '#9aa2ab'], ['100%', s.bezelLo || '#5a616b']]],
+    ['dial', [['0%', dial], ['100%', s.dialDeep || '#05070a']]],
+    ['glass', [['0%', '#ffffff', 0.34], ['55%', '#ffffff', 0.06], ['100%', '#ffffff', 0]]]
+  ];
+  out += defs(u, defPairs);
+  /* lugs */
+  if (s.lugs !== false) {
+    for (const a of [-38, -18, 18, 38]) {
+      const [lx, ly] = pt(cx, cy, R + 4, a - 90 + 90); // placeholder recompute below
+    }
+  }
+  /* case */
+  out += circle(cx, cy, R + 16, `url(#${u}case)`, null, 0);
+  out += circle(cx, cy, R + 11, '#2a313b', null, 0);
+  /* crown */
+  if (s.crown !== false) {
+    const [kx, ky] = pt(cx, cy, R + 22, 90);
+    out += rect(kx - 4, ky - 10, 12, 20, `url(#${u}bezel)`, '#1a1f27', 1, 3);
+  }
+  /* bezel */
+  if (s.bezelStyle === 'fluted') {
+    for (let i = 0; i < 60; i++) {
+      const a = i * 6;
+      const [x1, y1] = pt(cx, cy, R + 3, a), [x2, y2] = pt(cx, cy, R + 11, a);
+      out += line(x1, y1, x2, y2, i % 2 ? '#e9edf2' : '#8d959e', 1.4);
+    }
+    out += circle(cx, cy, R + 1, `url(#${u}bezel)`, '#2a313b', 1);
+  } else if (s.bezelStyle === 'diver') {
+    out += circle(cx, cy, R + 8, s.bezelInsert || '#0d1117', null, 0);
+    out += circle(cx, cy, R + 8, 'none', '#2a313b', 1);
+    for (let i = 0; i < 60; i++) {
+      const a = i * 6;
+      const [x1, y1] = pt(cx, cy, R + 4, a), [x2, y2] = pt(cx, cy, R + 7, a);
+      out += line(x1, y1, x2, y2, i % 5 ? '#c9cdd4' : '#ffffff', i % 5 ? 0.8 : 1.6);
+    }
+    if (s.triangle !== false) {
+      const [tx, ty] = pt(cx, cy, R + 5, 0);
+      out += path(`M${cx} ${cy - R - 12} L${cx - 6} ${cy - R + 2} L${cx + 6} ${cy - R + 2} Z`, s.triangleColor || '#f0c876', null, 0);
+    }
+  } else if (s.bezelStyle === 'track') {
+    out += circle(cx, cy, R + 9, s.bezelInsert || '#e8e4d8', null, 0);
+    out += circle(cx, cy, R + 9, 'none', '#1a1f27', 1.2);
+    for (let i = 0; i < 60; i++) {
+      const a = i * 6;
+      const [x1, y1] = pt(cx, cy, R + 4, a), [x2, y2] = pt(cx, cy, R + 8, a);
+      out += line(x1, y1, x2, y2, '#1a1f27', i % 5 ? 0.7 : 1.4);
+    }
+  } else if (s.bezelStyle === 'octagon') {
+    const oc = 8;
+    const pts = [];
+    for (let i = 0; i < oc; i++) {
+      const a = (i * 45) + 22.5;
+      const [x, y] = pt(cx, cy, R + 11, a);
+      pts.push([x, y]);
+    }
+    const d = 'M' + pts.map(p => p.map(n => n.toFixed(1)).join(' ')).join(' L') + ' Z';
+    out += path(d, `url(#${u}bezel)`, '#2a313b', 1.4);
+    for (let i = 0; i < oc; i++) {
+      const a = (i * 45) + 22.5;
+      const [x, y] = pt(cx, cy, R + 6, a);
+      out += circle(x, y, 2.4, '#5a616b', '#2a313b', 0.8);
+    }
+  } else {
+    out += circle(cx, cy, R + 9, `url(#${u}bezel)`, '#2a313b', 1);
+  }
+  /* rehaut / chapter */
+  out += circle(cx, cy, R, `url(#${u}dial)`, null, 0);
+  if (s.chapter) {
+    out += circle(cx, cy, R - 2, 'none', s.chapterColor || '#d4a24e', 1.4);
+    for (let i = 0; i < 60; i++) {
+      const a = i * 6;
+      const [x1, y1] = pt(cx, cy, R - 4, a), [x2, y2] = pt(cx, cy, R - 9, a);
+      out += line(x1, y1, x2, y2, s.chapterColor || '#e8e4d8', i % 5 ? 0.5 : 1.3);
+    }
+  }
+  /* markers */
+  const mR = R - 22;
+  if (s.markers === 'dot') out += dotMarkers(cx, cy, mR, 12, accent, s.lume);
+  else if (s.markers === 'baton') out += batonMarkers(cx, cy, mR + 8, mR - 10, 12, accent, 3, s.lume);
+  else if (s.markers === 'numeral') out += numeralMarkers(cx, cy, mR, 12, accent, s.numeralSize || 15, s.numeralFamily);
+  else if (s.markers === 'roman') out += romanMarkers(cx, cy, mR, accent, s.numeralSize || 13, s.numeralFamily);
+  /* special dial decoration */
+  if (s.dialDeco) out += s.dialDeco(cx, cy, R, accent);
+  /* brand text */
+  if (s.brand) {
+    out += txt(cx, cy - (s.brandY || R * 0.42), s.brand, s.brandSize || 12, accent, `font-family="${s.brandFamily || 'Georgia,serif'}" font-weight="700" letter-spacing=".12em"`);
+    if (s.brandSub) out += txt(cx, cy - (s.brandY || R * 0.42) + (s.brandSubY || 12), s.brandSub, s.brandSubSize || 7, accent, `font-family="${s.brandFamily || 'Georgia,serif'}" letter-spacing=".2em"`);
+  }
+  if (s.bottomText) out += txt(cx, cy + (s.bottomY || R * 0.46), s.bottomText, s.bottomSize || 7, s.bottomColor || accent, `font-family="${s.bottomFamily || 'Georgia,serif'}" letter-spacing=".18em"`);
+  /* date */
+  if (s.date) {
+    const pos = s.datePos || '3';
+    let dx = cx + R - 34, dy = cy;
+    if (pos === '6') { dx = cx; dy = cy + R - 34; }
+    else if (pos === '9') { dx = cx - R + 34; dy = cy; }
+    else if (pos === '12') { dx = cx; dy = cy - R + 34; }
+    out += rect(dx - 14, dy - 9, 28, 18, s.dateBg || '#e8e4d8', '#2a313b', 1, 2);
+    out += `<text data-field="date" x="${dx}" y="${dy + 1}" font-size="11" fill="#14181e" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-weight="700">1</text>`;
+    if (s.cyclops) out += circle(dx, dy, 13, 'none', 'rgba(255,255,255,.45)', 1.4);
+  }
+  if (s.daydate) {
+    const dy = cy - R + 30;
+    out += rect(cx - 34, dy - 9, 68, 18, s.dateBg || '#e8e4d8', '#2a313b', 1, 2);
+    out += `<text data-field="weekday" x="${cx}" y="${dy + 1}" font-size="10" fill="#14181e" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-weight="700">MON</text>`;
+  }
+  /* day-date window */
+  if (s.daydate) {
+    const dy = cy - R + 30;
+    out += rect(cx - 40, dy - 10, 80, 20, s.dateBg || '#e8e4d8', '#2a313b', 1, 3);
+    out += `<text data-field="weekday" x="${cx - 18}" y="${dy + 1}" font-size="9" fill="#14181e" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-weight="700">MON</text>`;
+    out += `<text data-field="date" x="${cx + 20}" y="${dy + 1}" font-size="10" fill="#14181e" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-weight="700">1</text>`;
+  }
+  /* GMT hand */
+  if (s.gmt) {
+    out += `<g data-hand="gmt" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 16}" x2="${cx}" y2="${cy - R * 0.52}" stroke="${s.gmtColor || '#d4a24e'}" stroke-width="5" stroke-linecap="butt"/><circle cx="${cx}" cy="${cy - R * 0.52}" r="5" fill="${s.gmtColor || '#d4a24e'}"/></g>`;
+  }
+  /* chrono subdial */
+  if (s.chrono) {
+    const [sx, sy] = pt(cx, cy, R * 0.52, s.chronoAngle == null ? 90 : s.chronoAngle);
+    out += circle(sx, sy, R * 0.26, s.chronoDial || dial, s.chronoRing || accent, 1.4);
+    for (let i = 0; i < 12; i++) {
+      const [x1, y1] = pt(sx, sy, R * 0.26 - 3, i * 30), [x2, y2] = pt(sx, sy, R * 0.26 - 7, i * 30);
+      out += line(x1, y1, x2, y2, accent, 0.9);
+    }
+    out += `<g data-hand="chrono" data-px="${sx}" data-py="${sy}"><line x1="${sx}" y1="${sy + 6}" x2="${sx}" y2="${sy - R * 0.2}" stroke="${s.chronoHand || secondColor}" stroke-width="2" stroke-linecap="round"/></g>`;
+    out += circle(sx, sy, 2.4, s.chronoHand || secondColor);
+  }
+  /* moon phase aperture */
+  if (s.moon) {
+    const [mx, my] = pt(cx, cy, R * 0.44, 180);
+    out += circle(mx, my, R * 0.2, '#0a1420', accent, 1.4);
+    out += circle(mx, my, R * 0.17, '#f5f2e4', null, 0);
+    out += `<g data-moon><circle cx="${mx}" cy="${my}" r="${R * 0.17}" fill="#0a1420" opacity="0.9" data-moon-shadow/></g>`;
+  }
+  /* small seconds subdial */
+  if (s.smallSeconds) {
+    const ang = s.smallSecondsAngle == null ? 270 : s.smallSecondsAngle;
+    const [sx, sy] = pt(cx, cy, R * 0.5, ang);
+    out += circle(sx, sy, R * 0.22, s.smallSecondsDial || (s.dial || '#101418'), s.smallSecondsRing || accent, 1.3);
+    for (let i = 0; i < 12; i++) {
+      const [x1, y1] = pt(sx, sy, R * 0.22 - 2, i * 30), [x2, y2] = pt(sx, sy, R * 0.22 - 5, i * 30);
+      out += line(x1, y1, x2, y2, accent, 0.8);
+    }
+    out += `<g data-hand="smallsec" data-px="${sx}" data-py="${sy}"><line x1="${sx}" y1="${sy + 5}" x2="${sx}" y2="${sy - R * 0.17}" stroke="${s.smallSecondsHand || secondColor}" stroke-width="1.8" stroke-linecap="round"/></g>`;
+    out += circle(sx, sy, 2.2, s.smallSecondsHand || secondColor);
+  }
+  /* hands */
+  const handStyle = s.handStyle || 'baton';
+  if (handStyle === 'sword') {
+    out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${swordHand(cx, cy, R * 0.44, 10, handColor)}</g>`;
+    out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${swordHand(cx, cy, R * 0.66, 8, handColor)}</g>`;
+  } else if (handStyle === 'dauphine') {
+    out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${dauphineHand(cx, cy, R * 0.44, 11, handColor)}</g>`;
+    out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${dauphineHand(cx, cy, R * 0.66, 9, handColor)}</g>`;
+  } else {
+    out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.44, 6, handColor, 12)}</g>`;
+    out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.68, 4.4, handColor, 12)}</g>`;
+  }
+  const secondStyle = s.secondStyle || 'stick';
+  if (secondStyle === 'lollipop') out += `<g data-hand="second" data-px="${cx}" data-py="${cy}">${lollipopSecond(cx, cy, R * 0.74, 16, secondColor)}</g>`;
+  else if (secondStyle === 'alpha') out += `<g data-hand="second" data-px="${cx}" data-py="${cy}">${alphaSecond(cx, cy, R * 0.72, secondColor)}</g>`;
+  else out += `<g data-hand="second" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 18}" x2="${cx}" y2="${cy - R * 0.76}" stroke="${secondColor}" stroke-width="1.8" stroke-linecap="round"/></g>`;
+  out += circle(cx, cy, 4.6, secondColor);
+  out += circle(cx, cy, 2.2, '#0d1117');
+  /* glass */
+  out += `<circle cx="${cx}" cy="${cy}" r="${R + 4}" fill="url(#${u}glass)" opacity=".5"/>`;
+  out += path(`M${cx - R * 0.55} ${cy - R * 0.62} Q${cx} ${cy - R * 0.95} ${cx + R * 0.6} ${cy - R * 0.55}`, 'none', 'rgba(255,255,255,.5)', 2);
+  return out;
+}
+
+/* ---------- special-shape helpers ---------- */
+function drawRectangularWatch(u, s) {
+  const cx = 150, cy = 150;
+  const w = s.w || 150, h = s.h || 190;
+  const x0 = cx - w / 2, y0 = cy - h / 2;
+  const dial = s.dial || '#efe9da', bezel = s.bezel || '#c9a84c', accent = s.accent || '#1a1a1a';
+  const hand = s.hand || '#1a1a1a', second = s.second || '#1a1a1a';
+  const innerW = w - 26, innerH = h - 26;
+  let out = '';
+  out += defs(u, [
+    ['case', [['0%', '#e9edf2'], ['45%', '#b9c0c9'], ['100%', '#5a616b']]],
+    ['dial', [['0%', dial], ['100%', s.dialDeep || '#05070a']]],
+    ['glass', [['0%', '#ffffff', 0.3], ['100%', '#ffffff', 0]]]
+  ]);
+  out += rect(cx + w / 2 + 2, cy - 10, 12, 20, `url(#${u}case)`, '#1a1f27', 1, 3);
+  out += rect(x0, y0, w, h, `url(#${u}case)`, '#1a1f27', 1.5, 10);
+  out += rect(x0 + 13, y0 + 13, innerW, innerH, `url(#${u}dial)`, 'none', 0, 5);
+  if (s.railroad) {
+    const m = 22;
+    out += rect(x0 + m, y0 + m, innerW - 2 * m, innerH - 2 * m, 'none', accent, 1);
+    for (let i = 0; i < 60; i++) {
+      const top = i % 5 === 0;
+      const len = top ? 8 : 4;
+      const x = x0 + m + (innerW - 2 * m) * i / 59;
+      out += `<line x1="${x}" y1="${y0 + m}" x2="${x}" y2="${y0 + m + len}" stroke="${accent}" stroke-width="${top ? 1.6 : 0.9}"/>`;
+    }
+  }
+  if (s.roman) {
+    const romans = ['XII', 'III', 'VI', 'IX'];
+    const pos = [[cx, cy - innerH / 2 + 22], [cx + innerW / 2 - 20, cy], [cx, cy + innerH / 2 - 22], [cx - innerW / 2 + 20, cy]];
+    romans.forEach((r, i) => { out += txt(pos[i][0], pos[i][1], r, 13, accent, 'font-family="Georgia,serif" font-weight="700"'); });
+  } else if (s.numeral) {
+    const nums = [12, 3, 6, 9];
+    const pos = [[cx, cy - innerH / 2 + 20], [cx + innerW / 2 - 18, cy], [cx, cy + innerH / 2 - 20], [cx - innerW / 2 + 18, cy]];
+    nums.forEach((n, i) => { out += txt(pos[i][0], pos[i][1], String(n), 13, accent, 'font-family="Arial,sans-serif" font-weight="700"'); });
+  }
+  if (s.brand) out += txt(cx, cy - innerH * 0.2, s.brand, s.brandSize || 9, accent, 'font-family="Georgia,serif" font-weight="700" letter-spacing=".14em"');
+  if (s.bottomText) out += txt(cx, cy + innerH * 0.24, s.bottomText, 6.5, accent, 'font-family="Georgia,serif" letter-spacing=".2em"');
+  if (s.hinged) {
+    out += line(x0 + 4, cy, x0 + 14, cy, accent, 2.4);
+    out += line(cx + w / 2 - 14, cy, cx + w / 2 - 4, cy, accent, 2.4);
+  }
+  const hr = Math.min(innerW, innerH) * 0.3;
+  const mr = Math.min(innerW, innerH) * 0.44;
+  out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, hr, 6, hand, 12)}</g>`;
+  out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, mr, 4.4, hand, 12)}</g>`;
+  out += `<g data-hand="second" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 16}" x2="${cx}" y2="${cy - mr - 6}" stroke="${second}" stroke-width="1.8" stroke-linecap="round"/></g>`;
+  out += circle(cx, cy, 4.4, second);
+  out += `<circle cx="${cx}" cy="${cy}" r="${Math.min(w, h) / 2}" fill="url(#${u}glass)" opacity=".35"/>`;
+  return out;
+}
+
+function drawSquareWatch(u, s) {
+  const cx = 150, cy = 150, w = s.w || 176, h = s.h || 176;
+  const x0 = cx - w / 2, y0 = cy - h / 2;
+  const dial = s.dial || '#101418', bezel = s.bezel || '#1a1f27', accent = s.accent || '#e8e4d8';
+  const hand = s.hand || '#e8e4d8', second = s.second || '#e8e4d8';
+  const innerW = w - 24, innerH = h - 24;
+  let out = '';
+  out += defs(u, [
+    ['case', [['0%', '#e9edf2'], ['45%', '#b9c0c9'], ['100%', '#5a616b']]],
+    ['dial', [['0%', dial], ['100%', s.dialDeep || '#05070a']]],
+    ['glass', [['0%', '#ffffff', 0.3], ['100%', '#ffffff', 0]]]
+  ]);
+  out += rect(cx + w / 2 + 2, cy - 10, 12, 20, `url(#${u}case)`, '#1a1f27', 1, 3);
+  out += rect(x0, y0, w, h, `url(#${u}case)`, '#1a1f27', 1.5, 12);
+  out += rect(x0 + 12, y0 + 12, innerW, innerH, `url(#${u}dial)`, 'none', 0, 6);
+  if (s.screws) {
+    for (const [sx, sy] of [[x0 + 14, y0 + 14], [x0 + w - 14, y0 + 14], [x0 + 14, y0 + h - 14], [x0 + w - 14, y0 + h - 14]]) {
+      out += circle(sx, sy, 4, '#c9cdd4', '#1a1f27', 1.2);
+      out += line(sx - 2.6, sy, sx + 2.6, sy, '#1a1f27', 1.1);
+    }
+  }
+  const R = Math.min(innerW, innerH) / 2 - 10;
+  if (s.markers === 'baton') out += batonMarkers(cx, cy, R, R - 12, 12, accent, 3.2, s.lume);
+  else if (s.markers === 'numeral') out += numeralMarkers(cx, cy, R - 2, 12, accent, 12, s.numeralFamily);
+  else if (s.markers === 'roman') out += romanMarkers(cx, cy, R - 2, accent, 11, s.numeralFamily);
+  if (s.brand) out += txt(cx, cy - R * 0.44, s.brand, s.brandSize || 9, accent, 'font-family="Georgia,serif" font-weight="700" letter-spacing=".14em"');
+  if (s.bottomText) out += txt(cx, cy + R * 0.44, s.bottomText, 6.5, accent, 'font-family="Georgia,serif" letter-spacing=".2em"');
+  if (s.date) {
+    const dx = cx + R - 18, dy = cy;
+    out += rect(dx - 12, dy - 8, 24, 16, s.dateBg || '#e8e4d8', '#2a313b', 1, 2);
+    out += `<text data-field="date" x="${dx}" y="${dy + 1}" font-size="10" fill="#14181e" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-weight="700">1</text>`;
+  }
+  out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.44, 6, hand, 12)}</g>`;
+  out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.66, 4.4, hand, 12)}</g>`;
+  out += `<g data-hand="second" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 16}" x2="${cx}" y2="${cy - R * 0.72}" stroke="${second}" stroke-width="1.8" stroke-linecap="round"/></g>`;
+  out += circle(cx, cy, 4.2, second);
+  out += `<circle cx="${cx}" cy="${cy}" r="${Math.min(w, h) / 2}" fill="url(#${u}glass)" opacity=".3"/>`;
+  return out;
+}
+
+function drawDigitalWatch(u, s) {
+  const cx = 150, cy = 150;
+  const w = s.w || 150, h = s.h || 120;
+  const x0 = cx - w / 2, y0 = cy - h / 2;
+  const dial = s.dial || '#0d1117', accent = s.accent || '#3cff6a';
+  let out = '';
+  out += defs(u, [
+    ['case', [['0%', '#3a414b'], ['50%', '#232a33'], ['100%', '#14181e']]],
+    ['lcd', [['0%', dial], ['100%', s.lcdDeep || '#05070a']]]
+  ]);
+  out += rect(x0 - 12, y0 - 12, w + 24, h + 24, `url(#${u}case)`, '#05070a', 1.5, 26);
+  out += rect(x0 - 18, cy - 34, 10, 16, '#2a313b', '#05070a', 1, 3);
+  out += rect(x0 - 18, cy + 18, 10, 16, '#2a313b', '#05070a', 1, 3);
+  out += rect(x0 + w + 8, cy - 34, 10, 16, '#2a313b', '#05070a', 1, 3);
+  out += rect(x0 + w + 8, cy + 18, 10, 16, '#2a313b', '#05070a', 1, 3);
+  out += rect(x0, y0, w, h, `url(#${u}lcd)`, '#05070a', 1.5, 8);
+  out += txt(cx, y0 + 16, s.label || 'DIGITAL', 7, accent, 'font-family="Arial,sans-serif" letter-spacing=".3em"');
+  const big = s.big !== false;
+  out += `<text data-field="lcd" x="${cx}" y="${cy + (big ? 4 : 2)}" font-size="${big ? 30 : 22}" fill="${accent}" text-anchor="middle" dominant-baseline="middle" font-family="ui-monospace,monospace" font-weight="700" letter-spacing=".06em">10:09</text>`;
+  out += txt(cx, y0 + h - 12, 'MODE  ·  START  ·  RESET', 5.5, accent, 'font-family="Arial,sans-serif" letter-spacing=".18em"');
+  return out;
+}
+
+function drawDaytona(u, s) {
+  const cx = 150, cy = 150, R = 116;
+  const dial = s.dial || '#efe9da', bezel = s.bezel || '#1a1a1a', accent = s.accent || '#1a1a1a';
+  const hand = s.hand || '#1a1a1a', second = s.second || '#1a1a1a';
+  let out = '';
+  out += defs(u, [
+    ['case', [['0%', '#e9edf2'], ['45%', '#b9c0c9'], ['100%', '#5a616b']]],
+    ['bezel', [['0%', '#2a313b'], ['100%', '#0d1117']]],
+    ['dial', [['0%', dial], ['100%', '#d8d2c2']]],
+    ['glass', [['0%', '#ffffff', 0.32], ['100%', '#ffffff', 0]]]
+  ]);
+  out += circle(cx, cy, R + 14, `url(#${u}case)`, null, 0);
+  out += circle(cx, cy, R + 9, `url(#${u}bezel)`, '#2a313b', 1);
+  for (let i = 0; i < 60; i++) {
+    const a = i * 6;
+    const [x1, y1] = pt(cx, cy, R + 3, a), [x2, y2] = pt(cx, cy, R + 8, a);
+    out += line(x1, y1, x2, y2, '#e8e4d8', i % 5 ? 0.6 : 1.3);
+  }
+  out += circle(cx, cy, R, `url(#${u}dial)`, 'none', 0);
+  for (const [ang, label] of [[90, '24H'], [180, '60'], [270, '12']]) {
+    const [sx, sy] = pt(cx, cy, R * 0.52, ang);
+    out += circle(sx, sy, R * 0.24, '#d8d2c2', accent, 1.2);
+    for (let i = 0; i < 12; i++) {
+      const [x1, y1] = pt(sx, sy, R * 0.24 - 3, i * 30), [x2, y2] = pt(sx, sy, R * 0.24 - 6, i * 30);
+      out += line(x1, y1, x2, y2, accent, 0.8);
+    }
+    out += `<g data-hand="sub${label}" data-px="${sx}" data-py="${sy}"><line x1="${sx}" y1="${sy + 5}" x2="${sx}" y2="${sy - R * 0.18}" stroke="${accent}" stroke-width="1.6" stroke-linecap="round"/></g>`;
+  }
+  if (s.markers !== false) out += batonMarkers(cx, cy, R - 16, R - 28, 12, accent, 3.4, false);
+  out += txt(cx, cy - R * 0.42, s.brand || 'ROLEX', 11, accent, 'font-family="Georgia,serif" font-weight="700" letter-spacing=".14em"');
+  out += txt(cx, cy - R * 0.42 + 13, s.bottomText || 'DAYTONA', 6, accent, 'font-family="Georgia,serif" letter-spacing=".2em"');
+  out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.44, 6, hand, 12)}</g>`;
+  out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.64, 4.4, hand, 12)}</g>`;
+  out += `<g data-hand="second" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 16}" x2="${cx}" y2="${cy - R * 0.72}" stroke="${second}" stroke-width="1.8" stroke-linecap="round"/></g>`;
+  out += circle(cx, cy, 4.2, second);
+  out += `<circle cx="${cx}" cy="${cy}" r="${R + 4}" fill="url(#${u}glass)" opacity=".45"/>`;
+  return out;
+}
+
+
+function drawBigClock(u, s) {
+  const cx = 150, cy = 140, R = 96;
+  const dial = s.dial || '#f0ead8', accent = s.accent || '#1a1a1a';
+  const hand = s.hand || '#1a1a1a', second = s.second || '#e11';
+  let out = '';
+  out += defs(u, [
+    ['case', [['0%', '#e9edf2'], ['45%', '#b9c0c9'], ['100%', '#5a616b']]],
+    ['dial', [['0%', dial], ['100%', s.dialDeep || '#05070a']]],
+    ['glass', [['0%', '#ffffff', 0.32], ['100%', '#ffffff', 0]]]
+  ]);
+  out += rect(cx - 60, cy + R + 8, 120, 40, `url(#${u}case)`, '#1a1f27', 1.2, 6);
+  out += circle(cx, cy, R + 14, `url(#${u}case)`, null, 0);
+  out += circle(cx, cy, R, `url(#${u}dial)`, 'none', 0);
+  const nums = s.gothic ? ['XII', 'III', 'VI', 'IX'] : ['12', '3', '6', '9'];
+  const pos = [[cx, cy - R * 0.66], [cx + R * 0.66, cy], [cx, cy + R * 0.66], [cx - R * 0.66, cy]];
+  nums.forEach((n, i) => { out += txt(pos[i][0], pos[i][1], n, s.gothic ? 15 : 17, accent, 'font-family="Georgia,serif" font-weight="700"'); });
+  for (let i = 0; i < 60; i++) {
+    const a = i * 6;
+    const [x1, y1] = pt(cx, cy, R - 3, a), [x2, y2] = pt(cx, cy, R - 8, a);
+    out += line(x1, y1, x2, y2, accent, i % 5 ? 0.7 : 1.5);
+  }
+  if (s.brand) out += txt(cx, cy - R * 0.34, s.brand, 9, accent, 'font-family="Georgia,serif" font-weight="700" letter-spacing=".16em"');
+  if (s.bottomText) out += txt(cx, cy + R * 0.34, s.bottomText, 6, accent, 'font-family="Georgia,serif" letter-spacing=".2em"');
+  out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${swordHand(cx, cy, R * 0.46, 9, hand)}</g>`;
+  out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${swordHand(cx, cy, R * 0.66, 7, hand)}</g>`;
+  out += `<g data-hand="second" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 14}" x2="${cx}" y2="${cy - R * 0.74}" stroke="${second}" stroke-width="1.6" stroke-linecap="round"/></g>`;
+  out += circle(cx, cy, 4.4, second);
+  out += `<circle cx="${cx}" cy="${cy}" r="${R + 4}" fill="url(#${u}glass)" opacity=".4"/>`;
+  return out;
+}
+
+function drawTonneauWatch(u, s) {
+  const cx = 150, cy = 150;
+  const w = s.w || 158, h = s.h || 186;
+  const x0 = cx - w / 2, y0 = cy - h / 2;
+  const dial = s.dial || '#1a1a1a', accent = s.accent || '#e8e4d8';
+  const hand = s.hand || '#e8e4d8', second = s.second || '#e11';
+  let out = '';
+  out += defs(u, [
+    ['case', [['0%', '#e9edf2'], ['45%', '#b9c0c9'], ['100%', '#5a616b']]],
+    ['dial', [['0%', dial], ['100%', s.dialDeep || '#05070a']]],
+    ['glass', [['0%', '#ffffff', 0.3], ['100%', '#ffffff', 0]]]
+  ]);
+  out += rect(cx + w / 2 + 2, cy - 10, 12, 20, `url(#${u}case)`, '#1a1f27', 1, 3);
+  out += path(`M${x0 + 18} ${y0} L${x0 + w - 18} ${y0} Q${x0 + w} ${y0 + 14} ${x0 + w} ${y0 + h / 2} Q${x0 + w} ${y0 + h - 14} ${x0 + w - 18} ${y0 + h} L${x0 + 18} ${y0 + h} Q${x0} ${y0 + h - 14} ${x0} ${y0 + h / 2} Q${x0} ${y0 + 14} ${x0 + 18} ${y0} Z`, `url(#${u}case)`, '#1a1f27', 1.5);
+  out += path(`M${x0 + 14} ${y0 + 12} L${x0 + w - 14} ${y0 + 12} Q${x0 + w - 8} ${y0 + 22} ${x0 + w - 8} ${y0 + h / 2} Q${x0 + w - 8} ${y0 + h - 22} ${x0 + w - 14} ${y0 + h - 12} L${x0 + 14} ${y0 + h - 12} Q${x0 + 8} ${y0 + h - 22} ${x0 + 8} ${y0 + h / 2} Q${x0 + 8} ${y0 + 22} ${x0 + 14} ${y0 + 12} Z`, `url(#${u}dial)`, 'none', 0);
+  if (s.skeleton) {
+    for (let i = 0; i < 4; i++) {
+      const r = 30 + i * 12;
+      out += circle(cx, cy, r, 'none', '#3a414b', 1.4);
+    }
+    out += circle(cx, cy, 18, 'none', accent, 1.6);
+  }
+  const R = Math.min(w, h) / 2 - 30;
+  if (s.markers === 'numeral') out += numeralMarkers(cx, cy, R, 12, accent, 11, s.numeralFamily);
+  else if (s.markers === 'baton') out += batonMarkers(cx, cy, R + 6, R - 10, 12, accent, 2.8, s.lume);
+  if (s.brand) out += txt(cx, cy - R * 0.5, s.brand, s.brandSize || 9, accent, 'font-family="Georgia,serif" font-weight="700" letter-spacing=".14em"');
+  if (s.bottomText) out += txt(cx, cy + R * 0.5, s.bottomText, 6, accent, 'font-family="Georgia,serif" letter-spacing=".2em"');
+  out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.44, 5.6, hand, 12)}</g>`;
+  out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.64, 4, hand, 12)}</g>`;
+  out += `<g data-hand="second" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 14}" x2="${cx}" y2="${cy - R * 0.7}" stroke="${second}" stroke-width="1.6" stroke-linecap="round"/></g>`;
+  out += circle(cx, cy, 4, second);
+  out += `<circle cx="${cx}" cy="${cy}" r="${Math.min(w, h) / 2}" fill="url(#${u}glass)" opacity=".3"/>`;
+  return out;
+}
+
+/* ============================================================
+   Inkling 2 Mini — independent World Clock rendition
+   ============================================================ */
+const TAU = Math.PI * 2;
+function pt(cx, cy, r, a) { const rad = (a - 90) * Math.PI / 180; return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)]; }
+function circle(cx, cy, r, fill, stroke, sw, extra) { return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill || 'none'}" stroke="${stroke || 'none'}" stroke-width="${sw || 0}" ${extra || ''}/>`; }
+function line(x1, y1, x2, y2, stroke, sw, lc) { return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${sw || 1}" stroke-linecap="${lc || 'round'}"/>`; }
+function path(d, fill, stroke, sw, extra) { return `<path d="${d}" fill="${fill || 'none'}" stroke="${stroke || 'none'}" stroke-width="${sw || 0}" ${extra || ''}/>`; }
+function rect(x, y, w, h, fill, stroke, sw, rx, extra) { return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill || 'none'}" stroke="${stroke || 'none'}" stroke-width="${sw || 0}" rx="${rx || 0}" ${extra || ''}/>`; }
+function txt(x, y, t, size, fill, attrs) { return `<text x="${x}" y="${y}" font-size="${size}" fill="${fill}" text-anchor="middle" dominant-baseline="middle" ${attrs || ''}>${t}</text>`; }
+function defs(u, pairs) { return `<defs>${pairs.map(([id, stops]) => `<radialGradient id="${u}${id}" cx="42%" cy="36%" r="75%">${stops.map(([o, c, op]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${op == null ? 1 : op}"/>`).join('')}</radialGradient>`).join('')}</defs>`; }
+function linearDefs(u, pairs) { return `<defs>${pairs.map(([id, stops]) => `<linearGradient id="${u}${id}" x1="0" y1="0" x2="1" y2="1">${stops.map(([o, c, op]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${op == null ? 1 : op}"/>`).join('')}</linearGradient>`).join('')}</defs>`; }
+
+/* ============================================================
+   Face catalogue — 62 objects
+   ============================================================ */
+const FACES = {
+  /* Rolex Submariner Date 126610LN */
+  submariner: {
+    name: 'Rolex Submariner Date 126610LN', maker: 'Rolex', cat: 'sport', cadence: 'sweep',
+    blurb: 'The canonical diver: 39mm steel case, black dial with lume dots, Mercedes-style hands and a date at 3 under a cyclops, ringed by a black unidirectional bezel.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#0d0f12', bezel: '#1a1f27', accent: '#e8e4d8', hand: '#e8e4d8', second: '#d4a24e', markers: 'dot', lume: true, bezelStyle: 'diver', brand: 'ROLEX', brandSize: 12, brandY: 44, bottomText: 'SUBMARINER', bottomY: 52, bottomSize: 7, date: true, cyclops: true, handStyle: 'sword', secondStyle: 'stick', handStyle2: 'mercedes' }); }
+  },
+  /* Omega Speedmaster Moonwatch Professional */
+  speedmaster: {
+    name: 'Omega Speedmaster Moonwatch Professional 310.30.42.50.01.001', maker: 'Omega', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The Moonwatch: black dial with baton markers, silver sword hands and a date at 6, ringed by a tachymeter bezel — the reference every astronaut wore.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#101010', bezel: '#1a1f27', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'baton', lume: true, bezelStyle: 'track', brand: 'OMEGA', brandSize: 11, brandY: 46, bottomText: 'PROFESSIONAL', bottomY: 50, bottomSize: 6, date: true, datePos: '6', handStyle: 'sword', secondStyle: 'alpha', chrono: true, chronoAngle: 90 }); }
+  },
+  /* Patek Philippe Nautilus 5811/1G-001 */
+  nautilus: {
+    name: 'Patek Philippe Nautilus 5811/1G-001', maker: 'Patek Philippe', cat: 'dress', cadence: 'sweep',
+    blurb: 'The Nautilus: two-tone steel case with a notched bezel, deep blue dial and horizontal baton markers — the dress-sport icon.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#16304e', bezel: '#1a1f27', accent: '#e8e4d8', hand: '#e8e4d8', second: '#d4a24e', markers: 'baton', lume: true, bezelStyle: 'bezel', brand: 'PATEK PHILIPPE', brandSize: 8, brandY: 46, bottomText: 'NAUTILUS', bottomY: 52, bottomSize: 6, date: true, cyclops: true, handStyle: 'sword', secondStyle: 'alpha' }); }
+  },
+  /* Audemars Piguet Royal Oak 15510ST */
+  royaloak: {
+    name: 'Audemars Piguet Royal Oak Selfwinding 15510ST.OO.1320ST.06', maker: 'Audemars Piguet', cat: 'dress', cadence: 'sweep',
+    blurb: 'The Royal Oak: octagonal steel bezel with eight screws, tapisserie-textured blue dial, baton markers and sword hands.',
+    draw(u) { return roundWatch(u, { R: 112, dial: '#1c3a5c', bezel: '#c9cdd4', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'baton', lume: true, bezelStyle: 'octagon', brand: 'AUDEMARS PIGUET', brandSize: 7, brandY: 46, bottomText: 'ROYAL OAK', bottomY: 52, bottomSize: 6, date: true, handStyle: 'sword', secondStyle: 'stick' }); }
+  },
+  /* Patek Philippe Calatrava 5227G-015 */
+  calatrava: {
+    name: 'Patek Philippe Calatrava 5227G-015', maker: 'Patek Philippe', cat: 'dress', cadence: 'sweep',
+    blurb: 'The Calatrava: slim round case in white gold, cream dial with a railroad chapter and dauphine hands.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#efe9da', bezel: '#c9a84c', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'numeral', chapter: true, chapterColor: '#1a1a1a', brand: 'PATEK PHILIPPE', brandSize: 8, brandY: 48, bottomText: 'GENÈVE', bottomY: 52, bottomSize: 6, date: true, handStyle: 'dauphine', secondStyle: 'alpha', bezelStyle: 'fluted' }); }
+  },
+  /* Cartier Tank Louis Cartier WGTA0342 */
+  tank: {
+    name: 'Cartier Tank Louis Cartier WGTA0342', maker: 'Cartier', cat: 'dress', cadence: 'tick',
+    blurb: 'The Tank: rectangular white-gold case, cream dial with Roman numerals, railroad track and blued hands — the Cartier archetype.',
+    draw(u) { return drawRectangularWatch(u, { w: 150, h: 196, dial: '#efe9da', bezel: '#c9a84c', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', roman: true, railroad: true, brand: 'CARTIER', bottomText: 'TANK' }); }
+  },
+  /* Jaeger-LeCoultre Reverso */
+  reverso: {
+    name: 'Jaeger-LeCoultre Reverso', maker: 'Jaeger-LeCoultre', cat: 'dress', cadence: 'sweep',
+    blurb: 'The Reverso: hinged rectangular case, silvered dial with Roman numerals and blued hands — the wristwatch that flips.',
+    draw(u) { return drawRectangularWatch(u, { w: 138, h: 172, dial: '#efe9da', bezel: '#c9a84c', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', roman: true, railroad: true, brand: 'JAEGER-LECOULTRE', bottomText: 'REVERSO', hinged: true }); }
+  },
+  /* Omega Seamaster Diver 300M */
+  seamaster: {
+    name: 'Omega Seamaster Diver 300M', maker: 'Omega', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Seamaster: unidirectional blue bezel, wave-pattern dial with dot markers and a date at 3.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#0a2a4a', bezel: '#0a2a4a', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'dot', lume: true, bezelStyle: 'diver', bezelInsert: '#0a2a4a', dialDeco: (cx, cy, R, accent) => { let out = ''; for (let i = 0; i < 5; i++) { const r = R - 18 - i * 9; out += circle(cx, cy, r, 'none', '#1a4a6a', 1.1); } return out; }, brand: 'OMEGA', brandSize: 11, brandY: 46, bottomText: 'SEAMASTER', bottomY: 50, bottomSize: 6, date: true, handStyle: 'sword', secondStyle: 'stick' }); }
+  },
+  /* A. Lange & Söhne Lange 1 */
+  lange1: {
+    name: 'A. Lange & Söhne Lange 1', maker: 'A. Lange & Söhne', cat: 'dress', cadence: 'sweep',
+    blurb: 'The Lange 1: silvered dial with an off-center small-seconds subdial at 9, baton hands and a polished case.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#efe9da', bezel: '#c9c9c9', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'baton', chapter: true, chapterColor: '#1a1a1a', brand: 'A. LANGE & SÖHNE', brandSize: 7, brandY: 48, bottomText: 'LANGE 1', bottomY: 52, bottomSize: 6, date: false, handStyle: 'dauphine', secondStyle: 'stick', smallSeconds: true }); }
+  },
+  /* IWC Portugieser */
+  portugieser: {
+    name: 'IWC Portugieser', maker: 'IWC Schaffhausen', cat: 'dress', cadence: 'sweep',
+    blurb: 'The Portugieser: cream dial with railroad track, baton markers and a small-seconds subdial at 6.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#efe9da', bezel: '#c9c9c9', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'baton', chapter: true, chapterColor: '#1a1a1a', brand: 'IWC', brandSize: 12, brandY: 46, bottomText: 'PORTUGIESER', bottomY: 50, bottomSize: 6, date: false, handStyle: 'sword', secondStyle: 'alpha', smallSeconds: true, smallSecondsAngle: 180 }); }
+  },
+  /* Rolex Daytona */
+  daytona: {
+    name: 'Rolex Daytona', maker: 'Rolex', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The Daytona: silver dial with three chronograph subdials, tachymeter bezel and baton markers.',
+    draw(u) { return drawDaytona(u, { dial: '#efe9da', bezel: '#1a1a1a', accent: '#1a1a1a' }); }
+  },
+  /* Rolex GMT-Master II */
+  gmt: {
+    name: 'Rolex GMT-Master II', maker: 'Rolex', cat: 'sport', cadence: 'sweep',
+    blurb: 'The GMT-Master II: blue dial, 24-hour bezel and a red GMT hand that tracks the home timezone.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#0a2a3a', bezel: '#1a1a1a', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e11', markers: 'dot', lume: true, bezelStyle: 'diver', bezelInsert: '#0a2a3a', triangleColor: '#e11', brand: 'ROLEX', brandSize: 11, brandY: 46, bottomText: 'GMT-MASTER II', bottomY: 50, bottomSize: 6, gmt: true, gmtColor: '#e11', handStyle: 'sword', secondStyle: 'stick' }); }
+  },
+  /* Rolex Datejust */
+  datejust: {
+    name: 'Rolex Datejust', maker: 'Rolex', cat: 'dress', cadence: 'sweep',
+    blurb: 'The Datejust: fluted bezel, white dial with baton markers and a date at 3 under a cyclops.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#efe9da', bezel: '#c9a84c', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'baton', lume: true, bezelStyle: 'fluted', brand: 'ROLEX', brandSize: 11, brandY: 46, bottomText: 'DATEJUST', bottomY: 50, bottomSize: 6, date: true, cyclops: true, handStyle: 'sword', secondStyle: 'stick' }); }
+  },
+  /* Grand Seiko Snowflake */
+  snowflake: {
+    name: 'Grand Seiko Snowflake', maker: 'Grand Seiko', cat: 'dress', cadence: 'glide',
+    blurb: 'The Snowflake: light-blue dial with a radiant snowflake pattern, blued hands and a polished case.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#e8f0f5', bezel: '#c9c9c9', accent: '#1a1a1a', hand: '#1a5a8a', second: '#1a5a8a', markers: 'baton', lume: true, bezelStyle: 'bezel', dialDeco: (cx, cy, R, accent) => { let out = ''; for (let i = 0; i < 24; i++) { const a = i * 15; const [x2, y2] = pt(cx, cy, R * 0.72, a); out += line(cx, cy, x2, y2, '#b8c8d8', 1.1); } return out; }, brand: 'Grand Seiko', brandSize: 10, brandY: 46, bottomText: 'SNOWFLAKE', bottomY: 50, bottomSize: 6, date: false, handStyle: 'sword', secondStyle: 'stick' }); }
+  },
+  /* Casio G-Shock DW-5600UE-1 */
+  gshock: {
+    name: 'Casio G-Shock DW-5600UE-1', maker: 'Casio', cat: 'digital', cadence: 'digital',
+    blurb: 'The G-Shock: rugged resin case, LCD readout with 24-hour digits and a chronograph mode button.',
+    draw(u) { return drawDigitalWatch(u, { w: 150, h: 128, dial: '#0d1117', accent: '#3cff6a', label: 'G-SHOCK', big: true }); }
+  },
+  /* Casio F-91W */
+  f91w: {
+    name: 'Casio F-91W', maker: 'Casio', cat: 'digital', cadence: 'digital',
+    blurb: 'The F-91W: the classic pocket-sized digital — 12-hour digits on a muted green-gray LCD.',
+    draw(u) { return drawDigitalWatch(u, { w: 150, h: 100, dial: '#c8d8c0', accent: '#1a1a1a', label: 'F-91W', big: false }); }
+  },
+  /* Apple Watch */
+  apple: {
+    name: 'Apple Watch', maker: 'Apple', cat: 'digital', cadence: 'glide',
+    blurb: 'The Apple Watch: a rounded-rectangle case with a dark screen showing an activity-ring dial and digital time.',
+    draw(u) {
+      const cx = 150, cy = 150, w = 128, h = 168;
+      const x0 = cx - w / 2, y0 = cy - h / 2;
+      let out = '';
+      out += defs(u, [['case', [['0%', '#e9edf2'], ['100%', '#6a7280']]], ['screen', [['0%', '#0a0d12'], ['100%', '#05070a']]]]);
+      out += rect(cx - 16, y0 - 12, 32, 14, '#3a414b', '#05070a', 1, 6);
+      out += rect(cx - 16, y0 + h - 2, 32, 14, '#3a414b', '#05070a', 1, 6);
+      out += rect(x0 - 8, y0 - 8, w + 16, h + 16, `url(#${u}case)`, '#1a1f27', 1.5, 34);
+      out += rect(x0, y0, w, h, `url(#${u}screen)`, '#1a1f27', 1.5, 26);
+      const ringR = 44;
+      out += circle(cx, cy - 14, ringR, 'none', '#2a313b', 7);
+      out += circle(cx, cy - 14, ringR, 'none', '#ff4d6a', 7, `stroke-dasharray="180 100" stroke-linecap="round" transform="rotate(-90 ${cx} ${cy - 14})"`);
+      out += circle(cx, cy - 14, ringR - 12, 'none', '#3cff6a', 6, `stroke-dasharray="120 90" stroke-linecap="round" transform="rotate(-90 ${cx} ${cy - 14})"`);
+      out += circle(cx, cy - 14, ringR - 24, 'none', '#3cb8ff', 5, `stroke-dasharray="80 70" stroke-linecap="round" transform="rotate(-90 ${cx} ${cy - 14})"`);
+      out += `<text data-field="lcd" x="${cx}" y="${cy + 44}" font-size="19" fill="#e8e4d8" text-anchor="middle" dominant-baseline="middle" font-family="ui-monospace,monospace" font-weight="600" letter-spacing=".04em">10:09</text>`;
+      out += txt(cx, cy + 70, 'TUE 23 NOV', 7, '#98a0ac', 'font-family="Arial,sans-serif" letter-spacing=".18em"');
+      return out;
+    }
+  },
+  /* Swatch Once Again */
+  swatch: {
+    name: 'Swatch Once Again', maker: 'Swatch', cat: 'everyday', cadence: 'tick',
+    blurb: 'The Swatch Once Again: a pastel dial with Roman numerals and a playful lume sweep.',
+    draw(u) { return roundWatch(u, { R: 112, dial: '#f2c4c4', bezel: '#f2c4c4', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'roman', lume: true, bezelStyle: 'bezel', brand: 'SWATCH', brandSize: 10, brandY: 46, bottomText: 'ONCE AGAIN', bottomY: 50, bottomSize: 6, date: false, handStyle: 'baton', secondStyle: 'stick' }); }
+  },
+  /* Braun BN0021 */
+  braun: {
+    name: 'Braun BN0021', maker: 'Braun', cat: 'everyday', cadence: 'tick',
+    blurb: 'The Braun BN0021: a white dial with bold numerals and a black resin case — Braun at its most graphic.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#efe9da', bezel: '#1a1a1a', accent: '#1a1a1a', hand: '#1a1a1a', second: '#e11', markers: 'numeral', lume: true, bezelStyle: 'bezel', brand: 'BRAUN', brandSize: 10, brandY: 46, bottomText: 'BN0021', bottomY: 50, bottomSize: 6, date: false, handStyle: 'baton', secondStyle: 'stick' }); }
+  },
+  /* Mondaine Swiss Railway */
+  mondaine: {
+    name: 'Mondaine Swiss Railway', maker: 'Mondaine', cat: 'everyday', cadence: 'mondaine',
+    blurb: 'The Swiss Railway: cream dial with a railroad track, baton markers and a red second hand.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#f0ead8', bezel: '#c9c9c9', accent: '#1a1a1a', hand: '#1a1a1a', second: '#e11', markers: 'baton', chapter: true, chapterColor: '#1a1a1a', brand: 'MONDAINE', brandSize: 10, brandY: 46, bottomText: 'SWISS RAILWAY', bottomY: 50, bottomSize: 6, date: false, handStyle: 'sword', secondStyle: 'alpha' }); }
+  },
+  /* TAG Heuer Monaco Calibre 11 */
+  monaco: {
+    name: 'TAG Heuer Monaco Calibre 11', maker: 'TAG Heuer', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The Monaco: square case, blue dial with baton markers, chrono subdial and sword hands.',
+    draw(u) { return drawSquareWatch(u, { w: 176, h: 176, dial: '#16304e', bezel: '#1a1a1a', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'baton', lume: true, brand: 'TAG HEUER', bottomText: 'MONACO' }); }
+  },
+  /* Panerai Luminor Marina PAM03312 */
+  panerai: {
+    name: 'Panerai Luminor Marina PAM03312', maker: 'Panerai', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Luminor: cushion case with a crown guard, black dial with bold lume batons and a diver bezel.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#0d0f12', bezel: '#1a1f27', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'baton', lume: true, bezelStyle: 'diver', bezelInsert: '#0d0f12', brand: 'PANERAI', brandSize: 10, brandY: 46, bottomText: 'LUMINOR', bottomY: 50, bottomSize: 6, date: false, handStyle: 'sword', secondStyle: 'stick' }); }
+  },
+  /* Rolex Trackside Clock */
+  f1: {
+    name: 'Rolex Trackside Clock', maker: 'Rolex', cat: 'clock', cadence: 'sweep',
+    blurb: 'The Trackside Clock: a large round white dial with bold numerals, a red second and a slim steel case — the race-day timepiece.',
+    draw(u) { return drawBigClock(u, { dial: '#f0ead8', accent: '#1a1a1a', hand: '#1a1a1a', second: '#e11', brand: 'ROLEX', bottomText: 'TRACKSIDE' }); }
+  },
+  /* Big Ben (Elizabeth Tower) */
+  bigben: {
+    name: 'Big Ben (Elizabeth Tower)', maker: 'Big Ben', cat: 'clock', cadence: 'tick',
+    blurb: 'Big Ben: a dark-blue dial with gothic numerals, gilt hands and a slow tick — the iconic Westminster clock.',
+    draw(u) { return drawBigClock(u, { dial: '#1a2a4a', accent: '#d4a24e', hand: '#d4a24e', second: '#d4a24e', brand: 'BIG BEN', bottomText: 'ELIZABETH TOWER', gothic: true }); }
+  },
+  /* Seiko 5 Sports SRPD51 */
+  seiko5: {
+    name: 'Seiko 5 Sports SRPD51', maker: 'Seiko', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Seiko 5 Sports: dark-green dial with baton markers, day-date window and sweep second.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#1a3a2a', bezel: '#1a1f27', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'baton', lume: true, bezelStyle: 'bezel', brand: 'SEIKO 5', brandSize: 10, brandY: 46, bottomText: 'SPORTS', bottomY: 50, bottomSize: 6, daydate: true, handStyle: 'baton', secondStyle: 'stick' }); }
+  },
+  /* Blancpain Villeret Quantième Complet */
+  moonphase: {
+    name: 'Blancpain Villeret Quantième Complet', maker: 'Blancpain', cat: 'dress', cadence: 'sweep',
+    blurb: 'The Villeret Quantième Complet: cream dial with a moonphase aperture, date and small seconds subdial.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#efe9da', bezel: '#c9a84c', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'baton', chapter: true, chapterColor: '#1a1a1a', brand: 'BLANCPAIN', brandSize: 9, brandY: 46, bottomText: 'VILLÈRET', bottomY: 50, bottomSize: 6, date: true, moon: true, smallSeconds: true, smallSecondsAngle: 180, handStyle: 'dauphine', secondStyle: 'alpha' }); }
+  },
+  /* Richard Mille RM 011 Felipe Massa */
+  richardmille: {
+    name: 'Richard Mille RM 011 Felipe Massa', maker: 'Richard Mille', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The RM 011: tonneau-cased skeleton with exposed structure, red second hand and racing-inspired dial.',
+    draw(u) { return drawTonneauWatch(u, { dial: '#1a1a1a', accent: '#e11', hand: '#e8e4d8', second: '#e11', brand: 'RICHARD MILLE', bottomText: 'RM 011', skeleton: true }); }
+  },
+  /* TUDOR Black Bay Fifty-Eight M79030N */
+  blackbay58: {
+    name: 'TUDOR Black Bay Fifty-Eight M79030N', maker: 'Tudor', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Black Bay 58: black dial with snowflake hands, dot markers and a unidirectional bezel.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#0d0f12', bezel: '#1a1f27', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'dot', lume: true, bezelStyle: 'diver', bezelInsert: '#0d0f12', brand: 'TUDOR', brandSize: 11, brandY: 46, bottomText: 'BLACK BAY 58', bottomY: 50, bottomSize: 6, date: false, handStyle: 'sword', secondStyle: 'alpha' }); }
+  },
+  /* Breitling Navitimer B01 */
+  navitimer: {
+    name: 'Breitling Navitimer B01 Chronograph 43', maker: 'Breitling', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The Navitimer: slide-rule bezel, white dial with three chrono subdials and baton hands.',
+    draw(u) { return drawDaytona(u, { dial: '#efe9da', bezel: '#1a1a1a', accent: '#1a1a1a', brand: 'BREITLING', bottomText: 'NAVITIMER' }); }
+  },
+  /* Zenith Chronomaster Sport 03.3100.3600 */
+  elprimero: {
+    name: 'Zenith Chronomaster Sport 03.3100.3600/69.M3100', maker: 'Zenith', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The Chronomaster Sport: silver dial with chrono subdials, tachymeter bezel and baton markers.',
+    draw(u) { return drawDaytona(u, { dial: '#d8d2c2', bezel: '#1a1a1a', accent: '#1a1a1a', brand: 'ZENITH', bottomText: 'CHRONOMASTER' }); }
+  },
+  /* Vacheron Constantin Overseas 4520V */
+  overseas: {
+    name: 'Vacheron Constantin Overseas Self-Winding 4520V/210A-B128', maker: 'Vacheron Constantin', cat: 'dress', cadence: 'sweep',
+    blurb: 'The Overseas: deep-blue dial with Maltese-cross chrono subdials, baton markers and polished case.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#16304e', bezel: '#c9a84c', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'baton', lume: true, bezelStyle: 'fluted', brand: 'VACHERON CONSTANTIN', brandSize: 7, brandY: 46, bottomText: 'OVERSEAS', bottomY: 50, bottomSize: 6, chrono: true, chronoAngle: 90, date: true, handStyle: 'dauphine', secondStyle: 'stick' }); }
+  },
+  /* Hublot Big Bang Unico Red Magic 42 */
+  bigbang: {
+    name: 'Hublot Big Bang Unico Red Magic 42', maker: 'Hublot', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The Big Bang: black skeleton with red accents, exposed structure and a red second hand.',
+    draw(u) { return drawTonneauWatch(u, { dial: '#0d0f12', accent: '#e11', hand: '#e8e4d8', second: '#e11', brand: 'HUBLOT', bottomText: 'BIG BANG', skeleton: true, tonneau: true }); }
+  },
+  /* Tissot PRX */
+  prx: {
+    name: 'Tissot PRX 40mm Powermatic 80 T137.407.11.041.00', maker: 'Tissot', cat: 'dress', cadence: 'sweep',
+    blurb: 'The PRX: waffle-pattern dial with baton markers and lume — the modern classic.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#d8d2c2', bezel: '#c9a84c', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'baton', lume: true, bezelStyle: 'fluted', dialDeco: (cx, cy, R, accent) => { let out = ''; for (let i = -4; i <= 4; i++) { for (let j = -4; j <= 4; j++) { out += circle(cx + i * 18, cy + j * 18, 2.2, '#b8b0a0'); } } return out; }, brand: 'TISSOT', brandSize: 10, brandY: 46, bottomText: 'PRX', bottomY: 50, bottomSize: 6, date: false, handStyle: 'baton', secondStyle: 'stick' }); }
+  },
+  /* Hamilton Khaki Field */
+  khaki: {
+    name: 'Hamilton Khaki Field Mechanical 38mm H69439931', maker: 'Hamilton', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Khaki Field: dark-green dial with lume numerals, baton markers and a strap-like steel case.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#2a3a2a', bezel: '#2a313b', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'numeral', lume: true, bezelStyle: 'bezel', brand: 'HAMILTON', brandSize: 9, brandY: 46, bottomText: 'KHAKI FIELD', bottomY: 50, bottomSize: 6, date: false, handStyle: 'baton', secondStyle: 'stick' }); }
+  },
+  /* Bell & Ross BR-03 */
+  br03: {
+    name: 'Bell & Ross BR-03 Black Matte BR03A-BL-CE/SRB', maker: 'Bell & Ross', cat: 'sport', cadence: 'sweep',
+    blurb: 'The BR-03: square matte-black case with screws, aviation dial and baton hands.',
+    draw(u) { return drawSquareWatch(u, { w: 176, h: 176, dial: '#0d0f12', bezel: '#1a1f27', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'baton', lume: true, screws: true, brand: 'BELL & ROSS', bottomText: 'BR-03' }); }
+  },
+  /* Westclox Twin Bell Alarm Clock */
+  twinbell: {
+    name: 'Westclox Twin Bell Alarm Clock 70010A', maker: 'Westclox', cat: 'clock', cadence: 'tick',
+    blurb: 'The Twin Bell: twin-bell alarm clock with white dial, bold numerals and a slow tick.',
+    draw(u) {
+      const cx = 150, cy = 150, R = 100;
+      let out = '';
+      out += defs(u, [['case', [['0%', '#e9edf2'], ['100%', '#5a616b']]], ['dial', [['0%', '#f0ead8'], ['100%', '#d8d2c2']]], ['glass', [['0%', '#ffffff', 0.3], ['100%', '#ffffff', 0]]]]);
+      out += path(`M${cx - 30} ${cy - R - 20} Q${cx - 30} ${cy - R - 40} ${cx - 14} ${cy - R - 40} L${cx - 6} ${cy - R - 40} Q${cx} ${cy - R - 40} ${cx + 6} ${cy - R - 40} L${cx + 14} ${cy - R - 40} Q${cx + 30} ${cy - R - 40} ${cx + 30} ${cy - R - 20}`, '#d4a24e', '#1a1f27', 1.5);
+      out += circle(cx - 38, cy - R - 8, 16, '#d4a24e', '#1a1f27', 1.5);
+      out += circle(cx + 38, cy - R - 8, 16, '#d4a24e', '#1a1f27', 1.5);
+      out += circle(cx, cy, R + 14, `url(#${u}case)`, null, 0);
+      out += circle(cx, cy, R, `url(#${u}dial)`, 'none', 0);
+      const nums = ['12', '3', '6', '9'];
+      const pos = [[cx, cy - R * 0.64], [cx + R * 0.64, cy], [cx, cy + R * 0.64], [cx - R * 0.64, cy]];
+      nums.forEach((n, i) => { out += txt(pos[i][0], pos[i][1], n, 16, '#1a1a1a', 'font-family="Georgia,serif" font-weight="700"'); });
+      for (let i = 0; i < 60; i++) {
+        const a = i * 6;
+        const [x1, y1] = pt(cx, cy, R - 3, a), [x2, y2] = pt(cx, cy, R - 8, a);
+        out += line(x1, y1, x2, y2, '#1a1a1a', i % 5 ? 0.7 : 1.6);
+      }
+      out += txt(cx, cy - R * 0.32, 'WESTCLOX', 9, '#1a1a1a', 'font-family="Georgia,serif" font-weight="700" letter-spacing=".16em"');
+      out += txt(cx, cy + R * 0.32, 'TWIN BELL', 6, '#1a1a1a', 'font-family="Georgia,serif" letter-spacing=".2em"');
+      out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.42, 6, '#1a1a1a', 12)}</g>`;
+      out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.62, 4.4, '#1a1a1a', 12)}</g>`;
+      out += `<g data-hand="second" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 14}" x2="${cx}" y2="${cy - R * 0.72}" stroke="#e11" stroke-width="1.6" stroke-linecap="round"/></g>`;
+      out += circle(cx, cy, 4.4, '#e11');
+      out += `<circle cx="${cx}" cy="${cy}" r="${R + 4}" fill="url(#${u}glass)" opacity=".4"/>`;
+      return out;
+    }
+  },
+  /* Comtoise Longcase Clock */
+  grandfather: {
+    name: 'Comtoise Longcase Clock — Musée du Temps, c. 1850', maker: 'Comtoise', cat: 'clock', cadence: 'tick',
+    blurb: 'The Comtoise longcase: walnut case, cream dial with gothic numerals, pendulum and gilt hands.',
+    draw(u) {
+      const cx = 150, cy = 120, R = 72;
+      let out = '';
+      out += defs(u, [['case', [['0%', '#5a3a1a'], ['100%', '#2a1a0a']]], ['dial', [['0%', '#f0ead8'], ['100%', '#d8d2c2']]], ['glass', [['0%', '#ffffff', 0.3], ['100%', '#ffffff', 0]]]]);
+      out += rect(cx - 60, cy + R + 14, 120, 90, `url(#${u}case)`, '#1a1f27', 1.5, 4);
+      out += rect(cx - 44, cy + R + 26, 88, 60, '#3a2a1a', '#1a1f27', 1.2, 4);
+      out += line(cx, cy + R + 20, cx, cy + R + 78, '#d4a24e', 2.4);
+      out += circle(cx, cy + R + 78, 10, '#d4a24e', '#1a1f27', 1.4);
+      out += circle(cx, cy, R + 12, `url(#${u}case)`, null, 0);
+      out += circle(cx, cy, R, `url(#${u}dial)`, 'none', 0);
+      const nums = ['XII', 'III', 'VI', 'IX'];
+      const pos = [[cx, cy - R * 0.62], [cx + R * 0.62, cy], [cx, cy + R * 0.62], [cx - R * 0.62, cy]];
+      nums.forEach((n, i) => { out += txt(pos[i][0], pos[i][1], n, 13, '#1a1a1a', 'font-family="Georgia,serif" font-weight="700"'); });
+      for (let i = 0; i < 60; i++) {
+        const a = i * 6;
+        const [x1, y1] = pt(cx, cy, R - 3, a), [x2, y2] = pt(cx, cy, R - 7, a);
+        out += line(x1, y1, x2, y2, '#1a1a1a', i % 5 ? 0.6 : 1.3);
+      }
+      out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.42, 5, '#1a1a1a', 12)}</g>`;
+      out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.62, 4, '#1a1a1a', 12)}</g>`;
+      out += `<g data-hand="second" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 12}" x2="${cx}" y2="${cy - R * 0.7}" stroke="#1a1a1a" stroke-width="1.4" stroke-linecap="round"/></g>`;
+      out += circle(cx, cy, 4, '#1a1a1a');
+      out += `<circle cx="${cx}" cy="${cy}" r="${R + 4}" fill="url(#${u}glass)" opacity=".4"/>`;
+      return out;
+    }
+  },
+  /* Prague Astronomical Clock */
+  orloj: {
+    name: 'Prague Old Town Astronomical Clock (2018-restored astrolabe)', maker: 'Orloj', cat: 'clock', cadence: 'tick',
+    blurb: 'The Orloj: dark-blue astrolabe dial with gilded hands, ornate chapter and a slow tick.',
+    draw(u) {
+      const cx = 150, cy = 140, R = 88;
+      let out = '';
+      out += defs(u, [['case', [['0%', '#e9edf2'], ['100%', '#5a616b']]], ['dial', [['0%', '#1a2a4a'], ['100%', '#05070a']]], ['glass', [['0%', '#ffffff', 0.3], ['100%', '#ffffff', 0]]]]);
+      out += rect(cx - 56, cy + R + 10, 112, 34, `url(#${u}case)`, '#1a1f27', 1.2, 4);
+      out += circle(cx, cy, R + 14, `url(#${u}case)`, null, 0);
+      out += circle(cx, cy, R, `url(#${u}dial)`, 'none', 0);
+      for (let i = 0; i < 60; i++) {
+        const a = i * 6;
+        const [x1, y1] = pt(cx, cy, R - 2, a), [x2, y2] = pt(cx, cy, R - 7, a);
+        out += line(x1, y1, x2, y2, '#d4a24e', i % 5 ? 0.6 : 1.4);
+      }
+      const nums = ['XII', 'III', 'VI', 'IX'];
+      const pos = [[cx, cy - R * 0.6], [cx + R * 0.6, cy], [cx, cy + R * 0.6], [cx - R * 0.6, cy]];
+      nums.forEach((n, i) => { out += txt(pos[i][0], pos[i][1], n, 14, '#d4a24e', 'font-family="Georgia,serif" font-weight="700"'); });
+      out += circle(cx, cy, R * 0.34, 'none', '#d4a24e', 1.6);
+      out += circle(cx, cy, R * 0.26, 'none', '#d4a24e', 1.2);
+      out += txt(cx, cy - R * 0.44, 'ORLOJ', 9, '#d4a24e', 'font-family="Georgia,serif" font-weight="700" letter-spacing=".2em"');
+      out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${swordHand(cx, cy, R * 0.44, 8, '#d4a24e')}</g>`;
+      out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${swordHand(cx, cy, R * 0.62, 6, '#d4a24e')}</g>`;
+      out += `<g data-hand="second" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 12}" x2="${cx}" y2="${cy - R * 0.7}" stroke="#d4a24e" stroke-width="1.4" stroke-linecap="round"/></g>`;
+      out += circle(cx, cy, 4.4, '#d4a24e');
+      out += `<circle cx="${cx}" cy="${cy}" r="${R + 4}" fill="url(#${u}glass)" opacity=".4"/>`;
+      return out;
+    }
+  },
+  /* Ulysse Nardin Marine Torpilleur */
+  marine: {
+    name: 'Ulysse Nardin Marine Torpilleur 1182-310/42', maker: 'Ulysse Nardin', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Marine Torpilleur: cream dial with Roman numerals, lume and a slim polished case.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#efe9da', bezel: '#c9c9c9', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'roman', lume: true, bezelStyle: 'bezel', brand: 'U. NARDIN', brandSize: 9, brandY: 46, bottomText: 'MARINE', bottomY: 50, bottomSize: 6, date: false, handStyle: 'dauphine', secondStyle: 'alpha' }); }
+  },
+  /* Ulysse Nardin Freak X */
+  freak: {
+    name: 'Ulysse Nardin Freak X Carb 2303-270/CARB', maker: 'Ulysse Nardin', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The Freak X: skeleton tonneau with exposed structure, red second hand and a carbon-black dial.',
+    draw(u) { return drawTonneauWatch(u, { dial: '#0d0f12', accent: '#e11', hand: '#e8e4d8', second: '#e11', brand: 'FREAK X', bottomText: 'CARB', skeleton: true }); }
+  },
+  /* Patek Philippe 5270J Perpetual Calendar */
+  patek: {
+    name: 'Patek Philippe Perpetual Calendar Chronograph 5270J-001', maker: 'Patek Philippe', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The 5270J: perpetual calendar with chrono subdials, cream dial and baton markers.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#efe9da', bezel: '#c9a84c', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'baton', chapter: true, chapterColor: '#1a1a1a', brand: 'PATEK PHILIPPE', brandSize: 8, brandY: 46, bottomText: '5270J', bottomY: 50, bottomSize: 6, chrono: true, chronoAngle: 90, date: true, handStyle: 'dauphine', secondStyle: 'alpha' }); }
+  },
+  /* Rolex Explorer 36 */
+  explorer: {
+    name: 'Rolex Explorer 36 124270', maker: 'Rolex', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Explorer 36: black dial with lume numerals, sword hands and a polished case.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#0d0f12', bezel: '#c9c9c9', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'numeral', lume: true, bezelStyle: 'bezel', brand: 'ROLEX', brandSize: 11, brandY: 46, bottomText: 'EXPLORER 36', bottomY: 50, bottomSize: 6, date: false, handStyle: 'sword', secondStyle: 'stick' }); }
+  },
+  /* Cartier Santos de Cartier Large */
+  santos: {
+    name: 'Cartier Santos de Cartier Large WSSA0018', maker: 'Cartier', cat: 'dress', cadence: 'sweep',
+    blurb: 'The Santos: square case with screws, cream dial with Roman numerals and sword hands.',
+    draw(u) { return drawSquareWatch(u, { w: 176, h: 176, dial: '#efe9da', bezel: '#c9a84c', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'roman', screws: true, brand: 'CARTIER', bottomText: 'SANTOS' }); }
+  },
+  /* IWC Big Pilot's Watch 43 */
+  bigpilot: {
+    name: "IWC Big Pilot's Watch 43 IW329301", maker: 'IWC Schaffhausen', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Big Pilot: black dial with lume numerals, baton hands and an aviation case.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#0d0f12', bezel: '#2a313b', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'numeral', lume: true, bezelStyle: 'bezel', brand: 'IWC', brandSize: 11, brandY: 46, bottomText: 'BIG PILOT', bottomY: 50, bottomSize: 6, date: false, handStyle: 'baton', secondStyle: 'stick' }); }
+  },
+  /* Blancpain Fifty Fathoms */
+  fiftyfathoms: {
+    name: 'Blancpain Fifty Fathoms Automatique 5015 1130 71S', maker: 'Blancpain', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Fifty Fathoms: black dial with lume numerals, unidirectional bezel and sword hands.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#0d0f12', bezel: '#1a1f27', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'numeral', lume: true, bezelStyle: 'diver', bezelInsert: '#0d0f12', brand: 'BLANCPAIN', brandSize: 10, brandY: 46, bottomText: 'FIFTY FATHOMS', bottomY: 50, bottomSize: 6, date: false, handStyle: 'sword', secondStyle: 'alpha' }); }
+  },
+  /* Breguet Type XX */
+  typexx: {
+    name: 'Breguet Type XX Chronographe 2067 2067ST/92/3WU', maker: 'Breguet', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The Type XX: black dial with chrono subdial, baton markers and polished case.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#0d0f12', bezel: '#c9a84c', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'baton', lume: true, bezelStyle: 'fluted', brand: 'BREGUET', brandSize: 10, brandY: 46, bottomText: 'TYPE XX', bottomY: 50, bottomSize: 6, chrono: true, chronoAngle: 90, date: false, handStyle: 'sword', secondStyle: 'stick' }); }
+  },
+  /* Panerai Radiomir */
+  radiomir: {
+    name: 'Panerai Radiomir Black Seal Logo PAM00754', maker: 'Panerai', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Radiomir: cushion case, black dial with bold lume batons and a crown guard.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#0d0f12', bezel: '#1a1f27', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'baton', lume: true, bezelStyle: 'diver', bezelInsert: '#0d0f12', brand: 'PANERAI', brandSize: 10, brandY: 46, bottomText: 'RADIOMIR', bottomY: 50, bottomSize: 6, date: false, handStyle: 'sword', secondStyle: 'stick' }); }
+  },
+  /* TAG Heuer Carrera */
+  carrera: {
+    name: 'TAG Heuer Carrera Chronograph CBN2011.BA0642', maker: 'TAG Heuer', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The Carrera: white dial with chrono subdials, baton markers and polished case.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#efe9da', bezel: '#c9c9c9', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'baton', lume: true, bezelStyle: 'bezel', brand: 'TAG HEUER', brandSize: 9, brandY: 46, bottomText: 'CARRERA', bottomY: 50, bottomSize: 6, chrono: true, chronoAngle: 90, date: false, handStyle: 'baton', secondStyle: 'alpha' }); }
+  },
+  /* Omega Speedmaster Silver Snoopy */
+  snoopy: {
+    name: 'Omega Speedmaster "Silver Snoopy Award" 310.32.42.50.02.001', maker: 'Omega', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The Silver Snoopy: white dial with a Snoopy illustration, chrono subdials and baton hands.',
+    draw(u) {
+      const cx = 150, cy = 150, R = 116;
+      let out = '';
+      out += defs(u, [['case', [['0%', '#e9edf2'], ['100%', '#5a616b']]], ['bezel', [['0%', '#2a313b'], ['100%', '#0d1117']]], ['dial', [['0%', '#f0ead8'], ['100%', '#d8d2c2']]], ['glass', [['0%', '#ffffff', 0.3], ['100%', '#ffffff', 0]]]]);
+      out += circle(cx, cy, R + 14, `url(#${u}case)`, null, 0);
+      out += circle(cx, cy, R + 9, `url(#${u}bezel)`, '#2a313b', 1);
+      out += circle(cx, cy, R, `url(#${u}dial)`, 'none', 0);
+      for (let i = 0; i < 60; i++) {
+        const a = i * 6;
+        const [x1, y1] = pt(cx, cy, R - 3, a), [x2, y2] = pt(cx, cy, R - 8, a);
+        out += line(x1, y1, x2, y2, '#1a1a1a', i % 5 ? 0.6 : 1.4);
+      }
+      /* Snoopy silhouette */
+      out += path(`M${cx - 14} ${cy + 18} Q${cx - 14} ${cy - 4} ${cx + 2} ${cy - 4} Q${cx + 12} ${cy - 4} ${cx + 12} ${cy + 2} Q${cx + 12} ${cy + 10} ${cx + 2} ${cy + 10} L${cx + 4} ${cy + 22} L${cx - 10} ${cy + 22} Z`, '#1a1a1a', null, 0);
+      out += circle(cx + 8, cy - 8, 6, '#1a1a1a');
+      out += circle(cx + 12, cy - 9, 1.2, '#f0ead8');
+      out += txt(cx, cy - R * 0.44, 'OMEGA', 10, '#1a1a1a', 'font-family="Georgia,serif" font-weight="700" letter-spacing=".16em"');
+      out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.4, 5.6, '#1a1a1a', 12)}</g>`;
+      out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.58, 4, '#1a1a1a', 12)}</g>`;
+      out += `<g data-hand="second" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 14}" x2="${cx}" y2="${cy - R * 0.7}" stroke="#e11" stroke-width="1.6" stroke-linecap="round"/></g>`;
+      out += circle(cx, cy, 4.2, '#e11');
+      out += `<circle cx="${cx}" cy="${cy}" r="${R + 4}" fill="url(#${u}glass)" opacity=".4"/>`;
+      return out;
+    }
+  },
+  /* Rolex Milgauss Z-Blue */
+  milgauss: {
+    name: 'Rolex Milgauss 116400GV-0002 "Z-Blue"', maker: 'Rolex', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Milgauss: blue dial with baton markers, lume and a unidirectional bezel — the magnetic-field watch.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#16304e', bezel: '#1a1f27', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'baton', lume: true, bezelStyle: 'diver', bezelInsert: '#16304e', brand: 'ROLEX', brandSize: 11, brandY: 46, bottomText: 'MILGAUSS', bottomY: 50, bottomSize: 6, date: false, handStyle: 'sword', secondStyle: 'stick' }); }
+  },
+  /* Rolex Yacht-Master II */
+  yachtmaster2: {
+    name: 'Rolex Yacht-Master II 126680', maker: 'Rolex', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Yacht-Master II: white dial with baton markers, polished case and a regatta-inspired lume.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#f0ead8', bezel: '#c9c9c9', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'baton', lume: true, bezelStyle: 'bezel', brand: 'ROLEX', brandSize: 11, brandY: 46, bottomText: 'YACHT-MASTER', bottomY: 50, bottomSize: 6, date: false, handStyle: 'sword', secondStyle: 'stick' }); }
+  },
+  /* Jorg Gray JGC6500 Secret Service */
+  jorggray: {
+    name: 'Jorg Gray JGC6500 Secret Service Edition', maker: 'Jorg Gray', cat: 'sport', cadence: 'tick',
+    blurb: 'The JGC6500 Secret Service: black dial with numerals, lume and a discreet military case.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#0d0f12', bezel: '#1a1f27', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'numeral', lume: true, bezelStyle: 'bezel', brand: 'JORG GRAY', brandSize: 8, brandY: 46, bottomText: 'JGC6500', bottomY: 50, bottomSize: 6, date: false, handStyle: 'baton', secondStyle: 'stick' }); }
+  },
+  /* Rolex Cosmograph Daytona Rainbow */
+  rainbow: {
+    name: 'Rolex Cosmograph Daytona 116595RBOW-0001', maker: 'Rolex', cat: 'chrono', cadence: 'sweep',
+    blurb: 'The Rainbow Daytona: vivid rainbow dial with chrono subdials, baton markers and sword hands.',
+    draw(u) { return drawDaytona(u, { dial: '#d8e4f0', bezel: '#1a1a1a', accent: '#1a1a1a', brand: 'ROLEX', bottomText: 'COSMOGRAPH', dialDeep: '#b0c8e0' }); }
+  },
+  /* Norfolk Southern Railroad Pocket Watch */
+  railroad: {
+    name: 'Norfolk Southern Railroad Pocket Watch (1994)', maker: 'Norfolk Southern', cat: 'clock', cadence: 'tick',
+    blurb: 'The Railroad Pocket Watch: cream dial with railroad track, gilt case and chain — the 1994 railroad keepsake.',
+    draw(u) {
+      const cx = 150, cy = 152, R = 78;
+      let out = '';
+      out += defs(u, [['case', [['0%', '#e9edf2'], ['100%', '#5a616b']]], ['dial', [['0%', '#f0ead8'], ['100%', '#d8d2c2']]], ['glass', [['0%', '#ffffff', 0.3], ['100%', '#ffffff', 0]]]]);
+      out += circle(cx, cy - R - 14, 12, '#d4a24e', '#1a1f27', 1.4);
+      out += line(cx, cy - R - 2, cx, cy - R + 12, '#d4a24e', 2.4);
+      out += circle(cx, cy, R + 12, `url(#${u}case)`, null, 0);
+      out += circle(cx, cy, R, `url(#${u}dial)`, 'none', 0);
+      for (let i = 0; i < 60; i++) {
+        const a = i * 6;
+        const [x1, y1] = pt(cx, cy, R - 3, a), [x2, y2] = pt(cx, cy, R - 7, a);
+        out += line(x1, y1, x2, y2, '#1a1a1a', i % 5 ? 0.6 : 1.4);
+      }
+      const nums = ['12', '3', '6', '9'];
+      const pos = [[cx, cy - R * 0.6], [cx + R * 0.6, cy], [cx, cy + R * 0.6], [cx - R * 0.6, cy]];
+      nums.forEach((n, i) => { out += txt(pos[i][0], pos[i][1], n, 14, '#1a1a1a', 'font-family="Georgia,serif" font-weight="700"'); });
+      out += txt(cx, cy - R * 0.32, 'N.S.', 8, '#1a1a1a', 'font-family="Georgia,serif" font-weight="700" letter-spacing=".2em"');
+      out += txt(cx, cy + R * 0.32, 'RAILROAD', 6, '#1a1a1a', 'font-family="Georgia,serif" letter-spacing=".2em"');
+      out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.42, 5, '#1a1a1a', 12)}</g>`;
+      out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.62, 4, '#1a1a1a', 12)}</g>`;
+      out += `<g data-hand="second" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 12}" x2="${cx}" y2="${cy - R * 0.7}" stroke="#1a1a1a" stroke-width="1.4" stroke-linecap="round"/></g>`;
+      out += circle(cx, cy, 4, '#1a1a1a');
+      out += `<circle cx="${cx}" cy="${cy}" r="${R + 4}" fill="url(#${u}glass)" opacity=".4"/>`;
+      return out;
+    }
+  },
+  /* NOMOS Glashütte Metro */
+  nomosmetro: {
+    name: 'NOMOS Glashütte Metro date power reserve 1101', maker: 'NOMOS Glashütte', cat: 'dress', cadence: 'sweep',
+    blurb: 'The NOMOS Metro: white dial with baton markers, power-reserve subdial and date.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#f0ead8', bezel: '#c9c9c9', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'baton', chapter: true, chapterColor: '#1a1a1a', brand: 'NOMOS', brandSize: 10, brandY: 46, bottomText: 'METRO', bottomY: 50, bottomSize: 6, date: true, chrono: true, chronoAngle: 270, handStyle: 'baton', secondStyle: 'stick' }); }
+  },
+  /* Grand Central Terminal Clock */
+  grandcentral: {
+    name: 'Grand Central Terminal Information Booth Clock (1913)', maker: 'Grand Central', cat: 'clock', cadence: 'tick',
+    blurb: 'The Grand Central Booth Clock: dark-blue dial with gothic numerals and gilt hands — the 1913 information booth.',
+    draw(u) { return drawBigClock(u, { dial: '#1a2a4a', accent: '#d4a24e', hand: '#d4a24e', second: '#d4a24e', brand: 'GRAND CENTRAL', bottomText: '1913', gothic: true }); }
+  },
+  /* Howard Miller Chateau Grandfather */
+  howardmiller: {
+    name: 'Howard Miller Chateau 610-520 Grandfather Clock', maker: 'Howard Miller', cat: 'clock', cadence: 'tick',
+    blurb: 'The Chateau Grandfather: walnut case, cream dial with gothic numerals and pendulum.',
+    draw(u) { return drawBigClock(u, { dial: '#f0ead8', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', brand: 'HOWARD MILLER', bottomText: 'CHATEAU', gothic: true }); }
+  },
+  /* Ingersoll Mickey Mouse 1933 */
+  mickey: {
+    name: 'Ingersoll Mickey Mouse (1933)', maker: 'Ingersoll', cat: 'everyday', cadence: 'tick',
+    blurb: 'The Mickey Mouse: black-and-white dial with Mickey ears, numerals and a slow tick.',
+    draw(u) {
+      const cx = 150, cy = 150, R = 88;
+      let out = '';
+      out += defs(u, [['case', [['0%', '#e9edf2'], ['100%', '#5a616b']]], ['dial', [['0%', '#f0ead8'], ['100%', '#d8d2c2']]], ['glass', [['0%', '#ffffff', 0.3], ['100%', '#ffffff', 0]]]]);
+      out += circle(cx - 34, cy - R - 8, 22, '#1a1a1a');
+      out += circle(cx + 34, cy - R - 8, 22, '#1a1a1a');
+      out += circle(cx, cy, R + 12, `url(#${u}case)`, null, 0);
+      out += circle(cx, cy, R, `url(#${u}dial)`, 'none', 0);
+      const nums = ['12', '3', '6', '9'];
+      const pos = [[cx, cy - R * 0.6], [cx + R * 0.6, cy], [cx, cy + R * 0.6], [cx - R * 0.6, cy]];
+      nums.forEach((n, i) => { out += txt(pos[i][0], pos[i][1], n, 14, '#1a1a1a', 'font-family="Georgia,serif" font-weight="700"'); });
+      for (let i = 0; i < 60; i++) {
+        const a = i * 6;
+        const [x1, y1] = pt(cx, cy, R - 3, a), [x2, y2] = pt(cx, cy, R - 7, a);
+        out += line(x1, y1, x2, y2, '#1a1a1a', i % 5 ? 0.6 : 1.4);
+      }
+      out += txt(cx, cy - R * 0.32, 'MICKEY', 8, '#1a1a1a', 'font-family="Georgia,serif" font-weight="700" letter-spacing=".2em"');
+      out += `<g data-hand="hour" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.42, 5, '#1a1a1a', 12)}</g>`;
+      out += `<g data-hand="minute" data-px="${cx}" data-py="${cy}">${batonHand(cx, cy, R * 0.62, 4, '#1a1a1a', 12)}</g>`;
+      out += `<g data-hand="second" data-px="${cx}" data-py="${cy}"><line x1="${cx}" y1="${cy + 12}" x2="${cx}" y2="${cy - R * 0.7}" stroke="#1a1a1a" stroke-width="1.4" stroke-linecap="round"/></g>`;
+      out += circle(cx, cy, 4, '#1a1a1a');
+      out += `<circle cx="${cx}" cy="${cy}" r="${R + 4}" fill="url(#${u}glass)" opacity=".4"/>`;
+      return out;
+    }
+  },
+  /* Hamilton Khaki Field King */
+  kingkhaki: {
+    name: 'Hamilton Khaki Field King Auto H64455533', maker: 'Hamilton', cat: 'sport', cadence: 'sweep',
+    blurb: 'The Khaki Field King: dark-green dial with day-date window, baton markers and a polished case.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#2a3a2a', bezel: '#2a313b', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'baton', lume: true, bezelStyle: 'bezel', brand: 'HAMILTON', brandSize: 9, brandY: 46, bottomText: 'KHAKI FIELD KING', bottomY: 50, bottomSize: 6, daydate: true, handStyle: 'baton', secondStyle: 'stick' }); }
+  },
+  /* CASIO MQ-24-7B2LL */
+  casiomq24: {
+    name: 'CASIO MQ-24-7B2LL', maker: 'Casio', cat: 'everyday', cadence: 'tick',
+    blurb: 'The CASIO MQ-24: white dial with baton markers and a simple strap — the understated everyday.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#f0ead8', bezel: '#c9c9c9', accent: '#1a1a1a', hand: '#1a1a1a', second: '#1a1a1a', markers: 'baton', lume: true, bezelStyle: 'bezel', brand: 'CASIO', brandSize: 10, brandY: 46, bottomText: 'MQ-24', bottomY: 50, bottomSize: 6, date: false, handStyle: 'baton', secondStyle: 'stick' }); }
+  },
+  /* Fossil Big Tic JR-7845 */
+  bigtic: {
+    name: 'Fossil Big Tic JR-7845', maker: 'Fossil', cat: 'digital', cadence: 'tick',
+    blurb: 'The Big Tic: black dial with a bold green LCD readout and chunky resin case.',
+    draw(u) { return drawDigitalWatch(u, { w: 150, h: 110, dial: '#0d1117', accent: '#3cff6a', label: 'BIG TIC', big: true }); }
+  },
+  /* Timex Easy Reader Day Date Indiglo */
+  timexindiglo: {
+    name: 'Timex Easy Reader Day Date T20041 (INDIGLO)', maker: 'Timex', cat: 'everyday', cadence: 'tick',
+    blurb: 'The Timex Easy Reader: blue dial with day-date window, lume and a chunky case.',
+    draw(u) { return roundWatch(u, { R: 118, dial: '#1a3a5a', bezel: '#1a1f27', accent: '#e8e4d8', hand: '#e8e4d8', second: '#e8e4d8', markers: 'baton', lume: true, bezelStyle: 'bezel', brand: 'TIMEX', brandSize: 10, brandY: 46, bottomText: 'INDIGLO', bottomY: 50, bottomSize: 6, daydate: true, handStyle: 'baton', secondStyle: 'stick' }); }
+  },
+};
+const FACE_KEYS = Object.keys(FACES);
+
+/* ============================================================
+   App — cities, time, shuffle, collection
+   ============================================================ */
+const CITIES = [
+  { name: 'Honolulu', tz: 'Pacific/Honolulu' },
+  { name: 'Anchorage', tz: 'America/Anchorage' },
+  { name: 'Los Angeles', tz: 'America/Los_Angeles' },
+  { name: 'Vancouver', tz: 'America/Vancouver' },
+  { name: 'Denver', tz: 'America/Denver' },
+  { name: 'Chicago', tz: 'America/Chicago' },
+  { name: 'Mexico City', tz: 'America/Mexico_City' },
+  { name: 'New York', tz: 'America/New_York' },
+  { name: 'Toronto', tz: 'America/Toronto' },
+  { name: 'Halifax', tz: 'America/Halifax' },
+  { name: 'St. John\'s', tz: 'America/St_Johns' },
+  { name: 'Bogota', tz: 'America/Bogota' },
+  { name: 'Lima', tz: 'America/Lima' },
+  { name: 'Santiago', tz: 'America/Santiago' },
+  { name: 'São Paulo', tz: 'America/Sao_Paulo' },
+  { name: 'Rio de Janeiro', tz: 'America/Sao_Paulo' },
+  { name: 'Buenos Aires', tz: 'America/Argentina/Buenos_Aires' },
+  { name: 'Caracas', tz: 'America/Caracas' },
+  { name: 'Reykjavik', tz: 'Atlantic/Reykjavik' },
+  { name: 'Casablanca', tz: 'Africa/Casablanca' },
+  { name: 'London', tz: 'Europe/London' },
+  { name: 'Paris', tz: 'Europe/Paris' },
+  { name: 'Madrid', tz: 'Europe/Madrid' },
+  { name: 'Rome', tz: 'Europe/Rome' },
+  { name: 'Berlin', tz: 'Europe/Berlin' },
+  { name: 'Amsterdam', tz: 'Europe/Amsterdam' },
+  { name: 'Istanbul', tz: 'Europe/Istanbul' },
+  { name: 'Athens', tz: 'Europe/Athens' },
+  { name: 'Moscow', tz: 'Europe/Moscow' },
+  { name: 'Nairobi', tz: 'Africa/Nairobi' },
+  { name: 'Cairo', tz: 'Africa/Cairo' },
+  { name: 'Johannesburg', tz: 'Africa/Johannesburg' },
+  { name: 'Riyadh', tz: 'Asia/Riyadh' },
+  { name: 'Dubai', tz: 'Asia/Dubai' },
+  { name: 'Mumbai', tz: 'Asia/Kolkata' },
+  { name: 'Bangkok', tz: 'Asia/Bangkok' },
+  { name: 'Jakarta', tz: 'Asia/Jakarta' },
+  { name: 'Singapore', tz: 'Asia/Singapore' },
+  { name: 'Hong Kong', tz: 'Asia/Hong_Kong' },
+  { name: 'Beijing', tz: 'Asia/Shanghai' },
+  { name: 'Tokyo', tz: 'Asia/Tokyo' },
+  { name: 'Seoul', tz: 'Asia/Seoul' },
+  { name: 'Sydney', tz: 'Australia/Sydney' },
+  { name: 'Auckland', tz: 'Pacific/Auckland' },
+];
+
+const DEFAULT_CITIES = ['Auckland', 'Tokyo', 'London', 'New York', 'Los Angeles', 'Sydney'];
+const MAX_CITIES = 12;
+
+const state = {
+  cities: [],
+  faces: {},
+  heroFace: null,
+  inspectorFace: null,
+  lume: false,
+  view: 'world',
+  query: '',
+  category: 'all',
+  chrono: { running: false, start: 0, elapsed: 0 },
+};
+
+const fmtCache = new Map();
+function getTimeFmt(tz, opts) {
+  const key = tz + '|' + JSON.stringify(opts);
+  if (!fmtCache.has(key)) fmtCache.set(key, new Intl.DateTimeFormat('en-US', { timeZone: tz, hour12: false, ...opts }));
+  return fmtCache.get(key);
+}
+
+function offsetMinutes(tz, date) {
+  const dtf = new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
+  const parts = Object.fromEntries(dtf.formatToParts(date).filter(p => p.type !== 'literal').map(p => [p.type, p.value]));
+  const asUTC = Date.UTC(+parts.year, +parts.month - 1, +parts.day, +parts.hour, +parts.minute, +parts.second);
+  return Math.round((asUTC - date.getTime()) / 60000);
+}
+
+function cityKey(name) { return name.toLowerCase().replace(/[^a-z0-9]+/g, '-'); }
+
+function sortedCities() {
+  const now = new Date();
+  return state.cities.map(c => ({ ...c, offset: offsetMinutes(c.tz, now) })).sort((a, b) => a.offset - b.offset || a.name.localeCompare(b.name));
+}
+
+function pickFace(avoid) {
+  const pool = FACE_KEYS.filter(k => !avoid || !avoid.has(k));
+  if (!pool.length) return FACE_KEYS[Math.floor(Math.random() * FACE_KEYS.length)];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function assignFaces(names) {
+  const used = new Set();
+  const out = {};
+  for (const n of names) {
+    const key = pickFace(used);
+    used.add(key);
+    out[n] = key;
+  }
+  return out;
+}
+
+function buildCity(name) {
+  const c = CITIES.find(x => x.name === name);
+  if (!c) return null;
+  return { name: c.name, tz: c.tz };
+}
+
+function renderHero() {
+  const el = document.getElementById('hero-clock');
+  const face = FACES[state.heroFace];
+  el.innerHTML = `<div class="stage"><svg class="watch-svg" data-face="${state.heroFace}" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${face.name}">${face.draw('hero-')}</svg></div><div class="hero-caption"><span id="hero-name">${face.name}</span><span id="hero-time">—</span></div>`;
+}
+
+function renderGrid() {
+  const grid = document.getElementById('city-grid');
+  const sorted = sortedCities();
+  const empty = document.getElementById('empty-cities');
+  if (!sorted.length) { grid.innerHTML = ''; empty.hidden = false; return; }
+  empty.hidden = true;
+  grid.innerHTML = sorted.map(c => {
+    const face = FACES[state.faces[c.name]];
+    const key = cityKey(c.name);
+    return `<article class="city-card" data-city="${c.name}">
+      <div class="stage"><svg class="watch-svg" data-face="${state.faces[c.name]}" data-city-key="${key}" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${c.name} clock">${face.draw('g-' + key + '-')}</svg></div>
+      <div class="city-meta">
+        <div class="city-row"><span class="city-name">${c.name}</span><span class="city-zone">${c.tz.replace(/_/g, ' ')}</span></div>
+        <div class="city-time" data-field="time">—</div>
+        <div class="city-sub" data-field="date-line">—</div>
+        <div class="city-foot">
+          <span class="city-off" data-field="offset">—</span>
+          <span class="city-actions">
+            <button class="icon-btn" data-action="shuffle" data-city="${c.name}" aria-label="Shuffle face for ${c.name}" title="Shuffle face">↺</button>
+            <button class="icon-btn" data-action="inspect" data-city="${c.name}" aria-label="Inspect ${c.name}" title="Inspect">⌕</button>
+            <button class="icon-btn" data-action="remove" data-city="${c.name}" aria-label="Remove ${c.name}" title="Remove">✕</button>
+          </span>
+        </div>
+        <div class="city-sub" style="margin-top:6px;font-size:10px">${face.name}</div>
+      </div>
+    </article>`;
+  }).join('');
+  document.getElementById('city-count').textContent = String(sorted.length);
+}
+
+function filteredFaces() {
+  const q = state.query.trim().toLowerCase();
+  return FACE_KEYS.filter(k => {
+    const f = FACES[k];
+    if (state.category !== 'all' && f.cat !== state.category) return false;
+    if (!q) return true;
+    return (f.name + ' ' + f.maker + ' ' + f.cat).toLowerCase().includes(q);
+  });
+}
+
+function renderCollection() {
+  const grid = document.getElementById('collection-grid');
+  const empty = document.getElementById('empty-collection');
+  const keys = filteredFaces();
+  document.getElementById('collection-count').textContent = String(keys.length);
+  if (!keys.length) { grid.innerHTML = ''; empty.hidden = false; return; }
+  empty.hidden = true;
+  grid.innerHTML = keys.map(k => {
+    const f = FACES[k];
+    return `<button class="coll-card" data-face="${k}" aria-label="Inspect ${f.name}">
+      <span class="coll-svg"><svg class="watch-svg" data-face="${k}" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${f.draw('c-' + k + '-')}</svg></span>
+      <span class="coll-meta">
+        <span class="coll-maker">${f.maker}</span>
+        <span class="coll-name">${f.name}</span>
+        <span class="coll-cat">${f.cat} · ${f.cadence}</span>
+      </span>
+    </button>`;
+  }).join('');
+}
+
+function renderInspector() {
+  const key = state.inspectorFace || state.heroFace;
+  const f = FACES[key];
+  if (!f) return;
+  document.getElementById('inspect-stage').innerHTML = `<svg class="watch-svg" data-face="${key}" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${f.name}">${f.draw('i-' + key + '-')}</svg>`;
+  document.getElementById('inspect-name').textContent = f.name;
+  document.getElementById('inspect-maker').textContent = f.maker;
+  document.getElementById('inspect-title').textContent = f.name;
+  document.getElementById('inspect-blurb').textContent = f.blurb;
+  const idx = FACE_KEYS.indexOf(key) + 1;
+  document.getElementById('inspect-meta').innerHTML = `
+    <div><span>N°</span><b>${idx} / ${FACE_KEYS.length}</b></div>
+    <div><span>Category</span><b>${f.cat}</b></div>
+    <div><span>Cadence</span><b>${f.cadence}</b></div>
+    <div><span>Face</span><b>${f.name.split(' ').slice(0, 3).join(' ')}</b></div>`;
+  const hasChrono = f.draw('probe-' + key + '-').includes('data-hand="chrono"');
+  document.getElementById('chrono-box').hidden = !hasChrono;
+  document.getElementById('inspect-note').textContent = hasChrono
+    ? 'Chronograph subdial is driven by the stopwatch controls. Start/reset resets the elapsed time.'
+    : 'This timepiece has no chronograph subdial. The controls are hidden.';
+}
+
+function renderAll() {
+  renderHero();
+  renderGrid();
+  renderCollection();
+  renderInspector();
+  updateTimes();
+}
+
+function formatOffset(min) {
+  const sign = min >= 0 ? '+' : '-';
+  const abs = Math.abs(min);
+  const h = Math.floor(abs / 60);
+  const m = abs % 60;
+  return `UTC${sign}${h}${m ? ':' + String(m).padStart(2, '0') : ''}`;
+}
+
+function updateFace(svg, tz, now, chronoElapsed) {
+  if (!svg) return;
+  const faceKey = svg.dataset.face;
+  const faceObj = FACES[faceKey];
+  const cadence = faceObj ? faceObj.cadence : 'sweep';
+  const fmt = getTimeFmt(tz, { hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
+  const parts = Object.fromEntries(fmt.formatToParts(now).filter(p => p.type !== 'literal').map(p => [p.type, p.value]));
+  const hour = +parts.hour, minute = +parts.minute, second = +parts.second;
+  const secFrac = now.getMilliseconds() / 1000;
+  if (cadence === 'digital') {
+    const lcd = svg.querySelector('[data-field="lcd"]');
+    if (lcd) lcd.textContent = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    const dateEl = svg.querySelector('[data-field="date"]');
+    if (dateEl) dateEl.textContent = parts.day || '1';
+    return;
+  }
+  const hourAngle = ((hour % 12) + minute / 60) * 30;
+  const minuteAngle = (minute + second / 60) * 6;
+  const secondAngle = (second + secFrac) * 6;
+  const hourHand = svg.querySelector('[data-hand="hour"]');
+  const minuteHand = svg.querySelector('[data-hand="minute"]');
+  const secondHand = svg.querySelector('[data-hand="second"]');
+  if (hourHand) hourHand.setAttribute('transform', `rotate(${hourAngle} ${hourHand.dataset.px} ${hourHand.dataset.py})`);
+  if (minuteHand) minuteHand.setAttribute('transform', `rotate(${minuteAngle} ${minuteHand.dataset.px} ${minuteHand.dataset.py})`);
+  if (secondHand) {
+    let secAngle = secondAngle;
+    if (cadence === 'tick') secAngle = second * 6;
+    if (cadence === 'mondaine') secAngle = Math.floor(second * 8) / 8 * 6;
+    secondHand.setAttribute('transform', `rotate(${secAngle} ${secondHand.dataset.px} ${secondHand.dataset.py})`);
+  }
+  const smallsec = svg.querySelector('[data-hand="smallsec"]');
+  if (smallsec) {
+    const secAngle = cadence === 'tick' ? second * 6 : secondAngle;
+    smallsec.setAttribute('transform', `rotate(${secAngle} ${smallsec.dataset.px} ${smallsec.dataset.py})`);
+  }
+  const chrono = svg.querySelector('[data-hand="chrono"]');
+  if (chrono) {
+    const elapsed = chronoElapsed != null ? chronoElapsed : 0;
+    const chronoAngle = (elapsed / 1000) * 6;
+    chrono.setAttribute('transform', `rotate(${chronoAngle} ${chrono.dataset.px} ${chrono.dataset.py})`);
+  }
+  const gmt = svg.querySelector('[data-hand="gmt"]');
+  if (gmt) gmt.setAttribute('transform', `rotate(${((hour % 24) + minute / 60) * 15} ${gmt.dataset.px} ${gmt.dataset.py})`);
+  const sub24 = svg.querySelector('[data-hand="sub24H"]');
+  if (sub24) sub24.setAttribute('transform', `rotate(${((hour % 24) + minute / 60) * 15} ${sub24.dataset.px} ${sub24.dataset.py})`);
+  const sub60 = svg.querySelector('[data-hand="sub60"]');
+  if (sub60) sub60.setAttribute('transform', `rotate(${(minute % 60) * 6} ${sub60.dataset.px} ${sub60.dataset.py})`);
+  const sub12 = svg.querySelector('[data-hand="sub12"]');
+  if (sub12) sub12.setAttribute('transform', `rotate(${(hour % 12) * 30} ${sub12.dataset.px} ${sub12.dataset.py})`);
+  const dateEl = svg.querySelector('[data-field="date"]');
+  if (dateEl) dateEl.textContent = parts.day || '1';
+  const weekdayEl = svg.querySelector('[data-field="weekday"]');
+  if (weekdayEl) {
+    const wd = getTimeFmt(tz, { weekday: 'short' }).format(now).toUpperCase();
+    weekdayEl.textContent = wd;
+  }
+}
+
+function chronoElapsedNow() {
+  if (state.chrono.running) return state.chrono.elapsed + (performance.now() - state.chrono.start);
+  return state.chrono.elapsed;
+}
+
+function formatChrono(ms) {
+  const total = Math.max(0, ms);
+  const minutes = Math.floor(total / 60000);
+  const seconds = Math.floor((total % 60000) / 1000);
+  const tenths = Math.floor((total % 1000) / 100);
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${tenths}`;
+}
+
+function updateHands() {
+  const now = new Date();
+  const sorted = sortedCities();
+  const lead = sorted[0];
+  const leadTz = lead ? lead.tz : 'UTC';
+  document.querySelectorAll('.city-card').forEach(card => {
+    const city = state.cities.find(c => c.name === card.dataset.city);
+    if (!city) return;
+    updateFace(card.querySelector('svg'), city.tz, now);
+  });
+  const heroSvg = document.querySelector('#hero-clock svg');
+  if (heroSvg) updateFace(heroSvg, leadTz, now);
+  const inspectorSvg = document.querySelector('#inspect-stage svg');
+  if (inspectorSvg) updateFace(inspectorSvg, leadTz, now, chronoElapsedNow());
+}
+
+function updateText() {
+  const now = new Date();
+  const sorted = sortedCities();
+  const lead = sorted[0];
+  document.getElementById('utc').textContent = getTimeFmt('UTC', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(now) + ' UTC';
+  document.getElementById('world-status').textContent = sorted.length ? `${sorted.length} ${sorted.length === 1 ? 'city' : 'cities'} · west to east` : 'No cities';
+  document.getElementById('world-time').textContent = lead ? `${lead.name} · ${getTimeFmt(lead.tz, { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(now)}` : '—';
+  document.querySelectorAll('.city-card').forEach(card => {
+    const city = state.cities.find(c => c.name === card.dataset.city);
+    if (!city) return;
+    const fmt = getTimeFmt(city.tz, { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    const parts = Object.fromEntries(fmt.formatToParts(now).filter(p => p.type !== 'literal').map(p => [p.type, p.value]));
+    const timeEl = card.querySelector('[data-field="time"]');
+    const offsetEl = card.querySelector('[data-field="offset"]');
+    const dateEl = card.querySelector('[data-field="date-line"]');
+    if (timeEl) timeEl.textContent = `${parts.hour}:${parts.minute}:${parts.second}`;
+    if (offsetEl) offsetEl.textContent = formatOffset(offsetMinutes(city.tz, now));
+    if (dateEl) dateEl.textContent = `${parts.weekday}, ${parts.month} ${parts.day}, ${parts.year}`;
+  });
+  const heroTime = document.getElementById('hero-time');
+  if (heroTime) heroTime.textContent = getTimeFmt(lead ? lead.tz : 'UTC', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(now) + ' · ' + (lead ? lead.tz : 'UTC').replace(/_/g, ' ');
+  const display = document.getElementById('chrono-display');
+  if (display) display.textContent = formatChrono(chronoElapsedNow());
+  const toggle = document.getElementById('chrono-toggle');
+  if (toggle) toggle.textContent = state.chrono.running ? 'Stop' : 'Start';
+}
+
+function updateTimes() { updateHands(); updateText(); }
+
+let rafId = null;
+function startClock() {
+  if (rafId) return;
+  function tick() { updateHands(); rafId = requestAnimationFrame(tick); }
+  tick();
+  setInterval(updateText, 500);
+}
+
+function shuffleCity(cityName) {
+  const used = new Set(Object.entries(state.faces).filter(([n]) => n !== cityName).map(([, k]) => k));
+  state.faces[cityName] = pickFace(used);
+  renderGrid();
+  updateTimes();
+}
+
+function shuffleAll() {
+  state.faces = assignFaces(state.cities.map(c => c.name));
+  renderGrid();
+  updateTimes();
+}
+
+function shuffleHero() {
+  const used = new Set(Object.values(state.faces));
+  state.heroFace = pickFace(used);
+  renderHero();
+  updateTimes();
+}
+
+function addCity(name) {
+  const c = buildCity(name);
+  if (!c) return;
+  if (state.cities.some(x => x.name === c.name)) return;
+  if (state.cities.length >= MAX_CITIES) { showToast('Maximum 12 cities'); return; }
+  state.cities.push(c);
+  const used = new Set(Object.values(state.faces));
+  state.faces[c.name] = pickFace(used);
+  renderAll();
+  populateAddCity();
+  showToast(`${c.name} added`);
+}
+
+function removeCity(name) {
+  state.cities = state.cities.filter(c => c.name !== name);
+  delete state.faces[name];
+  if (!state.cities.length) { state.faces = {}; renderAll(); populateAddCity(); return; }
+  renderAll();
+  populateAddCity();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.hidden = false;
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => { t.hidden = true; t.classList.remove('show'); }, 2200);
+}
+
+function openInspector(key) {
+  state.inspectorFace = key;
+  renderInspector();
+  const dlg = document.getElementById('inspect-dialog');
+  dlg.showModal();
+  updateTimes();
+}
+
+function closeInspector() {
+  const dlg = document.getElementById('inspect-dialog');
+  if (dlg.open) dlg.close();
+  state.inspectorFace = null;
+}
+
+function setView(v) {
+  state.view = v;
+  document.getElementById('world-view').hidden = v !== 'world';
+  document.getElementById('collection-view').hidden = v !== 'collection';
+  document.getElementById('world-tab').setAttribute('aria-pressed', String(v === 'world'));
+  document.getElementById('collection-tab').setAttribute('aria-pressed', String(v === 'collection'));
+  if (v === 'collection') renderCollection();
+}
+
+function toggleLume() {
+  state.lume = !state.lume;
+  document.body.classList.toggle('lume', state.lume);
+  document.getElementById('lume').setAttribute('aria-pressed', String(state.lume));
+}
+
+function populateAddCity() {
+  const sel = document.getElementById('add-city-select');
+  if (!sel) return;
+  const used = new Set(state.cities.map(c => c.name));
+  const opts = CITIES.filter(c => !used.has(c.name));
+  sel.innerHTML = '<option value="">— add a city —</option>' + opts.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+}
+
+function bind() {
+  document.getElementById('world-tab').addEventListener('click', () => setView('world'));
+  document.getElementById('collection-tab').addEventListener('click', () => setView('collection'));
+  document.getElementById('lume').addEventListener('click', toggleLume);
+  document.getElementById('shuffle-all').addEventListener('click', shuffleAll);
+  document.getElementById('add-city').addEventListener('click', () => {
+    const panel = document.getElementById('add-panel');
+    panel.hidden = !panel.hidden;
+    if (!panel.hidden) populateAddCity();
+  });
+  document.getElementById('add-city-confirm').addEventListener('click', () => {
+    const sel = document.getElementById('add-city-select');
+    if (sel.value) addCity(sel.value);
+    document.getElementById('add-panel').hidden = true;
+    sel.value = '';
+  });
+  document.getElementById('add-city-select').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { const v = e.target.value; if (v) addCity(v); document.getElementById('add-panel').hidden = true; e.target.value = ''; }
+  });
+  document.getElementById('city-grid').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const city = btn.dataset.city;
+    const action = btn.dataset.action;
+    if (action === 'shuffle') shuffleCity(city);
+    else if (action === 'remove') removeCity(city);
+    else if (action === 'inspect') { const key = state.faces[city]; if (key) openInspector(key); }
+  });
+  document.getElementById('collection-grid').addEventListener('click', e => {
+    const card = e.target.closest('.coll-card');
+    if (!card) return;
+    openInspector(card.dataset.face);
+  });
+  document.getElementById('piece-search').addEventListener('input', e => { state.query = e.target.value; renderCollection(); });
+  document.getElementById('category').addEventListener('change', e => { state.category = e.target.value; renderCollection(); });
+  document.getElementById('close-inspect').addEventListener('click', closeInspector);
+  document.getElementById('inspect-dialog').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeInspector();
+  });
+  document.getElementById('chrono-toggle').addEventListener('click', () => {
+    if (state.chrono.running) {
+      state.chrono.elapsed = chronoElapsedNow();
+      state.chrono.running = false;
+    } else {
+      state.chrono.start = performance.now();
+      state.chrono.running = true;
+    }
+    updateTimes();
+  });
+  document.getElementById('chrono-reset').addEventListener('click', () => {
+    state.chrono.running = false;
+    state.chrono.elapsed = 0;
+    updateTimes();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeInspector(); document.getElementById('add-panel').hidden = true; }
+  });
+  document.addEventListener('click', e => {
+    const panel = document.getElementById('add-panel');
+    if (!panel.hidden && !panel.contains(e.target) && e.target.id !== 'add-city') panel.hidden = true;
+  });
+}
+
+function init() {
+  const seen = new Set();
+  for (const n of DEFAULT_CITIES) {
+    const c = buildCity(n);
+    if (c && !seen.has(c.name)) { state.cities.push(c); seen.add(c.name); }
+  }
+  state.faces = assignFaces(state.cities.map(c => c.name));
+  const used = new Set(Object.values(state.faces));
+  state.heroFace = pickFace(used);
+  renderAll();
+  populateAddCity();
+  bind();
+  startClock();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+</script>
+</body>
+</html>

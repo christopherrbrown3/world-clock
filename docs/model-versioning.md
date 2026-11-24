@@ -15,6 +15,7 @@ Before creating or refreshing a model page, read `docs/model-and-contributor-gui
 
 ## Current Model Pages
 
+- `versions/inkling-2-mini.html`: Inkling 2 Mini rendition with 62 inline SVG timepieces, live city cards, searchable collection, and interactive inspection controls.
 - `versions/gemini-4-neon.html`: Gemini 4 Neon checkpoint, authored from scratch with its own `Intl` timezone engine, 196-city atlas, 24-hour solar meridian strip, instance-scoped SVG horological kit, Lume Study, poseable Loupe & Timebench, sixteen interactive chronographs/stopwatches/regatta timer, and all 62 faces.
 - `versions/mai-code-2.html` is an independent Microsoft MAI Code 2 rendition with 62 scratch-authored SVG timepieces, a 52-city IANA atlas, duplicate-aware shuffling, fixed inspection poses, chronographs, and an adjustable regatta countdown.
 - `versions/gpt-6.2-astra.html` draws 62 independent SVG timepieces with live city time, calendar displays, elapsed-time and countdown controls, and magnified inspection.
