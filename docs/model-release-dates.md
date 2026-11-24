@@ -1,6 +1,6 @@
 # Model release dates
 
-Inkling 2 Mini’s directory date, **November 24, 2026**, is maintainer-supplied; no public vendor release source was provided. It is an ordering date for this checkpoint, not an externally verified launch date. The rendition snapshot was captured on November 24, 2026, and that date is recorded separately in `versions.json`.
+Inkling 2 Mini’s directory date, **November 20, 2026**, was supplied by the maintainer; no public vendor release source was provided, so it is not an externally verified launch date. The rendition snapshot was captured on November 24, 2026, and that date is recorded separately in `versions.json`.
 
 Gemini 4 Neon’s release date, **November 18, 2026**, was verified against [Google DeepMind’s announcement](https://deepmind.google/blog/introducing-gemini-4-neon/), “Introducing Gemini 4 Neon,” dated November 18, 2026. The rendition was captured on **November 19, 2026**, the snapshot date recorded separately in `versions.json`. Microsoft MAI Code 2 stays ahead for the tied November 18 release date.
 
