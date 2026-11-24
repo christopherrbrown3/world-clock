@@ -30,7 +30,7 @@ Models with verified release dates are listed newest first. **Model release** li
 
 | Model | Model release | Snapshot |
 | --- | --- | --- |
-| [Inkling 2 Mini](versions/inkling-2-mini.html) | 2026-11-24 (maintainer-supplied) | 2026-11-24 |
+| [Inkling 2 Mini](versions/inkling-2-mini.html) | 2026-11-20 (maintainer-supplied) | 2026-11-24 |
 | [Microsoft MAI Code 2](versions/mai-code-2.html) | 2026-11-18 (maintainer-supplied) | 2026-11-18 |
 | [Gemini 4 Neon](versions/gemini-4-neon.html) | [2026-11-18](https://deepmind.google/blog/introducing-gemini-4-neon/) | 2026-11-19 |
 | [GPT 6.2 Sol](versions/gpt-6.2-sol.html) | [2026-11-17](https://openai.com/index/introducing-gpt-6-2-astra-sol/) | 2026-11-17 |
